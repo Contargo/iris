@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import org.junit.runner.RunWith;
 
+import org.mockito.Matchers;
 import org.mockito.Mock;
 
 import org.mockito.runners.MockitoJUnitRunner;
@@ -36,23 +37,25 @@ public class RouteDataRevisionDtoServiceImplTest {
     @Mock
     private RouteDataRevisionService routeDataRevisionServiceMock;
     private List<RouteDataRevision> routeDataRevisions;
-    private List<RouteDataRevisionDto> routeDataRevisionDtoss;
+    private List<RouteDataRevisionDto> routeDataRevisionDtos;
     private Terminal terminal;
     private TerminalDto terminalDto;
+    private RouteDataRevision routeDataRevision;
+    private RouteDataRevisionDto routeDataRevisionDto;
 
     @Before
     public void setUp() {
 
         sut = new RouteDataRevisionDtoServiceImpl(routeDataRevisionServiceMock);
 
-        RouteDataRevision routeDataRevision = new RouteDataRevision(5L, null, BigDecimal.ONE, BigDecimal.ONE,
-                BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE);
+        routeDataRevision = new RouteDataRevision(5L, null, BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE,
+                BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE);
 
         routeDataRevisions = asList(routeDataRevision);
 
-        RouteDataRevisionDto routeDataRevisionDto = new RouteDataRevisionDto(routeDataRevision);
+        routeDataRevisionDto = new RouteDataRevisionDto(routeDataRevision);
 
-        routeDataRevisionDtoss = asList(routeDataRevisionDto);
+        routeDataRevisionDtos = asList(routeDataRevisionDto);
 
         terminal = new Terminal(new GeoLocation(BigDecimal.TEN, BigDecimal.TEN));
         terminalDto = new TerminalDto(terminal);
@@ -78,5 +81,27 @@ public class RouteDataRevisionDtoServiceImplTest {
         List<RouteDataRevisionDto> resultList = sut.getRouteDataRevisions(terminalDto);
         assertThat(resultList.size(), is(1));
         assertThat(resultList.get(0).getId(), is(5L));
+    }
+
+
+    @Test
+    public void getRouteDataRevisionById() {
+
+        when(routeDataRevisionServiceMock.getRouteDataRevision(5L)).thenReturn(routeDataRevision);
+
+        RouteDataRevisionDto result = sut.getRouteDataRevision(5L);
+        assertThat(result.getId(), is(5L));
+    }
+
+
+    @Test
+    public void save() {
+
+        when(routeDataRevisionServiceMock.save(
+                Matchers.argThat(org.hamcrest.Matchers.<RouteDataRevision>hasProperty("id", is(5L))))).thenReturn(
+            routeDataRevision);
+
+        RouteDataRevisionDto result = sut.save(routeDataRevisionDto);
+        assertThat(result.getId(), is(5L));
     }
 }

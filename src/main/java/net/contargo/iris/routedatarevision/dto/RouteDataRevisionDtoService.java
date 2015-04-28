@@ -31,4 +31,29 @@ public interface RouteDataRevisionDtoService {
      * @return  a list of {@link net.contargo.iris.routedatarevision.dto.RouteDataRevisionDto}s.
      */
     List<RouteDataRevisionDto> getRouteDataRevisions(TerminalDto terminal);
+
+
+    /**
+     * Finds the {@link net.contargo.iris.routedatarevision.dto.RouteDataRevisionDto} for the given id.
+     *
+     * @param  id  param identifying the {@link net.contargo.iris.routedatarevision.dto.RouteDataRevisionDto}
+     *
+     * @return  the found {@link net.contargo.iris.routedatarevision.dto.RouteDataRevisionDto}
+     *
+     * @throws  net.contargo.iris.api.NotFoundException  if there is no
+     *                                                   {@link net.contargo.iris.routedatarevision.dto.RouteDataRevisionDto}
+     *                                                   for the given id.
+     */
+    RouteDataRevisionDto getRouteDataRevision(Long id);
+
+
+    /**
+     * Saves the given {@link net.contargo.iris.routedatarevision.dto.RouteDataRevisionDto}.
+     *
+     * @param  routeDataRevision  the entity to save.
+     *
+     * @return  the saved {@link net.contargo.iris.routedatarevision.dto.RouteDataRevisionDto}
+     */
+
+    RouteDataRevisionDto save(RouteDataRevisionDto routeDataRevision);
 }

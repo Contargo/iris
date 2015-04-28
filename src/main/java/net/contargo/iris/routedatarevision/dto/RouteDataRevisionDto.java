@@ -1,7 +1,7 @@
 package net.contargo.iris.routedatarevision.dto;
 
 import net.contargo.iris.routedatarevision.RouteDataRevision;
-import net.contargo.iris.terminal.dto.TerminalDto;
+import net.contargo.iris.terminal.Terminal;
 
 import java.math.BigDecimal;
 
@@ -15,7 +15,7 @@ public class RouteDataRevisionDto {
 
     private Long id;
 
-    private TerminalDto terminal;
+    private Terminal terminal;
 
     private BigDecimal truckDistanceOneWay;
 
@@ -32,13 +32,17 @@ public class RouteDataRevisionDto {
     public RouteDataRevisionDto(RouteDataRevision routeDataRevision) {
 
         id = routeDataRevision.getId();
-        terminal = new TerminalDto(routeDataRevision.getTerminal());
+        terminal = routeDataRevision.getTerminal();
         truckDistanceOneWay = routeDataRevision.getTruckDistanceOneWay();
         tollDistanceOneWay = routeDataRevision.getTollDistanceOneWay();
         airlineDistance = routeDataRevision.getAirlineDistance();
         latitude = routeDataRevision.getLatitude();
         longitude = routeDataRevision.getLongitude();
         radius = routeDataRevision.getRadius();
+    }
+
+
+    public RouteDataRevisionDto() {
     }
 
     public Long getId() {
@@ -53,13 +57,13 @@ public class RouteDataRevisionDto {
     }
 
 
-    public TerminalDto getTerminal() {
+    public Terminal getTerminal() {
 
         return terminal;
     }
 
 
-    public void setTerminal(TerminalDto terminal) {
+    public void setTerminal(Terminal terminal) {
 
         this.terminal = terminal;
     }
@@ -139,7 +143,7 @@ public class RouteDataRevisionDto {
 
     public RouteDataRevision toEntity() {
 
-        return new RouteDataRevision(id, terminal.toEntity(), truckDistanceOneWay, tollDistanceOneWay, airlineDistance,
-                latitude, longitude, radius);
+        return new RouteDataRevision(id, terminal, truckDistanceOneWay, tollDistanceOneWay, airlineDistance, latitude,
+                longitude, radius);
     }
 }

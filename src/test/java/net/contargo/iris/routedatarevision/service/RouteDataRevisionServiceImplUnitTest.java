@@ -22,6 +22,7 @@ import static org.hamcrest.CoreMatchers.is;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import static java.util.Arrays.asList;
@@ -83,5 +84,30 @@ public class RouteDataRevisionServiceImplUnitTest {
 
         List<RouteDataRevision> resultList = sut.getRouteDataRevisions(terminal);
         assertThat(resultList, is(routeDataRevisions));
+    }
+
+
+    @Test
+    public void getOne() {
+
+        RouteDataRevision routeDataRevision = new RouteDataRevision();
+        when(routeDataRevisionRepositoryMock.findOne(5L)).thenReturn(routeDataRevision);
+
+        RouteDataRevision result = sut.getRouteDataRevision(5L);
+        assertThat(result, is(routeDataRevision));
+    }
+
+
+    @Test
+    public void save() {
+
+        RouteDataRevision routeDataRevision = new RouteDataRevision();
+
+        when(routeDataRevisionRepositoryMock.save(routeDataRevision)).thenReturn(routeDataRevision);
+
+        RouteDataRevision result = sut.save(routeDataRevision);
+
+        assertThat(result, is(routeDataRevision));
+        verify(routeDataRevisionRepositoryMock).save(routeDataRevision);
     }
 }

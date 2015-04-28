@@ -33,6 +33,18 @@ public class RouteDataRevisionDtoServiceImpl implements RouteDataRevisionDtoServ
         return convertToDtoList(routeDataRevisionService.getRouteDataRevisions(terminal.toEntity()));
     }
 
+    @Override
+    public RouteDataRevisionDto getRouteDataRevision(Long id) {
+
+        return new RouteDataRevisionDto(routeDataRevisionService.getRouteDataRevision(id));
+    }
+
+    @Override
+    public RouteDataRevisionDto save(RouteDataRevisionDto routeDataRevision) {
+
+        return new RouteDataRevisionDto(routeDataRevisionService.save(routeDataRevision.toEntity()));
+    }
+
     private List<RouteDataRevisionDto> convertToDtoList(List<RouteDataRevision> entities) {
 
         return entities.stream().

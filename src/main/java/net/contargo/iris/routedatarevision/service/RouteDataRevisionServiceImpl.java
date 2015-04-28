@@ -1,6 +1,7 @@
 package net.contargo.iris.routedatarevision.service;
 
 import net.contargo.iris.address.Address;
+import net.contargo.iris.api.NotFoundException;
 import net.contargo.iris.routedatarevision.RouteDataRevision;
 import net.contargo.iris.routedatarevision.persistence.RouteDataRevisionRepository;
 import net.contargo.iris.terminal.Terminal;
@@ -38,5 +39,25 @@ public class RouteDataRevisionServiceImpl implements RouteDataRevisionService {
     public List<RouteDataRevision> getRouteDataRevisions(Terminal terminal) {
 
         return routeDataRevisionRepository.findByTerminal(terminal);
+    }
+
+
+    @Override
+    public RouteDataRevision getRouteDataRevision(Long id) {
+
+        RouteDataRevision routeDataRevision = routeDataRevisionRepository.findOne(id);
+
+        if (routeDataRevision == null) {
+            throw new NotFoundException("Cannot find route data revision for id " + id);
+        }
+
+        return routeDataRevision;
+    }
+
+
+    @Override
+    public RouteDataRevision save(RouteDataRevision routeDataRevision) {
+
+        return routeDataRevisionRepository.save(routeDataRevision);
     }
 }

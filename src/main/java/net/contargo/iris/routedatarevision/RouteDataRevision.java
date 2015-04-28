@@ -66,6 +66,23 @@ public class RouteDataRevision {
     @BigDecimalValidate(minValue = MIN_0, maxFractionalPlaces = MAX_FRAC_2, maxDecimalPlaces = MAX_DEC_15)
     private BigDecimal radius;
 
+    public RouteDataRevision() {
+    }
+
+
+    public RouteDataRevision(Long id, Terminal terminal, BigDecimal truckDistanceOneWay, BigDecimal tollDistanceOneWay,
+        BigDecimal airlineDistance, BigDecimal latitude, BigDecimal longitude, BigDecimal radius) {
+
+        this.id = id;
+        this.terminal = terminal;
+        this.truckDistanceOneWay = truckDistanceOneWay;
+        this.tollDistanceOneWay = tollDistanceOneWay;
+        this.airlineDistance = airlineDistance;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.radius = radius;
+    }
+
     public Long getId() {
 
         return id;

@@ -7,6 +7,8 @@ import net.contargo.iris.terminal.Terminal;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 
 public class RouteDataRevisionServiceImpl implements RouteDataRevisionService {
 
@@ -22,5 +24,19 @@ public class RouteDataRevisionServiceImpl implements RouteDataRevisionService {
     public RouteDataRevision getRouteDataRevision(Terminal terminal, Address destination) {
 
         return routeDataRevisionRepository.findNearest(terminal, destination.getLatitude(), destination.getLongitude());
+    }
+
+
+    @Override
+    public List<RouteDataRevision> getRouteDataRevisions() {
+
+        return routeDataRevisionRepository.findAll();
+    }
+
+
+    @Override
+    public List<RouteDataRevision> getRouteDataRevisions(Terminal terminal) {
+
+        return routeDataRevisionRepository.findByTerminal(terminal);
     }
 }

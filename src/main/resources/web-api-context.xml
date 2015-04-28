@@ -26,6 +26,7 @@
     </bean>
 
     <context:component-scan base-package="net.contargo.iris.address.staticsearch.web"/>
+    <context:component-scan base-package="net.contargo.iris.routedatarevision.web"/>
     <context:component-scan base-package="net.contargo.iris.connection.web"/>
     <context:component-scan base-package="net.contargo.iris.seaport.web"/>
     <context:component-scan base-package="net.contargo.iris.terminal.web"/>

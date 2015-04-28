@@ -4,6 +4,8 @@ import net.contargo.iris.address.Address;
 import net.contargo.iris.routedatarevision.RouteDataRevision;
 import net.contargo.iris.terminal.Terminal;
 
+import java.util.List;
+
 
 /**
  * Service to a revision of the received information from a routing service.
@@ -25,4 +27,22 @@ public interface RouteDataRevisionService {
      * @return  the {@link RouteDataRevision} with the best fit for the given {@link Terminal} and {@link Address}
      */
     RouteDataRevision getRouteDataRevision(Terminal terminal, Address destination);
+
+
+    /**
+     * Finds all {@link net.contargo.iris.routedatarevision.RouteDataRevision}.
+     *
+     * @return  a list of all {@link net.contargo.iris.routedatarevision.RouteDataRevision}
+     */
+    List<RouteDataRevision> getRouteDataRevisions();
+
+
+    /**
+     * Finds all {@link net.contargo.iris.routedatarevision.RouteDataRevision} belonging to the given terminal.
+     *
+     * @param  terminal  The parameter to filter the {@link net.contargo.iris.routedatarevision.RouteDataRevision}s.
+     *
+     * @return  a list of {@link net.contargo.iris.routedatarevision.RouteDataRevision}s.
+     */
+    List<RouteDataRevision> getRouteDataRevisions(Terminal terminal);
 }

@@ -317,6 +317,10 @@
         <constructor-arg name="routeDataRevisionRepository" ref="routeDataRevisionRepository"/>
     </bean>
 
+    <bean id="routeDataRevisionDtoService" class="net.contargo.iris.routedatarevision.dto.RouteDataRevisionDtoServiceImpl">
+        <constructor-arg name="routeDataRevisionService" ref="routeDataRevisionService"/>
+    </bean>
+
     <bean id="enricherDtoService" class="net.contargo.iris.enricher.dto.EnricherDtoServiceImpl">
         <constructor-arg ref="enricherService"/>
     </bean>

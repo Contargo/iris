@@ -4,6 +4,7 @@ import net.contargo.iris.GeoLocation;
 import net.contargo.iris.routedatarevision.RouteDataRevision;
 import net.contargo.iris.terminal.Terminal;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import org.junit.runner.RunWith;
@@ -18,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+
+import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -52,24 +55,63 @@ public class RouteDataRevisionRepositoryIntegrationTest {
     @Autowired
     private RouteDataRevisionRepository sut;
 
+    private Terminal terminal;
+    private RouteDataRevision routeDataRevision;
+
+    @Before
+    public void setUp() {
+
+        terminal = createTerminal("terminal", BigInteger.ONE, TEN, TEN);
+        routeDataRevision = createRouteDataRevision(terminal, ZERO, ZERO, ZERO, valueOf(49.1001), valueOf(8.9101), TEN);
+    }
+
+
     @Test
     public void findNearest() {
 
-        Terminal terminal = createTerminal("terminal", BigInteger.ONE, TEN, TEN);
         em.persist(terminal);
-        em.persist(createRouteDataRevision(terminal, ZERO, ZERO, ZERO, valueOf(49.1001), valueOf(8.9101), TEN));
+
+        em.persist(routeDataRevision);
         em.persist(createRouteDataRevision(terminal, ONE, ONE, ONE, valueOf(49.1011), valueOf(8.9102), TEN));
         em.persist(createRouteDataRevision(terminal, TEN, TEN, TEN, valueOf(49.1021), valueOf(8.9103), TEN));
 
         em.flush();
 
-        RouteDataRevision routeDataRevision = sut.findNearest(terminal, valueOf(49.10), valueOf(8.91));
+        RouteDataRevision nearestRouteDataRevision = sut.findNearest(terminal, valueOf(49.10), valueOf(8.91));
 
-        assertThat(routeDataRevision.getAirlineDistance(), is(ZERO));
-        assertThat(routeDataRevision.getTollDistanceOneWay(), is(ZERO));
-        assertThat(routeDataRevision.getTruckDistanceOneWay(), is(ZERO));
-        assertThat(routeDataRevision.getLatitude(), is(valueOf(49.1001)));
-        assertThat(routeDataRevision.getLongitude(), is(valueOf(8.9101)));
+        assertThat(nearestRouteDataRevision.getAirlineDistance(), is(ZERO));
+        assertThat(nearestRouteDataRevision.getTollDistanceOneWay(), is(ZERO));
+        assertThat(nearestRouteDataRevision.getTruckDistanceOneWay(), is(ZERO));
+        assertThat(nearestRouteDataRevision.getLatitude(), is(valueOf(49.1001)));
+        assertThat(nearestRouteDataRevision.getLongitude(), is(valueOf(8.9101)));
+    }
+
+
+    @Test
+    public void findByTerminalAndLatitudeAndLongitude() {
+
+        em.persist(terminal);
+        em.persist(routeDataRevision);
+
+        em.flush();
+
+        Optional<RouteDataRevision> routeDataRevisionOptional = sut.findByTerminalAndLatitudeAndLongitude(terminal,
+                valueOf(49.1001), valueOf(8.9101));
+        assertThat(routeDataRevisionOptional.isPresent(), is(true));
+    }
+
+
+    @Test
+    public void findByTerminalAndLatitudeAndLongitudeNotExisting() {
+
+        em.persist(terminal);
+        em.persist(routeDataRevision);
+
+        em.flush();
+
+        Optional<RouteDataRevision> routeDataRevisionOptional = sut.findByTerminalAndLatitudeAndLongitude(terminal,
+                valueOf(49.1001), valueOf(8.9102));
+        assertThat(routeDataRevisionOptional.isPresent(), is(false));
     }
 
 

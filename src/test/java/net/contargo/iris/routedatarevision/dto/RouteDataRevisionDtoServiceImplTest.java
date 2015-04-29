@@ -24,11 +24,15 @@ import static org.hamcrest.Matchers.is;
 
 import static org.junit.Assert.assertThat;
 
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import static java.util.Arrays.asList;
 
 
+/**
+ * @author  David Schilling - schilling@synyx.de
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class RouteDataRevisionDtoServiceImplTest {
 
@@ -103,5 +107,15 @@ public class RouteDataRevisionDtoServiceImplTest {
 
         RouteDataRevisionDto result = sut.save(routeDataRevisionDto);
         assertThat(result.getId(), is(5L));
+    }
+
+
+    @Test
+    public void existsEntry() {
+
+        when(routeDataRevisionServiceMock.existsEntry(terminal, BigDecimal.TEN, BigDecimal.ONE)).thenReturn(true);
+
+        assertThat(sut.existsEntry(terminal, BigDecimal.TEN, BigDecimal.ONE), is(true));
+        verify(routeDataRevisionServiceMock).existsEntry(terminal, BigDecimal.TEN, BigDecimal.ONE);
     }
 }

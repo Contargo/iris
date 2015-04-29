@@ -1,6 +1,9 @@
 package net.contargo.iris.routedatarevision.dto;
 
+import net.contargo.iris.terminal.Terminal;
 import net.contargo.iris.terminal.dto.TerminalDto;
+
+import java.math.BigDecimal;
 
 import java.util.List;
 
@@ -56,4 +59,19 @@ public interface RouteDataRevisionDtoService {
      */
 
     RouteDataRevisionDto save(RouteDataRevisionDto routeDataRevision);
+
+
+    /**
+     * Checks if there is already an entry of type {@link net.contargo.iris.routedatarevision.RouteDataRevision} with
+     * the given values.
+     *
+     * @param  terminal  the corresponding {@link net.contargo.iris.terminal.Terminal} for a
+     *                   {@link net.contargo.iris.routedatarevision.RouteDataRevision}
+     * @param  latitude  the corresponding Latitude for a {@link net.contargo.iris.routedatarevision.RouteDataRevision}
+     * @param  longitude  the corresponding Longitude for a
+     *                    {@link net.contargo.iris.routedatarevision.RouteDataRevision}
+     *
+     * @return  true if there already exists an entry with the passed values, otherwise false.
+     */
+    boolean existsEntry(Terminal terminal, BigDecimal latitude, BigDecimal longitude);
 }

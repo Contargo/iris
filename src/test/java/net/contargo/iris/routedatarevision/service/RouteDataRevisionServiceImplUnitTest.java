@@ -17,6 +17,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.math.BigDecimal;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
 
@@ -109,5 +110,27 @@ public class RouteDataRevisionServiceImplUnitTest {
 
         assertThat(result, is(routeDataRevision));
         verify(routeDataRevisionRepositoryMock).save(routeDataRevision);
+    }
+
+
+    @Test
+    public void existsEntry() {
+
+        when(routeDataRevisionRepositoryMock.findByTerminalAndLatitudeAndLongitude(terminal, BigDecimal.TEN,
+                BigDecimal.ONE)).thenReturn(Optional.of(new RouteDataRevision()));
+
+        boolean existsEntry = sut.existsEntry(terminal, BigDecimal.TEN, BigDecimal.ONE);
+        assertThat(existsEntry, is(true));
+    }
+
+
+    @Test
+    public void existsEntryNotFound() {
+
+        when(routeDataRevisionRepositoryMock.findByTerminalAndLatitudeAndLongitude(terminal, BigDecimal.TEN,
+                BigDecimal.ONE)).thenReturn(Optional.<RouteDataRevision>empty());
+
+        boolean existsEntry = sut.existsEntry(terminal, BigDecimal.TEN, BigDecimal.ONE);
+        assertThat(existsEntry, is(false));
     }
 }

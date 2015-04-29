@@ -2,7 +2,7 @@ package net.contargo.iris.routedatarevision;
 
 import net.contargo.iris.terminal.Terminal;
 
-import net.contargo.validation.bigdecimal.BigDecimalValidate;
+import org.hibernate.validator.constraints.Range;
 
 import java.math.BigDecimal;
 
@@ -10,8 +10,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-
-import javax.validation.constraints.NotNull;
 
 
 /**
@@ -22,48 +20,32 @@ import javax.validation.constraints.NotNull;
 @Entity
 public class RouteDataRevision {
 
-    private static final int DEG_180 = 180;
-
     private static final int MAX_DEC_15 = 15;
     private static final int MAX_FRAC_2 = 2;
-    private static final int MAX_FRAC_10 = 10;
-    private static final int MAX_DEC_3 = 3;
     private static final int MIN_0 = 0;
+
+    private static final int MAX_VALUE_COORD = 180;
+    private static final int MIN_VALUE_COORD = -180;
 
     @Id
     @GeneratedValue
     private Long id;
 
-    @NotNull
     @ManyToOne
     private Terminal terminal;
 
-    @NotNull
-    @BigDecimalValidate(maxFractionalPlaces = MAX_FRAC_2, maxDecimalPlaces = MAX_DEC_15)
     private BigDecimal truckDistanceOneWay;
 
-    @NotNull
-    @BigDecimalValidate(maxFractionalPlaces = MAX_FRAC_2, maxDecimalPlaces = MAX_DEC_15)
     private BigDecimal tollDistanceOneWay;
 
-    @NotNull
-    @BigDecimalValidate(maxFractionalPlaces = MAX_FRAC_2, maxDecimalPlaces = MAX_DEC_15)
     private BigDecimal airlineDistance;
 
-    @NotNull
-    @BigDecimalValidate(
-        minValue = -DEG_180, maxValue = DEG_180, maxFractionalPlaces = MAX_FRAC_10, maxDecimalPlaces = MAX_DEC_3
-    )
+    @Range(min = MIN_VALUE_COORD, max = MAX_VALUE_COORD)
     private BigDecimal latitude;
 
-    @NotNull
-    @BigDecimalValidate(
-        minValue = -DEG_180, maxValue = DEG_180, maxFractionalPlaces = MAX_FRAC_10, maxDecimalPlaces = MAX_DEC_3
-    )
+    @Range(min = MIN_VALUE_COORD, max = MAX_VALUE_COORD)
     private BigDecimal longitude;
 
-    @NotNull
-    @BigDecimalValidate(minValue = MIN_0, maxFractionalPlaces = MAX_FRAC_2, maxDecimalPlaces = MAX_DEC_15)
     private BigDecimal radius;
 
     public RouteDataRevision() {

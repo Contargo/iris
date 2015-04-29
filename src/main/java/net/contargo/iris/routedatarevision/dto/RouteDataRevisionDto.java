@@ -3,7 +3,11 @@ package net.contargo.iris.routedatarevision.dto;
 import net.contargo.iris.routedatarevision.RouteDataRevision;
 import net.contargo.iris.terminal.Terminal;
 
+import net.contargo.validation.bigdecimal.BigDecimalValidate;
+
 import java.math.BigDecimal;
+
+import javax.validation.constraints.NotNull;
 
 
 /**
@@ -13,20 +17,35 @@ import java.math.BigDecimal;
  */
 public class RouteDataRevisionDto {
 
+    private static final int MAX_DEC_15 = 15;
+    private static final int MAX_FRAC_2 = 2;
+    private static final int MIN_0 = 0;
+
     private Long id;
 
+    @NotNull
     private Terminal terminal;
 
+    @BigDecimalValidate(maxFractionalPlaces = MAX_FRAC_2, maxDecimalPlaces = MAX_DEC_15)
+    @NotNull
     private BigDecimal truckDistanceOneWay;
 
+    @NotNull
+    @BigDecimalValidate(maxFractionalPlaces = MAX_FRAC_2, maxDecimalPlaces = MAX_DEC_15)
     private BigDecimal tollDistanceOneWay;
 
+    @NotNull
+    @BigDecimalValidate(maxFractionalPlaces = MAX_FRAC_2, maxDecimalPlaces = MAX_DEC_15)
     private BigDecimal airlineDistance;
 
+    @NotNull
     private BigDecimal latitude;
 
+    @NotNull
     private BigDecimal longitude;
 
+    @NotNull
+    @BigDecimalValidate(minValue = MIN_0, maxFractionalPlaces = MAX_FRAC_2, maxDecimalPlaces = MAX_DEC_15)
     private BigDecimal radius;
 
     public RouteDataRevisionDto(RouteDataRevision routeDataRevision) {

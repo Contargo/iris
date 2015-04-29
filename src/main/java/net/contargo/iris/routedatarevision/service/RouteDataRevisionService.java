@@ -4,6 +4,8 @@ import net.contargo.iris.address.Address;
 import net.contargo.iris.routedatarevision.RouteDataRevision;
 import net.contargo.iris.terminal.Terminal;
 
+import java.math.BigDecimal;
+
 import java.util.List;
 
 
@@ -69,4 +71,19 @@ public interface RouteDataRevisionService {
      * @return  the saved {@link net.contargo.iris.routedatarevision.RouteDataRevision}
      */
     RouteDataRevision save(RouteDataRevision routeDataRevision);
+
+
+    /**
+     * Checks if there is already an entry of type {@link net.contargo.iris.routedatarevision.RouteDataRevision} with
+     * the given values.
+     *
+     * @param  terminal  the corresponding {@link net.contargo.iris.terminal.Terminal} for a
+     *                   {@link net.contargo.iris.routedatarevision.RouteDataRevision}
+     * @param  latitude  the corresponding Latitude for a {@link net.contargo.iris.routedatarevision.RouteDataRevision}
+     * @param  longitude  the corresponding Longitude for a
+     *                    {@link net.contargo.iris.routedatarevision.RouteDataRevision}
+     *
+     * @return  true if there already exists an entry with the passed values, otherwise false.
+     */
+    boolean existsEntry(Terminal terminal, BigDecimal latitude, BigDecimal longitude);
 }

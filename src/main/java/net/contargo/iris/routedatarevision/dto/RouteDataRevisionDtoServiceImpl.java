@@ -2,8 +2,10 @@ package net.contargo.iris.routedatarevision.dto;
 
 import net.contargo.iris.routedatarevision.RouteDataRevision;
 import net.contargo.iris.routedatarevision.service.RouteDataRevisionService;
+import net.contargo.iris.terminal.Terminal;
 import net.contargo.iris.terminal.dto.TerminalDto;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,6 +45,12 @@ public class RouteDataRevisionDtoServiceImpl implements RouteDataRevisionDtoServ
     public RouteDataRevisionDto save(RouteDataRevisionDto routeDataRevision) {
 
         return new RouteDataRevisionDto(routeDataRevisionService.save(routeDataRevision.toEntity()));
+    }
+
+    @Override
+    public boolean existsEntry(Terminal terminal, BigDecimal latitude, BigDecimal longitude) {
+
+        return routeDataRevisionService.existsEntry(terminal, latitude, longitude);
     }
 
     private List<RouteDataRevisionDto> convertToDtoList(List<RouteDataRevision> entities) {

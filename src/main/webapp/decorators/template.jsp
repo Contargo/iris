@@ -73,7 +73,7 @@
                             </li>
                             <li>
                                 <a id="nav-routerevision-management"
-                                   href="<c:url value="/web/staticaddresses/"/>"><spring:message
+                                   href="<c:url value="/web/routerevisions"/>"><spring:message
                                         code="page.navbar.routerevisions"/></a>
                             </li>
                         </ul>

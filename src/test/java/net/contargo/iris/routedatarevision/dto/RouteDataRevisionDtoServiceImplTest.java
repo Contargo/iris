@@ -80,9 +80,9 @@ public class RouteDataRevisionDtoServiceImplTest {
     @Test
     public void getRouteDataRevisionsByTerminal() {
 
-        when(routeDataRevisionServiceMock.getRouteDataRevisions(terminal)).thenReturn(routeDataRevisions);
+        when(routeDataRevisionServiceMock.getRouteDataRevisions(1L)).thenReturn(routeDataRevisions);
 
-        List<RouteDataRevisionDto> resultList = sut.getRouteDataRevisions(terminalDto);
+        List<RouteDataRevisionDto> resultList = sut.getRouteDataRevisions(1L);
         assertThat(resultList.size(), is(1));
         assertThat(resultList.get(0).getId(), is(5L));
     }

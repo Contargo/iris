@@ -42,11 +42,11 @@ public interface RouteDataRevisionService {
     /**
      * Finds all {@link net.contargo.iris.routedatarevision.RouteDataRevision} belonging to the given terminal.
      *
-     * @param  terminal  The parameter to filter the {@link net.contargo.iris.routedatarevision.RouteDataRevision}s.
+     * @param  terminalId  The parameter to filter the {@link net.contargo.iris.routedatarevision.RouteDataRevision}s.
      *
      * @return  a list of {@link net.contargo.iris.routedatarevision.RouteDataRevision}s.
      */
-    List<RouteDataRevision> getRouteDataRevisions(Terminal terminal);
+    List<RouteDataRevision> getRouteDataRevisions(Long terminalId);
 
 
     /**

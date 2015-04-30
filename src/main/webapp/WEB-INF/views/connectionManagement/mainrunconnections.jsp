@@ -34,11 +34,11 @@
                     </a>
                 </div>
 
-                <c:url var="completeUrl" value="/web/connections/"/>
+                <c:url var="BASE_URL" value="/web/connections/"/>
                 <display:table name="mainRunConnections"
                                class="table iris-table"
                                uid="routingconnectiondetail"
-                               requestURI="${completeUrl}">
+                               requestURI="${BASE_URL}">
 
                     <spring:message code="mainrunconnection.seaport.name" var="label"/>
                     <display:column title="${label}" property="seaport.name" sortable="true"/>

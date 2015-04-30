@@ -38,9 +38,9 @@ public class RouteDataRevisionServiceImpl implements RouteDataRevisionService {
 
 
     @Override
-    public List<RouteDataRevision> getRouteDataRevisions(Terminal terminal) {
+    public List<RouteDataRevision> getRouteDataRevisions(Long terminalId) {
 
-        return routeDataRevisionRepository.findByTerminal(terminal);
+        return routeDataRevisionRepository.findByTerminalId(terminalId);
     }
 
 

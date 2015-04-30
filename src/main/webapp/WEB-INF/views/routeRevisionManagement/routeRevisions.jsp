@@ -12,8 +12,8 @@
 </head>
 
 <body>
+<c:url var="BASE_URL" value="/web/routerevisions"/>
 <div class="container-fluid">
-
     <div class="row-fluid">
         <div class="content-title">
             <h2>
@@ -21,22 +21,37 @@
             </h2>
         </div>
     </div>
-
     <div class="row-fluid">
         <div class="span12">
             <div class="content">
 
-                <c:url value="/web/routerevisions/new" var="COMPLETE_CREATE_URL"/>
-
+                <c:url value="${BASE_URL}/new" var="COMPLETE_CREATE_URL"/>
                 <div class="management-button-top">
                     <a href="${COMPLETE_CREATE_URL}" class="btn btn-primary btn-create-top" id="top-new">
                         <i class="icon-plus-sign icon-white"></i>
                         <spring:message code="table.newLabel"/>
                     </a>
                 </div>
+                <div class="margin-bottom-5">
+                    <select id="selectedTerminal">
+                        <option></option>
+                        <c:forEach items="${terminals}" var="terminal">
+                            <c:choose>
+                                <c:when test="${terminal.id eq selectedTerminal}">
+                                    <option value="${terminal.id}" selected="selected">${terminal.niceName}</option>
+                                </c:when>
+                                <c:otherwise>
+                                    <option value="${terminal.id}">${terminal.niceName}</option>
+                                </c:otherwise>
+                            </c:choose>
+                        </c:forEach>
+                    </select>
+                    <a id="filter-reset" href="${BASE_URL}" class="btn btn-primary"><spring:message
+                            code="routerevision.table.filter.reset"/></a>
+                </div>
 
-                <c:url var="completeUrl" value="/web/routerevisions"/>
-                <display:table name="routeRevisions" class="table iris-table" uid="routerevision" requestURI="${completeUrl}">
+                <display:table name="routeRevisions" class="table iris-table" uid="routerevision"
+                               requestURI="${BASE_URL}">
 
                     <spring:message code="routerevision.terminal" var="label"/>
                     <display:column title="${label}" property="terminal.name" sortable="true"/>
@@ -80,6 +95,23 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var $selectedTerminal = $('#selectedTerminal');
+        $selectedTerminal.select2({
+            width: 'resolve',
+            placeholder: 'Select a terminal'
+        });
+        $selectedTerminal.on('change', function () {
+            var terminalId = $selectedTerminal.select2('val');
 
+            var params = "?";
+            if (terminalId != 0) {
+                params += "terminalId=" + terminalId;
+            }
+            window.location.replace("${BASE_URL}" + params);
+        });
+    });
+</script>
 </body>
 </html>

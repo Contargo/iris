@@ -469,3 +469,7 @@ span.error {
     margin-bottom: 40px;
     display: inline-block;
 }
+
+.margin-bottom-5 {
+    margin-bottom: 5px;
+}

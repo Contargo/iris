@@ -35,8 +35,8 @@
                     </a>
                 </div>
 
-                <c:url var="completeUrl" value="/web/seaports/"/>
-                <display:table name="seaports" class="table iris-table" uid="seaport" requestURI="${completeUrl}">
+                <c:url var="BASE_URL" value="/web/seaports/"/>
+                <display:table name="seaports" class="table iris-table" uid="seaport" requestURI="${BASE_URL}">
 
                     <spring:message code="seaport.name" var="label"/>
                     <display:column title="${label}" property="name" sortable="true"/>

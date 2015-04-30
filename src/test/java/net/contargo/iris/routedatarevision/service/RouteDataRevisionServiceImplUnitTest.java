@@ -81,9 +81,9 @@ public class RouteDataRevisionServiceImplUnitTest {
     public void getRouteDataRevisionByTerminal() {
 
         List<RouteDataRevision> routeDataRevisions = asList(new RouteDataRevision());
-        when(routeDataRevisionRepositoryMock.findByTerminal(terminal)).thenReturn(routeDataRevisions);
+        when(routeDataRevisionRepositoryMock.findByTerminalId(1L)).thenReturn(routeDataRevisions);
 
-        List<RouteDataRevision> resultList = sut.getRouteDataRevisions(terminal);
+        List<RouteDataRevision> resultList = sut.getRouteDataRevisions(1L);
         assertThat(resultList, is(routeDataRevisions));
     }
 

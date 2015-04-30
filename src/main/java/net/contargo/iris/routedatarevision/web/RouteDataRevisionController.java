@@ -17,7 +17,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -52,9 +55,20 @@ public class RouteDataRevisionController extends AbstractController {
     }
 
     @RequestMapping(value = "", method = GET)
-    public String getAll(Model model) {
+    public String getAll(Model model,
+        @RequestParam(value = "terminalId", required = false) Long terminalId) {
 
-        model.addAttribute("routeRevisions", routeDataRevisionDtoService.getRouteDataRevisions());
+        List<RouteDataRevisionDto> routeDataRevisions;
+
+        if (terminalId == null) {
+            routeDataRevisions = routeDataRevisionDtoService.getRouteDataRevisions();
+        } else {
+            routeDataRevisions = routeDataRevisionDtoService.getRouteDataRevisions(terminalId);
+            model.addAttribute("selectedTerminal", terminalId);
+        }
+
+        model.addAttribute("routeRevisions", routeDataRevisions);
+        model.addAttribute("terminals", terminalService.getAll());
 
         return CONTROLLER_CONTEXT + "routeRevisions";
     }

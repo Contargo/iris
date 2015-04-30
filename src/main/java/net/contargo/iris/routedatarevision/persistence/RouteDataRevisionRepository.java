@@ -40,7 +40,8 @@ public interface RouteDataRevisionRepository extends JpaRepository<RouteDataRevi
         @Param("longitude") BigDecimal longitude);
 
 
-    List<RouteDataRevision> findByTerminal(Terminal terminal);
+    @Query("SELECT r FROM RouteDataRevision r WHERE r.terminal.id = ?1")
+    List<RouteDataRevision> findByTerminalId(Long id);
 
 
     Optional<RouteDataRevision> findByTerminalAndLatitudeAndLongitude(Terminal terminal, BigDecimal latitude,

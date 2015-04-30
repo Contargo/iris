@@ -1,7 +1,6 @@
 package net.contargo.iris.routedatarevision.dto;
 
 import net.contargo.iris.terminal.Terminal;
-import net.contargo.iris.terminal.dto.TerminalDto;
 
 import java.math.BigDecimal;
 
@@ -28,12 +27,12 @@ public interface RouteDataRevisionDtoService {
     /**
      * Finds all {@link net.contargo.iris.routedatarevision.RouteDataRevision} belonging to the given terminal.
      *
-     * @param  terminal  The parameter to filter the
-     *                   {@link net.contargo.iris.routedatarevision.dto.RouteDataRevisionDto}s.
+     * @param  terminalId  The parameter to filter the
+     *                     {@link net.contargo.iris.routedatarevision.dto.RouteDataRevisionDto}s.
      *
      * @return  a list of {@link net.contargo.iris.routedatarevision.dto.RouteDataRevisionDto}s.
      */
-    List<RouteDataRevisionDto> getRouteDataRevisions(TerminalDto terminal);
+    List<RouteDataRevisionDto> getRouteDataRevisions(Long terminalId);
 
 
     /**

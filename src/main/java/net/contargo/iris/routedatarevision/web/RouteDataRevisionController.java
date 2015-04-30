@@ -103,7 +103,8 @@ public class RouteDataRevisionController extends AbstractController {
     private String createOrUpdate(RouteDataRevisionDto routeDataRevisionDto, RedirectAttributes redirectAttributes,
         BindingResult result, Model model, Message successMessage) {
 
-        if (routeDataRevisionDtoService.existsEntry(routeDataRevisionDto.getTerminal(),
+        if (routeDataRevisionDto.getId() == null
+                && routeDataRevisionDtoService.existsEntry(routeDataRevisionDto.getTerminal(),
                     routeDataRevisionDto.getLatitude(), routeDataRevisionDto.getLongitude())) {
             result.rejectValue("terminal.id", "routerevision.exists");
             result.rejectValue("longitude", "routerevision.exists");

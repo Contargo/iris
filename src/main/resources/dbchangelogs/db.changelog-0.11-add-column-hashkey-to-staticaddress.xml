@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet author="franke@synyx.de" id="add-column-hashkey-to-staticaddress">
+                
+        <addColumn tableName="StaticAddress">
+            <column name="hashKey" type="VARCHAR(5)">
+                <constraints unique="true"/>
+            </column>
+                    
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>

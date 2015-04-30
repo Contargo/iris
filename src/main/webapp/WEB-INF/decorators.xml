@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<decorators defaultdir="/decorators/">
+    
+    <decorator name="help-theme" page="minimal-template.jsp">
+       
+        <pattern>**/help/*</pattern>
+
+    </decorator>
+
+    <decorator name="basic-theme" page="template.jsp">
+        <pattern>*</pattern>
+    </decorator>
+    
+</decorators>

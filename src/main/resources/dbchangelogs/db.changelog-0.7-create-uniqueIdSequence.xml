@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet author="franke@synyx.de" id="create-uniqueIdSequence">
+        <comment>Create table for managing id sequences</comment>
+
+        <createTable tableName="UniqueIdSequence">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" />
+            </column>
+            <column name="entityName" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="nextId" type="NUMBER(22)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+    </changeSet>
+    
+    <changeSet id="insert-start-sequence-terminal" author="franke@synyx.de">
+        <insert tableName="UniqueIdSequence">
+            <column name="entityName" value="Terminal"/>
+            <column name="nextId" value="1301000000000001"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="insert-start-sequence-seaport" author="franke@synyx.de">
+        <insert tableName="UniqueIdSequence">
+            <column name="entityName" value="Seaport"/>
+            <column name="nextId" value="1301000000000001"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="insert-start-sequence-staticaddress" author="franke@synyx.de">
+        <insert tableName="UniqueIdSequence">
+            <column name="entityName" value="StaticAddress"/>
+            <column name="nextId" value="1301000000000001"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

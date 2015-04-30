@@ -1,0 +1,23 @@
+{
+    "place_id": "84069287",
+    "licence": "Data Copyright OpenStreetMap Contributors, Some Rights Reserved. CC-BY-SA 2.0.",
+    "osm_type": "way",
+    "osm_id": "90085697",
+    "boundingbox": ["49.002025604248", "49.0021591186523", "8.39366722106934", "8.39412879943848"],
+    "lat": "49.002095196515", "lon": "8.39391718305592",
+    "display_name": "Fotostudio Becker, 68, Karlstrasse, Suedweststadt, Karlsruhe, Regierungsbezirk Karlsruhe, Baden-Wuerttemberg, 76137, Federal Republic of Germany (land mass)", "class": "amenity",
+    "type": "photo_studio",
+    "address": {
+        "amenity": "Fotostudio Becker",
+        "house_number": "68",
+        "road": "Karlstraße",
+        "suburb": "Suedweststadt",
+        "city": "Karlsruhe",
+        "county": "Karlsruhe",
+        "state_district": "Regierungsbezirk Karlsruhe",
+        "state": "Baden-Wuerttemberg",
+        "postcode": "76137",
+        "country": "Federal Republic of Germany (land mass)",
+        "country_code": "de"
+    }
+}

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet author="thieme@synyx.de" id="add-unique-constraints-to-terminal">
+
+        <comment>Add unique constraints on both the terminal's name and its coordinates.</comment>
+
+        <addUniqueConstraint tableName="Terminal" columnNames="name" constraintName="terminalUniqueName"/>
+
+        <addUniqueConstraint tableName="Terminal" columnNames="latitude, longitude"
+                             constraintName="terminalUniqueCoordinates"/>
+
+    </changeSet>
+
+    <changeSet author="thieme@synyx.de" id="add-unique-constraints-to-seaport">
+
+        <comment>Add unique constraints on both the seaport's name and its coordinates.</comment>
+
+        <addUniqueConstraint tableName="Seaport" columnNames="name" constraintName="seaportUniqueName"/>
+
+        <addUniqueConstraint tableName="Seaport" columnNames="latitude, longitude"
+                             constraintName="seaportUniqueCoordinates"/>
+
+    </changeSet>
+
+</databaseChangeLog>

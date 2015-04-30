@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet author="franke@synyx.de" id="addNotNullConstraintToTerminalRegion">
+        <addNotNullConstraint
+                tableName="Terminal"
+                columnName="region"
+                defaultNullValue="NOT_SET"
+                columnDataType="varchar(255)"/>
+        <addDefaultValue tableName="Terminal" columnName="region" defaultValue="NOT_SET"/>
+    </changeSet>
+
+</databaseChangeLog>

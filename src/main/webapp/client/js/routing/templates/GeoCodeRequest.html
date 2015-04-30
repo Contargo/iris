@@ -1,0 +1,25 @@
+<div class="content-title">
+    <h2>Destination</h2>
+</div>
+
+<div class="content">
+    <form class="form-horizontal" style="padding-top: 0;">
+
+        <p class="gap">Please provide as much information as possible on the destination. Fields can be left blank.</p>
+
+        <div>
+
+            <input id="street" type="text" class="input-medium street" placeholder="Street & House number"
+                   title="Street & House number" value="{{street}}"/>
+            <input id="postCode" type="text" class="input-small postalcode" placeholder="Postal code"
+                   title="Postal code" value="{{postalcode}}"/>
+            <input id="city" type="text" class="input-small-medium city" placeholder="City" title="City"
+                   value="{{city}}"/>
+            <!-- country container is filled by GeoCodeRequestView -->
+            <span class="country-container"></span>
+            <button id="submitButton" type="submit" class="search btn btn-primary">Search</button>
+            <button id="resetButton" type="reset" class="reset btn">Reset</button>
+
+        </div>
+    </form>
+</div>

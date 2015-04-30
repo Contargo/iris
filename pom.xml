@@ -4,7 +4,7 @@
 
     <groupId>net.contargo</groupId>
     <artifactId>iris</artifactId>
-    <version>1.6</version>
+    <version>1.7-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <!-- DispatcherServlet Context: defines this servlet's request-processing 
+         infrastructure -->
+
+    <context:property-placeholder
+            ignore-resource-not-found="true"
+            location="classpath:application.properties, classpath:application-${environment:dev}.properties"/>
+
+    <!-- Enables the Spring MVC @Controller programming model -->
+    <mvc:annotation-driven/>
+
+    <!-- Resolves views selected for rendering by @Controllers to .jsp resources 
+         in the /WEB-INF/views directory -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/views/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+
+    <context:component-scan base-package="net.contargo.iris.address.staticsearch.web"/>
+    <context:component-scan base-package="net.contargo.iris.connection.web"/>
+    <context:component-scan base-package="net.contargo.iris.seaport.web"/>
+    <context:component-scan base-package="net.contargo.iris.terminal.web"/>
+    <context:component-scan base-package="net.contargo.iris.login.web"/>
+    <context:component-scan base-package="net.contargo.iris.web"/>
+
+    <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+        <property name="contentNegotiationManager" ref="cnManager"/>
+        <property name="viewResolvers">
+            <list>
+                <bean class="org.springframework.web.servlet.view.BeanNameViewResolver"/>
+            </list>
+        </property>
+    </bean>
+    <bean id="cnManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+        <property name="favorPathExtension" value="true"/>
+        <property name="ignoreAcceptHeader" value="false"/>
+        <property name="defaultContentType" value="application/xml"/>
+        <property name="mediaTypes">
+            <map>
+                <entry key="json" value="application/json"/>
+                <entry key="html" value="text/html"/>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="cacheInterceptor" class="org.springframework.web.servlet.mvc.WebContentInterceptor">
+        <property name="supportedMethods" value="GET,PUT,POST,HEAD,DELETE"/>
+    </bean>
+
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
+        <property name="useSuffixPatternMatch" value="false"/>
+        <property name="interceptors">
+            <list>
+                <ref bean="cacheInterceptor"/>
+                <bean class="org.synyx.sitemesh.ViewWebRequestEnricher"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+        <property name="supportedMethods" value="GET,PUT,POST,HEAD,DELETE"/>
+        <property name="messageConverters">
+            <list>
+                <bean class="org.springframework.http.converter.StringHttpMessageConverter"/>
+                <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                    <constructor-arg name="objectMapper" ref="duplicateDetectionObjectMapper"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="duplicateDetectionObjectMapper"
+                class="org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean">
+        <property name="featuresToEnable">
+            <array>
+                <util:constant
+                        static-field="com.fasterxml.jackson.core.JsonGenerator.Feature.STRICT_DUPLICATE_DETECTION"/>
+            </array>
+        </property>
+    </bean>
+    
+    <!-- Error handling: generating error reports and redirect to specific error jsps-->
+    <bean id="exceptionResolver" class="net.contargo.iris.api.WebExceptionHandler">
+        <constructor-arg value="${error.reports.basepath}/exceptions"/>
+        <constructor-arg ref="userAuthenticationService"/>
+        <property name="defaultErrorView" value="general-error"/>
+
+        <!-- If you want to map Exceptions to specific jsps you can do it this way -->
+        <!--        <property name="exceptionMappings">
+            <props>
+                <prop key="org.springframework.security.access.AccessDeniedException">accessDenied</prop>
+            </props>
+        </property>-->
+
+    </bean>
+
+    <!-- set locale default to en -->
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.FixedLocaleResolver">
+        <property name="defaultLocale" value="en_EN"/>
+    </bean>
+</beans>

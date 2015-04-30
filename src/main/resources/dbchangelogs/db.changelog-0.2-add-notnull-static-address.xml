@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    
+    <changeSet author="hoffmann@synyx.de" id="add-notnull-static-address">
+        <comment>Add NOT-NULL constraints for columns postalcode, city and cityNormalized</comment>
+
+        <addNotNullConstraint tableName="StaticAddress" columnName="postalcode" columnDataType="varchar(10)" defaultNullValue=""/>
+        
+        <addNotNullConstraint tableName="StaticAddress" columnName="city" columnDataType="varchar(255)" defaultNullValue=""/>
+
+        <addNotNullConstraint tableName="StaticAddress" columnName="cityNormalized" columnDataType="varchar(255)" defaultNullValue=""/>
+
+    </changeSet>
+
+</databaseChangeLog>

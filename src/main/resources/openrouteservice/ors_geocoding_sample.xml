@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<xls:XLS version="1.1" xsi:schemaLocation="http://www.opengis.net/xls http://schemas.opengis.net/ols/1.1.0/LocationUtilityService.xsd">
+    <xls:ResponseHeader xsi:type="xls:ResponseHeaderType"/>
+    <xls:Response xsi:type="xls:ResponseType" requestID="123456789" version="1.1" numberOfResponses="1">
+        <xls:GeocodeResponse xsi:type="xls:GeocodeResponseType">
+            <xls:GeocodeResponseList numberOfGeocodedAddresses="4">
+                <xls:GeocodedAddress>
+                    <gml:Point>
+                        <gml:pos srsName="EPSG:4326">8.4044366 49.0140679</gml:pos>
+                    </gml:Point>
+                    <xls:Address countryCode="de">
+                        <xls:StreetAddress>
+                            <xls:Street/>
+                        </xls:StreetAddress>
+                        <xls:Place type="CountrySubdivision">Baden-Württemberg</xls:Place>
+                        <xls:Place type="Municipality">Karlsruhe</xls:Place>
+                        <xls:PostalCode>76131</xls:PostalCode>
+                    </xls:Address>
+                    <xls:GeocodeMatchCode accuracy="1.0"/>
+                </xls:GeocodedAddress>
+                <xls:GeocodedAddress>
+                    <gml:Point>
+                        <gml:pos srsName="EPSG:4326">7.2931383 51.1526207</gml:pos>
+                    </gml:Point>
+                    <xls:Address countryCode="de">
+                        <xls:StreetAddress>
+                            <xls:Street/>
+                        </xls:StreetAddress>
+                        <xls:Place type="CountrySubdivision">Nordrhein-Westfalen</xls:Place>
+                        <xls:Place type="Municipality">Karlsruhe</xls:Place>
+                        <xls:PostalCode>42897</xls:PostalCode>
+                    </xls:Address>
+                    <xls:GeocodeMatchCode accuracy="1.0"/>
+                </xls:GeocodedAddress>
+                <xls:GeocodedAddress>
+                    <gml:Point>
+                        <gml:pos srsName="EPSG:4326">8.39390170659984 49.0020971544562</gml:pos>
+                    </gml:Point>
+                    <xls:Address countryCode="de">
+                        <xls:StreetAddress>
+                            <xls:Building xsi:type="xls:BuildingLocatorType" number="68"/>
+                            <xls:Street officialName="Karlstraße"/>
+                        </xls:StreetAddress>
+                        <xls:Place type="CountrySubdivision">Baden-Württemberg</xls:Place>
+                        <xls:Place type="Municipality">Karlsruhe</xls:Place>
+                        <xls:PostalCode>76137</xls:PostalCode>
+                    </xls:Address>
+                    <xls:GeocodeMatchCode accuracy="0.53"/>
+                </xls:GeocodedAddress>
+                <xls:GeocodedAddress>
+                    <gml:Point>
+                        <gml:pos srsName="EPSG:4326">8.39390170659984 49.0020971544562</gml:pos>
+                    </gml:Point>
+                    <xls:Address countryCode="de">
+                        <xls:StreetAddress>
+                            <xls:Street officialName="Karlstraße"/>
+                        </xls:StreetAddress>
+                        <xls:Place type="CountrySubdivision">Baden-Württemberg</xls:Place>
+                        <xls:Place type="Municipality">Karlsruhe</xls:Place>
+                        <xls:PostalCode>76137</xls:PostalCode>
+                    </xls:Address>
+                    <xls:GeocodeMatchCode accuracy="0.53"/>
+                </xls:GeocodedAddress>
+                </xls:GeocodeResponseList>
+            </xls:GeocodeResponse>
+        </xls:Response>
+</xls:XLS>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    
+	<changeSet author="franke@synyx.de" id="create-static-address">
+		<comment>Create table for static address list</comment>
+
+        <createTable tableName="StaticAddress">
+
+			<column autoIncrement="true" name="id" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" />
+			</column>
+
+			<column name="country" type="varchar(5)" />
+
+            <column name="postalcode" type="varchar(10)" />
+
+            <column name="city" type="varchar(255)" />
+            
+            <column name="cityNormalized" type="varchar(255)" />
+
+            <column name="suburb" type="varchar(255)" />
+
+            <column name="suburbNormalized" type="varchar(255)" />
+
+            <column name="latitude" type="DECIMAL(15,10)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="longitude" type="DECIMAL(15,10)">
+                <constraints nullable="false" />
+            </column>
+
+		</createTable>
+
+        <createIndex indexName="idx_staticaddress_1" tableName="StaticAddress" unique="false">
+            <column name="postalcode" />
+        </createIndex>
+        <createIndex indexName="idx_staticaddress_2" tableName="StaticAddress" unique="false">
+            <column name="country" />
+        </createIndex>
+        <createIndex indexName="idx_staticaddress_3" tableName="StaticAddress" unique="false">
+            <column name="cityNormalized" />
+        </createIndex>
+        <createIndex indexName="idx_staticaddress_4" tableName="StaticAddress" unique="false">
+            <column name="suburbNormalized" />
+        </createIndex>
+        <createIndex indexName="staticAddressLatitudeLongitudeUnique" tableName="StaticAddress" unique="true">
+            <column name="latitude" />
+            <column name="longitude" />
+        </createIndex>
+
+	</changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    
+    <changeSet author="schneider@synyx.de" id="addUniqueConstraintConnections">
+        <comment>Add unique constraint to connections</comment>
+
+        <addUniqueConstraint tableName="Connection" columnNames="seaport_id,terminal_id,routeType" constraintName="Unique_seaport_terminal_routeType"/>
+        
+    </changeSet>
+
+</databaseChangeLog>

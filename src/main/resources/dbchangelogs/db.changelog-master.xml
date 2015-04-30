@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <include file="dbchangelogs/db.changelog-0.2-create-static-address.xml"/>
+
+    <include file="dbchangelogs/db.changelog-0.2-create-seaport.xml"/>
+
+    <include file="dbchangelogs/db.changelog-0.2-create-terminal.xml"/>
+
+    <include file="dbchangelogs/db.changelog-0.2-create-connection.xml"/>
+
+    <include file="dbchangelogs/db.changelog-0.2-add-notnull-static-address.xml"/>
+
+    <include file="dbchangelogs/db.changelog-0.3-Unique_constraint_main_run_connections.xml"/>
+
+    <include file="dbchangelogs/db.changelog-0.3-add-column-region-to-terminal.xml"/>
+
+    <include file="dbchangelogs/db.changelog-0.6-add-column-uniqueId-to-terminal-seaport.xml"/>
+
+    <include file="dbchangelogs/db.changelog-0.6-add-uniquie-contraints-to-terminal-seaport.xml"/>
+
+    <include file="dbchangelogs/db.changelog-0.7-add-column-uniqueId-to-staticaddress.xml"/>
+
+    <include file="dbchangelogs/db.changelog-0.7-create-uniqueIdSequence.xml"/>
+
+    <include file="dbchangelogs/db.changelog-0.9-fix-terminal-idx.xml"/>
+
+    <include file="dbchangelogs/db.changelog-0.10-add-not-null-constraint-to-terminal-region.xml"/>
+
+    <include file="dbchangelogs/db.changelog-0.11-add-column-hashkey-to-staticaddress.xml"/>
+
+    <include file="dbchangelogs/db.changelog-1.6-add-route-data-revisions.xml"/>
+
+</databaseChangeLog>

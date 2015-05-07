@@ -28,15 +28,15 @@ public class RouteDataRevisionDto {
 
     @BigDecimalValidate(maxFractionalPlaces = MAX_FRAC_2, maxDecimalPlaces = MAX_DEC_15)
     @NotNull
-    private BigDecimal truckDistanceOneWay;
+    private BigDecimal truckDistanceOneWayInMeter;
 
     @NotNull
     @BigDecimalValidate(maxFractionalPlaces = MAX_FRAC_2, maxDecimalPlaces = MAX_DEC_15)
-    private BigDecimal tollDistanceOneWay;
+    private BigDecimal tollDistanceOneWayInMeter;
 
     @NotNull
     @BigDecimalValidate(maxFractionalPlaces = MAX_FRAC_2, maxDecimalPlaces = MAX_DEC_15)
-    private BigDecimal airlineDistance;
+    private BigDecimal airlineDistanceInMeter;
 
     @NotNull
     private BigDecimal latitude;
@@ -46,18 +46,18 @@ public class RouteDataRevisionDto {
 
     @NotNull
     @BigDecimalValidate(minValue = MIN_0, maxFractionalPlaces = MAX_FRAC_2, maxDecimalPlaces = MAX_DEC_15)
-    private BigDecimal radius;
+    private BigDecimal radiusInMeter;
 
     public RouteDataRevisionDto(RouteDataRevision routeDataRevision) {
 
         id = routeDataRevision.getId();
         terminal = routeDataRevision.getTerminal();
-        truckDistanceOneWay = routeDataRevision.getTruckDistanceOneWay();
-        tollDistanceOneWay = routeDataRevision.getTollDistanceOneWay();
-        airlineDistance = routeDataRevision.getAirlineDistance();
+        truckDistanceOneWayInMeter = routeDataRevision.getTruckDistanceOneWayInMeter();
+        tollDistanceOneWayInMeter = routeDataRevision.getTollDistanceOneWayInMeter();
+        airlineDistanceInMeter = routeDataRevision.getAirlineDistanceInMeter();
         latitude = routeDataRevision.getLatitude();
         longitude = routeDataRevision.getLongitude();
-        radius = routeDataRevision.getRadius();
+        radiusInMeter = routeDataRevision.getRadiusInMeter();
     }
 
 
@@ -88,39 +88,39 @@ public class RouteDataRevisionDto {
     }
 
 
-    public BigDecimal getTruckDistanceOneWay() {
+    public BigDecimal getTruckDistanceOneWayInMeter() {
 
-        return truckDistanceOneWay;
+        return truckDistanceOneWayInMeter;
     }
 
 
-    public void setTruckDistanceOneWay(BigDecimal truckDistanceOneWay) {
+    public void setTruckDistanceOneWayInMeter(BigDecimal truckDistanceOneWayInMeter) {
 
-        this.truckDistanceOneWay = truckDistanceOneWay;
+        this.truckDistanceOneWayInMeter = truckDistanceOneWayInMeter;
     }
 
 
-    public BigDecimal getTollDistanceOneWay() {
+    public BigDecimal getTollDistanceOneWayInMeter() {
 
-        return tollDistanceOneWay;
+        return tollDistanceOneWayInMeter;
     }
 
 
-    public void setTollDistanceOneWay(BigDecimal tollDistanceOneWay) {
+    public void setTollDistanceOneWayInMeter(BigDecimal tollDistanceOneWayInMeter) {
 
-        this.tollDistanceOneWay = tollDistanceOneWay;
+        this.tollDistanceOneWayInMeter = tollDistanceOneWayInMeter;
     }
 
 
-    public BigDecimal getAirlineDistance() {
+    public BigDecimal getAirlineDistanceInMeter() {
 
-        return airlineDistance;
+        return airlineDistanceInMeter;
     }
 
 
-    public void setAirlineDistance(BigDecimal airlineDistance) {
+    public void setAirlineDistanceInMeter(BigDecimal airlineDistanceInMeter) {
 
-        this.airlineDistance = airlineDistance;
+        this.airlineDistanceInMeter = airlineDistanceInMeter;
     }
 
 
@@ -148,21 +148,21 @@ public class RouteDataRevisionDto {
     }
 
 
-    public BigDecimal getRadius() {
+    public BigDecimal getRadiusInMeter() {
 
-        return radius;
+        return radiusInMeter;
     }
 
 
-    public void setRadius(BigDecimal radius) {
+    public void setRadiusInMeter(BigDecimal radiusInMeter) {
 
-        this.radius = radius;
+        this.radiusInMeter = radiusInMeter;
     }
 
 
     public RouteDataRevision toEntity() {
 
-        return new RouteDataRevision(id, terminal, truckDistanceOneWay, tollDistanceOneWay, airlineDistance, latitude,
-                longitude, radius);
+        return new RouteDataRevision(id, terminal, truckDistanceOneWayInMeter, tollDistanceOneWayInMeter,
+                airlineDistanceInMeter, latitude, longitude, radiusInMeter);
     }
 }

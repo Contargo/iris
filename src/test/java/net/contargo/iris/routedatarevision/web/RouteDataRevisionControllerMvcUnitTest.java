@@ -136,8 +136,9 @@ public class RouteDataRevisionControllerMvcUnitTest {
                 eq(BigDecimal.ONE))).thenReturn(false);
 
         ResultActions resultActions = perform(post(
-                    "/routerevisions?terminal.id=10&latitude=10&longitude=1&truckDistanceOneWay=1&tollDistanceOneWay=2&airlineDistance=3&radius=4")
-                .contentType(APPLICATION_JSON));
+                    "/routerevisions?terminal.id=10&latitude=10&longitude=1&truckDistanceOneWayInMeter=1&"
+                    + "tollDistanceOneWayInMeter=2&airlineDistanceInMeter=3&radiusInMeter=4").contentType(
+                    APPLICATION_JSON));
 
         resultActions.andExpect(status().is3xxRedirection());
     }
@@ -158,10 +159,13 @@ public class RouteDataRevisionControllerMvcUnitTest {
         resultActions.andExpect(model().errorCount(7));
         resultActions.andExpect(model().attributeHasFieldErrorCode("routeRevision", "latitude", "NotNull"));
         resultActions.andExpect(model().attributeHasFieldErrorCode("routeRevision", "longitude", "NotNull"));
-        resultActions.andExpect(model().attributeHasFieldErrorCode("routeRevision", "truckDistanceOneWay", "NotNull"));
-        resultActions.andExpect(model().attributeHasFieldErrorCode("routeRevision", "tollDistanceOneWay", "NotNull"));
-        resultActions.andExpect(model().attributeHasFieldErrorCode("routeRevision", "airlineDistance", "NotNull"));
-        resultActions.andExpect(model().attributeHasFieldErrorCode("routeRevision", "radius", "NotNull"));
+        resultActions.andExpect(model().attributeHasFieldErrorCode("routeRevision", "truckDistanceOneWayInMeter",
+                "NotNull"));
+        resultActions.andExpect(model().attributeHasFieldErrorCode("routeRevision", "tollDistanceOneWayInMeter",
+                "NotNull"));
+        resultActions.andExpect(model().attributeHasFieldErrorCode("routeRevision", "airlineDistanceInMeter",
+                "NotNull"));
+        resultActions.andExpect(model().attributeHasFieldErrorCode("routeRevision", "radiusInMeter", "NotNull"));
     }
 
 
@@ -172,8 +176,9 @@ public class RouteDataRevisionControllerMvcUnitTest {
             routeDataRevision);
 
         ResultActions resultActions = perform(put(
-                    "/routerevisions/7?id=7&terminal.id=10&latitude=10&longitude=1&truckDistanceOneWay=1&tollDistanceOneWay=2&airlineDistance=3&radius=4")
-                .contentType(APPLICATION_JSON));
+                    "/routerevisions/7?id=7&terminal.id=10&latitude=10&longitude=1&truckDistanceOneWayInMeter=1&"
+                    + "tollDistanceOneWayInMeter=2&airlineDistanceInMeter=3&radiusInMeter=4").contentType(
+                    APPLICATION_JSON));
 
         resultActions.andExpect(status().is3xxRedirection());
     }

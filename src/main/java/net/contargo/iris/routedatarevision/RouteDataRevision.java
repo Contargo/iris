@@ -6,6 +6,7 @@ import org.hibernate.validator.constraints.Range;
 
 import java.math.BigDecimal;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -34,11 +35,14 @@ public class RouteDataRevision {
     @ManyToOne
     private Terminal terminal;
 
-    private BigDecimal truckDistanceOneWay;
+    @Column(name = "truckDistanceOneWay")
+    private BigDecimal truckDistanceOneWayInMeter;
 
-    private BigDecimal tollDistanceOneWay;
+    @Column(name = "tollDistanceOneWay")
+    private BigDecimal tollDistanceOneWayInMeter;
 
-    private BigDecimal airlineDistance;
+    @Column(name = "airlineDistance")
+    private BigDecimal airlineDistanceInMeter;
 
     @Range(min = MIN_VALUE_COORD, max = MAX_VALUE_COORD)
     private BigDecimal latitude;
@@ -46,23 +50,25 @@ public class RouteDataRevision {
     @Range(min = MIN_VALUE_COORD, max = MAX_VALUE_COORD)
     private BigDecimal longitude;
 
-    private BigDecimal radius;
+    @Column(name = "radius")
+    private BigDecimal radiusInMeter;
 
     public RouteDataRevision() {
     }
 
 
-    public RouteDataRevision(Long id, Terminal terminal, BigDecimal truckDistanceOneWay, BigDecimal tollDistanceOneWay,
-        BigDecimal airlineDistance, BigDecimal latitude, BigDecimal longitude, BigDecimal radius) {
+    public RouteDataRevision(Long id, Terminal terminal, BigDecimal truckDistanceOneWayInMeter,
+        BigDecimal tollDistanceOneWayInMeter, BigDecimal airlineDistanceInMeter, BigDecimal latitude,
+        BigDecimal longitude, BigDecimal radiusInMeter) {
 
         this.id = id;
         this.terminal = terminal;
-        this.truckDistanceOneWay = truckDistanceOneWay;
-        this.tollDistanceOneWay = tollDistanceOneWay;
-        this.airlineDistance = airlineDistance;
+        this.truckDistanceOneWayInMeter = truckDistanceOneWayInMeter;
+        this.tollDistanceOneWayInMeter = tollDistanceOneWayInMeter;
+        this.airlineDistanceInMeter = airlineDistanceInMeter;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.radius = radius;
+        this.radiusInMeter = radiusInMeter;
     }
 
     public Long getId() {
@@ -89,39 +95,39 @@ public class RouteDataRevision {
     }
 
 
-    public BigDecimal getTruckDistanceOneWay() {
+    public BigDecimal getTruckDistanceOneWayInMeter() {
 
-        return truckDistanceOneWay;
+        return truckDistanceOneWayInMeter;
     }
 
 
-    public void setTruckDistanceOneWay(BigDecimal truckDistanceOneWay) {
+    public void setTruckDistanceOneWayInMeter(BigDecimal truckDistanceOneWayInMeter) {
 
-        this.truckDistanceOneWay = truckDistanceOneWay;
+        this.truckDistanceOneWayInMeter = truckDistanceOneWayInMeter;
     }
 
 
-    public BigDecimal getTollDistanceOneWay() {
+    public BigDecimal getTollDistanceOneWayInMeter() {
 
-        return tollDistanceOneWay;
+        return tollDistanceOneWayInMeter;
     }
 
 
-    public void setTollDistanceOneWay(BigDecimal tollDistanceOneWay) {
+    public void setTollDistanceOneWayInMeter(BigDecimal tollDistanceOneWayInMeter) {
 
-        this.tollDistanceOneWay = tollDistanceOneWay;
+        this.tollDistanceOneWayInMeter = tollDistanceOneWayInMeter;
     }
 
 
-    public BigDecimal getAirlineDistance() {
+    public BigDecimal getAirlineDistanceInMeter() {
 
-        return airlineDistance;
+        return airlineDistanceInMeter;
     }
 
 
-    public void setAirlineDistance(BigDecimal airlineDistance) {
+    public void setAirlineDistanceInMeter(BigDecimal airlineDistanceInMeter) {
 
-        this.airlineDistance = airlineDistance;
+        this.airlineDistanceInMeter = airlineDistanceInMeter;
     }
 
 
@@ -149,14 +155,14 @@ public class RouteDataRevision {
     }
 
 
-    public BigDecimal getRadius() {
+    public BigDecimal getRadiusInMeter() {
 
-        return radius;
+        return radiusInMeter;
     }
 
 
-    public void setRadius(BigDecimal radius) {
+    public void setRadiusInMeter(BigDecimal radiusInMeter) {
 
-        this.radius = radius;
+        this.radiusInMeter = radiusInMeter;
     }
 }

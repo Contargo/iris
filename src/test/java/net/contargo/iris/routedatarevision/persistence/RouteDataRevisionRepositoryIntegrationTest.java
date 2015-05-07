@@ -79,9 +79,9 @@ public class RouteDataRevisionRepositoryIntegrationTest {
 
         RouteDataRevision nearestRouteDataRevision = sut.findNearest(terminal, valueOf(49.10), valueOf(8.91));
 
-        assertThat(nearestRouteDataRevision.getAirlineDistance(), is(ZERO));
-        assertThat(nearestRouteDataRevision.getTollDistanceOneWay(), is(ZERO));
-        assertThat(nearestRouteDataRevision.getTruckDistanceOneWay(), is(ZERO));
+        assertThat(nearestRouteDataRevision.getAirlineDistanceInMeter(), is(ZERO));
+        assertThat(nearestRouteDataRevision.getTollDistanceOneWayInMeter(), is(ZERO));
+        assertThat(nearestRouteDataRevision.getTruckDistanceOneWayInMeter(), is(ZERO));
         assertThat(nearestRouteDataRevision.getLatitude(), is(valueOf(49.1001)));
         assertThat(nearestRouteDataRevision.getLongitude(), is(valueOf(8.9101)));
     }
@@ -129,12 +129,12 @@ public class RouteDataRevisionRepositoryIntegrationTest {
         BigDecimal lat, BigDecimal lng, BigDecimal r) {
 
         RouteDataRevision routeDataRevision = new RouteDataRevision();
-        routeDataRevision.setTollDistanceOneWay(tdow);
-        routeDataRevision.setTruckDistanceOneWay(truckdow);
-        routeDataRevision.setAirlineDistance(ad);
+        routeDataRevision.setTollDistanceOneWayInMeter(tdow);
+        routeDataRevision.setTruckDistanceOneWayInMeter(truckdow);
+        routeDataRevision.setAirlineDistanceInMeter(ad);
         routeDataRevision.setLatitude(lat);
         routeDataRevision.setLongitude(lng);
-        routeDataRevision.setRadius(r);
+        routeDataRevision.setRadiusInMeter(r);
         routeDataRevision.setTerminal(t);
 
         return routeDataRevision;

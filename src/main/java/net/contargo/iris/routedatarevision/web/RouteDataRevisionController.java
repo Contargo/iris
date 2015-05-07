@@ -100,7 +100,7 @@ public class RouteDataRevisionController extends AbstractController {
         RouteDataRevisionDto routeDataRevisionDto, BindingResult result, RedirectAttributes redirectAttributes,
         Model model) {
 
-        return createOrUpdate(routeDataRevisionDto, redirectAttributes, result, model, SAVE_SUCCESS_MESSAGE);
+        return save(routeDataRevisionDto, redirectAttributes, result, model, SAVE_SUCCESS_MESSAGE);
     }
 
 
@@ -110,11 +110,11 @@ public class RouteDataRevisionController extends AbstractController {
         RouteDataRevisionDto routeDataRevisionDto, BindingResult result, RedirectAttributes redirectAttributes,
         Model model) {
 
-        return createOrUpdate(routeDataRevisionDto, redirectAttributes, result, model, UPDATE_SUCCESS_MESSAGE);
+        return save(routeDataRevisionDto, redirectAttributes, result, model, UPDATE_SUCCESS_MESSAGE);
     }
 
 
-    private String createOrUpdate(RouteDataRevisionDto routeDataRevisionDto, RedirectAttributes redirectAttributes,
+    private String save(RouteDataRevisionDto routeDataRevisionDto, RedirectAttributes redirectAttributes,
         BindingResult result, Model model, Message successMessage) {
 
         if (routeDataRevisionDto.getId() == null

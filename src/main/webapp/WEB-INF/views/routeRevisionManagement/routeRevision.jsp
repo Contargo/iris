@@ -93,17 +93,17 @@
                     <iris:inputField property="longitude" messageKey="geolocation.longitude"
                                      title="geolocation.longitude.title"/>
 
-                    <iris:inputField property="truckDistanceOneWay"
-                                     messageKey="routerevision.truckdistanceoneway"/>
+                    <iris:inputField property="truckDistanceOneWayInMeter"
+                                     messageKey="routerevision.truckdistanceoneway" unitMessageKey="unit.meter"/>
 
-                    <iris:inputField property="tollDistanceOneWay"
-                                     messageKey="routerevision.tolldistanceoneway"/>
+                    <iris:inputField property="tollDistanceOneWayInMeter"
+                                     messageKey="routerevision.tolldistanceoneway" unitMessageKey="unit.meter"/>
 
-                    <iris:inputField property="airlineDistance"
-                                     messageKey="routerevision.airlinedistance"/>
+                    <iris:inputField property="airlineDistanceInMeter"
+                                     messageKey="routerevision.airlinedistance" unitMessageKey="unit.meter"/>
 
-                    <iris:inputField property="radius"
-                                     messageKey="routerevision.radius"/>
+                    <iris:inputField property="radiusInMeter"
+                                     messageKey="routerevision.radius" unitMessageKey="unit.meter"/>
 
                     <div class="form-actions">
                         <input id="submit-button" class="btn btn-primary" type="submit"

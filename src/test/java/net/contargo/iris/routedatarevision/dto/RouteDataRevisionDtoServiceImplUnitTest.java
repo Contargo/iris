@@ -34,7 +34,7 @@ import static java.util.Arrays.asList;
  * @author  David Schilling - schilling@synyx.de
  */
 @RunWith(MockitoJUnitRunner.class)
-public class RouteDataRevisionDtoServiceImplTest {
+public class RouteDataRevisionDtoServiceImplUnitTest {
 
     private RouteDataRevisionDtoServiceImpl sut;
 

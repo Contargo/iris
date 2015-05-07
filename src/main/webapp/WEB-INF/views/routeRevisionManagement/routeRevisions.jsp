@@ -57,13 +57,13 @@
                     <display:column title="${label}" property="terminal.name" sortable="true"/>
 
                     <spring:message code="routerevision.truckdistanceoneway" var="label"/>
-                    <display:column title="${label}" property="truckDistanceOneWay" sortable="true"/>
+                    <display:column title="${label}" property="truckDistanceOneWayInMeter" sortable="true"/>
 
                     <spring:message code="routerevision.tolldistanceoneway" var="label"/>
-                    <display:column title="${label}" property="tollDistanceOneWay" sortable="true"/>
+                    <display:column title="${label}" property="tollDistanceOneWayInMeter" sortable="true"/>
 
                     <spring:message code="routerevision.airlinedistance" var="label"/>
-                    <display:column title="${label}" property="airlineDistance" sortable="true"/>
+                    <display:column title="${label}" property="airlineDistanceInMeter" sortable="true"/>
 
                     <spring:message code="routerevision.latitude" var="label"/>
                     <display:column title="${label}" property="latitude" sortable="true"/>
@@ -72,7 +72,7 @@
                     <display:column title="${label}" property="longitude" sortable="true"/>
 
                     <spring:message code="routerevision.radius" var="label"/>
-                    <display:column title="${label}" property="radius" sortable="true"/>
+                    <display:column title="${label}" property="radiusInMeter" sortable="true"/>
 
                     <display:column class="table-buttons">
 

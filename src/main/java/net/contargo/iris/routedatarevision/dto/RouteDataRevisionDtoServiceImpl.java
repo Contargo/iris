@@ -3,9 +3,11 @@ package net.contargo.iris.routedatarevision.dto;
 import net.contargo.iris.routedatarevision.RouteDataRevision;
 import net.contargo.iris.routedatarevision.service.RouteDataRevisionService;
 import net.contargo.iris.terminal.Terminal;
-import net.contargo.iris.terminal.dto.TerminalDto;
+import net.contargo.iris.terminal.service.TerminalService;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,9 +18,12 @@ import java.util.stream.Collectors;
 public class RouteDataRevisionDtoServiceImpl implements RouteDataRevisionDtoService {
 
     private final RouteDataRevisionService routeDataRevisionService;
+    private final TerminalService terminalService;
 
-    public RouteDataRevisionDtoServiceImpl(RouteDataRevisionService routeDataRevisionService) {
+    public RouteDataRevisionDtoServiceImpl(TerminalService terminalService,
+        RouteDataRevisionService routeDataRevisionService) {
 
+        this.terminalService = terminalService;
         this.routeDataRevisionService = routeDataRevisionService;
     }
 
@@ -35,28 +40,33 @@ public class RouteDataRevisionDtoServiceImpl implements RouteDataRevisionDtoServ
         return convertToDtoList(routeDataRevisionService.getRouteDataRevisions(terminalId));
     }
 
+
     @Override
     public RouteDataRevisionDto getRouteDataRevision(Long id) {
 
         return new RouteDataRevisionDto(routeDataRevisionService.getRouteDataRevision(id));
     }
 
-    @Override
-    public RouteDataRevisionDto save(RouteDataRevisionDto routeDataRevision) {
-
-        return new RouteDataRevisionDto(routeDataRevisionService.save(routeDataRevision.toEntity()));
-    }
 
     @Override
-    public boolean existsEntry(Terminal terminal, BigDecimal latitude, BigDecimal longitude) {
+    public RouteDataRevisionDto save(RouteDataRevisionDto dto) {
 
-        return routeDataRevisionService.existsEntry(terminal, latitude, longitude);
+        BigInteger terminalUniqueId = new BigInteger(dto.getTerminal().getUniqueId());
+        Terminal terminal = terminalService.getByUniqueId(terminalUniqueId);
+
+        return new RouteDataRevisionDto(routeDataRevisionService.save(dto.toEntity(terminal.getId())));
     }
+
+
+    @Override
+    public boolean existsEntry(String terminalUniqueId, BigDecimal latitude, BigDecimal longitude) {
+
+        return routeDataRevisionService.existsEntry(new BigInteger(terminalUniqueId), latitude, longitude);
+    }
+
 
     private List<RouteDataRevisionDto> convertToDtoList(List<RouteDataRevision> entities) {
 
-        return entities.stream().
-                map(RouteDataRevisionDto::new).
-                collect(Collectors.toList());
+        return entities.stream().map((entity) -> new RouteDataRevisionDto(entity)).collect(Collectors.toList());
     }
 }

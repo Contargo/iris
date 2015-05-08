@@ -5,6 +5,7 @@ import net.contargo.iris.routedatarevision.RouteDataRevision;
 import net.contargo.iris.terminal.Terminal;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import java.util.List;
 
@@ -85,5 +86,5 @@ public interface RouteDataRevisionService {
      *
      * @return  true if there already exists an entry with the passed values, otherwise false.
      */
-    boolean existsEntry(Terminal terminal, BigDecimal latitude, BigDecimal longitude);
+    boolean existsEntry(BigInteger terminalUniqueId, BigDecimal latitude, BigDecimal longitude);
 }

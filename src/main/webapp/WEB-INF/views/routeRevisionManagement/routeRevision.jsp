@@ -53,22 +53,22 @@
                 <fieldset>
 
                     <div class="control-group">
-                        <form:label path="terminal.id"
+                        <form:label path="terminal.uniqueId"
                                     cssClass="control-label"
                                     cssErrorClass="control-label error">
                             <spring:message code="routerevision.terminal.name"/>
                         </form:label>
 
                         <div class="controls">
-                            <form:select path="terminal.id" cssErrorClass="error">
+                            <form:select path="terminal.uniqueId" cssErrorClass="error">
                                 <c:forEach var="terminal" items="${terminals}">
                                     <spring:message
                                             code="mainrunconnection.terminal.isenabled.${terminal.enabled}"
                                             var="isenabled"/>
-                                    <form:option value="${terminal.id}" label="${terminal.name}${isenabled}"/>
+                                    <form:option value="${terminal.uniqueId}" label="${terminal.name}${isenabled}"/>
                                 </c:forEach>
                             </form:select>
-                            <form:errors path="terminal.id" cssClass="help-inline error"/>
+                            <form:errors path="terminal.uniqueId" cssClass="help-inline error"/>
                         </div>
                     </div>
 

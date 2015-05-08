@@ -4,7 +4,7 @@ import net.contargo.iris.GeoLocation;
 import net.contargo.iris.routedatarevision.RouteDataRevision;
 import net.contargo.iris.routedatarevision.service.RouteDataRevisionService;
 import net.contargo.iris.terminal.Terminal;
-import net.contargo.iris.terminal.dto.TerminalDto;
+import net.contargo.iris.terminal.service.TerminalService;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -17,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import java.util.List;
 
@@ -40,29 +41,27 @@ public class RouteDataRevisionDtoServiceImplUnitTest {
 
     @Mock
     private RouteDataRevisionService routeDataRevisionServiceMock;
+    @Mock
+    private TerminalService terminalServiceMock;
     private List<RouteDataRevision> routeDataRevisions;
-    private List<RouteDataRevisionDto> routeDataRevisionDtos;
     private Terminal terminal;
-    private TerminalDto terminalDto;
     private RouteDataRevision routeDataRevision;
     private RouteDataRevisionDto routeDataRevisionDto;
 
     @Before
     public void setUp() {
 
-        sut = new RouteDataRevisionDtoServiceImpl(routeDataRevisionServiceMock);
+        sut = new RouteDataRevisionDtoServiceImpl(terminalServiceMock, routeDataRevisionServiceMock);
 
-        routeDataRevision = new RouteDataRevision(5L, null, BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE,
+        terminal = new Terminal(new GeoLocation(BigDecimal.TEN, BigDecimal.TEN));
+        terminal.setUniqueId(BigInteger.ONE);
+
+        routeDataRevision = new RouteDataRevision(5L, terminal, BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE,
                 BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE);
 
         routeDataRevisions = asList(routeDataRevision);
 
         routeDataRevisionDto = new RouteDataRevisionDto(routeDataRevision);
-
-        routeDataRevisionDtos = asList(routeDataRevisionDto);
-
-        terminal = new Terminal(new GeoLocation(BigDecimal.TEN, BigDecimal.TEN));
-        terminalDto = new TerminalDto(terminal);
     }
 
 
@@ -104,6 +103,7 @@ public class RouteDataRevisionDtoServiceImplUnitTest {
         when(routeDataRevisionServiceMock.save(
                 Matchers.argThat(org.hamcrest.Matchers.<RouteDataRevision>hasProperty("id", is(5L))))).thenReturn(
             routeDataRevision);
+        when(terminalServiceMock.getByUniqueId(BigInteger.ONE)).thenReturn(terminal);
 
         RouteDataRevisionDto result = sut.save(routeDataRevisionDto);
         assertThat(result.getId(), is(5L));
@@ -113,9 +113,9 @@ public class RouteDataRevisionDtoServiceImplUnitTest {
     @Test
     public void existsEntry() {
 
-        when(routeDataRevisionServiceMock.existsEntry(terminal, BigDecimal.TEN, BigDecimal.ONE)).thenReturn(true);
+        when(routeDataRevisionServiceMock.existsEntry(BigInteger.ONE, BigDecimal.TEN, BigDecimal.ONE)).thenReturn(true);
 
-        assertThat(sut.existsEntry(terminal, BigDecimal.TEN, BigDecimal.ONE), is(true));
-        verify(routeDataRevisionServiceMock).existsEntry(terminal, BigDecimal.TEN, BigDecimal.ONE);
+        assertThat(sut.existsEntry("1", BigDecimal.TEN, BigDecimal.ONE), is(true));
+        verify(routeDataRevisionServiceMock).existsEntry(BigInteger.ONE, BigDecimal.TEN, BigDecimal.ONE);
     }
 }

@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import java.util.List;
 import java.util.Optional;
@@ -116,10 +117,10 @@ public class RouteDataRevisionServiceImplUnitTest {
     @Test
     public void existsEntry() {
 
-        when(routeDataRevisionRepositoryMock.findByTerminalAndLatitudeAndLongitude(terminal, BigDecimal.TEN,
+        when(routeDataRevisionRepositoryMock.findByTerminalAndLatitudeAndLongitude(BigInteger.ONE, BigDecimal.TEN,
                 BigDecimal.ONE)).thenReturn(Optional.of(new RouteDataRevision()));
 
-        boolean existsEntry = sut.existsEntry(terminal, BigDecimal.TEN, BigDecimal.ONE);
+        boolean existsEntry = sut.existsEntry(BigInteger.ONE, BigDecimal.TEN, BigDecimal.ONE);
         assertThat(existsEntry, is(true));
     }
 
@@ -127,10 +128,10 @@ public class RouteDataRevisionServiceImplUnitTest {
     @Test
     public void existsEntryNotFound() {
 
-        when(routeDataRevisionRepositoryMock.findByTerminalAndLatitudeAndLongitude(terminal, BigDecimal.TEN,
+        when(routeDataRevisionRepositoryMock.findByTerminalAndLatitudeAndLongitude(BigInteger.ONE, BigDecimal.TEN,
                 BigDecimal.ONE)).thenReturn(Optional.<RouteDataRevision>empty());
 
-        boolean existsEntry = sut.existsEntry(terminal, BigDecimal.TEN, BigDecimal.ONE);
+        boolean existsEntry = sut.existsEntry(BigInteger.ONE, BigDecimal.TEN, BigDecimal.ONE);
         assertThat(existsEntry, is(false));
     }
 }

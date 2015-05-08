@@ -118,9 +118,9 @@ public class RouteDataRevisionController extends AbstractController {
         BindingResult result, Model model, Message successMessage) {
 
         if (routeDataRevisionDto.getId() == null
-                && routeDataRevisionDtoService.existsEntry(routeDataRevisionDto.getTerminal(),
+                && routeDataRevisionDtoService.existsEntry(routeDataRevisionDto.getTerminal().getUniqueId(),
                     routeDataRevisionDto.getLatitude(), routeDataRevisionDto.getLongitude())) {
-            result.rejectValue("terminal.id", "routerevision.exists");
+            result.rejectValue("terminal.uniqueId", "routerevision.exists");
             result.rejectValue("longitude", "routerevision.exists");
             result.rejectValue("latitude", "routerevision.exists");
         }

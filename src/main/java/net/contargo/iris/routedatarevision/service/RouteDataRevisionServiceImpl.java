@@ -9,6 +9,7 @@ import net.contargo.iris.terminal.Terminal;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import java.util.List;
 
@@ -65,9 +66,9 @@ public class RouteDataRevisionServiceImpl implements RouteDataRevisionService {
 
 
     @Override
-    public boolean existsEntry(Terminal terminal, BigDecimal latitude, BigDecimal longitude) {
+    public boolean existsEntry(BigInteger terminalUniqueId, BigDecimal latitude, BigDecimal longitude) {
 
-        return routeDataRevisionRepository.findByTerminalAndLatitudeAndLongitude(terminal, latitude, longitude)
+        return routeDataRevisionRepository.findByTerminalAndLatitudeAndLongitude(terminalUniqueId, latitude, longitude)
             .isPresent();
     }
 }

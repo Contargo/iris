@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import java.util.List;
 import java.util.Optional;
@@ -44,6 +45,7 @@ public interface RouteDataRevisionRepository extends JpaRepository<RouteDataRevi
     List<RouteDataRevision> findByTerminalId(Long id);
 
 
-    Optional<RouteDataRevision> findByTerminalAndLatitudeAndLongitude(Terminal terminal, BigDecimal latitude,
+    @Query("SELECT r FROM RouteDataRevision r WHERE r.terminal.uniqueId = ?1 and r.latitude = ?2 and longitude = ?3")
+    Optional<RouteDataRevision> findByTerminalAndLatitudeAndLongitude(BigInteger terminalUniqueId, BigDecimal latitude,
         BigDecimal longitude);
 }

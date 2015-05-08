@@ -3,6 +3,7 @@ package net.contargo.iris.routedatarevision.web;
 import net.contargo.iris.routedatarevision.dto.RouteDataRevisionDto;
 import net.contargo.iris.routedatarevision.dto.RouteDataRevisionDtoService;
 import net.contargo.iris.terminal.Terminal;
+import net.contargo.iris.terminal.dto.TerminalDto;
 import net.contargo.iris.terminal.service.TerminalService;
 
 import org.junit.Before;
@@ -10,7 +11,6 @@ import org.junit.Test;
 
 import org.junit.runner.RunWith;
 
-import org.mockito.Matchers;
 import org.mockito.Mockito;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +31,6 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.isA;
 import static org.hamcrest.Matchers.nullValue;
 
-import static org.mockito.Matchers.eq;
-
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -49,7 +47,7 @@ import static java.util.Arrays.asList;
 
 
 /**
- * @author  David Schilling -schilling@synyx.de
+ * @author  David Schilling - schilling@synyx.de
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:web-api-context.xml" })
@@ -72,6 +70,10 @@ public class RouteDataRevisionControllerMvcUnitTest {
 
         routeDataRevision = new RouteDataRevisionDto();
         routeDataRevisions = asList(routeDataRevision);
+
+        TerminalDto terminalDto = new TerminalDto();
+        terminalDto.setUniqueId("foo");
+        routeDataRevision.setTerminal(terminalDto);
 
         Terminal terminal = new Terminal();
         terminals = asList(terminal);
@@ -131,12 +133,10 @@ public class RouteDataRevisionControllerMvcUnitTest {
 
         when(routeDataRevisionDtoServiceMock.save(Mockito.any(RouteDataRevisionDto.class))).thenReturn(
             routeDataRevision);
-        when(routeDataRevisionDtoServiceMock.existsEntry(
-                Matchers.argThat(org.hamcrest.Matchers.<Terminal>hasProperty("id", is(10))), eq(BigDecimal.TEN),
-                eq(BigDecimal.ONE))).thenReturn(false);
+        when(routeDataRevisionDtoServiceMock.existsEntry("10", BigDecimal.TEN, BigDecimal.ONE)).thenReturn(false);
 
         ResultActions resultActions = perform(post(
-                    "/routerevisions?terminal.id=10&latitude=10&longitude=1&truckDistanceOneWayInMeter=1&"
+                    "/routerevisions?terminal.uniqueId=10&latitude=10&longitude=1&truckDistanceOneWayInMeter=1&"
                     + "tollDistanceOneWayInMeter=2&airlineDistanceInMeter=3&radiusInMeter=4").contentType(
                     APPLICATION_JSON));
 
@@ -149,14 +149,12 @@ public class RouteDataRevisionControllerMvcUnitTest {
 
         when(routeDataRevisionDtoServiceMock.save(Mockito.any(RouteDataRevisionDto.class))).thenReturn(
             routeDataRevision);
-        when(routeDataRevisionDtoServiceMock.existsEntry(
-                Matchers.argThat(org.hamcrest.Matchers.<Terminal>hasProperty("id", is(10))), eq(BigDecimal.TEN),
-                eq(BigDecimal.ONE))).thenReturn(false);
 
-        ResultActions resultActions = perform(post("/routerevisions").contentType(APPLICATION_JSON));
+        ResultActions resultActions = perform(post("/routerevisions").param("terminal.uniqueId", "foo").contentType(
+                    APPLICATION_JSON));
 
         resultActions.andExpect(status().isOk());
-        resultActions.andExpect(model().errorCount(7));
+        resultActions.andExpect(model().errorCount(6));
         resultActions.andExpect(model().attributeHasFieldErrorCode("routeRevision", "latitude", "NotNull"));
         resultActions.andExpect(model().attributeHasFieldErrorCode("routeRevision", "longitude", "NotNull"));
         resultActions.andExpect(model().attributeHasFieldErrorCode("routeRevision", "truckDistanceOneWayInMeter",
@@ -176,7 +174,7 @@ public class RouteDataRevisionControllerMvcUnitTest {
             routeDataRevision);
 
         ResultActions resultActions = perform(put(
-                    "/routerevisions/7?id=7&terminal.id=10&latitude=10&longitude=1&truckDistanceOneWayInMeter=1&"
+                    "/routerevisions/7?id=7&terminal.uniqueId=10&latitude=10&longitude=1&truckDistanceOneWayInMeter=1&"
                     + "tollDistanceOneWayInMeter=2&airlineDistanceInMeter=3&radiusInMeter=4").contentType(
                     APPLICATION_JSON));
 

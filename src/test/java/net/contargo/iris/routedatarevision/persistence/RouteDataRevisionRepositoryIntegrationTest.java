@@ -62,6 +62,7 @@ public class RouteDataRevisionRepositoryIntegrationTest {
     public void setUp() {
 
         terminal = createTerminal("terminal", BigInteger.ONE, TEN, TEN);
+        terminal.setUniqueId(BigInteger.TEN);
         routeDataRevision = createRouteDataRevision(terminal, ZERO, ZERO, ZERO, valueOf(49.1001), valueOf(8.9101), TEN);
     }
 
@@ -95,8 +96,8 @@ public class RouteDataRevisionRepositoryIntegrationTest {
 
         em.flush();
 
-        Optional<RouteDataRevision> routeDataRevisionOptional = sut.findByTerminalAndLatitudeAndLongitude(terminal,
-                valueOf(49.1001), valueOf(8.9101));
+        Optional<RouteDataRevision> routeDataRevisionOptional = sut.findByTerminalAndLatitudeAndLongitude(
+                BigInteger.TEN, valueOf(49.1001), valueOf(8.9101));
         assertThat(routeDataRevisionOptional.isPresent(), is(true));
     }
 
@@ -109,8 +110,8 @@ public class RouteDataRevisionRepositoryIntegrationTest {
 
         em.flush();
 
-        Optional<RouteDataRevision> routeDataRevisionOptional = sut.findByTerminalAndLatitudeAndLongitude(terminal,
-                valueOf(49.1001), valueOf(8.9102));
+        Optional<RouteDataRevision> routeDataRevisionOptional = sut.findByTerminalAndLatitudeAndLongitude(
+                BigInteger.TEN, valueOf(49.1001), valueOf(8.9102));
         assertThat(routeDataRevisionOptional.isPresent(), is(false));
     }
 

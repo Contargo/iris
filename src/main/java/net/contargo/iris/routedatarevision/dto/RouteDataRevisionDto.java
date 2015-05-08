@@ -2,6 +2,7 @@ package net.contargo.iris.routedatarevision.dto;
 
 import net.contargo.iris.routedatarevision.RouteDataRevision;
 import net.contargo.iris.terminal.Terminal;
+import net.contargo.iris.terminal.dto.TerminalDto;
 
 import net.contargo.validation.bigdecimal.BigDecimalValidate;
 
@@ -24,7 +25,7 @@ public class RouteDataRevisionDto {
     private Long id;
 
     @NotNull
-    private Terminal terminal;
+    private TerminalDto terminal;
 
     @BigDecimalValidate(maxFractionalPlaces = MAX_FRAC_2, maxDecimalPlaces = MAX_DEC_15)
     @NotNull
@@ -51,7 +52,7 @@ public class RouteDataRevisionDto {
     public RouteDataRevisionDto(RouteDataRevision routeDataRevision) {
 
         id = routeDataRevision.getId();
-        terminal = routeDataRevision.getTerminal();
+        terminal = new TerminalDto(routeDataRevision.getTerminal());
         truckDistanceOneWayInMeter = routeDataRevision.getTruckDistanceOneWayInMeter();
         tollDistanceOneWayInMeter = routeDataRevision.getTollDistanceOneWayInMeter();
         airlineDistanceInMeter = routeDataRevision.getAirlineDistanceInMeter();
@@ -73,18 +74,6 @@ public class RouteDataRevisionDto {
     public void setId(Long id) {
 
         this.id = id;
-    }
-
-
-    public Terminal getTerminal() {
-
-        return terminal;
-    }
-
-
-    public void setTerminal(Terminal terminal) {
-
-        this.terminal = terminal;
     }
 
 
@@ -160,9 +149,24 @@ public class RouteDataRevisionDto {
     }
 
 
-    public RouteDataRevision toEntity() {
+    public RouteDataRevision toEntity(Long terminalId) {
 
-        return new RouteDataRevision(id, terminal, truckDistanceOneWayInMeter, tollDistanceOneWayInMeter,
+        Terminal terminalEntity = terminal.toEntity();
+        terminalEntity.setId(terminalId);
+
+        return new RouteDataRevision(id, terminalEntity, truckDistanceOneWayInMeter, tollDistanceOneWayInMeter,
                 airlineDistanceInMeter, latitude, longitude, radiusInMeter);
+    }
+
+
+    public TerminalDto getTerminal() {
+
+        return terminal;
+    }
+
+
+    public void setTerminal(TerminalDto terminal) {
+
+        this.terminal = terminal;
     }
 }

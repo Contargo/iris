@@ -10,7 +10,7 @@ import java.io.IOException;
 
 
 /**
- * Implementation of the osrm query service.
+ * Implementation of the OSRM query service.
  *
  * @author  Sven Mueller - mueller@synyx.de
  * @author  Tobias Schneider - schneider@synyx.de

@@ -28,7 +28,7 @@ class AddressCache {
     /**
      * Caches all the Addresses.
      *
-     * @param  addressListList
+     * @param  addressListList  A {@link java.util.List} of {@link net.contargo.iris.address.AddressList}
      */
     public void cache(List<AddressList> addressListList) {
 
@@ -41,11 +41,11 @@ class AddressCache {
 
 
     /**
-     * Returns the Address-Instance for the given GeoLocation IF it exists in the cache - null otherwise.
+     * Returns the Address-Instance for the given {@link GeoLocation} if it exists in the cache - null otherwise.
      *
-     * @param  loc
+     * @param  loc  Eventually cached {@link GeoLocation}
      *
-     * @return
+     * @return  cached {@link net.contargo.iris.address.Address} from given {@link net.contargo.iris.GeoLocation}
      */
     public Address getForLocation(GeoLocation loc) {
 

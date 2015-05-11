@@ -18,7 +18,7 @@ import javax.validation.constraints.NotNull;
  */
 public class RouteDataRevisionDto {
 
-    private static final int MAX_DEC_15 = 15;
+    private static final int MAX_DEC = 13;
     private static final int MAX_FRAC_2 = 2;
     private static final int MIN_0 = 0;
 
@@ -27,16 +27,16 @@ public class RouteDataRevisionDto {
     @NotNull
     private TerminalDto terminal;
 
-    @BigDecimalValidate(maxFractionalPlaces = MAX_FRAC_2, maxDecimalPlaces = MAX_DEC_15)
+    @BigDecimalValidate(maxFractionalPlaces = MAX_FRAC_2, maxDecimalPlaces = MAX_DEC)
     @NotNull
     private BigDecimal truckDistanceOneWayInMeter;
 
     @NotNull
-    @BigDecimalValidate(maxFractionalPlaces = MAX_FRAC_2, maxDecimalPlaces = MAX_DEC_15)
+    @BigDecimalValidate(maxFractionalPlaces = MAX_FRAC_2, maxDecimalPlaces = MAX_DEC)
     private BigDecimal tollDistanceOneWayInMeter;
 
     @NotNull
-    @BigDecimalValidate(maxFractionalPlaces = MAX_FRAC_2, maxDecimalPlaces = MAX_DEC_15)
+    @BigDecimalValidate(maxFractionalPlaces = MAX_FRAC_2, maxDecimalPlaces = MAX_DEC)
     private BigDecimal airlineDistanceInMeter;
 
     @NotNull
@@ -46,7 +46,7 @@ public class RouteDataRevisionDto {
     private BigDecimal longitude;
 
     @NotNull
-    @BigDecimalValidate(minValue = MIN_0, maxFractionalPlaces = MAX_FRAC_2, maxDecimalPlaces = MAX_DEC_15)
+    @BigDecimalValidate(minValue = MIN_0, maxFractionalPlaces = MAX_FRAC_2, maxDecimalPlaces = MAX_DEC)
     private BigDecimal radiusInMeter;
 
     public RouteDataRevisionDto(RouteDataRevision routeDataRevision) {

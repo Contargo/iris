@@ -21,10 +21,6 @@ import javax.persistence.ManyToOne;
 @Entity
 public class RouteDataRevision {
 
-    private static final int MAX_DEC_15 = 15;
-    private static final int MAX_FRAC_2 = 2;
-    private static final int MIN_0 = 0;
-
     private static final int MAX_VALUE_COORD = 180;
     private static final int MIN_VALUE_COORD = -180;
 

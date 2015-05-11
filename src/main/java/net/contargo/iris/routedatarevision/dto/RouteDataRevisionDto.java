@@ -63,6 +63,8 @@ public class RouteDataRevisionDto {
 
 
     public RouteDataRevisionDto() {
+
+        // for json serialization
     }
 
     public Long getId() {
@@ -154,8 +156,17 @@ public class RouteDataRevisionDto {
         Terminal terminalEntity = terminal.toEntity();
         terminalEntity.setId(terminalId);
 
-        return new RouteDataRevision(id, terminalEntity, truckDistanceOneWayInMeter, tollDistanceOneWayInMeter,
-                airlineDistanceInMeter, latitude, longitude, radiusInMeter);
+        RouteDataRevision routeDataRevision = new RouteDataRevision();
+        routeDataRevision.setId(id);
+        routeDataRevision.setTerminal(terminalEntity);
+        routeDataRevision.setTruckDistanceOneWayInMeter(truckDistanceOneWayInMeter);
+        routeDataRevision.setTollDistanceOneWayInMeter(tollDistanceOneWayInMeter);
+        routeDataRevision.setAirlineDistanceInMeter(airlineDistanceInMeter);
+        routeDataRevision.setLatitude(latitude);
+        routeDataRevision.setLatitude(longitude);
+        routeDataRevision.setRadiusInMeter(radiusInMeter);
+
+        return routeDataRevision;
     }
 
 

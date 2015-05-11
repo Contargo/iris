@@ -56,8 +56,15 @@ public class RouteDataRevisionDtoServiceImplUnitTest {
         terminal = new Terminal(new GeoLocation(BigDecimal.TEN, BigDecimal.TEN));
         terminal.setUniqueId(BigInteger.ONE);
 
-        routeDataRevision = new RouteDataRevision(5L, terminal, BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE,
-                BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE);
+        routeDataRevision = new RouteDataRevision();
+        routeDataRevision.setId(5L);
+        routeDataRevision.setTerminal(terminal);
+        routeDataRevision.setTruckDistanceOneWayInMeter(BigDecimal.ONE);
+        routeDataRevision.setTollDistanceOneWayInMeter(BigDecimal.ONE);
+        routeDataRevision.setAirlineDistanceInMeter(BigDecimal.ONE);
+        routeDataRevision.setLatitude(BigDecimal.ONE);
+        routeDataRevision.setLatitude(BigDecimal.ONE);
+        routeDataRevision.setRadiusInMeter(BigDecimal.ONE);
 
         routeDataRevisions = asList(routeDataRevision);
 

@@ -50,21 +50,8 @@ public class RouteDataRevision {
     private BigDecimal radiusInMeter;
 
     public RouteDataRevision() {
-    }
 
-
-    public RouteDataRevision(Long id, Terminal terminal, BigDecimal truckDistanceOneWayInMeter,
-        BigDecimal tollDistanceOneWayInMeter, BigDecimal airlineDistanceInMeter, BigDecimal latitude,
-        BigDecimal longitude, BigDecimal radiusInMeter) {
-
-        this.id = id;
-        this.terminal = terminal;
-        this.truckDistanceOneWayInMeter = truckDistanceOneWayInMeter;
-        this.tollDistanceOneWayInMeter = tollDistanceOneWayInMeter;
-        this.airlineDistanceInMeter = airlineDistanceInMeter;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.radiusInMeter = radiusInMeter;
+        // for jpa
     }
 
     public Long getId() {

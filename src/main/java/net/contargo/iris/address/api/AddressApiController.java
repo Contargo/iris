@@ -32,7 +32,11 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static net.contargo.iris.address.nominatim.service.AddressDetailKey.*;
+import static net.contargo.iris.address.nominatim.service.AddressDetailKey.CITY;
+import static net.contargo.iris.address.nominatim.service.AddressDetailKey.COUNTRY;
+import static net.contargo.iris.address.nominatim.service.AddressDetailKey.NAME;
+import static net.contargo.iris.address.nominatim.service.AddressDetailKey.POSTAL_CODE;
+import static net.contargo.iris.address.nominatim.service.AddressDetailKey.STREET;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -114,10 +118,10 @@ public class AddressApiController extends AbstractController {
     @ModelAttribute("geoCodeResponse")
     @RequestMapping(value = GEOCODES, method = RequestMethod.GET)
     public ListOfAddressListsResponse addressesByAddressDetails(@RequestParam(required = false) String street,
-        @RequestParam(required = false) String postalCode,
-        @RequestParam(required = false) String city,
-        @RequestParam(required = false) String country,
-        @RequestParam(required = false) String name, HttpServletRequest request) {
+        @RequestParam(required = false, value = "postalcode") String postalCode,
+        @RequestParam(required = false, value = "city") String city,
+        @RequestParam(required = false, value = "country") String country,
+        @RequestParam(required = false, value = "name") String name, HttpServletRequest request) {
 
         Map<String, String> addressDetails = putRequestParamsToMap(street, postalCode, city, country, name);
 
@@ -136,10 +140,10 @@ public class AddressApiController extends AbstractController {
     @ModelAttribute("simpleGeoCodeResponse")
     @RequestMapping(value = SIMPLE_GEOCODES, method = RequestMethod.GET)
     public AddressListResponse addressesByAddressDetailsPlain(@RequestParam(required = false) String street,
-        @RequestParam(required = false) String postalCode,
-        @RequestParam(required = false) String city,
-        @RequestParam(required = false) String country,
-        @RequestParam(required = false) String name, HttpServletRequest request) {
+        @RequestParam(required = false, value = "postalcode") String postalCode,
+        @RequestParam(required = false, value = "city") String city,
+        @RequestParam(required = false, value = "country") String country,
+        @RequestParam(required = false, value = "name") String name, HttpServletRequest request) {
 
         Map<String, String> addressDetails = putRequestParamsToMap(street, postalCode, city, country, name);
 

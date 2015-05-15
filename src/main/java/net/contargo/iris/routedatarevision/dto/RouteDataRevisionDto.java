@@ -9,6 +9,7 @@ import net.contargo.validation.bigdecimal.BigDecimalValidate;
 import java.math.BigDecimal;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 
 /**
@@ -21,6 +22,7 @@ public class RouteDataRevisionDto {
     private static final int MAX_DEC = 13;
     private static final int MAX_FRAC_2 = 2;
     private static final int MIN_0 = 0;
+    private static final int COMMENT_SIZE = 5000;
 
     private Long id;
 
@@ -49,6 +51,9 @@ public class RouteDataRevisionDto {
     @BigDecimalValidate(minValue = MIN_0, maxFractionalPlaces = MAX_FRAC_2, maxDecimalPlaces = MAX_DEC)
     private BigDecimal radiusInMeter;
 
+    @Size(max = COMMENT_SIZE)
+    private String comment;
+
     public RouteDataRevisionDto(RouteDataRevision routeDataRevision) {
 
         id = routeDataRevision.getId();
@@ -59,6 +64,7 @@ public class RouteDataRevisionDto {
         latitude = routeDataRevision.getLatitude();
         longitude = routeDataRevision.getLongitude();
         radiusInMeter = routeDataRevision.getRadiusInMeter();
+        comment = routeDataRevision.getComment();
     }
 
 
@@ -165,6 +171,7 @@ public class RouteDataRevisionDto {
         routeDataRevision.setLatitude(latitude);
         routeDataRevision.setLongitude(longitude);
         routeDataRevision.setRadiusInMeter(radiusInMeter);
+        routeDataRevision.setComment(comment);
 
         return routeDataRevision;
     }
@@ -179,5 +186,17 @@ public class RouteDataRevisionDto {
     public void setTerminal(TerminalDto terminal) {
 
         this.terminal = terminal;
+    }
+
+
+    public String getComment() {
+
+        return comment;
+    }
+
+
+    public void setComment(String comment) {
+
+        this.comment = comment;
     }
 }

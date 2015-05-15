@@ -12,6 +12,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import javax.validation.constraints.Size;
+
 
 /**
  * Entity holding the information of route data revisions.
@@ -23,6 +25,7 @@ public class RouteDataRevision {
 
     private static final int MAX_VALUE_COORD = 180;
     private static final int MIN_VALUE_COORD = -180;
+    private static final int COMMENT_SIZE = 5000;
 
     @Id
     @GeneratedValue
@@ -48,6 +51,9 @@ public class RouteDataRevision {
 
     @Column(name = "radius")
     private BigDecimal radiusInMeter;
+
+    @Size(max = COMMENT_SIZE)
+    private String comment;
 
     public RouteDataRevision() {
 
@@ -147,5 +153,17 @@ public class RouteDataRevision {
     public void setRadiusInMeter(BigDecimal radiusInMeter) {
 
         this.radiusInMeter = radiusInMeter;
+    }
+
+
+    public String getComment() {
+
+        return comment;
+    }
+
+
+    public void setComment(String comment) {
+
+        this.comment = comment;
     }
 }

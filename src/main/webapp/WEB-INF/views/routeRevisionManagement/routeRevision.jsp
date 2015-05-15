@@ -105,6 +105,8 @@
                     <iris:inputField property="airlineDistanceInMeter"
                                      messageKey="routerevision.airlinedistance" unitMessageKey="unit.meter"/>
 
+                    <iris:textArea property="comment" messageKey="routerevision.comment" />
+
                     <div class="form-actions">
                         <input id="submit-button" class="btn btn-primary" type="submit"
                                value="<spring:message code="${SUBMIT_BUTTON_MESSAGE_KEY}" />"/>

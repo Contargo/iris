@@ -25,6 +25,8 @@ import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import static org.hamcrest.core.Is.is;
@@ -63,7 +65,8 @@ public class RouteDataRevisionRepositoryIntegrationTest {
 
         terminal = createTerminal("terminal", BigInteger.ONE, TEN, TEN);
         terminal.setUniqueId(BigInteger.TEN);
-        routeDataRevision = createRouteDataRevision(terminal, ZERO, ZERO, ZERO, valueOf(49.1001), valueOf(8.9101), TEN);
+        routeDataRevision = createRouteDataRevision(terminal, ZERO, ZERO, ZERO, valueOf(49.1001), valueOf(8.9101), TEN,
+                "comment0");
     }
 
 
@@ -73,8 +76,10 @@ public class RouteDataRevisionRepositoryIntegrationTest {
         em.persist(terminal);
 
         em.persist(routeDataRevision);
-        em.persist(createRouteDataRevision(terminal, ONE, ONE, ONE, valueOf(49.1011), valueOf(8.9102), TEN));
-        em.persist(createRouteDataRevision(terminal, TEN, TEN, TEN, valueOf(49.1021), valueOf(8.9103), TEN));
+        em.persist(createRouteDataRevision(terminal, ONE, ONE, ONE, valueOf(49.1011), valueOf(8.9102), TEN,
+                "comment1"));
+        em.persist(createRouteDataRevision(terminal, TEN, TEN, TEN, valueOf(49.1021), valueOf(8.9103), TEN,
+                "comment2"));
 
         em.flush();
 
@@ -85,6 +90,7 @@ public class RouteDataRevisionRepositoryIntegrationTest {
         assertThat(nearestRouteDataRevision.getTruckDistanceOneWayInMeter(), is(ZERO));
         assertThat(nearestRouteDataRevision.getLatitude(), is(valueOf(49.1001)));
         assertThat(nearestRouteDataRevision.getLongitude(), is(valueOf(8.9101)));
+        assertThat(nearestRouteDataRevision.getComment(), equalTo("comment0"));
     }
 
 
@@ -127,7 +133,7 @@ public class RouteDataRevisionRepositoryIntegrationTest {
 
 
     private RouteDataRevision createRouteDataRevision(Terminal t, BigDecimal tdow, BigDecimal truckdow, BigDecimal ad,
-        BigDecimal lat, BigDecimal lng, BigDecimal r) {
+        BigDecimal lat, BigDecimal lng, BigDecimal r, String comment) {
 
         RouteDataRevision routeDataRevision = new RouteDataRevision();
         routeDataRevision.setTollDistanceOneWayInMeter(tdow);
@@ -137,6 +143,7 @@ public class RouteDataRevisionRepositoryIntegrationTest {
         routeDataRevision.setLongitude(lng);
         routeDataRevision.setRadiusInMeter(r);
         routeDataRevision.setTerminal(t);
+        routeDataRevision.setComment(comment);
 
         return routeDataRevision;
     }

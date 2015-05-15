@@ -163,7 +163,7 @@ public class RouteDataRevisionDto {
         routeDataRevision.setTollDistanceOneWayInMeter(tollDistanceOneWayInMeter);
         routeDataRevision.setAirlineDistanceInMeter(airlineDistanceInMeter);
         routeDataRevision.setLatitude(latitude);
-        routeDataRevision.setLatitude(longitude);
+        routeDataRevision.setLongitude(longitude);
         routeDataRevision.setRadiusInMeter(radiusInMeter);
 
         return routeDataRevision;

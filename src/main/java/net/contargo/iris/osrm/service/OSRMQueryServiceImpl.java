@@ -1,11 +1,9 @@
 package net.contargo.iris.osrm.service;
 
 import net.contargo.iris.GeoLocation;
-import net.contargo.iris.util.HttpUtilException;
 
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-
-import java.io.IOException;
 
 
 /**
@@ -43,13 +41,13 @@ public class OSRMQueryServiceImpl implements OSRMQueryService {
 
         try {
             return createOSRMQueryResult(route(start, destination));
-        } catch (HttpUtilException | IOException e) {
+        } catch (RestClientException e) {
             throw new RoutingException("Error querying OSRM service: ", e);
         }
     }
 
 
-    private OSRMJsonResponse route(GeoLocation start, GeoLocation destination) throws IOException {
+    private OSRMJsonResponse route(GeoLocation start, GeoLocation destination) {
 
         return osrmRestClient.getForEntity(createOSRMQueryString(start, destination), OSRMJsonResponse.class).getBody();
     }

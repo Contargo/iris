@@ -2,7 +2,6 @@ package net.contargo.iris.address.nominatim.service;
 
 import net.contargo.iris.GeoLocation;
 import net.contargo.iris.address.Address;
-import net.contargo.iris.util.HttpUtilException;
 
 import org.slf4j.Logger;
 
@@ -107,7 +106,7 @@ public class NominatimAddressService implements AddressService {
             String url = nominatimUrlBuilder.buildUrl(geoLocation);
 
             return nominatimResponder.getAddressForUrl(url);
-        } catch (IllegalArgumentException | HttpUtilException e) {
+        } catch (IllegalArgumentException e) {
             throw new AddressResolutionException("Failed to resolve address for " + geoLocation, e);
         }
     }

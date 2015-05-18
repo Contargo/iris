@@ -50,17 +50,6 @@
         <constructor-arg name="ehcache" ref="ehCacheFactory"/>
     </bean>
 
-    <!-- 
-    Utils, Helpers and supporting Services 
-    -->
-    <bean id="httpUtil" class="net.contargo.iris.util.HttpUtil">
-        <constructor-arg ref="httpClient"/>
-    </bean>
-
-    <bean id="httpClientBuilder" class="org.apache.http.impl.client.HttpClientBuilder" factory-method="create"/>
-
-    <bean id="httpClient" factory-bean="httpClientBuilder" factory-method="build"/>
-
     <bean id="roundingService" class="net.contargo.iris.rounding.RoundingServiceImpl"/>
 
     <bean id="urlSerializationService" class="net.contargo.iris.connection.api.RouteUrlSerializationServiceImpl"/>

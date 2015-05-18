@@ -2,7 +2,6 @@ package net.contargo.iris.address.nominatim.service;
 
 import net.contargo.iris.GeoLocation;
 import net.contargo.iris.address.Address;
-import net.contargo.iris.util.HttpUtilException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -262,15 +261,6 @@ public class NominatimAddressServiceUnitTest {
     public void getAddressByGeolocationIllegalArgument() {
 
         when(nominatimUrlBuilderMock.buildUrl(a1)).thenThrow(new IllegalArgumentException());
-        sut.getAddressByGeolocation(a1);
-    }
-
-
-    @Test(expected = AddressResolutionException.class)
-    public void getAddressByGeolocationHttpUtilError() {
-
-        when(nominatimUrlBuilderMock.buildUrl(a1)).thenReturn("foo");
-        when(nominatimResponderMock.getAddressForUrl("foo")).thenThrow(new HttpUtilException("", new Throwable()));
         sut.getAddressByGeolocation(a1);
     }
 }

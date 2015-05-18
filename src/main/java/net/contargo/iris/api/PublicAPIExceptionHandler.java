@@ -30,7 +30,7 @@ public class PublicAPIExceptionHandler implements HandlerExceptionResolver {
 
         ModelAndView modelAndView = new ModelAndView();
 
-        LOG.error("REST-API Exception: " + ex.getMessage(), ex);
+        LOG.error("REST-API Exception: " + ex.getMessage());
 
         try {
             if (ex instanceof IllegalArgumentException) {

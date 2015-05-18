@@ -5,5 +5,5 @@ script: mvn verify
 jdk:
   - oraclejdk8
 
-cript:
+before_script:
   - mysql -e 'create database iris;'

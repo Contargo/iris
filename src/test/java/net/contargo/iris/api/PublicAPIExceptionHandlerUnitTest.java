@@ -12,7 +12,6 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import java.io.IOException;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -32,43 +31,44 @@ import static javax.servlet.http.HttpServletResponse.SC_SERVICE_UNAVAILABLE;
  * Unit test for {@link PublicAPIExceptionHandler}.
  *
  * @author  Aljona Murygina - murygina@synyx.de
+ * @author  Tobias Schneider - schneider@synyx.de
  */
 public class PublicAPIExceptionHandlerUnitTest {
 
     private final PublicAPIExceptionHandler sut;
 
-    private final HttpServletRequest request;
-    private final MockHttpServletResponse response;
+    private final MockHttpServletRequest requestMock;
+    private final MockHttpServletResponse responseMock;
 
     public PublicAPIExceptionHandlerUnitTest() {
 
-        sut = new PublicAPIExceptionHandler();
+        requestMock = new MockHttpServletRequest();
+        responseMock = new MockHttpServletResponse();
 
-        request = new MockHttpServletRequest();
-        response = new MockHttpServletResponse();
+        sut = new PublicAPIExceptionHandler();
     }
 
     @Test
     public void resolveIllegalArgumentException() {
 
-        String exMessage = "Invalid ID for Foo";
+        String exMessage = "Invalid ID for terminal";
 
-        sut.resolveException(request, response, sut, new IllegalArgumentException(exMessage));
+        sut.resolveException(requestMock, responseMock, null, new IllegalArgumentException(exMessage));
 
-        assertThat(response.getErrorMessage(), containsString(exMessage));
-        assertThat(response.getStatus(), equalTo(SC_BAD_REQUEST));
+        assertThat(responseMock.getErrorMessage(), containsString(exMessage));
+        assertThat(responseMock.getStatus(), equalTo(SC_BAD_REQUEST));
     }
 
 
     @Test
     public void resolveIllegalStateException() {
 
-        String exMessage = "Invalid state foo";
+        String exMessage = "Invalid application state";
 
-        sut.resolveException(request, response, sut, new IllegalStateException(exMessage));
+        sut.resolveException(requestMock, responseMock, null, new IllegalStateException(exMessage));
 
-        assertThat(response.getErrorMessage(), containsString(exMessage));
-        assertThat(response.getStatus(), equalTo(SC_BAD_REQUEST));
+        assertThat(responseMock.getErrorMessage(), containsString(exMessage));
+        assertThat(responseMock.getStatus(), equalTo(SC_BAD_REQUEST));
     }
 
 
@@ -77,13 +77,13 @@ public class PublicAPIExceptionHandlerUnitTest {
 
         String exMessage = "Nominatim down";
 
-        sut.resolveException(request, response, sut,
+        sut.resolveException(requestMock, responseMock, null,
             new HttpClientErrorException(HttpStatus.SERVICE_UNAVAILABLE, exMessage));
 
-        assertThat(response.getErrorMessage(), containsString(exMessage));
-        assertThat(response.getErrorMessage(),
+        assertThat(responseMock.getErrorMessage(), containsString(exMessage));
+        assertThat(responseMock.getErrorMessage(),
             containsString("Service is temporary not available, please try again later"));
-        assertThat(response.getStatus(), equalTo(SC_SERVICE_UNAVAILABLE));
+        assertThat(responseMock.getStatus(), equalTo(SC_SERVICE_UNAVAILABLE));
     }
 
 
@@ -92,11 +92,10 @@ public class PublicAPIExceptionHandlerUnitTest {
 
         String exMessage = "This should never happen";
 
-        // NullpointerException must be thrown for test purposes
-        sut.resolveException(request, response, sut, new NullPointerException(exMessage));
+        sut.resolveException(requestMock, responseMock, null, new NullPointerException(exMessage));
 
-        assertThat(response.getErrorMessage(), containsString(exMessage));
-        assertThat(response.getStatus(), equalTo(SC_INTERNAL_SERVER_ERROR));
+        assertThat(responseMock.getErrorMessage(), containsString(exMessage));
+        assertThat(responseMock.getStatus(), equalTo(SC_INTERNAL_SERVER_ERROR));
     }
 
 
@@ -105,21 +104,21 @@ public class PublicAPIExceptionHandlerUnitTest {
 
         String exMessage = "This should never happen";
 
-        // Runtimeexception must be thrown for test purposes
-        sut.resolveException(request, response, sut, new RuntimeException(exMessage));
+        sut.resolveException(requestMock, responseMock, null, new RuntimeException(exMessage));
 
-        assertThat(response.getErrorMessage(), containsString(exMessage));
-        assertThat(response.getStatus(), equalTo(SC_INTERNAL_SERVER_ERROR));
+        assertThat(responseMock.getErrorMessage(), containsString(exMessage));
+        assertThat(responseMock.getStatus(), equalTo(SC_INTERNAL_SERVER_ERROR));
     }
 
 
     @Test
     public void exceptionWhileResolvingGetsCaught() throws IOException {
 
-        String exMessage = "Invalid state foo";
+        String exMessage = "Invalid application state";
         HttpServletResponse responseMock = mock(HttpServletResponse.class);
 
-        doThrow(new IOException()).when(responseMock).sendError(SC_BAD_REQUEST, "Bad request. " + exMessage);
-        sut.resolveException(request, responseMock, sut, new IllegalStateException(exMessage));
+        doThrow(new IOException()).when(responseMock).sendError(SC_BAD_REQUEST, "Bad requestMock. " + exMessage);
+
+        sut.resolveException(requestMock, responseMock, null, new IllegalStateException(exMessage));
     }
 }

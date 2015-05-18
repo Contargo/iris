@@ -51,7 +51,7 @@ public class OSRMQueryServiceImplUnitTest {
     @Before
     public void setUp() throws Exception {
 
-        String response = new ObjectMapper().readTree(new File("src/test/resources/osrm/response.json")).toString();
+        String response = new ObjectMapper().readTree(new File("src/test/resources/osrm/osrmResponse.json")).toString();
         when(httpUtilMock.getResponseContent(anyString())).thenReturn(response);
 
         OSRMJsonResponse OSRMJsonResponse = new OSRMJsonResponse();

@@ -1,0 +1,9 @@
+language: java
+
+script: mvn verify
+
+jdk:
+  - oraclejdk8
+
+cript:
+  - mysql -e 'create database iris;'

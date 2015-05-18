@@ -4,9 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import net.contargo.iris.address.Address;
 import net.contargo.iris.util.HttpUtil;
-import net.contargo.iris.util.InputStreamUtil;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,8 +14,8 @@ import org.mockito.Mock;
 
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 
 import java.util.List;
 
@@ -41,8 +39,8 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class NominatimJsonResponseParserUnitTest {
 
-    private static final String FILE = "nominatim/json_sample.json";
-    private static final String FILE_SINGLE_RESULT = "nominatim/json_sample_single_result.json";
+    private static final String NOMINATIM_SAMPLE = "src/test/resources/nominatim/json_sample.json";
+    private static final String NOMINATIM_SINGLE_SAMPLE = "src/test/resources/nominatim/json_sample_single_result.json";
     private static final int DELTA = 1;
     private static final String REQUEST =
         "http://maps.contargo.net/nominatim/reverse/?format=json&lat=48.0750600000&lon=8.6362987000";
@@ -56,28 +54,17 @@ public class NominatimJsonResponseParserUnitTest {
     @Mock
     private HttpUtil httpUtilMock;
 
-    private InputStream in;
-
     @Before
     public void setup() {
 
-        in = InputStreamUtil.getFileInputStream(FILE);
-
         sut = new NominatimJsonResponseParser(httpUtilMock, new ObjectMapper());
-    }
-
-
-    @After
-    public void tearDown() throws IOException {
-
-        in.close();
     }
 
 
     @Test
     public void getAddressesForUrl() throws IOException {
 
-        when(httpUtilMock.getResponseContent(anyString())).thenReturn(InputStreamUtil.convertInputStreamToString(in));
+        when(httpUtilMock.getResponseContent(anyString())).thenReturn(getStringFromJson(NOMINATIM_SAMPLE));
 
         List<Address> addresses = sut.getAddressesForUrl("foo");
         assertThat(addresses.size(), is(5));
@@ -93,8 +80,7 @@ public class NominatimJsonResponseParserUnitTest {
     @Test
     public void getAddressesForUrlForOsmId() throws IOException {
 
-        in = InputStreamUtil.getFileInputStream(FILE_SINGLE_RESULT);
-        when(httpUtilMock.getResponseContent(anyString())).thenReturn(InputStreamUtil.convertInputStreamToString(in));
+        when(httpUtilMock.getResponseContent(anyString())).thenReturn(getStringFromJson(NOMINATIM_SINGLE_SAMPLE));
 
         List<Address> addresses = sut.getAddressesForUrlForOsmId("foo");
         assertThat(addresses.size(), is(1));
@@ -120,7 +106,7 @@ public class NominatimJsonResponseParserUnitTest {
     @Test
     public void getCountryCode() throws IOException {
 
-        when(httpUtilMock.getResponseContent(anyString())).thenReturn(InputStreamUtil.convertInputStreamToString(in));
+        when(httpUtilMock.getResponseContent(anyString())).thenReturn(getStringFromJson(NOMINATIM_SAMPLE));
 
         Address address = sut.getAddressesForUrl("foo").get(0);
         assertThat(address.getCountryCode(), is("de"));
@@ -144,6 +130,12 @@ public class NominatimJsonResponseParserUnitTest {
 
         Address address = sut.getAddressForUrl(null);
         assertThat(address, nullValue());
+    }
+
+
+    private String getStringFromJson(String path) throws IOException {
+
+        return new ObjectMapper().readTree(new File(path)).toString();
     }
 
 

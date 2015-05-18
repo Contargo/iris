@@ -17,9 +17,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.io.File;
 import java.io.IOException;
 
-import java.math.BigDecimal;
-
-
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import static org.hamcrest.Matchers.is;
@@ -27,6 +24,9 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.anyString;
 
 import static org.mockito.Mockito.when;
+
+import static java.math.BigDecimal.ONE;
+import static java.math.BigDecimal.TEN;
 
 
 /**
@@ -41,8 +41,7 @@ public class OSRMQueryServiceImplUnitTest {
     private static final String BASE_URL = "baseUrl";
     private static final double TOTAL_DISTANCE = 28295.0;
     private static final double TOTAL_TIME = 2264.0;
-    private static final String osrmResponseWithWrongParameters =
-        "{\"alternative_names\": [[\"Kriegsstraße/;primary/;no/;DE\"]]}";
+    private static final String OSRM_RSP_WRONG_PARAM = "{\"alternative_names\": [[\"Kriegsstraße/;primary/;no/;DE\"]]}";
 
     private OSRMQueryService sut;
 
@@ -68,8 +67,8 @@ public class OSRMQueryServiceImplUnitTest {
     @Test
     public void getOSRMXmlRoute() {
 
-        GeoLocation start = new GeoLocation(BigDecimal.ONE, BigDecimal.ONE);
-        GeoLocation destination = new GeoLocation(BigDecimal.TEN, BigDecimal.TEN);
+        GeoLocation start = new GeoLocation(ONE, ONE);
+        GeoLocation destination = new GeoLocation(TEN, TEN);
 
         OSRMQueryResult actualResult = sut.getOSRMXmlRoute(start, destination);
 
@@ -88,8 +87,8 @@ public class OSRMQueryServiceImplUnitTest {
         String r = new ObjectMapper().readTree(new File("src/test/resources/osrm/osrmResponseNoRoute.json")).toString();
         when(httpUtilMock.getResponseContent(anyString())).thenReturn(r);
 
-        GeoLocation start = new GeoLocation(BigDecimal.ONE, BigDecimal.ONE);
-        GeoLocation destination = new GeoLocation(BigDecimal.TEN, BigDecimal.TEN);
+        GeoLocation start = new GeoLocation(ONE, ONE);
+        GeoLocation destination = new GeoLocation(TEN, TEN);
 
         OSRMQueryResult actualResult = sut.getOSRMXmlRoute(start, destination);
 
@@ -103,10 +102,10 @@ public class OSRMQueryServiceImplUnitTest {
     @Test(expected = RoutingException.class)
     public void getOSRMXmlRouteThrowsException() throws IOException {
 
-        GeoLocation start = new GeoLocation(BigDecimal.ONE, BigDecimal.ONE);
-        GeoLocation destination = new GeoLocation(BigDecimal.TEN, BigDecimal.TEN);
+        GeoLocation start = new GeoLocation(ONE, ONE);
+        GeoLocation destination = new GeoLocation(TEN, TEN);
 
-        when(httpUtilMock.getResponseContent(anyString())).thenReturn(osrmResponseWithWrongParameters);
+        when(httpUtilMock.getResponseContent(anyString())).thenReturn(OSRM_RSP_WRONG_PARAM);
 
         sut.getOSRMXmlRoute(start, destination);
     }

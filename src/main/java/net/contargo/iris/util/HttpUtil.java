@@ -8,10 +8,14 @@ import org.apache.http.client.methods.HttpGet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.unitils.thirdparty.org.apache.commons.io.IOUtils;
+
 import java.io.IOException;
 import java.io.InputStream;
 
 import java.lang.invoke.MethodHandles;
+
+import java.nio.charset.StandardCharsets;
 
 
 /**
@@ -46,7 +50,7 @@ public class HttpUtil {
 
         if (entity != null) {
             try(InputStream is = entity.getContent()) {
-                response = InputStreamUtil.convertInputStreamToString(is);
+                response = IOUtils.toString(is, StandardCharsets.UTF_8.name());
             } catch (IOException ex) {
                 throw new HttpUtilException("Could not get content (InputStream) of HttpEntity", ex);
             }

@@ -14,14 +14,11 @@ import org.mockito.Mock;
 
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.io.File;
 import java.io.IOException;
 
 import java.math.BigDecimal;
 
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -55,8 +52,8 @@ public class OSRMQueryServiceImplUnitTest {
     @Before
     public void setUp() throws Exception {
 
-        String osrmResponse = readFile("src/test/resources/osrmResponse.json", StandardCharsets.UTF_8);
-        when(httpUtilMock.getResponseContent(anyString())).thenReturn(osrmResponse);
+        String response = new ObjectMapper().readTree(new File("src/test/resources/osrm/response.json")).toString();
+        when(httpUtilMock.getResponseContent(anyString())).thenReturn(response);
 
         OSRMJsonResponse OSRMJsonResponse = new OSRMJsonResponse();
         OSRMJsonResponseRouteSummary summary = new OSRMJsonResponseRouteSummary();
@@ -88,8 +85,8 @@ public class OSRMQueryServiceImplUnitTest {
     @Test
     public void getOSRMXmlRouteNoRoute() throws IOException {
 
-        String osrmResponseNoRoute = readFile("src/test/resources/osrmResponseNoRoute.json", StandardCharsets.UTF_8);
-        when(httpUtilMock.getResponseContent(anyString())).thenReturn(osrmResponseNoRoute);
+        String r = new ObjectMapper().readTree(new File("src/test/resources/osrm/osrmResponseNoRoute.json")).toString();
+        when(httpUtilMock.getResponseContent(anyString())).thenReturn(r);
 
         GeoLocation start = new GeoLocation(BigDecimal.ONE, BigDecimal.ONE);
         GeoLocation destination = new GeoLocation(BigDecimal.TEN, BigDecimal.TEN);
@@ -112,13 +109,5 @@ public class OSRMQueryServiceImplUnitTest {
         when(httpUtilMock.getResponseContent(anyString())).thenReturn(osrmResponseWithWrongParameters);
 
         sut.getOSRMXmlRoute(start, destination);
-    }
-
-
-    private String readFile(String path, Charset encoding) throws IOException {
-
-        byte[] encoded = Files.readAllBytes(Paths.get(path));
-
-        return new String(encoded, encoding);
     }
 }

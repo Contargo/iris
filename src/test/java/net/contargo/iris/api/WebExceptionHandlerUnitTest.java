@@ -2,12 +2,15 @@ package net.contargo.iris.api;
 
 import net.contargo.iris.security.UserAuthenticationService;
 
-import org.hamcrest.Matchers;
-
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import org.junit.runner.RunWith;
+
+import org.mockito.Mock;
+
+import org.mockito.runners.MockitoJUnitRunner;
 
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -23,14 +26,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import static java.util.Arrays.asList;
@@ -43,22 +44,26 @@ import static java.util.Arrays.asList;
  * @author  Oliver Messner - messner@synyx.de
  * @author  Arnold Franke - franke@synyx.de
  */
+@RunWith(MockitoJUnitRunner.class)
 public class WebExceptionHandlerUnitTest {
 
     private static final String REPORT_PATH = "test-tmp";
+
     private WebExceptionHandler sut;
-    private HttpServletRequest request;
-    private HttpServletResponse response;
+
+    private MockHttpServletRequest request;
+    private MockHttpServletResponse response;
+
+    @Mock
     private UserAuthenticationService userAuthenticationServiceMock;
 
     @Before
     public void setUp() {
 
-        userAuthenticationServiceMock = mock(UserAuthenticationService.class);
-        sut = new WebExceptionHandler(new File(REPORT_PATH), userAuthenticationServiceMock);
-
         request = new MockHttpServletRequest();
         response = new MockHttpServletResponse();
+
+        sut = new WebExceptionHandler(new File(REPORT_PATH), userAuthenticationServiceMock);
     }
 
 
@@ -78,22 +83,16 @@ public class WebExceptionHandlerUnitTest {
     }
 
 
-    /**
-     * Test of doResolveException method, of class WebExceptionHandler.
-     */
     @Test
-    public void testDoResolveExceptionErrorReportContainsTheRelevantInformation() throws Exception {
+    public void doResolveExceptionErrorReportContainsTheRelevantInformation() throws Exception {
 
-        sut.doResolveException(request, response, sut, new IOException("My Foo-Exception"));
+        sut.doResolveException(request, response, sut, new IOException("Exception"));
 
         File dir = new File(REPORT_PATH);
         File[] files = dir.listFiles();
 
-        Assert.assertThat(files.length, Matchers.equalTo(1));
-
-        String content = IOUtils.toString(new FileInputStream(files[0]));
-
-        Assert.assertThat(content, Matchers.containsString("java.io.IOException: My Foo-Exception"));
+        assertThat(files.length, equalTo(1));
+        assertThat(IOUtils.toString(new FileInputStream(files[0])), containsString("java.io.IOException: Exception"));
     }
 
 
@@ -107,7 +106,6 @@ public class WebExceptionHandlerUnitTest {
         when(userAuthenticationServiceMock.getCurrentUser()).thenReturn(usernamePasswordAuthenticationToken);
 
         String user = sut.textualRepresentationOfCurrentUser();
-
         assertThat(user, is("user: admin@synyx.de\n"));
     }
 
@@ -118,7 +116,6 @@ public class WebExceptionHandlerUnitTest {
         when(userAuthenticationServiceMock.getCurrentUser()).thenReturn(null);
 
         String user = sut.textualRepresentationOfCurrentUser();
-
         assertThat(user, is("?"));
     }
 }

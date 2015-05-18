@@ -42,7 +42,7 @@ public class PublicAPIExceptionHandlerUnitTest {
     }
 
     @Test
-    public void testResolveIllegalArgumentException() {
+    public void resolveIllegalArgumentException() {
 
         String exMessage = "Invalid ID for Foo";
 
@@ -54,7 +54,7 @@ public class PublicAPIExceptionHandlerUnitTest {
 
 
     @Test
-    public void testResolveIllegalStateException() {
+    public void resolveIllegalStateException() {
 
         String exMessage = "Invalid state foo";
 
@@ -66,7 +66,7 @@ public class PublicAPIExceptionHandlerUnitTest {
 
 
     @Test
-    public void testResolveHttpClientErrorException() {
+    public void resolveHttpClientErrorException() {
 
         String exMessage = "Nominatim down";
 
@@ -81,7 +81,7 @@ public class PublicAPIExceptionHandlerUnitTest {
 
 
     @Test
-    public void testResolveNullPointerException() {
+    public void resolveNullPointerException() {
 
         String exMessage = "This should never happen";
 
@@ -94,7 +94,7 @@ public class PublicAPIExceptionHandlerUnitTest {
 
 
     @Test
-    public void testResolveRuntimeException() {
+    public void resolveRuntimeException() {
 
         String exMessage = "This should never happen";
 
@@ -107,7 +107,7 @@ public class PublicAPIExceptionHandlerUnitTest {
 
 
     @Test
-    public void testExceptionWhileResolvingGetsCaught() throws IOException {
+    public void exceptionWhileResolvingGetsCaught() throws IOException {
 
         String exMessage = "Invalid state foo";
         HttpServletResponse responseMock = mock(HttpServletResponse.class);

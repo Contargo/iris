@@ -189,8 +189,9 @@
 
     <bean id="osrmQueryService" class="net.contargo.iris.osrm.service.OSRMQueryServiceImpl">
         <constructor-arg name="baseUrl" value="${osrm.url}"/>
-        <constructor-arg ref="httpUtil"/>
-        <constructor-arg ref="duplicateDetectionObjectMapper"/>
+        <constructor-arg name="osrmRestClient">
+            <bean class="org.springframework.web.client.RestTemplate"/>
+        </constructor-arg>
     </bean>
 
     <bean id="truckRouteService" class="net.contargo.iris.truck.service.OSRMTruckRouteService">

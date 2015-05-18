@@ -1,9 +1,6 @@
 package net.contargo.iris.osrm.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import net.contargo.iris.GeoLocation;
-import net.contargo.iris.util.HttpUtil;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +11,10 @@ import org.mockito.Mock;
 
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.io.File;
+import org.springframework.http.ResponseEntity;
+
+import org.springframework.web.client.RestTemplate;
+
 import java.io.IOException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -22,8 +22,12 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
+
+import static org.springframework.http.HttpStatus.OK;
 
 import static java.math.BigDecimal.ONE;
 import static java.math.BigDecimal.TEN;
@@ -41,56 +45,53 @@ public class OSRMQueryServiceImplUnitTest {
     private static final String BASE_URL = "baseUrl";
     private static final double TOTAL_DISTANCE = 28295.0;
     private static final double TOTAL_TIME = 2264.0;
-    private static final String OSRM_RSP_WRONG_PARAM = "{\"alternative_names\": [[\"Kriegsstraße/;primary/;no/;DE\"]]}";
+    private static final GeoLocation START_LOCATION = new GeoLocation(ONE, ONE);
+    private static final GeoLocation DESTINATION_LOCATION = new GeoLocation(TEN, TEN);
 
     private OSRMQueryService sut;
 
     @Mock
-    private HttpUtil httpUtilMock;
+    private RestTemplate osrmRestClientMock;
 
     @Before
     public void setUp() throws Exception {
 
-        String response = new ObjectMapper().readTree(new File("src/test/resources/osrm/osrmResponse.json")).toString();
-        when(httpUtilMock.getResponseContent(anyString())).thenReturn(response);
-
-        OSRMJsonResponse OSRMJsonResponse = new OSRMJsonResponse();
-        OSRMJsonResponseRouteSummary summary = new OSRMJsonResponseRouteSummary();
-        summary.setTotalDistance(TOTAL_DISTANCE);
-        summary.setTotalTime(TOTAL_TIME);
-        OSRMJsonResponse.setRoute_summary(summary);
-
-        sut = new OSRMQueryServiceImpl(httpUtilMock, BASE_URL, new ObjectMapper());
+        sut = new OSRMQueryServiceImpl(osrmRestClientMock, BASE_URL);
     }
 
 
     @Test
     public void getOSRMXmlRoute() {
 
-        GeoLocation start = new GeoLocation(ONE, ONE);
-        GeoLocation destination = new GeoLocation(TEN, TEN);
+        OSRMJsonResponseRouteSummary summary = new OSRMJsonResponseRouteSummary();
+        summary.setTotalDistance(TOTAL_DISTANCE);
+        summary.setTotalTime(TOTAL_TIME);
 
-        OSRMQueryResult actualResult = sut.getOSRMXmlRoute(start, destination);
+        OSRMJsonResponse osrmJsonResponse = new OSRMJsonResponse();
+        osrmJsonResponse.setStatus(200);
+        osrmJsonResponse.setRoute_summary(summary);
 
-        assertThat(actualResult.getStatus(), is(0));
-        assertThat(actualResult.getTotalDistance(), is(TOTAL_DISTANCE));
-        assertThat(actualResult.getTotalTime(), is(TOTAL_TIME));
-        assertThat(actualResult.getRouteInstructions().length, is(23));
-        assertThat(actualResult.getRouteInstructions()[0][1], is("Hafenstraße/;tertiary/;no/;DE"));
-        assertThat(actualResult.getRouteInstructions()[5][4], is("19"));
+        ResponseEntity<OSRMJsonResponse> responseEntity = new ResponseEntity<>(osrmJsonResponse, OK);
+        when(osrmRestClientMock.getForEntity(anyString(), eq(OSRMJsonResponse.class))).thenReturn(responseEntity);
+
+        OSRMQueryResult osrmResult = sut.getOSRMXmlRoute(START_LOCATION, DESTINATION_LOCATION);
+
+        assertThat(osrmResult.getStatus(), is(200));
+        assertThat(osrmResult.getTotalDistance(), is(TOTAL_DISTANCE));
+        assertThat(osrmResult.getTotalTime(), is(TOTAL_TIME));
     }
 
 
     @Test
     public void getOSRMXmlRouteNoRoute() throws IOException {
 
-        String r = new ObjectMapper().readTree(new File("src/test/resources/osrm/osrmResponseNoRoute.json")).toString();
-        when(httpUtilMock.getResponseContent(anyString())).thenReturn(r);
+        OSRMJsonResponse osrmJsonResponse = new OSRMJsonResponse();
+        osrmJsonResponse.setStatus(207);
 
-        GeoLocation start = new GeoLocation(ONE, ONE);
-        GeoLocation destination = new GeoLocation(TEN, TEN);
+        ResponseEntity<OSRMJsonResponse> responseEntity = new ResponseEntity<>(osrmJsonResponse, OK);
+        when(osrmRestClientMock.getForEntity(anyString(), eq(OSRMJsonResponse.class))).thenReturn(responseEntity);
 
-        OSRMQueryResult actualResult = sut.getOSRMXmlRoute(start, destination);
+        OSRMQueryResult actualResult = sut.getOSRMXmlRoute(START_LOCATION, new GeoLocation(TEN, TEN));
 
         assertThat(actualResult.getStatus(), is(207));
         assertThat(actualResult.getTotalDistance(), is(0d));
@@ -102,11 +103,8 @@ public class OSRMQueryServiceImplUnitTest {
     @Test(expected = RoutingException.class)
     public void getOSRMXmlRouteThrowsException() throws IOException {
 
-        GeoLocation start = new GeoLocation(ONE, ONE);
-        GeoLocation destination = new GeoLocation(TEN, TEN);
+        doThrow(RoutingException.class).when(osrmRestClientMock).getForEntity(anyString(), eq(OSRMJsonResponse.class));
 
-        when(httpUtilMock.getResponseContent(anyString())).thenReturn(OSRM_RSP_WRONG_PARAM);
-
-        sut.getOSRMXmlRoute(start, destination);
+        sut.getOSRMXmlRoute(START_LOCATION, new GeoLocation(TEN, TEN));
     }
 }

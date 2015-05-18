@@ -1,10 +1,9 @@
 package net.contargo.iris.osrm.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import net.contargo.iris.GeoLocation;
-import net.contargo.iris.util.HttpUtil;
 import net.contargo.iris.util.HttpUtilException;
+
+import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 
@@ -31,14 +30,12 @@ public class OSRMQueryServiceImpl implements OSRMQueryService {
     private static final String Q_ALTERNATIVE = "alt";
 
     private final String baseUrl;
-    private final HttpUtil httpUtil;
-    private final ObjectMapper objectMapper;
+    private final RestTemplate osrmRestClient;
 
-    public OSRMQueryServiceImpl(HttpUtil httpUtil, String baseUrl, ObjectMapper objectMapper) {
+    public OSRMQueryServiceImpl(RestTemplate osrmRestClient, String baseUrl) {
 
-        this.httpUtil = httpUtil;
+        this.osrmRestClient = osrmRestClient;
         this.baseUrl = baseUrl;
-        this.objectMapper = objectMapper;
     }
 
     @Override
@@ -54,10 +51,7 @@ public class OSRMQueryServiceImpl implements OSRMQueryService {
 
     private OSRMJsonResponse route(GeoLocation start, GeoLocation destination) throws IOException {
 
-        String query = createOSRMQueryString(start, destination);
-        String response = httpUtil.getResponseContent(query);
-
-        return objectMapper.readValue(response, OSRMJsonResponse.class);
+        return osrmRestClient.getForEntity(createOSRMQueryString(start, destination), OSRMJsonResponse.class).getBody();
     }
 
 

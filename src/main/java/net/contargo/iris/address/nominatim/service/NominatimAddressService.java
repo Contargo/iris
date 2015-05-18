@@ -94,7 +94,7 @@ public class NominatimAddressService implements AddressService {
     public Address getAddressByOsmId(long osmId) {
 
         String suburbUrl = nominatimUrlBuilder.buildOsmUrl(osmId);
-        List<Address> foundAddresses = nominatimResponder.getAddressesForUrlForOsmId(suburbUrl);
+        List<Address> foundAddresses = nominatimResponder.getAddressesForUrl(suburbUrl);
 
         return foundAddresses.get(0);
     }

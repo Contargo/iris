@@ -90,8 +90,9 @@
         </constructor-arg>
         <constructor-arg>
             <bean class="net.contargo.iris.address.nominatim.service.NominatimJsonResponseParser">
-                <constructor-arg name="httpUtil" ref="httpUtil"/>
-                <constructor-arg name="objectMapper" ref="duplicateDetectionObjectMapper"/>
+                <constructor-arg name="nominatimRestClient">
+                    <bean class="org.springframework.web.client.RestTemplate"/>
+                </constructor-arg>
             </bean>
         </constructor-arg>
         <constructor-arg name="addressSorter" ref="addressSorter"/>

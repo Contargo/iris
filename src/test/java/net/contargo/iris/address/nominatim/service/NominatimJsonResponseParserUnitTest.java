@@ -1,9 +1,6 @@
 package net.contargo.iris.address.nominatim.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import net.contargo.iris.address.Address;
-import net.contargo.iris.util.HttpUtil;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,20 +11,28 @@ import org.mockito.Mock;
 
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.io.File;
-import java.io.IOException;
+import org.springframework.http.ResponseEntity;
+
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
-import static org.hamcrest.Matchers.closeTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
+
+import static org.springframework.http.HttpStatus.OK;
+
+import static java.math.BigDecimal.ONE;
+import static java.math.BigDecimal.TEN;
 
 
 /**
@@ -39,116 +44,77 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class NominatimJsonResponseParserUnitTest {
 
-    private static final String NOMINATIM_SAMPLE = "src/test/resources/nominatim/json_sample.json";
-    private static final String NOMINATIM_SINGLE_SAMPLE = "src/test/resources/nominatim/json_sample_single_result.json";
-    private static final int DELTA = 1;
-    private static final String REQUEST =
-        "http://maps.contargo.net/nominatim/reverse/?format=json&lat=48.0750600000&lon=8.6362987000";
-    private static final String ADDRESS =
-        "Fotostudio Becker, 68, Karlstrasse, Suedweststadt, Karlsruhe, Regierungsbezirk Karlsruhe, Baden-Wuerttemberg, 76137, Federal Republic of Germany (land mass)";
-    private static final String ADDRESS_EBERHARDSTR =
-        "Eberhardstraße, Schura, Trossingen, Landkreis Tuttlingen, Regierungsbezirk Freiburg, Baden-Württemberg, 78647, Germany";
+    private static final String DISPLAY_NAME = "displayName";
+    private static final long OSM_ID = 90085697L;
 
     private NominatimJsonResponseParser sut;
 
     @Mock
-    private HttpUtil httpUtilMock;
+    private RestTemplate nominatimRestClientMock;
+
+    private Address responseAddress;
 
     @Before
     public void setup() {
 
-        sut = new NominatimJsonResponseParser(httpUtilMock, new ObjectMapper());
+        responseAddress = new Address(ONE, TEN);
+        responseAddress.setDisplayName(DISPLAY_NAME);
+        responseAddress.setOsmId(OSM_ID);
+
+        sut = new NominatimJsonResponseParser(nominatimRestClientMock);
     }
 
 
     @Test
-    public void getAddressesForUrl() throws IOException {
+    public void getAddressesForUrl() {
 
-        when(httpUtilMock.getResponseContent(anyString())).thenReturn(getStringFromJson(NOMINATIM_SAMPLE));
+        ResponseEntity<Address[]> response = new ResponseEntity<>(new Address[] { responseAddress }, OK);
 
-        List<Address> addresses = sut.getAddressesForUrl("foo");
-        assertThat(addresses.size(), is(5));
+        when(nominatimRestClientMock.getForEntity(anyString(), eq(Address[].class))).thenReturn(response);
 
-        Address address = addresses.get(0);
-        assertThat(address.getDisplayName(), is(ADDRESS));
-        assertThat(address.getOsmId(), is(90085697L));
-        assertThat(address.getLatitude().doubleValue(), closeTo(49.002095196515d, DELTA));
-        assertThat(address.getLongitude().doubleValue(), closeTo(8.39391718305592d, DELTA));
-    }
-
-
-    @Test
-    public void getAddressesForUrlForOsmId() throws IOException {
-
-        when(httpUtilMock.getResponseContent(anyString())).thenReturn(getStringFromJson(NOMINATIM_SINGLE_SAMPLE));
-
-        List<Address> addresses = sut.getAddressesForUrlForOsmId("foo");
+        List<Address> addresses = sut.getAddressesForUrl("aUrl");
         assertThat(addresses.size(), is(1));
 
-        Address address = addresses.get(0);
-        assertThat(address.getDisplayName(), is(ADDRESS));
-        assertThat(address.getOsmId(), is(90085697L));
-        assertThat(address.getLatitude().doubleValue(), closeTo(49.002095196515d, DELTA));
-        assertThat(address.getLongitude().doubleValue(), closeTo(8.39391718305592d, DELTA));
+        Address firstAddress = addresses.get(0);
+        assertThat(firstAddress.getDisplayName(), is(DISPLAY_NAME));
+        assertThat(firstAddress.getOsmId(), is(OSM_ID));
+        assertThat(firstAddress.getLatitude(), is(ONE.setScale(10)));
+        assertThat(firstAddress.getLongitude(), is(TEN.setScale(10)));
     }
 
 
     @Test
-    public void noResponse() {
+    public void getAddressesForUrlRestClientException() {
 
-        when(httpUtilMock.getResponseContent(anyString())).thenReturn(null);
+        doThrow(RestClientException.class).when(nominatimRestClientMock).getForEntity(anyString(), eq(Address[].class));
 
-        List<Address> addresses = sut.getAddressesForUrl("foo");
+        List<Address> addresses = sut.getAddressesForUrl("aUrl");
         assertThat(addresses, nullValue());
-    }
-
-
-    @Test
-    public void getCountryCode() throws IOException {
-
-        when(httpUtilMock.getResponseContent(anyString())).thenReturn(getStringFromJson(NOMINATIM_SAMPLE));
-
-        Address address = sut.getAddressesForUrl("foo").get(0);
-        assertThat(address.getCountryCode(), is("de"));
     }
 
 
     @Test
     public void getAddressForUrl() {
 
-        when(httpUtilMock.getResponseContent(REQUEST)).thenReturn(getResponse());
+        ResponseEntity<Address> response = new ResponseEntity<>(responseAddress, OK);
 
-        String displayName = sut.getAddressForUrl(REQUEST).getDisplayName();
-        assertThat(displayName, is(ADDRESS_EBERHARDSTR));
+        when(nominatimRestClientMock.getForEntity(anyString(), eq(Address.class))).thenReturn(response);
+
+        Address address = sut.getAddressForUrl("aUrl");
+
+        assertThat(address.getDisplayName(), is(DISPLAY_NAME));
+        assertThat(address.getOsmId(), is(OSM_ID));
+        assertThat(address.getLatitude(), is(ONE.setScale(10)));
+        assertThat(address.getLongitude(), is(TEN.setScale(10)));
     }
 
 
     @Test
-    public void getAddressForUrlRequestNull() {
+    public void getAddressForUrlRestClientException() {
 
-        when(httpUtilMock.getResponseContent(REQUEST)).thenReturn(getResponse());
+        doThrow(RestClientException.class).when(nominatimRestClientMock).getForEntity(anyString(), eq(Address.class));
 
-        Address address = sut.getAddressForUrl(null);
+        Address address = sut.getAddressForUrl("aUrl");
         assertThat(address, nullValue());
-    }
-
-
-    private String getStringFromJson(String path) throws IOException {
-
-        return new ObjectMapper().readTree(new File(path)).toString();
-    }
-
-
-    private String getResponse() {
-
-        return "{" + "\"place_id\":\"36907539\"," + "\"licence\":\"Data \\u00a9 OpenStreetMap contributors"
-            + ", ODbL 1.0. http:\\/\\/www.openstreetmap.org\\/copyright\"," + "\"osm_type\":\"way\","
-            + "\"osm_id\":\"23515787\"," + "\"lat\":\"48.0743824\"," + "\"lon\":\"8.6358638\","
-            + "\"display_name\":\"Eberhardstra\\u00dfe, Schura, Trossingen, Landkreis Tuttlingen"
-            + ", Regierungsbezirk Freiburg, Baden-W\\u00fcrttemberg, 78647, Germany\"," + "\"address\":{"
-            + "\"road\":\"Eberhardstra\\u00dfe\"," + "\"suburb\":\"Schura\"," + "\"city\":\"Trossingen\","
-            + "\"county\":\"Landkreis Tuttlingen\"," + "\"state_district\":\"Regierungsbezirk Freiburg\","
-            + "\"state\":\"Baden-W\\u00fcrttemberg\"," + "\"postcode\":\"78647\"," + "\"country\":\"Germany\","
-            + "\"country_code\":\"de\"" + "}}";
     }
 }

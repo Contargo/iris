@@ -112,7 +112,7 @@ public class NominatimAddressServiceUnitTest {
         when(addressSorterMock.compare(any(Address.class), any(Address.class))).thenReturn(1);
         when(addressValidatorMock.validateStreet(anyString())).then(returnsFirstArg());
         when(addressHelperMock.mergeSearchResultsWithoutDuplications(anyListOf(Address.class),
-                anyListOf(Address.class))).then(returnsFirstArg());
+                    anyListOf(Address.class))).then(returnsFirstArg());
 
         addressDetails = new HashMap<>();
         addressDetails.put(CITY.getKey(), "city");
@@ -192,7 +192,7 @@ public class NominatimAddressServiceUnitTest {
         expectedAddress.setDisplayName("Alleinstellungsmerkmal für die expectedAddress");
 
         when(nominatimUrlBuilderMock.buildOsmUrl(OSM_ID)).thenReturn(DUMMY_URL);
-        when(nominatimResponderMock.getAddressesForUrlForOsmId(DUMMY_URL)).thenReturn(asList(expectedAddress));
+        when(nominatimResponderMock.getAddressesForUrl(DUMMY_URL)).thenReturn(asList(expectedAddress));
 
         Address actualAddress = sut.getAddressByOsmId(OSM_ID);
 

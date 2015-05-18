@@ -23,6 +23,10 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 
+import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
+import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+import static javax.servlet.http.HttpServletResponse.SC_SERVICE_UNAVAILABLE;
+
 
 /**
  * Unit test for {@link PublicAPIExceptionHandler}.
@@ -52,7 +56,7 @@ public class PublicAPIExceptionHandlerUnitTest {
         sut.resolveException(request, response, sut, new IllegalArgumentException(exMessage));
 
         assertThat(response.getErrorMessage(), containsString(exMessage));
-        assertThat(response.getStatus(), equalTo(HttpServletResponse.SC_BAD_REQUEST));
+        assertThat(response.getStatus(), equalTo(SC_BAD_REQUEST));
     }
 
 
@@ -64,7 +68,7 @@ public class PublicAPIExceptionHandlerUnitTest {
         sut.resolveException(request, response, sut, new IllegalStateException(exMessage));
 
         assertThat(response.getErrorMessage(), containsString(exMessage));
-        assertThat(response.getStatus(), equalTo(HttpServletResponse.SC_BAD_REQUEST));
+        assertThat(response.getStatus(), equalTo(SC_BAD_REQUEST));
     }
 
 
@@ -79,7 +83,7 @@ public class PublicAPIExceptionHandlerUnitTest {
         assertThat(response.getErrorMessage(), containsString(exMessage));
         assertThat(response.getErrorMessage(),
             containsString("Service is temporary not available, please try again later"));
-        assertThat(response.getStatus(), equalTo(HttpServletResponse.SC_SERVICE_UNAVAILABLE));
+        assertThat(response.getStatus(), equalTo(SC_SERVICE_UNAVAILABLE));
     }
 
 
@@ -92,7 +96,7 @@ public class PublicAPIExceptionHandlerUnitTest {
         sut.resolveException(request, response, sut, new NullPointerException(exMessage));
 
         assertThat(response.getErrorMessage(), containsString(exMessage));
-        assertThat(response.getStatus(), equalTo(HttpServletResponse.SC_INTERNAL_SERVER_ERROR));
+        assertThat(response.getStatus(), equalTo(SC_INTERNAL_SERVER_ERROR));
     }
 
 
@@ -105,7 +109,7 @@ public class PublicAPIExceptionHandlerUnitTest {
         sut.resolveException(request, response, sut, new RuntimeException(exMessage));
 
         assertThat(response.getErrorMessage(), containsString(exMessage));
-        assertThat(response.getStatus(), equalTo(HttpServletResponse.SC_INTERNAL_SERVER_ERROR));
+        assertThat(response.getStatus(), equalTo(SC_INTERNAL_SERVER_ERROR));
     }
 
 
@@ -115,8 +119,7 @@ public class PublicAPIExceptionHandlerUnitTest {
         String exMessage = "Invalid state foo";
         HttpServletResponse responseMock = mock(HttpServletResponse.class);
 
-        doThrow(new IOException()).when(responseMock)
-            .sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request. " + exMessage);
+        doThrow(new IOException()).when(responseMock).sendError(SC_BAD_REQUEST, "Bad request. " + exMessage);
         sut.resolveException(request, responseMock, sut, new IllegalStateException(exMessage));
     }
 }

@@ -1,9 +1,6 @@
 
 package net.contargo.iris.api;
 
-import org.hamcrest.Matchers;
-
-import org.junit.Assert;
 import org.junit.Test;
 
 import org.springframework.http.HttpStatus;
@@ -17,6 +14,11 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
 
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -37,6 +39,7 @@ public class PublicAPIExceptionHandlerUnitTest {
     public PublicAPIExceptionHandlerUnitTest() {
 
         sut = new PublicAPIExceptionHandler();
+
         request = new MockHttpServletRequest();
         response = new MockHttpServletResponse();
     }
@@ -48,8 +51,8 @@ public class PublicAPIExceptionHandlerUnitTest {
 
         sut.resolveException(request, response, sut, new IllegalArgumentException(exMessage));
 
-        Assert.assertThat(response.getErrorMessage(), Matchers.containsString(exMessage));
-        Assert.assertThat(response.getStatus(), Matchers.equalTo(HttpServletResponse.SC_BAD_REQUEST));
+        assertThat(response.getErrorMessage(), containsString(exMessage));
+        assertThat(response.getStatus(), equalTo(HttpServletResponse.SC_BAD_REQUEST));
     }
 
 
@@ -60,8 +63,8 @@ public class PublicAPIExceptionHandlerUnitTest {
 
         sut.resolveException(request, response, sut, new IllegalStateException(exMessage));
 
-        Assert.assertThat(response.getErrorMessage(), Matchers.containsString(exMessage));
-        Assert.assertThat(response.getStatus(), Matchers.equalTo(HttpServletResponse.SC_BAD_REQUEST));
+        assertThat(response.getErrorMessage(), containsString(exMessage));
+        assertThat(response.getStatus(), equalTo(HttpServletResponse.SC_BAD_REQUEST));
     }
 
 
@@ -73,10 +76,10 @@ public class PublicAPIExceptionHandlerUnitTest {
         sut.resolveException(request, response, sut,
             new HttpClientErrorException(HttpStatus.SERVICE_UNAVAILABLE, exMessage));
 
-        Assert.assertThat(response.getErrorMessage(), Matchers.containsString(exMessage));
-        Assert.assertThat(response.getErrorMessage(),
-            Matchers.containsString("Service is temporary not available, please try again later"));
-        Assert.assertThat(response.getStatus(), Matchers.equalTo(HttpServletResponse.SC_SERVICE_UNAVAILABLE));
+        assertThat(response.getErrorMessage(), containsString(exMessage));
+        assertThat(response.getErrorMessage(),
+            containsString("Service is temporary not available, please try again later"));
+        assertThat(response.getStatus(), equalTo(HttpServletResponse.SC_SERVICE_UNAVAILABLE));
     }
 
 
@@ -88,8 +91,8 @@ public class PublicAPIExceptionHandlerUnitTest {
         // NullpointerException must be thrown for test purposes
         sut.resolveException(request, response, sut, new NullPointerException(exMessage));
 
-        Assert.assertThat(response.getErrorMessage(), Matchers.containsString(exMessage));
-        Assert.assertThat(response.getStatus(), Matchers.equalTo(HttpServletResponse.SC_INTERNAL_SERVER_ERROR));
+        assertThat(response.getErrorMessage(), containsString(exMessage));
+        assertThat(response.getStatus(), equalTo(HttpServletResponse.SC_INTERNAL_SERVER_ERROR));
     }
 
 
@@ -101,8 +104,8 @@ public class PublicAPIExceptionHandlerUnitTest {
         // Runtimeexception must be thrown for test purposes
         sut.resolveException(request, response, sut, new RuntimeException(exMessage));
 
-        Assert.assertThat(response.getErrorMessage(), Matchers.containsString(exMessage));
-        Assert.assertThat(response.getStatus(), Matchers.equalTo(HttpServletResponse.SC_INTERNAL_SERVER_ERROR));
+        assertThat(response.getErrorMessage(), containsString(exMessage));
+        assertThat(response.getStatus(), equalTo(HttpServletResponse.SC_INTERNAL_SERVER_ERROR));
     }
 
 
@@ -112,8 +115,8 @@ public class PublicAPIExceptionHandlerUnitTest {
         String exMessage = "Invalid state foo";
         HttpServletResponse responseMock = mock(HttpServletResponse.class);
 
-        doThrow(new IOException()).when(responseMock).sendError(HttpServletResponse.SC_BAD_REQUEST,
-            "Bad request. " + exMessage);
+        doThrow(new IOException()).when(responseMock)
+            .sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request. " + exMessage);
         sut.resolveException(request, responseMock, sut, new IllegalStateException(exMessage));
     }
 }

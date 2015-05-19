@@ -12,6 +12,11 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
+import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
+import static javax.servlet.http.HttpServletResponse.SC_SERVICE_UNAVAILABLE;
+
 
 /**
  * This ExceptionHandler handles thrown Exceptions of our public API and responds with Exception specific HTTP status
@@ -55,7 +60,7 @@ public class PublicAPIExceptionHandler implements HandlerExceptionResolver {
     private ModelAndView handleIllegalArgumentException(HttpServletResponse response, IllegalArgumentException ex)
         throws IOException {
 
-        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad Request. " + ex.getMessage());
+        response.sendError(SC_BAD_REQUEST, "Bad Request. " + ex.getMessage());
 
         return new ModelAndView();
     }
@@ -64,7 +69,7 @@ public class PublicAPIExceptionHandler implements HandlerExceptionResolver {
     private ModelAndView handleIllegalStateException(HttpServletResponse response, IllegalStateException ex)
         throws IOException {
 
-        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request. " + ex.getMessage());
+        response.sendError(SC_BAD_REQUEST, "Bad request. " + ex.getMessage());
 
         return new ModelAndView();
     }
@@ -73,7 +78,7 @@ public class PublicAPIExceptionHandler implements HandlerExceptionResolver {
     private ModelAndView handleHttpClientErrorException(HttpServletResponse response, HttpClientErrorException ex)
         throws IOException {
 
-        response.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE,
+        response.sendError(SC_SERVICE_UNAVAILABLE,
             "Service is temporary not available, please try again later. " + ex.getMessage());
 
         return new ModelAndView();
@@ -82,7 +87,7 @@ public class PublicAPIExceptionHandler implements HandlerExceptionResolver {
 
     private ModelAndView handleGenericException(HttpServletResponse response, Exception ex) throws IOException {
 
-        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Internal Server Error. " + ex.getMessage());
+        response.sendError(SC_INTERNAL_SERVER_ERROR, "Internal Server Error. " + ex.getMessage());
 
         return new ModelAndView();
     }
@@ -91,7 +96,7 @@ public class PublicAPIExceptionHandler implements HandlerExceptionResolver {
     private ModelAndView handleNotFoundException(HttpServletResponse response, NotFoundException ex)
         throws IOException {
 
-        response.sendError(HttpServletResponse.SC_NOT_FOUND, "Not found. " + ex.getMessage());
+        response.sendError(SC_NOT_FOUND, "Not found. " + ex.getMessage());
 
         return new ModelAndView();
     }

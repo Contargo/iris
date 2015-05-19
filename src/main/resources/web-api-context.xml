@@ -92,7 +92,7 @@
     </bean>
     
     <!-- Error handling: generating error reports and redirect to specific error jsps-->
-    <bean id="exceptionResolver" class="net.contargo.iris.api.WebExceptionHandler">
+    <bean class="net.contargo.iris.web.WebExceptionHandler">
         <constructor-arg value="${error.reports.basepath}/exceptions"/>
         <constructor-arg ref="userAuthenticationService"/>
         <property name="defaultErrorView" value="general-error"/>

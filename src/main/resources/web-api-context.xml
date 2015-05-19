@@ -20,8 +20,7 @@
     <!-- Enables the Spring MVC @Controller programming model -->
     <mvc:annotation-driven/>
 
-    <!-- Resolves views selected for rendering by @Controllers to .jsp resources 
-         in the /WEB-INF/views directory -->
+    <!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/WEB-INF/views/"/>
         <property name="suffix" value=".jsp"/>
@@ -82,7 +81,7 @@
     </bean>
 
     <bean id="duplicateDetectionObjectMapper"
-                class="org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean">
+          class="org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean">
         <property name="featuresToEnable">
             <array>
                 <util:constant
@@ -90,24 +89,16 @@
             </array>
         </property>
     </bean>
-    
+
     <!-- Error handling: generating error reports and redirect to specific error jsps-->
     <bean class="net.contargo.iris.web.WebExceptionHandler">
         <constructor-arg value="${error.reports.basepath}/exceptions"/>
         <constructor-arg ref="userAuthenticationService"/>
         <property name="defaultErrorView" value="general-error"/>
-
-        <!-- If you want to map Exceptions to specific jsps you can do it this way -->
-        <!--        <property name="exceptionMappings">
-            <props>
-                <prop key="org.springframework.security.access.AccessDeniedException">accessDenied</prop>
-            </props>
-        </property>-->
-
     </bean>
 
     <!-- set locale default to en -->
-    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.FixedLocaleResolver">
+    <bean class="org.springframework.web.servlet.i18n.FixedLocaleResolver">
         <property name="defaultLocale" value="en_EN"/>
     </bean>
 </beans>

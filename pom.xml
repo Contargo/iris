@@ -681,11 +681,11 @@
                 <artifactId>jetty-maven-plugin</artifactId>
                 <version>${jetty.version}</version>
                 <configuration>
-                    <connectors>
-                        <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
-                            <port>8082</port>
-                        </connector>
-                    </connectors>
+                    <stopKey>stop</stopKey>
+                    <stopPort>9966</stopPort>
+                    <httpConnector>
+                        <port>8082</port>
+                    </httpConnector>
                 </configuration>
             </plugin>
 

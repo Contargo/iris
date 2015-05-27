@@ -103,11 +103,11 @@ class NominatimJsonResponseParser {
      *
      * @return  HttpEntity with TEXT_HTML Accept in Header
      */
-    private HttpEntity getHttpEntity() {
+    private HttpEntity<Address> getHttpEntity() {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(asList(MediaType.TEXT_HTML));
 
-        return new HttpEntity(headers);
+        return new HttpEntity<>(headers);
     }
 }

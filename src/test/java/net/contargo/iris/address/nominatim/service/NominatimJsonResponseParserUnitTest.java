@@ -11,6 +11,7 @@ import org.mockito.Mock;
 
 import org.mockito.runners.MockitoJUnitRunner;
 
+import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.client.RestClientException;
@@ -23,12 +24,14 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
+import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpStatus.OK;
 
 import static java.math.BigDecimal.ONE;
@@ -66,13 +69,14 @@ public class NominatimJsonResponseParserUnitTest {
 
 
     @Test
-    public void getAddressesForUrl() {
+    public void getAddresses() {
 
         ResponseEntity<Address[]> response = new ResponseEntity<>(new Address[] { responseAddress }, OK);
 
-        when(nominatimRestClientMock.getForEntity(anyString(), eq(Address[].class))).thenReturn(response);
+        when(nominatimRestClientMock.exchange(anyString(), eq(GET), any(HttpEntity.class), eq(Address[].class)))
+            .thenReturn(response);
 
-        List<Address> addresses = sut.getAddressesForUrl("aUrl");
+        List<Address> addresses = sut.getAddresses("aUrl");
         assertThat(addresses.size(), is(1));
 
         Address firstAddress = addresses.get(0);
@@ -84,11 +88,42 @@ public class NominatimJsonResponseParserUnitTest {
 
 
     @Test
-    public void getAddressesForUrlRestClientException() {
+    public void getAddressesRestClientException() {
 
-        doThrow(RestClientException.class).when(nominatimRestClientMock).getForEntity(anyString(), eq(Address[].class));
+        doThrow(RestClientException.class).when(nominatimRestClientMock)
+            .exchange(anyString(), eq(GET), any(HttpEntity.class), eq(Address[].class));
 
-        List<Address> addresses = sut.getAddressesForUrl("aUrl");
+        List<Address> addresses = sut.getAddresses("aUrl");
+        assertThat(addresses, nullValue());
+    }
+
+
+    @Test
+    public void getAddressesWithOSMId() {
+
+        ResponseEntity<Address> response = new ResponseEntity<>(responseAddress, OK);
+
+        when(nominatimRestClientMock.exchange(anyString(), eq(GET), any(HttpEntity.class), eq(Address.class)))
+            .thenReturn(response);
+
+        List<Address> addresses = sut.getAddressesFromOSMId("aUrl");
+        assertThat(addresses.size(), is(1));
+
+        Address firstAddress = addresses.get(0);
+        assertThat(firstAddress.getDisplayName(), is(DISPLAY_NAME));
+        assertThat(firstAddress.getOsmId(), is(OSM_ID));
+        assertThat(firstAddress.getLatitude(), is(ONE.setScale(10)));
+        assertThat(firstAddress.getLongitude(), is(TEN.setScale(10)));
+    }
+
+
+    @Test
+    public void getAddressesWithOSMIdRestClientException() {
+
+        doThrow(RestClientException.class).when(nominatimRestClientMock)
+            .exchange(anyString(), eq(GET), any(HttpEntity.class), eq(Address.class));
+
+        List<Address> addresses = sut.getAddressesFromOSMId("aUrl");
         assertThat(addresses, nullValue());
     }
 
@@ -98,9 +133,10 @@ public class NominatimJsonResponseParserUnitTest {
 
         ResponseEntity<Address> response = new ResponseEntity<>(responseAddress, OK);
 
-        when(nominatimRestClientMock.getForEntity(anyString(), eq(Address.class))).thenReturn(response);
+        when(nominatimRestClientMock.exchange(anyString(), eq(GET), any(HttpEntity.class), eq(Address.class)))
+            .thenReturn(response);
 
-        Address address = sut.getAddressForUrl("aUrl");
+        Address address = sut.getAddress("aUrl");
 
         assertThat(address.getDisplayName(), is(DISPLAY_NAME));
         assertThat(address.getOsmId(), is(OSM_ID));
@@ -112,9 +148,10 @@ public class NominatimJsonResponseParserUnitTest {
     @Test
     public void getAddressForUrlRestClientException() {
 
-        doThrow(RestClientException.class).when(nominatimRestClientMock).getForEntity(anyString(), eq(Address.class));
+        doThrow(RestClientException.class).when(nominatimRestClientMock)
+            .exchange(anyString(), eq(GET), any(HttpEntity.class), eq(Address.class));
 
-        Address address = sut.getAddressForUrl("aUrl");
+        Address address = sut.getAddress("aUrl");
         assertThat(address, nullValue());
     }
 }

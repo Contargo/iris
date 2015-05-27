@@ -102,11 +102,11 @@ public class NominatimAddressServiceUnitTest {
         a4.setOsmId(4L);
 
         // the simple case
-        when(nominatimResponderMock.getAddressesForUrl(urlNormal)).thenReturn(asList(a1, a2, a3, a4));
+        when(nominatimResponderMock.getAddresses(urlNormal)).thenReturn(asList(a1, a2, a3, a4));
 
         // the complex case: searching by name
-        when(nominatimResponderMock.getAddressesForUrl(urlByName)).thenReturn(asList(a3, a4));
-        when(nominatimResponderMock.getAddressesForUrl(urlByStreet)).thenReturn(asList(a1, a3));
+        when(nominatimResponderMock.getAddresses(urlByName)).thenReturn(asList(a3, a4));
+        when(nominatimResponderMock.getAddresses(urlByStreet)).thenReturn(asList(a1, a3));
 
         when(addressSorterMock.compare(any(Address.class), any(Address.class))).thenReturn(1);
         when(addressValidatorMock.validateStreet(anyString())).then(returnsFirstArg());
@@ -172,7 +172,7 @@ public class NominatimAddressServiceUnitTest {
         Address address = new Address(lat, lon);
 
         when(nominatimUrlBuilderMock.buildUrl(geoLocation)).thenReturn("url");
-        when(nominatimResponderMock.getAddressForUrl("url")).thenReturn(address);
+        when(nominatimResponderMock.getAddress("url")).thenReturn(address);
 
         Address result = sut.getAddressByGeolocation(geoLocation);
 
@@ -180,7 +180,7 @@ public class NominatimAddressServiceUnitTest {
         assertThat(result.getLongitude(), closeTo(lon, new BigDecimal("0.001")));
 
         verify(nominatimUrlBuilderMock).buildUrl(geoLocation);
-        verify(nominatimResponderMock).getAddressForUrl("url");
+        verify(nominatimResponderMock).getAddress("url");
     }
 
 
@@ -191,7 +191,7 @@ public class NominatimAddressServiceUnitTest {
         expectedAddress.setDisplayName("Alleinstellungsmerkmal für die expectedAddress");
 
         when(nominatimUrlBuilderMock.buildOsmUrl(OSM_ID)).thenReturn(DUMMY_URL);
-        when(nominatimResponderMock.getAddressesForUrl(DUMMY_URL)).thenReturn(asList(expectedAddress));
+        when(nominatimResponderMock.getAddressesFromOSMId(DUMMY_URL)).thenReturn(asList(expectedAddress));
 
         Address actualAddress = sut.getAddressByOsmId(OSM_ID);
 
@@ -212,8 +212,7 @@ public class NominatimAddressServiceUnitTest {
 
         when(nominatimUrlBuilderMock.buildSuburbUrl(OSM_PLACE_ID, SuburbType.ADDRESSES.getType())).thenReturn(
             DUMMY_URL);
-        when(nominatimResponderMock.getAddressesForUrl(DUMMY_URL)).thenReturn(asList(expectedAddress1,
-                expectedAddress2));
+        when(nominatimResponderMock.getAddresses(DUMMY_URL)).thenReturn(asList(expectedAddress1, expectedAddress2));
 
         List<Address> actualAddresses = sut.getAdressesWherePlaceIsIn(OSM_PLACE_ID);
         assertThat(actualAddresses, is(expectedAddresses));
@@ -231,8 +230,7 @@ public class NominatimAddressServiceUnitTest {
 
         when(nominatimUrlBuilderMock.buildSuburbUrl(OSM_PLACE_ID, SuburbType.ADDRESSES.getType())).thenReturn(
             DUMMY_URL);
-        when(nominatimResponderMock.getAddressesForUrl(anyString())).thenReturn(asList(expectedAddress1,
-                expectedAddress2));
+        when(nominatimResponderMock.getAddresses(anyString())).thenReturn(asList(expectedAddress1, expectedAddress2));
 
         List<Address> actualList = sut.getAddressesByDetails(addressDetails);
         assertThat(actualList, contains(expectedAddress1, expectedAddress2));
@@ -250,7 +248,7 @@ public class NominatimAddressServiceUnitTest {
 
         when(nominatimUrlBuilderMock.buildSuburbUrl(OSM_PLACE_ID, SuburbType.ADDRESSES.getType())).thenReturn(
             DUMMY_URL);
-        when(nominatimResponderMock.getAddressesForUrl(anyString())).thenReturn(Collections.<Address>emptyList());
+        when(nominatimResponderMock.getAddresses(anyString())).thenReturn(Collections.<Address>emptyList());
 
         List<Address> actualList = sut.getAddressesByDetails(addressDetails);
         assertThat(actualList, empty());

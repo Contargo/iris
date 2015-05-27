@@ -73,7 +73,7 @@ public class NominatimAddressService implements AddressService {
         } else {
             String url = nominatimUrlBuilder.buildUrl(street, postalCode, city, country, name);
 
-            List<Address> addresses = nominatimResponder.getAddressesForUrl(url);
+            List<Address> addresses = nominatimResponder.getAddresses(url);
 
             Collections.sort(addresses, addressSorter);
 
@@ -93,7 +93,7 @@ public class NominatimAddressService implements AddressService {
     public Address getAddressByOsmId(long osmId) {
 
         String suburbUrl = nominatimUrlBuilder.buildOsmUrl(osmId);
-        List<Address> foundAddresses = nominatimResponder.getAddressesForUrl(suburbUrl);
+        List<Address> foundAddresses = nominatimResponder.getAddressesFromOSMId(suburbUrl);
 
         return foundAddresses.get(0);
     }
@@ -105,7 +105,7 @@ public class NominatimAddressService implements AddressService {
         try {
             String url = nominatimUrlBuilder.buildUrl(geoLocation);
 
-            return nominatimResponder.getAddressForUrl(url);
+            return nominatimResponder.getAddress(url);
         } catch (IllegalArgumentException e) {
             throw new AddressResolutionException("Failed to resolve address for " + geoLocation, e);
         }
@@ -118,7 +118,7 @@ public class NominatimAddressService implements AddressService {
         List<Address> suburbs = new ArrayList<>();
 
         String suburbUrl = nominatimUrlBuilder.buildSuburbUrl(osmPlaceId, suburbType.getType());
-        List<Address> foundSuburbs = nominatimResponder.getAddressesForUrl(suburbUrl);
+        List<Address> foundSuburbs = nominatimResponder.getAddresses(suburbUrl);
 
         if (!foundSuburbs.isEmpty()) {
             // check for possible redundant address display names
@@ -144,8 +144,8 @@ public class NominatimAddressService implements AddressService {
         String url1 = nominatimUrlBuilder.buildUrl(null, postalCode, city, country, name);
         String url2 = nominatimUrlBuilder.buildUrl(street, postalCode, city, country, null);
 
-        List<Address> one = nominatimResponder.getAddressesForUrl(url1);
-        List<Address> two = nominatimResponder.getAddressesForUrl(url2);
+        List<Address> one = nominatimResponder.getAddresses(url1);
+        List<Address> two = nominatimResponder.getAddresses(url2);
 
         // avoid duplication of places by osm_id
         List<Address> mergedList = addressHelper.mergeSearchResultsWithoutDuplications(one, two);

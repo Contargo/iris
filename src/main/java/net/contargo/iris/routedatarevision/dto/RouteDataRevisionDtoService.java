@@ -40,9 +40,8 @@ public interface RouteDataRevisionDtoService {
      *
      * @return  the found {@link net.contargo.iris.routedatarevision.dto.RouteDataRevisionDto}
      *
-     * @throws  net.contargo.iris.api.NotFoundException  if there is no
-     *                                                   {@link net.contargo.iris.routedatarevision.dto.RouteDataRevisionDto}
-     *                                                   for the given id.
+     * @throws  net.contargo.iris.api.NotFoundException  if there is no {@link RouteDataRevisionDto}
+     *                                                   RouteDataRevisionDto for the given id.
      */
     RouteDataRevisionDto getRouteDataRevision(Long id);
 
@@ -62,8 +61,8 @@ public interface RouteDataRevisionDtoService {
      * Checks if there is already an entry of type {@link net.contargo.iris.routedatarevision.RouteDataRevision} with
      * the given values.
      *
-     * @param  terminal  the corresponding {@link net.contargo.iris.terminal.Terminal} for a
-     *                   {@link net.contargo.iris.routedatarevision.RouteDataRevision}
+     * @param  terminalUniqueId  the corresponding {@link net.contargo.iris.terminal.Terminal} for a
+     *                           {@link net.contargo.iris.routedatarevision.RouteDataRevision}
      * @param  latitude  the corresponding Latitude for a {@link net.contargo.iris.routedatarevision.RouteDataRevision}
      * @param  longitude  the corresponding Longitude for a
      *                    {@link net.contargo.iris.routedatarevision.RouteDataRevision}

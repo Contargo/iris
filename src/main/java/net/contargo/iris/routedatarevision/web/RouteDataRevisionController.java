@@ -42,6 +42,7 @@ public class RouteDataRevisionController extends AbstractController {
     private static final Message UPDATE_SUCCESS_MESSAGE = Message.success("routerevision.success.update.message");
 
     private static final String CONTROLLER_CONTEXT = "routeRevisionManagement/";
+    private static final String ROUTE_REVISION = "routeRevision";
 
     private final RouteDataRevisionDtoService routeDataRevisionDtoService;
     private final TerminalService terminalService;
@@ -77,26 +78,26 @@ public class RouteDataRevisionController extends AbstractController {
     @RequestMapping(value = "/new", method = GET)
     public String createSkeleton(Model model) {
 
-        model.addAttribute("routeRevision", new RouteDataRevisionDto());
+        model.addAttribute(ROUTE_REVISION, new RouteDataRevisionDto());
         addCollectionsToModel(model);
 
-        return CONTROLLER_CONTEXT + "routeRevision";
+        return CONTROLLER_CONTEXT + ROUTE_REVISION;
     }
 
 
     @RequestMapping(value = "/{id}", method = GET)
     public String get(@PathVariable Long id, Model model) {
 
-        model.addAttribute("routeRevision", routeDataRevisionDtoService.getRouteDataRevision(id));
+        model.addAttribute(ROUTE_REVISION, routeDataRevisionDtoService.getRouteDataRevision(id));
         addCollectionsToModel(model);
 
-        return CONTROLLER_CONTEXT + "routeRevision";
+        return CONTROLLER_CONTEXT + ROUTE_REVISION;
     }
 
 
     @RequestMapping(value = "", method = POST)
     public String create(@Valid
-        @ModelAttribute("routeRevision")
+        @ModelAttribute(ROUTE_REVISION)
         RouteDataRevisionDto routeDataRevisionDto, BindingResult result, RedirectAttributes redirectAttributes,
         Model model) {
 
@@ -106,7 +107,7 @@ public class RouteDataRevisionController extends AbstractController {
 
     @RequestMapping(value = "/{id}", method = PUT)
     public String update(@Valid
-        @ModelAttribute("routeRevision")
+        @ModelAttribute(ROUTE_REVISION)
         RouteDataRevisionDto routeDataRevisionDto, BindingResult result, RedirectAttributes redirectAttributes,
         Model model) {
 
@@ -126,10 +127,10 @@ public class RouteDataRevisionController extends AbstractController {
         }
 
         if (result.hasErrors()) {
-            model.addAttribute("routeRevision", routeDataRevisionDto);
+            model.addAttribute(ROUTE_REVISION, routeDataRevisionDto);
             model.addAttribute("terminals", terminalService.getAll());
 
-            return CONTROLLER_CONTEXT + "routeRevision";
+            return CONTROLLER_CONTEXT + ROUTE_REVISION;
         }
 
         RouteDataRevisionDto savedDto = routeDataRevisionDtoService.save(routeDataRevisionDto);

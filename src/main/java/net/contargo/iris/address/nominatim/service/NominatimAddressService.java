@@ -85,7 +85,7 @@ public class NominatimAddressService implements AddressService {
     @Override
     public List<Address> getAddressesWherePlaceIsIn(Long placeId) {
 
-        return searchSuburbsViaNominatimsDetailPage(placeId, SuburbType.ADDRESSES, new HashSet<String>());
+        return searchSuburbsViaNominatimsDetailPage(placeId, SuburbType.ADDRESSES, new HashSet<>());
     }
 
 

@@ -55,11 +55,6 @@ public class RouteDataRevision {
     @Size(max = COMMENT_SIZE)
     private String comment;
 
-    public RouteDataRevision() {
-
-        // for jpa
-    }
-
     public Long getId() {
 
         return id;

@@ -128,7 +128,7 @@ public class NominatimAddressService implements AddressService {
                     // add to suburbs list
                     suburbs.add(foundSuburb);
 
-                    // add to golbal display names, for next iteration
+                    // add to global display names, for next iteration
                     suburbGlobalDisplayNames.add(foundSuburb.getDisplayName());
                 }
             }
@@ -140,7 +140,7 @@ public class NominatimAddressService implements AddressService {
 
     private List<Address> geocodeByName(String street, String postalCode, String city, String country, String name) {
 
-        // make 2 querys: 1 query for search by name, 1 query for search by street
+        // make 2 queries: 1 query for search by name, 1 query for search by street
         String url1 = nominatimUrlBuilder.buildUrl(null, postalCode, city, country, name);
         String url2 = nominatimUrlBuilder.buildUrl(street, postalCode, city, country, null);
 
@@ -150,7 +150,7 @@ public class NominatimAddressService implements AddressService {
         // avoid duplication of places by osm_id
         List<Address> mergedList = addressHelper.mergeSearchResultsWithoutDuplications(one, two);
 
-        // sort list so that unplausible results (e.g., not in europe) appear last
+        // sort list so that no plausible results (e.g., not in europe) appear last
         Collections.sort(mergedList, addressSorter);
 
         return mergedList;

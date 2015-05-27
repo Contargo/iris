@@ -97,6 +97,6 @@ public class WebExceptionHandler extends SimpleMappingExceptionResolver {
 
     private int randomInRange(int min, int max) {
 
-        return new Random().nextInt((max - min + 1)) + min;
+        return new Random().nextInt(max - min + 1) + min;
     }
 }

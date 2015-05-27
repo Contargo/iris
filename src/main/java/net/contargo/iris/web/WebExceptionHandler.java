@@ -40,6 +40,8 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class WebExceptionHandler extends SimpleMappingExceptionResolver {
 
     private static final Logger LOG = getLogger(MethodHandles.lookup().lookupClass());
+    private static final int MIN = 1000;
+    private static final int MAX = 9999;
 
     private final File baseDirectory;
     private final UserAuthenticationService userAuthenticationService;
@@ -57,7 +59,7 @@ public class WebExceptionHandler extends SimpleMappingExceptionResolver {
 
         Authentication user = userAuthenticationService.getCurrentUser();
         String now = new DateTime().toString("yyyy-MM-dd_HH-mm-ss");
-        String id = format("%s-%4d", now, randomInRange(1000, 9999));
+        String id = format("%s-%4d", now, randomInRange(MIN, MAX));
 
         File errorReport = new File(baseDirectory, id + "-report.txt");
 

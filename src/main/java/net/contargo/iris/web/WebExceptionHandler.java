@@ -64,8 +64,7 @@ public class WebExceptionHandler extends SimpleMappingExceptionResolver {
         File errorReport = new File(baseDirectory, id + "-report.txt");
 
         try(PrintWriter writer = new PrintWriter(errorReport, UTF_8.name())) {
-            String errorMessage = format(""
-                    + "Id: %s%n%n"
+            String errorMessage = format("Id: %s%n%n"
                     + "Date: %s%n"
                     + "Username: %s%n%n"
                     + "Requested URL: %s%n"

@@ -89,7 +89,7 @@ public class AddressDtoServiceImpl implements AddressDtoService {
     @Override
     public List<AddressDto> getAddressesWherePlaceIsIn(Long placeId) {
 
-        List<Address> addressList = addressService.getAdressesWherePlaceIsIn(placeId);
+        List<Address> addressList = addressService.getAddressesWherePlaceIsIn(placeId);
 
         List<AddressDto> addressDtoList = new ArrayList<>();
 

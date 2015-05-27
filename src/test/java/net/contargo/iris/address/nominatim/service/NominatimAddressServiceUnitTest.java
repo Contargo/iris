@@ -214,7 +214,7 @@ public class NominatimAddressServiceUnitTest {
             DUMMY_URL);
         when(nominatimResponderMock.getAddresses(DUMMY_URL)).thenReturn(asList(expectedAddress1, expectedAddress2));
 
-        List<Address> actualAddresses = sut.getAdressesWherePlaceIsIn(OSM_PLACE_ID);
+        List<Address> actualAddresses = sut.getAddressesWherePlaceIsIn(OSM_PLACE_ID);
         assertThat(actualAddresses, is(expectedAddresses));
     }
 

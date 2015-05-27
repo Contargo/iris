@@ -153,7 +153,7 @@ public class AddressDtoServiceImplUnitTest {
     public void testGetAddressesWherePlaceIsIn() {
 
         Address secondAddress = new Address(BigDecimal.TEN, BigDecimal.TEN);
-        when(addressServiceMock.getAdressesWherePlaceIsIn(PLACE_ID)).thenReturn(Arrays.asList(address, secondAddress));
+        when(addressServiceMock.getAddressesWherePlaceIsIn(PLACE_ID)).thenReturn(Arrays.asList(address, secondAddress));
 
         List<AddressDto> expectedAddressList = Arrays.asList(new AddressDto(address), new AddressDto(secondAddress));
 

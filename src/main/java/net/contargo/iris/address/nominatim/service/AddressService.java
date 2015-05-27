@@ -34,7 +34,7 @@ public interface AddressService {
      *
      * @return  All addresses belonging to the OSM-Place defined by the OSM Place ID
      */
-    List<Address> getAdressesWherePlaceIsIn(Long placeId);
+    List<Address> getAddressesWherePlaceIsIn(Long placeId);
 
 
     /**

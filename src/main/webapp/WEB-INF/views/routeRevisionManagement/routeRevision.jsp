@@ -105,7 +105,7 @@
                     <iris:inputField property="airlineDistanceInMeter"
                                      messageKey="routerevision.airlinedistance" unitMessageKey="unit.meter"/>
 
-                    <iris:textArea property="comment" messageKey="routerevision.comment" />
+                    <iris:textArea property="comment" messageKey="routerevision.comment" maxlength="5000"/>
 
                     <div class="form-actions">
                         <input id="submit-button" class="btn btn-primary" type="submit"

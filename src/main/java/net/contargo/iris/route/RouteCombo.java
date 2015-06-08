@@ -9,9 +9,7 @@ public enum RouteCombo {
 
     WATERWAY(new RouteType[] { RouteType.BARGE }),
     RAILWAY(new RouteType[] { RouteType.RAIL }),
-    DIRECT_TRUCK(new RouteType[] { RouteType.TRUCK }),
     ALL(new RouteType[] { RouteType.BARGE, RouteType.RAIL });
-    // DIRECT_TRUCK is at the moment not in ALL included. #3194
 
     private RouteType[] routeTypes;
 

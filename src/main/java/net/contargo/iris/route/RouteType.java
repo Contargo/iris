@@ -10,7 +10,8 @@ public enum RouteType {
 
     BARGE("route.type.barge"),
     RAIL("route.type.rail"),
-    TRUCK("route.type.truck");
+    TRUCK("route.type.truck"),
+    BARGE_RAIL("route.type.bargerail");
 
     private String messageKey;
 

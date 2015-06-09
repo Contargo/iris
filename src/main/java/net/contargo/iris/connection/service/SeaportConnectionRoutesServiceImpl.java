@@ -29,7 +29,7 @@ public class SeaportConnectionRoutesServiceImpl implements SeaportConnectionRout
 
     Route getMainRunRoute(Seaport seaPort, Terminal terminal, RouteInformation routeInformation, RouteType routeType) {
 
-        if (routeType != RouteType.BARGE && routeType != RouteType.RAIL) {
+        if (routeType != RouteType.BARGE && routeType != RouteType.RAIL && routeType != RouteType.BARGE_RAIL) {
             throw new IllegalArgumentException();
         }
 

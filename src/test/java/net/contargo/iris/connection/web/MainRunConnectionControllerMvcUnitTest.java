@@ -111,7 +111,8 @@ public class MainRunConnectionControllerMvcUnitTest {
 
         ResultActions resultActions = mockMvc.perform(get("/connections/new"));
         resultActions.andExpect(model().attribute("mainRunConnection", instanceOf(MainRunConnection.class)));
-        resultActions.andExpect(model().attribute("routetypes", contains(RouteType.BARGE, RouteType.RAIL)));
+        resultActions.andExpect(model().attribute("routetypes",
+                contains(RouteType.BARGE, RouteType.RAIL, RouteType.BARGE_RAIL)));
         resultActions.andExpect(model().attribute("terminals", contains(terminal)));
         resultActions.andExpect(model().attribute("seaports", contains(seaport)));
         resultActions.andExpect(view().name("connectionManagement/mainrunconnection"));
@@ -134,7 +135,8 @@ public class MainRunConnectionControllerMvcUnitTest {
 
         ResultActions resultActions = mockMvc.perform(get("/connections/2"));
         resultActions.andExpect(model().attribute("mainRunConnection", is(mainRunConnection)));
-        resultActions.andExpect(model().attribute("routetypes", contains(RouteType.BARGE, RouteType.RAIL)));
+        resultActions.andExpect(model().attribute("routetypes",
+                contains(RouteType.BARGE, RouteType.RAIL, RouteType.BARGE_RAIL)));
         resultActions.andExpect(model().attribute("terminals", contains(terminal)));
         resultActions.andExpect(model().attribute("seaports", contains(seaport)));
         resultActions.andExpect(view().name("connectionManagement/mainrunconnection"));

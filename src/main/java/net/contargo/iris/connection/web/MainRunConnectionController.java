@@ -158,6 +158,6 @@ public class MainRunConnectionController extends AbstractController {
 
         model.addAttribute(SEAPORTS_ATTRIBUTE, seaportService.getAll());
         model.addAttribute(TERMINALS_ATTRIBUTE, terminalService.getAll());
-        model.addAttribute(ROUTE_TYPES_ATTRIBUTE, Arrays.asList(RouteType.BARGE, RouteType.RAIL));
+        model.addAttribute(ROUTE_TYPES_ATTRIBUTE, Arrays.asList(RouteType.BARGE, RouteType.RAIL, RouteType.BARGE_RAIL));
     }
 }

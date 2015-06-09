@@ -9,7 +9,8 @@ public enum RouteCombo {
 
     WATERWAY(new RouteType[] { RouteType.BARGE }),
     RAILWAY(new RouteType[] { RouteType.RAIL }),
-    ALL(new RouteType[] { RouteType.BARGE, RouteType.RAIL });
+    WATERWAY_RAIL(new RouteType[] { RouteType.BARGE_RAIL }),
+    ALL(new RouteType[] { RouteType.BARGE, RouteType.RAIL, RouteType.BARGE_RAIL });
 
     private RouteType[] routeTypes;
 

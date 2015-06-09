@@ -56,6 +56,8 @@ class MainRunPartEnricher implements RoutePartEnricher {
             routePartData.setDistance(connectionDistanceService.getDistance(mainRunConnection));
             routePartData.setDieselDistance(connectionDistanceService.getDieselDistance(mainRunConnection));
             routePartData.setElectricDistance(connectionDistanceService.getElectricDistance(mainRunConnection));
+            routePartData.setRailDieselDistance(connectionDistanceService.getRailDieselDistance(mainRunConnection));
+            routePartData.setBargeDieselDistance(connectionDistanceService.getBargeDieselDistance(mainRunConnection));
             routePartData.setDuration(mainRunDurationService.getMainRunRoutePartDuration(mainRunConnection, routePart));
         }
     }

@@ -37,12 +37,13 @@ public class MainRunConnectionUnitTest {
     @Test
     public void getTotalDistance() {
 
-        sut.setDieselDistance(BigDecimal.TEN);
-        sut.setElectricDistance(BigDecimal.TEN);
+        sut.setRailDieselDistance(BigDecimal.TEN);
+        sut.setRailElectricDistance(BigDecimal.TEN);
+        sut.setBargeDieselDistance(BigDecimal.TEN);
 
         BigDecimal totalDistance = sut.getTotalDistance();
 
-        assertThat(totalDistance, is(new BigDecimal(20)));
+        assertThat(totalDistance, is(new BigDecimal(30)));
     }
 
 

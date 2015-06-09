@@ -28,7 +28,7 @@ class Co2PartBargeStrategy implements Co2PartStrategy {
         RoutePartData routePartData = routePart.getData();
         Terminal terminal = routePart.findTerminal();
 
-        BigDecimal distance1 = routePartData.getDieselDistance();
+        BigDecimal distance1 = routePartData.getBargeDieselDistance();
 
         BigDecimal co2Factor = co2BargeRegionMap.getCo2Factor(terminal.getRegion(), routePart);
 

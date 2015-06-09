@@ -36,8 +36,9 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class MainRunDurationServiceImplUnitTest {
 
-    private static final BigDecimal DIESEL_DISTANCE = BigDecimal.ONE;
-    private static final BigDecimal ELECTRICAL_DISTANCE = BigDecimal.TEN;
+    private static final BigDecimal BARGE_DIESEL_DISTANCE = BigDecimal.ONE;
+    private static final BigDecimal RAIL_DIESEL_DISTANCE = BigDecimal.ONE;
+    private static final BigDecimal RAIL_ELECTRICAL_DISTANCE = BigDecimal.TEN;
 
     private MainRunDurationServiceImpl sut;
 
@@ -58,8 +59,9 @@ public class MainRunDurationServiceImplUnitTest {
         terminal = new Terminal();
         seaport = new Seaport();
         mainRunConnection = new MainRunConnection();
-        mainRunConnection.setDieselDistance(DIESEL_DISTANCE);
-        mainRunConnection.setElectricDistance(ELECTRICAL_DISTANCE);
+        mainRunConnection.setBargeDieselDistance(BARGE_DIESEL_DISTANCE);
+        mainRunConnection.setRailDieselDistance(RAIL_DIESEL_DISTANCE);
+        mainRunConnection.setRailElectricDistance(RAIL_ELECTRICAL_DISTANCE);
     }
 
 
@@ -70,12 +72,12 @@ public class MainRunDurationServiceImplUnitTest {
         routePart.setDestination(terminal);
         routePart.setRouteType(RouteType.BARGE);
 
-        when(roundingServiceMock.roundDuration(argThat(closeTo(new BigDecimal("66"), BigDecimal.ZERO)))).thenReturn(
-            new BigDecimal("66"));
+        when(roundingServiceMock.roundDuration(argThat(closeTo(new BigDecimal("72"), BigDecimal.ZERO)))).thenReturn(
+            new BigDecimal("72"));
 
         BigDecimal duration = sut.getMainRunRoutePartDuration(mainRunConnection, routePart);
 
-        assertThat(duration, closeTo(new BigDecimal("66"), BigDecimal.ZERO));
+        assertThat(duration, closeTo(new BigDecimal("72"), BigDecimal.ZERO));
     }
 
 
@@ -85,15 +87,15 @@ public class MainRunDurationServiceImplUnitTest {
         routePart.setOrigin(terminal);
         routePart.setDestination(seaport);
         routePart.setRouteType(RouteType.BARGE);
-        mainRunConnection.setDieselDistance(BigDecimal.ONE);
-        mainRunConnection.setElectricDistance(BigDecimal.TEN);
+        mainRunConnection.setRailDieselDistance(BigDecimal.ONE);
+        mainRunConnection.setRailElectricDistance(BigDecimal.TEN);
 
-        when(roundingServiceMock.roundDuration(argThat(closeTo(new BigDecimal("36.6666"), BigDecimal.ZERO))))
-            .thenReturn(new BigDecimal("36.67"));
+        when(roundingServiceMock.roundDuration(argThat(closeTo(new BigDecimal("40.000200"), BigDecimal.ZERO))))
+            .thenReturn(new BigDecimal("40.00"));
 
         BigDecimal duration = sut.getMainRunRoutePartDuration(mainRunConnection, routePart);
 
-        assertThat(duration, closeTo(new BigDecimal("36.67"), BigDecimal.ZERO));
+        assertThat(duration, closeTo(new BigDecimal("40.00"), BigDecimal.ZERO));
     }
 
 
@@ -103,15 +105,15 @@ public class MainRunDurationServiceImplUnitTest {
         routePart.setOrigin(terminal);
         routePart.setDestination(seaport);
         routePart.setRouteType(RouteType.RAIL);
-        mainRunConnection.setDieselDistance(BigDecimal.ONE);
-        mainRunConnection.setElectricDistance(BigDecimal.TEN);
+        mainRunConnection.setRailDieselDistance(BigDecimal.ONE);
+        mainRunConnection.setRailElectricDistance(BigDecimal.TEN);
 
-        when(roundingServiceMock.roundDuration(argThat(closeTo(new BigDecimal("14.6664"), BigDecimal.ZERO))))
-            .thenReturn(new BigDecimal("14.67"));
+        when(roundingServiceMock.roundDuration(argThat(closeTo(new BigDecimal("16.000200"), BigDecimal.ZERO))))
+            .thenReturn(new BigDecimal("16.00"));
 
         BigDecimal duration = sut.getMainRunRoutePartDuration(mainRunConnection, routePart);
 
-        assertThat(duration, closeTo(new BigDecimal("14.67"), BigDecimal.ZERO));
+        assertThat(duration, closeTo(new BigDecimal("16.00"), BigDecimal.ZERO));
     }
 
 

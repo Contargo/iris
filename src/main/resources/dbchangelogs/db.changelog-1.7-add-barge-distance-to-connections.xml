@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet author="thieme@synyx.de" id="add-barge-distance-to-connections">
+
+        <addColumn tableName="Connection">
+            <column name="bargeDieselDistance" type="DECIMAL(15,10)" value="0">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <renameColumn tableName="Connection" oldColumnName="dieselDistance" newColumnName="railDieselDistance" columnDataType="DECIMAL(15,10)"/>
+        <renameColumn tableName="Connection" oldColumnName="electricDistance" newColumnName="railElectricDistance" columnDataType="DECIMAL(15,10)"/>
+
+        <sql>
+            update Connection set bargeDieselDistance = railDieselDistance, railDieselDistance = 0 where routeType = 'BARGE';
+        </sql>
+
+    </changeSet>
+
+</databaseChangeLog>

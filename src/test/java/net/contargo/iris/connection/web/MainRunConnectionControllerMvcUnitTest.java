@@ -154,8 +154,9 @@ public class MainRunConnectionControllerMvcUnitTest {
         when(mainRunConnectionServiceMock.isAlreadyApplied(mainRunConnectionMock)).thenReturn(false);
 
         MockHttpServletRequestBuilder builder = post("/connections/");
-        builder.param("electricDistance", "2.78");
-        builder.param("dieselDistance", "3.14");
+        builder.param("railElectricDistance", "0");
+        builder.param("railDieselDistance", "0");
+        builder.param("bargeDieselDistance", "3.14");
         builder.param("seaport.id", "1");
         builder.param("terminal.id", "1");
         builder.param("routeType", "BARGE");
@@ -203,8 +204,9 @@ public class MainRunConnectionControllerMvcUnitTest {
         when(mainRunConnectionServiceMock.save(any(MainRunConnection.class))).thenReturn(mainRunConnectionMock);
 
         MockHttpServletRequestBuilder builder = put("/connections/2");
-        builder.param("electricDistance", "2.78");
-        builder.param("dieselDistance", "3.14");
+        builder.param("railElectricDistance", "2.78");
+        builder.param("railDieselDistance", "3.14");
+        builder.param("bargeDieselDistance", "0");
         builder.param("seaport.id", "1");
         builder.param("terminal.id", "1");
         builder.param("routeType", "BARGE");

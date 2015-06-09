@@ -36,7 +36,8 @@ public class ConnectionDistanceServiceImpl implements ConnectionDistanceService 
     @Override
     public BigDecimal getDieselDistance(MainRunConnection mainrunConnection) {
 
-        return roundingService.roundDistance(mainrunConnection.getDieselDistance());
+        return roundingService.roundDistance(mainrunConnection.getRailDieselDistance()
+                .add(mainrunConnection.getBargeDieselDistance()));
     }
 
 
@@ -46,6 +47,20 @@ public class ConnectionDistanceServiceImpl implements ConnectionDistanceService 
     @Override
     public BigDecimal getElectricDistance(MainRunConnection mainrunConnection) {
 
-        return roundingService.roundDistance(mainrunConnection.getElectricDistance());
+        return roundingService.roundDistance(mainrunConnection.getRailElectricDistance());
+    }
+
+
+    @Override
+    public BigDecimal getRailDieselDistance(MainRunConnection mainrunConnection) {
+
+        return roundingService.roundDistance(mainrunConnection.getRailDieselDistance());
+    }
+
+
+    @Override
+    public BigDecimal getBargeDieselDistance(MainRunConnection mainrunConnection) {
+
+        return roundingService.roundDistance(mainrunConnection.getBargeDieselDistance());
     }
 }

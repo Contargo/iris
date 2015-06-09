@@ -113,13 +113,17 @@
                         </div>
                     </div>
 
-                    <iris:inputField property="dieselDistance"
+                    <iris:inputField property="bargeDieselDistance"
                                      cssClass="comma-replacement-aware"
-                                     messageKey="mainrunconnection.dieselDistance"/>
+                                     messageKey="mainrunconnection.bargeDieselDistance"/>
 
-                    <iris:inputField property="electricDistance"
+                    <iris:inputField property="railDieselDistance"
                                      cssClass="comma-replacement-aware"
-                                     messageKey="mainrunconnection.electricDistance"/>
+                                     messageKey="mainrunconnection.railDieselDistance"/>
+
+                    <iris:inputField property="railElectricDistance"
+                                     cssClass="comma-replacement-aware"
+                                     messageKey="mainrunconnection.railElectricDistance"/>
 
                     <iris:checkboxFieldNormal property="enabled" messageKey="mainrunconnection.enabled"/>
 

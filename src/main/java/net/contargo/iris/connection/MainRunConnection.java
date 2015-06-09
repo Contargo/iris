@@ -29,8 +29,8 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @Table(
-    name = "Connection",
-    uniqueConstraints = @UniqueConstraint(columnNames = { "seaport_id", "terminal_id", "routeType" })
+    name = "Connection", uniqueConstraints =
+        @UniqueConstraint(columnNames = { "seaport_id", "terminal_id", "routeType" })
 )
 public class MainRunConnection {
 
@@ -50,11 +50,15 @@ public class MainRunConnection {
 
     @NotNull
     @BigDecimalValidate(minValue = 0, minDecimalPlaces = 1L, maxDecimalPlaces = TEN, maxFractionalPlaces = TEN)
-    private BigDecimal dieselDistance;
+    private BigDecimal bargeDieselDistance;
 
     @NotNull
     @BigDecimalValidate(minValue = 0, minDecimalPlaces = 1L, maxDecimalPlaces = TEN, maxFractionalPlaces = TEN)
-    private BigDecimal electricDistance;
+    private BigDecimal railDieselDistance;
+
+    @NotNull
+    @BigDecimalValidate(minValue = 0, minDecimalPlaces = 1L, maxDecimalPlaces = TEN, maxFractionalPlaces = TEN)
+    private BigDecimal railElectricDistance;
 
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -76,14 +80,14 @@ public class MainRunConnection {
     }
 
     /**
-     * Computes the total distance of this {@link MainRunConnection} as the sum of its diesel distance and its
-     * electrical distance.
+     * Computes the total distance of this {@link MainRunConnection} as the sum of its barge distance, its diesel rail
+     * distance and its electrical rail distance.
      *
      * @return  total distance
      */
     public BigDecimal getTotalDistance() {
 
-        return getDieselDistance().add(getElectricDistance());
+        return getRailDieselDistance().add(getRailElectricDistance()).add(getBargeDieselDistance());
     }
 
 
@@ -123,27 +127,39 @@ public class MainRunConnection {
     }
 
 
-    public BigDecimal getDieselDistance() {
+    public BigDecimal getBargeDieselDistance() {
 
-        return dieselDistance;
+        return bargeDieselDistance;
     }
 
 
-    public void setDieselDistance(BigDecimal dieselDistance) {
+    public void setBargeDieselDistance(BigDecimal bargeDistance) {
 
-        this.dieselDistance = dieselDistance;
+        this.bargeDieselDistance = bargeDistance;
     }
 
 
-    public BigDecimal getElectricDistance() {
+    public BigDecimal getRailDieselDistance() {
 
-        return electricDistance;
+        return railDieselDistance;
     }
 
 
-    public void setElectricDistance(BigDecimal electricDistance) {
+    public void setRailDieselDistance(BigDecimal dieselDistance) {
 
-        this.electricDistance = electricDistance;
+        this.railDieselDistance = dieselDistance;
+    }
+
+
+    public BigDecimal getRailElectricDistance() {
+
+        return railElectricDistance;
+    }
+
+
+    public void setRailElectricDistance(BigDecimal electricDistance) {
+
+        this.railElectricDistance = electricDistance;
     }
 
 
@@ -206,7 +222,9 @@ public class MainRunConnection {
     public String toString() {
 
         return "MainRunConnection [id=" + id + ", seaport=" + seaport
-            + ", location=" + terminal + ", dieselDistance=" + dieselDistance + ", electricDistance=" + electricDistance
+            + ", location=" + terminal + ", bargeDieselDistance=" + bargeDieselDistance + ", railDieselDistance="
+            + railDieselDistance
+            + ", railElectricDistance=" + railElectricDistance
             + ", routeType=" + routeType + "]";
     }
 }

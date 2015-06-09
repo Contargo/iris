@@ -81,8 +81,9 @@ public class MainRunConnectionRepositoryIntegrationTest {
 
         List<MainRunConnection> connections = sut.findConnectionsByTerminalUniqueId(connectedTerminalUID);
         List<MainRunConnection> expectedConnections = em.createQuery(
-                "SELECT c FROM MainRunConnection c WHERE c.terminal.uniqueId = " + connectedTerminalUID,
-                MainRunConnection.class).getResultList();
+                    "SELECT c FROM MainRunConnection c WHERE c.terminal.uniqueId = " + connectedTerminalUID,
+                    MainRunConnection.class)
+            .getResultList();
 
         assertThat(connections, is(expectedConnections));
     }
@@ -94,8 +95,9 @@ public class MainRunConnectionRepositoryIntegrationTest {
         connection.setSeaport(seaport);
         connection.setTerminal(terminal);
         connection.setRouteType(BARGE);
-        connection.setElectricDistance(new BigDecimal("300"));
-        connection.setDieselDistance(new BigDecimal("200"));
+        connection.setRailElectricDistance(new BigDecimal("300"));
+        connection.setRailDieselDistance(new BigDecimal("200"));
+        connection.setBargeDieselDistance(new BigDecimal("400"));
 
         return connection;
     }

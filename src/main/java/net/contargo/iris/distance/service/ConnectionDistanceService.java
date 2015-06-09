@@ -21,7 +21,7 @@ public interface ConnectionDistanceService {
 
 
     /**
-     * Extracts the dieselDistance of a {@link net.contargo.iris.connection.MainRunConnection}.
+     * Extracts the total diesel distance of a {@link net.contargo.iris.connection.MainRunConnection}.
      *
      * @param  mainrunConnection
      *
@@ -38,4 +38,24 @@ public interface ConnectionDistanceService {
      * @return  BigDecimal
      */
     BigDecimal getElectricDistance(MainRunConnection mainrunConnection);
+
+
+    /**
+     * Extracts the railDieselDistance of a {@link net.contargo.iris.connection.MainRunConnection}.
+     *
+     * @param  mainrunConnection
+     *
+     * @return  BigDecimal
+     */
+    BigDecimal getRailDieselDistance(MainRunConnection mainrunConnection);
+
+
+    /**
+     * Extracts the bargeDieselDistance of a {@link net.contargo.iris.connection.MainRunConnection}.
+     *
+     * @param  mainrunConnection
+     *
+     * @return  BigDecimal
+     */
+    BigDecimal getBargeDieselDistance(MainRunConnection mainrunConnection);
 }

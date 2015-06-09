@@ -55,17 +55,38 @@ public class ConnectionDistanceServiceImplUnitTest {
     @Test
     public void getDieselDistance() {
 
-        when(mainrunConnectionMock.getDieselDistance()).thenReturn(TEN);
-        when(roundingServiceMock.roundDistance(TEN)).thenReturn(ONE);
+        when(mainrunConnectionMock.getRailDieselDistance()).thenReturn(TEN);
+        when(mainrunConnectionMock.getBargeDieselDistance()).thenReturn(TEN);
+        when(roundingServiceMock.roundDistance(TEN.add(TEN))).thenReturn(ONE);
 
         assertThat(sut.getDieselDistance(mainrunConnectionMock), is(ONE));
     }
 
 
     @Test
+    public void getRailDieselDistance() {
+
+        when(mainrunConnectionMock.getRailDieselDistance()).thenReturn(TEN);
+        when(roundingServiceMock.roundDistance(TEN)).thenReturn(ONE);
+
+        assertThat(sut.getRailDieselDistance(mainrunConnectionMock), is(ONE));
+    }
+
+
+    @Test
+    public void getBargeDieselDistance() {
+
+        when(mainrunConnectionMock.getBargeDieselDistance()).thenReturn(TEN);
+        when(roundingServiceMock.roundDistance(TEN)).thenReturn(ONE);
+
+        assertThat(sut.getBargeDieselDistance(mainrunConnectionMock), is(ONE));
+    }
+
+
+    @Test
     public void getElectricDistance() {
 
-        when(mainrunConnectionMock.getElectricDistance()).thenReturn(TEN);
+        when(mainrunConnectionMock.getRailElectricDistance()).thenReturn(TEN);
         when(roundingServiceMock.roundDistance(TEN)).thenReturn(ONE);
 
         assertThat(sut.getElectricDistance(mainrunConnectionMock), is(ONE));

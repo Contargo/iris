@@ -47,6 +47,18 @@ public interface MainRunConnectionRepository extends JpaRepository<MainRunConnec
 
 
     /**
+     * Finds all {@link MainRunConnection}s with the given {@link RouteType} and the specified {@link Seaport} property.
+     *
+     * @param  seaportUid  the {@link net.contargo.iris.connection.MainRunConnection}'s {@link Seaport}'s unique id
+     * @param  routeType  the {@link net.contargo.iris.connection.MainRunConnection}'s {@link RouteType}
+     *
+     * @return  a list of {@link MainRunConnection}s
+     */
+    @Query("SELECT c FROM MainRunConnection c WHERE c.seaport.uniqueId = ?1 AND c.routeType = ?2 and c.enabled = true")
+    List<MainRunConnection> findBySeaportAndRouteType(BigInteger seaportUid, RouteType routeType);
+
+
+    /**
      * Finds all {@link Seaport}s that are part of a {@link net.contargo.iris.connection.MainRunConnection} with the
      * given {@link RouteType}.
      *

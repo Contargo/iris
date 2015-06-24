@@ -3,6 +3,7 @@ package net.contargo.iris.connection.service;
 import com.vividsolutions.jts.util.Assert;
 
 import net.contargo.iris.GeoLocation;
+import net.contargo.iris.connection.MainRunConnection;
 import net.contargo.iris.connection.advice.MainRunAdvisor;
 import net.contargo.iris.connection.advice.MainRunStrategy;
 import net.contargo.iris.container.ContainerType;
@@ -27,7 +28,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.math.BigDecimal;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static net.contargo.iris.container.ContainerType.TWENTY_LIGHT;
@@ -41,9 +41,12 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import static java.util.Collections.singletonList;
 
 
 /**
@@ -63,14 +66,10 @@ public class SeaportConnectionRoutesServiceImplUnitTest {
     private GeoLocation destination;
     private ContainerType containerType;
     private Terminal terminal;
+    private MainRunConnection connection;
 
     @Before
     public void setup() throws Exception {
-
-        List<Terminal> terminals = Collections.singletonList(new Terminal());
-
-        when(seaportTerminalConnectionService.getTerminalsConnectedToSeaPortByRouteType(any(Seaport.class),
-                    any(RouteType.class))).thenReturn(terminals);
 
         RoutePart bargeRoute = new RoutePart();
         bargeRoute.setRouteType(RouteType.BARGE);
@@ -85,6 +84,12 @@ public class SeaportConnectionRoutesServiceImplUnitTest {
         destination = new GeoLocation(BigDecimal.ONE, BigDecimal.ONE);
         containerType = TWENTY_LIGHT;
         terminal = new Terminal();
+
+        connection = new MainRunConnection(seaPort);
+        connection.setTerminal(terminal);
+
+        when(seaportTerminalConnectionService.getConnectionsToSeaPortByRouteType(any(Seaport.class),
+                    any(RouteType.class))).thenReturn(singletonList(connection));
 
         sut = new SeaportConnectionRoutesServiceImpl(seaportTerminalConnectionService, mainRunAdvisorMock);
     }
@@ -122,7 +127,7 @@ public class SeaportConnectionRoutesServiceImplUnitTest {
 
         MainRunStrategy mainRunStrategy = mock(MainRunStrategy.class);
         when(mainRunAdvisorMock.advice(ONEWAY, IMPORT)).thenReturn(mainRunStrategy);
-        when(mainRunStrategy.getRoute(seaPort, destination, terminal, TWENTY_LIGHT, RouteType.BARGE)).thenReturn(
+        when(mainRunStrategy.getRoute(connection, destination, TWENTY_LIGHT, RouteType.BARGE)).thenReturn(
             expectedRoute);
 
         RouteInformation information = new RouteInformation(destination, ONEWAY, containerType, IMPORT,
@@ -151,8 +156,7 @@ public class SeaportConnectionRoutesServiceImplUnitTest {
 
         MainRunStrategy mainRunStrategy = mock(MainRunStrategy.class);
         when(mainRunAdvisorMock.advice(ONEWAY, EXPORT)).thenReturn(mainRunStrategy);
-        when(mainRunStrategy.getRoute(seaPort, destination, terminal, TWENTY_LIGHT, RouteType.RAIL)).thenReturn(
-            expectedRoute);
+        when(mainRunStrategy.getRoute(connection, destination, TWENTY_LIGHT, RouteType.RAIL)).thenReturn(expectedRoute);
 
         RouteInformation information = new RouteInformation(destination, ONEWAY, containerType, EXPORT,
                 RouteCombo.RAILWAY);
@@ -182,7 +186,7 @@ public class SeaportConnectionRoutesServiceImplUnitTest {
 
         MainRunStrategy mainRunStrategy = mock(MainRunStrategy.class);
         when(mainRunAdvisorMock.advice(ROUNDTRIP, IMPORT)).thenReturn(mainRunStrategy);
-        when(mainRunStrategy.getRoute(seaPort, destination, terminal, TWENTY_LIGHT, RouteType.BARGE)).thenReturn(
+        when(mainRunStrategy.getRoute(connection, destination, TWENTY_LIGHT, RouteType.BARGE)).thenReturn(
             expectedRoute);
 
         RouteInformation information = new RouteInformation(destination, ROUNDTRIP, containerType, IMPORT,
@@ -226,12 +230,12 @@ public class SeaportConnectionRoutesServiceImplUnitTest {
         Route expectedThirdRoute = getExpectedRoute(expectedThirdRouteTypes);
 
         MainRunStrategy mainRunStrategy = mock(MainRunStrategy.class);
-        when(mainRunAdvisorMock.advice(ONEWAY, IMPORT)).thenReturn(mainRunStrategy);
-        when(mainRunStrategy.getRoute(seaPort, destination, terminal, TWENTY_LIGHT, RouteType.BARGE)).thenReturn(
+        when(mainRunAdvisorMock.advice(eq(ONEWAY), eq(IMPORT))).thenReturn(mainRunStrategy);
+        when(mainRunStrategy.getRoute(connection, destination, TWENTY_LIGHT, RouteType.BARGE)).thenReturn(
             expectedFirstRoute);
-        when(mainRunStrategy.getRoute(seaPort, destination, terminal, TWENTY_LIGHT, RouteType.RAIL)).thenReturn(
+        when(mainRunStrategy.getRoute(connection, destination, TWENTY_LIGHT, RouteType.RAIL)).thenReturn(
             expectedSecondRoute);
-        when(mainRunStrategy.getRoute(seaPort, destination, terminal, TWENTY_LIGHT, RouteType.BARGE_RAIL)).thenReturn(
+        when(mainRunStrategy.getRoute(connection, destination, TWENTY_LIGHT, RouteType.BARGE_RAIL)).thenReturn(
             expectedThirdRoute);
 
         RouteInformation information = new RouteInformation(destination, ONEWAY, containerType, IMPORT, RouteCombo.ALL);
@@ -265,14 +269,16 @@ public class SeaportConnectionRoutesServiceImplUnitTest {
         GeoLocation destination = new GeoLocation(BigDecimal.ONE, BigDecimal.ONE);
         Terminal terminal = new Terminal();
 
+        connection.setTerminal(terminal);
+
         Route expectedRoute = mock(Route.class);
         MainRunStrategy mainRunStrategy = mock(MainRunStrategy.class);
         when(mainRunAdvisorMock.advice(ONEWAY, IMPORT)).thenReturn(mainRunStrategy);
-        when(mainRunStrategy.getRoute(seaPort, destination, terminal, TWENTY_LIGHT, RouteType.BARGE)).thenReturn(
+        when(mainRunStrategy.getRoute(connection, destination, TWENTY_LIGHT, RouteType.BARGE)).thenReturn(
             expectedRoute);
 
         RouteInformation information = new RouteInformation(destination, ONEWAY, TWENTY_LIGHT, IMPORT, null);
-        Route route = sut.getMainRunRoute(seaPort, terminal, information, RouteType.BARGE);
+        Route route = sut.getMainRunRoute(connection, information, RouteType.BARGE);
 
         assertThat(route, is(expectedRoute));
     }
@@ -282,6 +288,6 @@ public class SeaportConnectionRoutesServiceImplUnitTest {
     public void testGetMainRunConnectionWithException() {
 
         RouteInformation information = new RouteInformation(destination, ONEWAY, TWENTY_LIGHT, IMPORT, null);
-        sut.getMainRunRoute(seaPort, terminal, information, RouteType.TRUCK);
+        sut.getMainRunRoute(connection, information, RouteType.TRUCK);
     }
 }

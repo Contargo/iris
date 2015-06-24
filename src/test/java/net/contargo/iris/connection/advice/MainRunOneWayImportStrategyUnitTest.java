@@ -1,6 +1,7 @@
 package net.contargo.iris.connection.advice;
 
 import net.contargo.iris.GeoLocation;
+import net.contargo.iris.connection.MainRunConnection;
 import net.contargo.iris.container.ContainerType;
 import net.contargo.iris.route.Route;
 import net.contargo.iris.route.RouteType;
@@ -42,8 +43,11 @@ public class MainRunOneWayImportStrategyUnitTest {
         Terminal terminal = new Terminal();
         terminal.setName("term");
 
+        MainRunConnection connection = new MainRunConnection(seaPort);
+        connection.setTerminal(terminal);
+
         MainRunOneWayImportStrategy sut = new MainRunOneWayImportStrategy();
-        Route route = sut.getRoute(seaPort, destination, terminal, ContainerType.TWENTY_LIGHT, RouteType.BARGE);
+        Route route = sut.getRoute(connection, destination, ContainerType.TWENTY_LIGHT, RouteType.BARGE);
 
         assertThat(route.getName(), is("seaPort -> term -> 1,0:1,0 -> term"));
     }

@@ -1,5 +1,6 @@
 package net.contargo.iris.connection.service;
 
+import net.contargo.iris.connection.MainRunConnection;
 import net.contargo.iris.connection.persistence.MainRunConnectionRepository;
 import net.contargo.iris.route.RouteType;
 import net.contargo.iris.seaport.Seaport;
@@ -52,5 +53,12 @@ public class SeaportTerminalConnectionServiceImpl implements SeaportTerminalConn
         }
 
         return mainRunConnectionRepository.getTerminalsConnectedToSeaPortByRouteType(seaPort.getUniqueId(), routeType);
+    }
+
+
+    @Override
+    public List<MainRunConnection> getConnectionsToSeaPortByRouteType(Seaport seaport, RouteType routeType) {
+
+        return mainRunConnectionRepository.findBySeaportAndRouteType(seaport.getUniqueId(), routeType);
     }
 }

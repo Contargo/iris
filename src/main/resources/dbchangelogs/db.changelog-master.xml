@@ -38,4 +38,6 @@
 
     <include file="dbchangelogs/db.changelog-1.7-add-barge-distance-to-connections.xml"/>
 
+    <include file="dbchangelogs/db.changelog-1.7-add-sub-connections.xml"/>
+
 </databaseChangeLog>

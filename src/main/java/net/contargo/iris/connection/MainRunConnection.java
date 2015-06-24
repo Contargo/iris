@@ -8,12 +8,18 @@ import net.contargo.validation.bigdecimal.BigDecimalValidate;
 
 import java.math.BigDecimal;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -67,9 +73,13 @@ public class MainRunConnection {
     @NotNull
     private Boolean enabled = Boolean.TRUE;
 
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "parentConnection", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<SubConnection> subConnections;
+
     public MainRunConnection() {
 
         // JPA needs no-arg constructor
+        this.subConnections = new ArrayList<>();
     }
 
 
@@ -77,6 +87,7 @@ public class MainRunConnection {
 
         super();
         this.seaport = seaport;
+        this.subConnections = new ArrayList<>();
     }
 
     /**
@@ -187,6 +198,18 @@ public class MainRunConnection {
     }
 
 
+    public List<SubConnection> getSubConnections() {
+
+        return subConnections;
+    }
+
+
+    public void setSubConnections(List<SubConnection> subConnections) {
+
+        this.subConnections = subConnections;
+    }
+
+
     /**
      * Checks whether this {@link MainRunConnection} along with both its {@link Seaport} and {@link Terminal}.
      *
@@ -212,6 +235,14 @@ public class MainRunConnection {
 
         if (!terminal.isEnabled()) {
             return false;
+        }
+
+        if (!subConnections.isEmpty()) {
+            for (SubConnection subConnection : subConnections) {
+                if (!subConnection.isEnabled()) {
+                    return false;
+                }
+            }
         }
 
         return true;

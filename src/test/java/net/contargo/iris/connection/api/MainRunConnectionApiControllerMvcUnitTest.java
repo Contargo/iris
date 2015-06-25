@@ -1,10 +1,10 @@
 package net.contargo.iris.connection.api;
 
-import net.contargo.iris.connection.dto.MainRunConnectionDto;
 import net.contargo.iris.connection.dto.MainRunConnectionDtoService;
 import net.contargo.iris.connection.dto.RouteDto;
 import net.contargo.iris.connection.dto.SeaportConnectionRoutesDtoService;
 import net.contargo.iris.connection.dto.SeaportTerminalConnectionDtoService;
+import net.contargo.iris.connection.dto.SimpleMainRunConnectionDto;
 import net.contargo.iris.container.ContainerType;
 import net.contargo.iris.route.Route;
 import net.contargo.iris.route.RouteInformation;
@@ -117,7 +117,7 @@ public class MainRunConnectionApiControllerMvcUnitTest {
 
         when(seaportDtoServiceMock.getByUid(seaportUid)).thenReturn(seaportDto);
         when(seaportConnectionRoutesDtoServiceMock.getAvailableSeaportConnectionRoutes(eq(seaportDto),
-                any(RouteInformation.class))).thenReturn(asList(routeDto));
+                    any(RouteInformation.class))).thenReturn(asList(routeDto));
 
         MockHttpServletRequestBuilder builder = get(url);
         builder.param("containerType", ContainerType.TWENTY_LIGHT.toString());
@@ -139,7 +139,7 @@ public class MainRunConnectionApiControllerMvcUnitTest {
         String terminalUid = "5";
         String seaportUid = "23";
 
-        MainRunConnectionDto dto = new MainRunConnectionDto(seaportUid, terminalUid, BARGE);
+        SimpleMainRunConnectionDto dto = new SimpleMainRunConnectionDto(seaportUid, terminalUid, BARGE);
         when(connectionApiDtoService.getConnectionsForTerminal(new BigInteger(terminalUid))).thenReturn(asList(dto));
 
         MockHttpServletRequestBuilder builder = get("/connections");

@@ -22,9 +22,9 @@ public class MainRunConnectionDtoServiceImpl implements MainRunConnectionDtoServ
     }
 
     @Override
-    public List<MainRunConnectionDto> getConnectionsForTerminal(BigInteger terminalUID) {
+    public List<SimpleMainRunConnectionDto> getConnectionsForTerminal(BigInteger terminalUID) {
 
-        List<MainRunConnectionDto> connectionDtos = new ArrayList<>();
+        List<SimpleMainRunConnectionDto> connectionDtos = new ArrayList<>();
 
         for (MainRunConnection connection : mainRunConnectionService.getConnectionsForTerminal(terminalUID)) {
             connectionDtos.add(newDto(connection));
@@ -34,11 +34,25 @@ public class MainRunConnectionDtoServiceImpl implements MainRunConnectionDtoServ
     }
 
 
-    private MainRunConnectionDto newDto(MainRunConnection connection) {
+    @Override
+    public MainRunConnectionDto get(Long id) {
+
+        return new MainRunConnectionDto(mainRunConnectionService.getById(id));
+    }
+
+
+    @Override
+    public void save(MainRunConnectionDto dto) {
+
+        mainRunConnectionService.save(dto.toEntity());
+    }
+
+
+    private SimpleMainRunConnectionDto newDto(MainRunConnection connection) {
 
         String seaportUid = connection.getSeaport().getUniqueId().toString();
         String terminalUid = connection.getTerminal().getUniqueId().toString();
 
-        return new MainRunConnectionDto(seaportUid, terminalUid, connection.getRouteType());
+        return new SimpleMainRunConnectionDto(seaportUid, terminalUid, connection.getRouteType());
     }
 }

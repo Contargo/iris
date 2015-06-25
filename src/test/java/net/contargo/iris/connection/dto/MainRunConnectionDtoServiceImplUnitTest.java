@@ -11,12 +11,15 @@ import org.junit.Test;
 
 import org.junit.runner.RunWith;
 
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import java.util.Collections;
 import java.util.List;
 
 import static net.contargo.iris.route.RouteType.BARGE;
@@ -26,6 +29,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import static java.util.Arrays.asList;
@@ -37,43 +41,80 @@ import static java.util.Arrays.asList;
 @RunWith(MockitoJUnitRunner.class)
 public class MainRunConnectionDtoServiceImplUnitTest {
 
+    private MainRunConnectionDtoServiceImpl sut;
+
     @Mock
     private MainRunConnectionService mainRunConnectionServiceMock;
-    private MainRunConnectionDtoServiceImpl sut;
+    private BigInteger terminalUID;
+    private Terminal terminal;
+    private BigInteger seaportOneUID;
+    private Seaport seaportOne;
+    private BigInteger seaportTwoUID;
+    private Seaport seaportTwo;
 
     @Before
     public void before() {
 
         sut = new MainRunConnectionDtoServiceImpl(mainRunConnectionServiceMock);
+
+        terminalUID = new BigInteger("2");
+        terminal = new Terminal();
+        terminal.setUniqueId(terminalUID);
+
+        seaportOneUID = new BigInteger("3");
+        seaportOne = new Seaport();
+        seaportOne.setUniqueId(seaportOneUID);
+
+        seaportTwoUID = new BigInteger("4");
+        seaportTwo = new Seaport();
+        seaportTwo.setUniqueId(seaportTwoUID);
     }
 
 
     @Test
     public void getConnectionsForTerminal() {
 
-        BigInteger terminalUID = new BigInteger("2");
-        Terminal terminal = new Terminal();
-        terminal.setUniqueId(terminalUID);
-
-        BigInteger seaportOneUID = new BigInteger("3");
-        Seaport seaportOne = new Seaport();
-        seaportOne.setUniqueId(seaportOneUID);
-
-        BigInteger seaportTwoUID = new BigInteger("4");
-        Seaport seaportTwo = new Seaport();
-        seaportTwo.setUniqueId(seaportTwoUID);
-
         MainRunConnection c1 = newConnection(seaportOne, terminal, BARGE);
         MainRunConnection c2 = newConnection(seaportTwo, terminal, BARGE);
 
         when(mainRunConnectionServiceMock.getConnectionsForTerminal(terminalUID)).thenReturn(asList(c1, c2));
 
-        MainRunConnectionDto dto1 = new MainRunConnectionDto(seaportOneUID.toString(), terminalUID.toString(), BARGE);
-        MainRunConnectionDto dto2 = new MainRunConnectionDto(seaportTwoUID.toString(), terminalUID.toString(), BARGE);
+        SimpleMainRunConnectionDto dto1 = new SimpleMainRunConnectionDto(seaportOneUID.toString(),
+                terminalUID.toString(), BARGE);
+        SimpleMainRunConnectionDto dto2 = new SimpleMainRunConnectionDto(seaportTwoUID.toString(),
+                terminalUID.toString(), BARGE);
 
-        List<MainRunConnectionDto> expectedConnections = asList(dto1, dto2);
+        List<SimpleMainRunConnectionDto> expectedConnections = asList(dto1, dto2);
 
         assertConnections(sut.getConnectionsForTerminal(terminalUID), expectedConnections);
+    }
+
+
+    @Test
+    public void get() {
+
+        when(mainRunConnectionServiceMock.getById(42L)).thenReturn(newConnection(seaportOne, terminal, BARGE));
+
+        MainRunConnectionDto dto = sut.get(42L);
+
+        assertThat(dto.getRouteType(), is(BARGE));
+    }
+
+
+    @Test
+    public void save() {
+
+        MainRunConnectionDto dto = new MainRunConnectionDto(42L, 43L, 44L, BigDecimal.ONE, BigDecimal.TEN,
+                BigDecimal.ZERO, BARGE, Collections.<SubConnectionDto>emptyList());
+
+        sut.save(dto);
+
+        ArgumentCaptor<MainRunConnection> captor = ArgumentCaptor.forClass(MainRunConnection.class);
+        verify(mainRunConnectionServiceMock).save(captor.capture());
+
+        MainRunConnection value = captor.getValue();
+        assertThat(value.getId(), is(42L));
+        assertThat(value.getRouteType(), is(BARGE));
     }
 
 
@@ -88,7 +129,7 @@ public class MainRunConnectionDtoServiceImplUnitTest {
     }
 
 
-    private void assertConnections(List<MainRunConnectionDto> actual, List<MainRunConnectionDto> expected) {
+    private void assertConnections(List<SimpleMainRunConnectionDto> actual, List<SimpleMainRunConnectionDto> expected) {
 
         assertThat(actual, hasSize(expected.size()));
 

@@ -10,5 +10,11 @@ import java.util.List;
  */
 public interface MainRunConnectionDtoService {
 
-    List<MainRunConnectionDto> getConnectionsForTerminal(BigInteger terminalUID);
+    List<SimpleMainRunConnectionDto> getConnectionsForTerminal(BigInteger terminalUID);
+
+
+    MainRunConnectionDto get(Long id);
+
+
+    void save(MainRunConnectionDto dto);
 }

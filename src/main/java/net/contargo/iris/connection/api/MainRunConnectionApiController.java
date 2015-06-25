@@ -8,6 +8,7 @@ import net.contargo.iris.connection.dto.MainRunConnectionDtoService;
 import net.contargo.iris.connection.dto.RouteDto;
 import net.contargo.iris.connection.dto.SeaportConnectionRoutesDtoService;
 import net.contargo.iris.connection.dto.SeaportTerminalConnectionDtoService;
+import net.contargo.iris.connection.dto.SimpleMainRunConnectionDto;
 import net.contargo.iris.container.ContainerType;
 import net.contargo.iris.route.RouteCombo;
 import net.contargo.iris.route.RouteInformation;
@@ -19,10 +20,14 @@ import org.slf4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
 import org.springframework.stereotype.Controller;
 
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -42,6 +47,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 
 /**
@@ -108,8 +114,8 @@ public class MainRunConnectionApiController extends AbstractController {
         RoutesResponse response = new RoutesResponse();
 
         response.add(linkTo(
-                methodOn(getClass()).getSeaportRoutes(seaportUid, latitude, longitude, isRoundTrip, containerType,
-                    isImport, routeCombo)).withSelfRel());
+                    methodOn(getClass()).getSeaportRoutes(seaportUid, latitude, longitude, isRoundTrip, containerType,
+                        isImport, routeCombo)).withSelfRel());
 
         response.setRoutes(routes);
 
@@ -150,16 +156,34 @@ public class MainRunConnectionApiController extends AbstractController {
 
     @ApiOperation(
         value = "Returns all Connections containing the given terminal",
-        notes = "Returns all Connections containing the given terminal", response = MainRunConnectionDto.class,
+        notes = "Returns all Connections containing the given terminal", response = SimpleMainRunConnectionDto.class,
         responseContainer = "List"
     )
     @RequestMapping(method = GET, params = "terminalUid", produces = "application/json")
     @ResponseBody
-    public Collection<MainRunConnectionDto> getConnectionsForTerminal(
+    public Collection<SimpleMainRunConnectionDto> getConnectionsForTerminal(
         @RequestParam("terminalUid") BigInteger terminalUid) {
 
         LOG.info("API: client requests connections for terminal UID: " + terminalUid);
 
         return connectionApiDtoService.getConnectionsForTerminal(terminalUid);
+    }
+
+
+    @RequestMapping(method = GET, value = "/{id}")
+    public ResponseEntity<MainRunConnectionDto> getConnection(@PathVariable Long id) {
+
+        MainRunConnectionDto dto = connectionApiDtoService.get(id);
+
+        return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
+
+
+    @RequestMapping(method = POST, value = "")
+    public ResponseEntity createConnection(@RequestBody MainRunConnectionDto dto) {
+
+        connectionApiDtoService.save(dto);
+
+        return new ResponseEntity(HttpStatus.CREATED);
     }
 }

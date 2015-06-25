@@ -1,15 +1,30 @@
 package net.contargo.iris.connection.dto;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import net.contargo.iris.connection.MainRunConnection;
 import net.contargo.iris.connection.SubConnection;
 import net.contargo.iris.route.RouteType;
 
 import java.math.BigDecimal;
 
+import static com.fasterxml.jackson.annotation.JsonTypeInfo.As.PROPERTY;
+import static com.fasterxml.jackson.annotation.JsonTypeInfo.Id.NAME;
+
 
 /**
  * @author  Sandra Thieme - thieme@synyx.de
  */
+@JsonTypeInfo(use = NAME, include = PROPERTY, property = "routeType")
+@JsonSubTypes(
+    {
+        @JsonSubTypes.Type(value = SeaportSubConnectionDto.class, name = "BARGE"),
+        @JsonSubTypes.Type(
+            value = TerminalSubConnectionDto.class, name = "RAIL"
+        )
+    }
+)
 public abstract class SubConnectionDto {
 
     private final Long id;

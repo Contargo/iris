@@ -32,7 +32,7 @@ public final class MainRunConnectionDto {
     private final BigDecimal railDieselDistance;
     private final BigDecimal railElectricDistance;
     private final RouteType routeType;
-    private final Boolean enabled = Boolean.TRUE;
+    private final Boolean enabled;
     private final List<SubConnectionDto> subConnections;
 
     @JsonCreator
@@ -43,6 +43,7 @@ public final class MainRunConnectionDto {
         @JsonProperty("railDieselDistance") BigDecimal railDieselDistance,
         @JsonProperty("railElectricDistance") BigDecimal railElectricDistance,
         @JsonProperty("routeType") RouteType routeType,
+        @JsonProperty("enabled") Boolean enabled,
         @JsonProperty("subConnections") List<SubConnectionDto> subConnections) {
 
         this.id = id;
@@ -52,6 +53,7 @@ public final class MainRunConnectionDto {
         this.railDieselDistance = railDieselDistance;
         this.railElectricDistance = railElectricDistance;
         this.routeType = routeType;
+        this.enabled = enabled;
         this.subConnections = subConnections;
     }
 
@@ -65,6 +67,7 @@ public final class MainRunConnectionDto {
         this.railDieselDistance = mainRunConnection.getRailDieselDistance();
         this.railElectricDistance = mainRunConnection.getRailElectricDistance();
         this.routeType = mainRunConnection.getRouteType();
+        this.enabled = mainRunConnection.getEnabled();
         this.subConnections = mainRunConnection.getSubConnections().stream().map(toDto()).collect(toList());
     }
 

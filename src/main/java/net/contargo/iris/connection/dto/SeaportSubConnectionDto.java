@@ -11,6 +11,7 @@ import net.contargo.iris.seaport.Seaport;
 import net.contargo.iris.terminal.Terminal;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 
 /**
@@ -18,25 +19,25 @@ import java.math.BigDecimal;
  */
 public class SeaportSubConnectionDto extends SubConnectionDto {
 
-    private final Long seaportId;
+    private final BigInteger seaportUid;
 
     @JsonCreator
     public SeaportSubConnectionDto(@JsonProperty("id") Long id,
-        @JsonProperty("terminalId") Long terminalId,
+        @JsonProperty("terminalUid") BigInteger terminalUid,
         @JsonProperty("bargeDieselDistance") BigDecimal bargeDieselDistance,
         @JsonProperty("railDieselDistance") BigDecimal railDieselDistance,
         @JsonProperty("railElectricDistance") BigDecimal railElectricDistance,
-        @JsonProperty("seaportId") Long seaportId) {
+        @JsonProperty("seaportUid") BigInteger seaportUid) {
 
-        super(id, terminalId, bargeDieselDistance, railDieselDistance, railElectricDistance);
-        this.seaportId = seaportId;
+        super(id, terminalUid, bargeDieselDistance, railDieselDistance, railElectricDistance);
+        this.seaportUid = seaportUid;
     }
 
 
     public SeaportSubConnectionDto(SeaportSubConnection subConnection) {
 
         super(subConnection);
-        this.seaportId = subConnection.getSeaport().getId();
+        this.seaportUid = subConnection.getSeaport().getUniqueId();
     }
 
     @Override
@@ -46,9 +47,9 @@ public class SeaportSubConnectionDto extends SubConnectionDto {
     }
 
 
-    public Long getSeaportId() {
+    public BigInteger getSeaportUid() {
 
-        return seaportId;
+        return seaportUid;
     }
 
 
@@ -58,11 +59,11 @@ public class SeaportSubConnectionDto extends SubConnectionDto {
         SeaportSubConnection seaportSubConnection = new SeaportSubConnection();
 
         Seaport seaport = new Seaport();
-        seaport.setId(this.seaportId);
+        seaport.setUniqueId(this.seaportUid);
         seaportSubConnection.setSeaport(seaport);
 
         Terminal terminal = new Terminal();
-        terminal.setId(getTerminalId());
+        terminal.setUniqueId(getTerminalUid());
         seaportSubConnection.setTerminal(terminal);
 
         seaportSubConnection.setBargeDieselDistance(getBargeDieselDistance());

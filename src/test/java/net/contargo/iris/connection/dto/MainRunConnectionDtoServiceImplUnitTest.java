@@ -104,8 +104,8 @@ public class MainRunConnectionDtoServiceImplUnitTest {
     @Test
     public void save() {
 
-        MainRunConnectionDto dto = new MainRunConnectionDto(42L, 43L, 44L, BigDecimal.ONE, BigDecimal.TEN,
-                BigDecimal.ZERO, BARGE, Collections.<SubConnectionDto>emptyList());
+        MainRunConnectionDto dto = new MainRunConnectionDto(42L, BigInteger.ONE, BigInteger.TEN, BigDecimal.ONE,
+                BigDecimal.TEN, BigDecimal.ZERO, BARGE, Collections.<SubConnectionDto>emptyList());
 
         sut.save(dto);
 

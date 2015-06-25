@@ -5,6 +5,7 @@ import net.contargo.iris.connection.SubConnection;
 import net.contargo.iris.route.RouteType;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 
 /**
@@ -13,16 +14,16 @@ import java.math.BigDecimal;
 public abstract class SubConnectionDto {
 
     private final Long id;
-    private final Long terminalId;
+    private final BigInteger terminalUid;
     private final BigDecimal bargeDieselDistance;
     private final BigDecimal railDieselDistance;
     private final BigDecimal railElectricDistance;
 
-    public SubConnectionDto(Long id, Long terminalId, BigDecimal bargeDieselDistance, BigDecimal railDieselDistance,
-        BigDecimal railElectricDistance) {
+    public SubConnectionDto(Long id, BigInteger terminalUid, BigDecimal bargeDieselDistance,
+        BigDecimal railDieselDistance, BigDecimal railElectricDistance) {
 
         this.id = id;
-        this.terminalId = terminalId;
+        this.terminalUid = terminalUid;
         this.bargeDieselDistance = bargeDieselDistance;
         this.railDieselDistance = railDieselDistance;
         this.railElectricDistance = railElectricDistance;
@@ -32,7 +33,7 @@ public abstract class SubConnectionDto {
     public SubConnectionDto(SubConnection subConnection) {
 
         this.id = subConnection.getId();
-        this.terminalId = subConnection.getTerminal().getId();
+        this.terminalUid = subConnection.getTerminal().getUniqueId();
         this.bargeDieselDistance = subConnection.getBargeDieselDistance();
         this.railDieselDistance = subConnection.getRailDieselDistance();
         this.railElectricDistance = subConnection.getRailElectricDistance();
@@ -44,9 +45,9 @@ public abstract class SubConnectionDto {
     }
 
 
-    public Long getTerminalId() {
+    public BigInteger getTerminalUid() {
 
-        return terminalId;
+        return terminalUid;
     }
 
 

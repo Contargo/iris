@@ -10,6 +10,7 @@ import net.contargo.iris.route.RouteType;
 import net.contargo.iris.terminal.Terminal;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 
 /**
@@ -17,25 +18,25 @@ import java.math.BigDecimal;
  */
 public class TerminalSubConnectionDto extends SubConnectionDto {
 
-    private final Long terminal2Id;
+    private final BigInteger terminal2Uid;
 
     @JsonCreator
     public TerminalSubConnectionDto(@JsonProperty("id") Long id,
-        @JsonProperty("terminalId") Long terminalId,
+        @JsonProperty("terminalId") BigInteger terminalUid,
         @JsonProperty("bargeDieselDistance") BigDecimal bargeDieselDistance,
         @JsonProperty("railDieselDistance") BigDecimal railDieselDistance,
         @JsonProperty("railElectricDistance") BigDecimal railElectricDistance,
-        @JsonProperty("terminal2Id") Long terminal2Id) {
+        @JsonProperty("terminal2Id") BigInteger terminal2Uid) {
 
-        super(id, terminalId, bargeDieselDistance, railDieselDistance, railElectricDistance);
-        this.terminal2Id = terminal2Id;
+        super(id, terminalUid, bargeDieselDistance, railDieselDistance, railElectricDistance);
+        this.terminal2Uid = terminal2Uid;
     }
 
 
     public TerminalSubConnectionDto(TerminalSubConnection subConnection) {
 
         super(subConnection);
-        this.terminal2Id = subConnection.getTerminal2().getId();
+        this.terminal2Uid = subConnection.getTerminal2().getUniqueId();
     }
 
     @Override
@@ -45,9 +46,9 @@ public class TerminalSubConnectionDto extends SubConnectionDto {
     }
 
 
-    public Long getTerminal2Id() {
+    public BigInteger getTerminal2Uid() {
 
-        return terminal2Id;
+        return terminal2Uid;
     }
 
 
@@ -57,11 +58,11 @@ public class TerminalSubConnectionDto extends SubConnectionDto {
         TerminalSubConnection terminalSubConnection = new TerminalSubConnection();
 
         Terminal terminal = new Terminal();
-        terminal.setId(getTerminalId());
+        terminal.setUniqueId(getTerminalUid());
         terminalSubConnection.setTerminal(terminal);
 
         Terminal terminal2 = new Terminal();
-        terminal2.setId(getTerminal2Id());
+        terminal2.setUniqueId(getTerminal2Uid());
         terminalSubConnection.setTerminal2(terminal2);
 
         terminalSubConnection.setBargeDieselDistance(getBargeDieselDistance());

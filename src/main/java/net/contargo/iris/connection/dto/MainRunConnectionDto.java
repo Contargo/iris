@@ -12,6 +12,7 @@ import net.contargo.iris.seaport.Seaport;
 import net.contargo.iris.terminal.Terminal;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import java.util.List;
 import java.util.function.Function;
@@ -25,8 +26,8 @@ import static java.util.stream.Collectors.toList;
 public final class MainRunConnectionDto {
 
     private final Long id;
-    private final Long seaportId;
-    private final Long terminalId;
+    private final BigInteger seaportUid;
+    private final BigInteger terminalUid;
     private final BigDecimal bargeDieselDistance;
     private final BigDecimal railDieselDistance;
     private final BigDecimal railElectricDistance;
@@ -36,8 +37,8 @@ public final class MainRunConnectionDto {
 
     @JsonCreator
     public MainRunConnectionDto(@JsonProperty("id") Long id,
-        @JsonProperty("seaportId") Long seaportId,
-        @JsonProperty("terminalId") Long terminalId,
+        @JsonProperty("seaportId") BigInteger seaportUid,
+        @JsonProperty("terminalId") BigInteger terminalUid,
         @JsonProperty("bargeDieselDistance") BigDecimal bargeDieselDistance,
         @JsonProperty("railDieselDistance") BigDecimal railDieselDistance,
         @JsonProperty("railElectricDistance") BigDecimal railElectricDistance,
@@ -45,8 +46,8 @@ public final class MainRunConnectionDto {
         @JsonProperty("subConnections") List<SubConnectionDto> subConnections) {
 
         this.id = id;
-        this.seaportId = seaportId;
-        this.terminalId = terminalId;
+        this.seaportUid = seaportUid;
+        this.terminalUid = terminalUid;
         this.bargeDieselDistance = bargeDieselDistance;
         this.railDieselDistance = railDieselDistance;
         this.railElectricDistance = railElectricDistance;
@@ -58,8 +59,8 @@ public final class MainRunConnectionDto {
     public MainRunConnectionDto(MainRunConnection mainRunConnection) {
 
         this.id = mainRunConnection.getId();
-        this.seaportId = mainRunConnection.getSeaport().getId();
-        this.terminalId = mainRunConnection.getTerminal().getId();
+        this.seaportUid = mainRunConnection.getSeaport().getUniqueId();
+        this.terminalUid = mainRunConnection.getTerminal().getUniqueId();
         this.bargeDieselDistance = mainRunConnection.getBargeDieselDistance();
         this.railDieselDistance = mainRunConnection.getRailDieselDistance();
         this.railElectricDistance = mainRunConnection.getRailElectricDistance();
@@ -86,15 +87,15 @@ public final class MainRunConnectionDto {
     }
 
 
-    public Long getSeaportId() {
+    public BigInteger getSeaportUid() {
 
-        return seaportId;
+        return seaportUid;
     }
 
 
-    public Long getTerminalId() {
+    public BigInteger getTerminalUid() {
 
-        return terminalId;
+        return terminalUid;
     }
 
 
@@ -139,11 +140,11 @@ public final class MainRunConnectionDto {
         MainRunConnection connection = new MainRunConnection();
 
         Seaport seaport = new Seaport();
-        seaport.setId(this.seaportId);
+        seaport.setUniqueId(this.seaportUid);
         connection.setSeaport(seaport);
 
         Terminal terminal = new Terminal();
-        terminal.setId(this.terminalId);
+        terminal.setUniqueId(this.terminalUid);
         connection.setTerminal(terminal);
 
         connection.setRouteType(this.routeType);

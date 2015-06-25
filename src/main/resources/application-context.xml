@@ -205,6 +205,8 @@
     <!-- All Beans for Connection -->
     <bean id="connectionService" class="net.contargo.iris.connection.service.MainRunConnectionServiceImpl">
         <constructor-arg name="mainRunConnectionRepository" ref="mainRunConnectionRepository"/>
+        <constructor-arg name="seaportService" ref="seaportService"/>
+        <constructor-arg name="terminalService" ref="terminalService"/>
     </bean>
 
     <bean id="seaportTerminalConnectionService"

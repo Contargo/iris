@@ -18,15 +18,15 @@ import java.math.BigInteger;
  */
 public class TerminalSubConnectionDto extends SubConnectionDto {
 
-    private final BigInteger terminal2Uid;
+    private final String terminal2Uid;
 
     @JsonCreator
     public TerminalSubConnectionDto(@JsonProperty("id") Long id,
-        @JsonProperty("terminalId") BigInteger terminalUid,
+        @JsonProperty("terminalId") String terminalUid,
         @JsonProperty("bargeDieselDistance") BigDecimal bargeDieselDistance,
         @JsonProperty("railDieselDistance") BigDecimal railDieselDistance,
         @JsonProperty("railElectricDistance") BigDecimal railElectricDistance,
-        @JsonProperty("terminal2Id") BigInteger terminal2Uid) {
+        @JsonProperty("terminal2Id") String terminal2Uid) {
 
         super(id, terminalUid, bargeDieselDistance, railDieselDistance, railElectricDistance);
         this.terminal2Uid = terminal2Uid;
@@ -36,7 +36,7 @@ public class TerminalSubConnectionDto extends SubConnectionDto {
     public TerminalSubConnectionDto(TerminalSubConnection subConnection) {
 
         super(subConnection);
-        this.terminal2Uid = subConnection.getTerminal2().getUniqueId();
+        this.terminal2Uid = subConnection.getTerminal2().getUniqueId().toString();
     }
 
     @Override
@@ -46,7 +46,7 @@ public class TerminalSubConnectionDto extends SubConnectionDto {
     }
 
 
-    public BigInteger getTerminal2Uid() {
+    public String getTerminal2Uid() {
 
         return terminal2Uid;
     }
@@ -58,11 +58,11 @@ public class TerminalSubConnectionDto extends SubConnectionDto {
         TerminalSubConnection terminalSubConnection = new TerminalSubConnection();
 
         Terminal terminal = new Terminal();
-        terminal.setUniqueId(getTerminalUid());
+        terminal.setUniqueId(new BigInteger(getTerminalUid()));
         terminalSubConnection.setTerminal(terminal);
 
         Terminal terminal2 = new Terminal();
-        terminal2.setUniqueId(getTerminal2Uid());
+        terminal2.setUniqueId(new BigInteger(getTerminal2Uid()));
         terminalSubConnection.setTerminal2(terminal2);
 
         terminalSubConnection.setBargeDieselDistance(getBargeDieselDistance());

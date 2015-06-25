@@ -19,15 +19,15 @@ import java.math.BigInteger;
  */
 public class SeaportSubConnectionDto extends SubConnectionDto {
 
-    private final BigInteger seaportUid;
+    private final String seaportUid;
 
     @JsonCreator
     public SeaportSubConnectionDto(@JsonProperty("id") Long id,
-        @JsonProperty("terminalUid") BigInteger terminalUid,
+        @JsonProperty("terminalUid") String terminalUid,
         @JsonProperty("bargeDieselDistance") BigDecimal bargeDieselDistance,
         @JsonProperty("railDieselDistance") BigDecimal railDieselDistance,
         @JsonProperty("railElectricDistance") BigDecimal railElectricDistance,
-        @JsonProperty("seaportUid") BigInteger seaportUid) {
+        @JsonProperty("seaportUid") String seaportUid) {
 
         super(id, terminalUid, bargeDieselDistance, railDieselDistance, railElectricDistance);
         this.seaportUid = seaportUid;
@@ -37,7 +37,7 @@ public class SeaportSubConnectionDto extends SubConnectionDto {
     public SeaportSubConnectionDto(SeaportSubConnection subConnection) {
 
         super(subConnection);
-        this.seaportUid = subConnection.getSeaport().getUniqueId();
+        this.seaportUid = subConnection.getSeaport().getUniqueId().toString();
     }
 
     @Override
@@ -47,7 +47,7 @@ public class SeaportSubConnectionDto extends SubConnectionDto {
     }
 
 
-    public BigInteger getSeaportUid() {
+    public String getSeaportUid() {
 
         return seaportUid;
     }
@@ -59,11 +59,11 @@ public class SeaportSubConnectionDto extends SubConnectionDto {
         SeaportSubConnection seaportSubConnection = new SeaportSubConnection();
 
         Seaport seaport = new Seaport();
-        seaport.setUniqueId(this.seaportUid);
+        seaport.setUniqueId(new BigInteger(this.seaportUid));
         seaportSubConnection.setSeaport(seaport);
 
         Terminal terminal = new Terminal();
-        terminal.setUniqueId(getTerminalUid());
+        terminal.setUniqueId(new BigInteger(getTerminalUid()));
         seaportSubConnection.setTerminal(terminal);
 
         seaportSubConnection.setBargeDieselDistance(getBargeDieselDistance());

@@ -26,8 +26,8 @@ import static java.util.stream.Collectors.toList;
 public final class MainRunConnectionDto {
 
     private final Long id;
-    private final BigInteger seaportUid;
-    private final BigInteger terminalUid;
+    private final String seaportUid;
+    private final String terminalUid;
     private final BigDecimal bargeDieselDistance;
     private final BigDecimal railDieselDistance;
     private final BigDecimal railElectricDistance;
@@ -37,8 +37,8 @@ public final class MainRunConnectionDto {
 
     @JsonCreator
     public MainRunConnectionDto(@JsonProperty("id") Long id,
-        @JsonProperty("seaportId") BigInteger seaportUid,
-        @JsonProperty("terminalId") BigInteger terminalUid,
+        @JsonProperty("seaportId") String seaportUid,
+        @JsonProperty("terminalId") String terminalUid,
         @JsonProperty("bargeDieselDistance") BigDecimal bargeDieselDistance,
         @JsonProperty("railDieselDistance") BigDecimal railDieselDistance,
         @JsonProperty("railElectricDistance") BigDecimal railElectricDistance,
@@ -59,8 +59,8 @@ public final class MainRunConnectionDto {
     public MainRunConnectionDto(MainRunConnection mainRunConnection) {
 
         this.id = mainRunConnection.getId();
-        this.seaportUid = mainRunConnection.getSeaport().getUniqueId();
-        this.terminalUid = mainRunConnection.getTerminal().getUniqueId();
+        this.seaportUid = mainRunConnection.getSeaport().getUniqueId().toString();
+        this.terminalUid = mainRunConnection.getTerminal().getUniqueId().toString();
         this.bargeDieselDistance = mainRunConnection.getBargeDieselDistance();
         this.railDieselDistance = mainRunConnection.getRailDieselDistance();
         this.railElectricDistance = mainRunConnection.getRailElectricDistance();
@@ -87,13 +87,13 @@ public final class MainRunConnectionDto {
     }
 
 
-    public BigInteger getSeaportUid() {
+    public String getSeaportUid() {
 
         return seaportUid;
     }
 
 
-    public BigInteger getTerminalUid() {
+    public String getTerminalUid() {
 
         return terminalUid;
     }
@@ -140,11 +140,11 @@ public final class MainRunConnectionDto {
         MainRunConnection connection = new MainRunConnection();
 
         Seaport seaport = new Seaport();
-        seaport.setUniqueId(this.seaportUid);
+        seaport.setUniqueId(new BigInteger(this.seaportUid));
         connection.setSeaport(seaport);
 
         Terminal terminal = new Terminal();
-        terminal.setUniqueId(this.terminalUid);
+        terminal.setUniqueId(new BigInteger(this.terminalUid));
         connection.setTerminal(terminal);
 
         connection.setRouteType(this.routeType);

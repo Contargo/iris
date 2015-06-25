@@ -33,7 +33,7 @@ import javax.persistence.PersistenceContext;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:application-context.xml")
-@TransactionConfiguration(defaultRollback = false)
+@TransactionConfiguration(defaultRollback = true)
 @Transactional
 public class MainRunConnectionServiceImplIntegrationTest {
 

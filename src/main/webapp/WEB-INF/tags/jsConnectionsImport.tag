@@ -14,9 +14,18 @@
 
 <!-- ################################# MODELS #################################-->
 <script src="<c:url value="/client/js/connections/models/connection.js" />"></script>
+<script src="<c:url value="/client/js/connections/models/connection-endpoint.js" />"></script>
+<script src="<c:url value="/client/js/connections/models/connection-seaport.js" />"></script>
+<script src="<c:url value="/client/js/connections/models/connection-terminal.js" />"></script>
+<script src="<c:url value="/client/js/connections/models/routetype.js" />"></script>
+<script src="<c:url value="/client/js/connections/models/distances.js" />"></script>
 
 <!-- ################################# VIEWS #################################-->
 <script src="<c:url value="/client/js/connections/views/connection-view.js" />"></script>
+<script src="<c:url value="/client/js/connections/views/seaports-view.js" />"></script>
+<script src="<c:url value="/client/js/connections/views/terminals-view.js" />"></script>
+<script src="<c:url value="/client/js/connections/views/routetypes-view.js" />"></script>
+<script src="<c:url value="/client/js/connections/views/distances-view.js" />"></script>
 
 <!-- ################################# APPS #################################-->
 <script src="<c:url value="/client/js/connections/connection-app.js" />"></script>

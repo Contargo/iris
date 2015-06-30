@@ -47,8 +47,8 @@ describe('ConnectionApp', function () {
         });
 
         spyOn(ConnectionView.prototype, 'create').andCallFake(function (options) {
-            expect(options.seaports).toEqual([1, 2]);
-            expect(options.terminals).toEqual([3, 4]);
+            expect(options.seaports.length).toEqual(2);
+            expect(options.terminals.length).toEqual(2);
             expect(options.model.get('id')).toEqual(5);
             return {
                 el: 'bar'

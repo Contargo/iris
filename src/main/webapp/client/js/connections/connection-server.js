@@ -36,12 +36,36 @@ var ConnectionServer = function (contextpath) {
                     alert('fehler');//TODO
                 }
             )
+        },
+        updateConnection: function (connection, callback) {
+            put(connectionUrl.replace('{connectionId}', connection.id), connection,
+                function(responseData) {
+                    callback(responseData);
+                },
+                function() {
+                    alert('fehler');//TODO
+                }
+            );
         }
     };
 
     function get(url, success, error) {
         $.ajax({
             url: url,
+            dataType: 'json',
+            cache: false,
+            async: true,
+            success: success,
+            error: error
+        });
+    }
+
+    function put(url, content, success, error) {
+        $.ajax({
+            type: 'PUT',
+            url: url,
+            contentType: 'application/json',
+            data: JSON.stringify(content),
             dataType: 'json',
             cache: false,
             async: true,

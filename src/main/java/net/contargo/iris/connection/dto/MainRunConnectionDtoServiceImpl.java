@@ -42,9 +42,9 @@ public class MainRunConnectionDtoServiceImpl implements MainRunConnectionDtoServ
 
 
     @Override
-    public void save(MainRunConnectionDto dto) {
+    public MainRunConnectionDto save(MainRunConnectionDto dto) {
 
-        mainRunConnectionService.save(dto.toEntity());
+        return new MainRunConnectionDto(mainRunConnectionService.save(dto.toEntity()));
     }
 
 

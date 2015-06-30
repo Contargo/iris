@@ -57,6 +57,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -232,7 +233,7 @@ public class MainRunConnectionApiControllerMvcUnitTest {
     public void getConnection() throws Exception {
 
         MainRunConnectionDto dto = new MainRunConnectionDto(42L, "1", "2", BigDecimal.ONE, BigDecimal.TEN,
-                BigDecimal.ZERO, BARGE, Collections.<SubConnectionDto>emptyList());
+                BigDecimal.ZERO, BARGE, true, Collections.<SubConnectionDto>emptyList());
 
         when(connectionApiDtoService.get(42L)).thenReturn(dto);
 
@@ -264,6 +265,26 @@ public class MainRunConnectionApiControllerMvcUnitTest {
 
         ResultActions resultActions = perform(builder);
         resultActions.andExpect(status().isCreated());
+
+        ArgumentCaptor<MainRunConnectionDto> captor = ArgumentCaptor.forClass(MainRunConnectionDto.class);
+
+        verify(connectionApiDtoService).save(captor.capture());
+
+        assertThat(captor.getValue().getId(), is(42L));
+    }
+
+
+    @Test
+    public void updateConnection() throws Exception {
+
+        MockHttpServletRequestBuilder builder = put("/connections/42");
+        builder.contentType("application/json;charset=UTF-8");
+        builder.content("{\"id\":42, \"bargeDieselDistance\":1,\"railDieselDistance\":10,\"railElectricDistance\":0,"
+            + "\"routeType\":\"BARGE\",\"subConnections\":[],\"seaportUid\":\"1\",\"terminalUid\":\"2\","
+            + "\"enabled\":true}");
+
+        ResultActions resultActions = perform(builder);
+        resultActions.andExpect(status().isOk());
 
         ArgumentCaptor<MainRunConnectionDto> captor = ArgumentCaptor.forClass(MainRunConnectionDto.class);
 

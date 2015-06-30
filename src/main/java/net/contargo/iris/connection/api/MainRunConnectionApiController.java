@@ -48,6 +48,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 
 /**
@@ -185,5 +186,14 @@ public class MainRunConnectionApiController extends AbstractController {
         connectionApiDtoService.save(dto);
 
         return new ResponseEntity(HttpStatus.CREATED);
+    }
+
+
+    @RequestMapping(method = PUT, value = "/{id}")
+    public ResponseEntity<MainRunConnectionDto> updateConnection(@RequestBody MainRunConnectionDto dto) {
+
+        MainRunConnectionDto updatedDto = connectionApiDtoService.save(dto);
+
+        return new ResponseEntity<>(updatedDto, HttpStatus.OK);
     }
 }

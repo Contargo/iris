@@ -4,6 +4,11 @@ var ConnectionView = Backbone.View.extend({
     tagName: 'div',
     className: 'connection-form',
 
+    events: {
+        'click #submit-button': 'submitConnection',
+        'change #enabled': 'updateEnabled'
+    },
+
     initialize: function (options) {
         'use strict';
 
@@ -25,23 +30,71 @@ var ConnectionView = Backbone.View.extend({
     render: function () {
         'use strict';
 
-        this.setSelected(this.seaports, 'uniqueId',this.model.get('seaportUid'));
-        this.setSelected(this.terminals, 'uniqueId',this.model.get('terminalUid'));
-        this.setSelected(this.routeTypes, 'name',this.model.get('routeType'));
+        this.seaports.setSelected(this.model.get('seaport').get('uniqueId'));
+        this.terminals.setSelected(this.model.get('terminal').get('uniqueId'));
+        this.routeTypes.setSelected(this.model.get('routeType').get('value'));
 
         this.$el.html(this.template({
-            connection: this.model.toJSON(),
-            seaports: this.seaports,
-            terminals: this.terminals,
-            routeTypes: this.routeTypes
+            header: this.createHeader(),
+            submitText: this.createSubmitText(),
+            enabled: this.model.get('enabled')
         }));
+        this.createChildren();
     },
 
-    setSelected: function (elements, key, value) {
-        elements.forEach(function (element) {
-            if (element[key] === value) {
-                element.selected = true;
-            }
+    createChildren: function() {
+        'use strict';
+        SeaportsView.prototype.create({
+            model: this.seaports,
+            el: this.$('#seaports')
         });
+
+        TerminalsView.prototype.create({
+            model: this.terminals,
+            el: this.$('#terminals')
+        });
+
+        RouteTypesView.prototype.create({
+            model: this.routeTypes,
+            el: this.$('#routeTypes')
+        });
+
+        DistancesView.prototype.create({
+            model: this.model.get('distances'),
+            el: this.$('#distances')
+        });
+    },
+
+    createHeader: function() {
+        'use strict';
+        var header;
+        if (this.model.get("id")) {
+            header = 'Edit main run connection - Seaport ';
+            header += this.seaports.getSelectedName();
+            header += " to Terminal ";
+            header += this.terminals.getSelectedName();
+        } else {
+            header = 'Create new main run connection';
+        }
+        return header;
+    },
+
+    createSubmitText: function() {
+        'use strict';
+        if (this.model.get("id")) {
+            return 'Update';
+        } else {
+            return 'Create';
+        }
+    },
+
+    updateEnabled: function(event) {
+        'use strict';
+        this.model.set('enabled', $(event.target).is(':checked'));
+    },
+
+    submitConnection: function(e) {
+        'use strict';
+        this.model.trigger('updateConnection');
     }
 });

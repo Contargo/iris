@@ -16,5 +16,5 @@ public interface MainRunConnectionDtoService {
     MainRunConnectionDto get(Long id);
 
 
-    void save(MainRunConnectionDto dto);
+    MainRunConnectionDto save(MainRunConnectionDto dto);
 }

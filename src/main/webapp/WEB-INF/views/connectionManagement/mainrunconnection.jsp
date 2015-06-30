@@ -21,7 +21,15 @@
         $(function () {
             exportTemplateManagerAsGlobalFunction("<c:url value='/client/js/connections/templates/' />");
             var connectionServer = new ConnectionServer('<c:url value="/" />');
-            var app = new ConnectionApp(connectionServer, ${mainRunConnection.id});
+            var app;
+            <c:choose>
+                <c:when test="${mainRunConnection.id == null}">
+                app = new ConnectionApp(connectionServer);
+                </c:when>
+                <c:otherwise>
+                app = new ConnectionApp(connectionServer, ${mainRunConnection.id});
+            </c:otherwise>
+            </c:choose>
             app.start();
         });
     </script>

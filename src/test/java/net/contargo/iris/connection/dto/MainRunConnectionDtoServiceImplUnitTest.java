@@ -29,6 +29,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 
+import static org.mockito.Matchers.any;
+
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -105,9 +107,17 @@ public class MainRunConnectionDtoServiceImplUnitTest {
     public void save() {
 
         MainRunConnectionDto dto = new MainRunConnectionDto(42L, BigInteger.ONE.toString(), BigInteger.TEN.toString(),
-                BigDecimal.ONE, BigDecimal.TEN, BigDecimal.ZERO, BARGE, true, Collections.<SubConnectionDto>emptyList());
+                BigDecimal.ONE, BigDecimal.TEN, BigDecimal.ZERO, BARGE, true,
+                Collections.<SubConnectionDto>emptyList());
 
-        sut.save(dto);
+        MainRunConnection connection = newConnection(seaportOne, terminal, BARGE);
+        connection.setId(42L);
+
+        when(mainRunConnectionServiceMock.save(any(MainRunConnection.class))).thenReturn(connection);
+
+        MainRunConnectionDto savedDto = sut.save(dto);
+
+        assertThat(savedDto.getId(), is(42L));
 
         ArgumentCaptor<MainRunConnection> captor = ArgumentCaptor.forClass(MainRunConnection.class);
         verify(mainRunConnectionServiceMock).save(captor.capture());

@@ -1,0 +1,15 @@
+<label for="seaport" class="control-label">
+    Seaport
+</label>
+
+<div class="controls">
+    <select id="seaport" name="seaport">
+        {{#each seaports}}
+        {{#if this.selected}}
+        <option value="{{this.uniqueId}}" selected="selected">{{this.nicename}}</option>
+        {{else}}
+        <option value="{{this.uniqueId}}">{{this.nicename}}</option>
+        {{/if}}
+        {{/each}}
+    </select>
+</div>

@@ -13,10 +13,15 @@ var ConnectionEndpoints = Backbone.Collection.extend({
 
     setSelected: function(value) {
         'use strict';
-        this.each(function(connectionEndpoint) {
-            connectionEndpoint.set('selected', connectionEndpoint.get('uniqueId') === value);
-        });
-        this.trigger('selectionChange', value)
+        if (value) {
+            this.each(function (connectionEndpoint) {
+                connectionEndpoint.set('selected', connectionEndpoint.get('uniqueId') === value);
+            });
+            this.trigger('selectionChange', value);
+        } else {
+            this.first().set('selected', true);
+            this.trigger('selectionChange', this.first().get('uniqueId'));
+        }
     },
 
     getSelectedName: function () {

@@ -13,12 +13,12 @@
 <script src="<c:url value="/client/js/connections/connection-server.js" />"></script>
 
 <!-- ################################# MODELS #################################-->
-<script src="<c:url value="/client/js/connections/models/connection.js" />"></script>
 <script src="<c:url value="/client/js/connections/models/connection-endpoint.js" />"></script>
 <script src="<c:url value="/client/js/connections/models/connection-seaport.js" />"></script>
 <script src="<c:url value="/client/js/connections/models/connection-terminal.js" />"></script>
 <script src="<c:url value="/client/js/connections/models/routetype.js" />"></script>
 <script src="<c:url value="/client/js/connections/models/distances.js" />"></script>
+<script src="<c:url value="/client/js/connections/models/connection.js" />"></script>
 
 <!-- ################################# VIEWS #################################-->
 <script src="<c:url value="/client/js/connections/views/connection-view.js" />"></script>

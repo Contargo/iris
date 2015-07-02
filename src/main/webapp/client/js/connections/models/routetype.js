@@ -11,10 +11,14 @@ var RouteTypes = Backbone.Collection.extend({
 
     setSelected: function(value) {
         'use strict';
-        this.each(function(type) {
-            if (type.get('uniqueId') === value) {
-                type.set('selected', true);
-            }
-        });
+        if (value) {
+            this.each(function (type) {
+                type.set('selected', type.get('value') === value);
+            });
+            this.trigger('selectionChange', value);
+        } else {
+            this.first().set('selected', true);
+            this.trigger('selectionChange', this.first().get('value'));
+        }
     }
 });

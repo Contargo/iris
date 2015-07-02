@@ -1,11 +1,11 @@
 var Connection = Backbone.Model.extend({
     defaults: {
         id: undefined,
-        seaport: undefined,
-        terminal: undefined,
-        distances: undefined,
-        routeType: undefined,
-        enabled: undefined
+        seaport: new ConnectionSeaport(),
+        terminal: new ConnectionTerminal(),
+        distances: new Distances(),
+        routeType: new RouteType(),
+        enabled: true
     },
 
     updateTerminal: function(updatedValue) {

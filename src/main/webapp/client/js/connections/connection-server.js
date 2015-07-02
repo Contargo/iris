@@ -6,6 +6,7 @@ var ConnectionServer = function (contextpath) {
     }
 
     var api = contextpath + 'api/';
+    var connectionsUrl = api + 'connections/';
     var connectionUrl = api + 'connections/{connectionId}';
     var seaportsUrl = api + 'seaports';
     var terminalsUrl = api + 'terminals';
@@ -46,6 +47,16 @@ var ConnectionServer = function (contextpath) {
                     alert('fehler');//TODO
                 }
             );
+        },
+        createConnection: function (connection, callback) {
+            post(connectionsUrl, connection,
+                function(responseData, status, request) {
+                    callback(request.getResponseHeader('location'));
+                },
+                function() {
+                    alert('fehler');//TODO
+                }
+            );
         }
     };
 
@@ -63,6 +74,20 @@ var ConnectionServer = function (contextpath) {
     function put(url, content, success, error) {
         $.ajax({
             type: 'PUT',
+            url: url,
+            contentType: 'application/json',
+            data: JSON.stringify(content),
+            dataType: 'json',
+            cache: false,
+            async: true,
+            success: success,
+            error: error
+        });
+    }
+
+    function post(url, content, success, error) {
+        $.ajax({
+            type: 'POST',
             url: url,
             contentType: 'application/json',
             data: JSON.stringify(content),

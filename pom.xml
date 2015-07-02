@@ -671,6 +671,12 @@
                         <include>routing/models/*.js</include>
                         <include>routing/views/*.js</include>
                         <include>routing/*.js</include>
+                        <include>connections/models/connection-endpoint.js</include>
+                        <include>connections/models/connection-seaport.js</include>
+                        <include>connections/models/connection-terminal.js</include>
+                        <include>connections/models/distances.js</include>
+                        <include>connections/models/routetype.js</include>
+                        <include>connections/models/connection.js</include>
                         <include>connections/models/*.js</include>
                         <include>connections/views/*.js</include>
                         <include>connections/*.js</include>

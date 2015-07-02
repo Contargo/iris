@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -31,10 +32,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.lang.invoke.MethodHandles;
 
 import java.math.BigInteger;
+
+import java.net.URI;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -183,9 +187,18 @@ public class MainRunConnectionApiController extends AbstractController {
     @RequestMapping(method = POST, value = "")
     public ResponseEntity createConnection(@RequestBody MainRunConnectionDto dto) {
 
-        connectionApiDtoService.save(dto);
+        MainRunConnectionDto savedDto = connectionApiDtoService.save(dto);
 
-        return new ResponseEntity(HttpStatus.CREATED);
+        URI location = ServletUriComponentsBuilder.fromCurrentServletMapping()
+            .path("/../web/connections/{id}")
+            .build()
+            .expand(savedDto.getId())
+            .toUri();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(location);
+
+        return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
 
 

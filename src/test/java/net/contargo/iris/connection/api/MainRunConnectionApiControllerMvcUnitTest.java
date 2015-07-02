@@ -43,6 +43,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 
@@ -59,6 +60,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
@@ -257,6 +259,9 @@ public class MainRunConnectionApiControllerMvcUnitTest {
     @Test
     public void createConnection() throws Exception {
 
+        when(connectionApiDtoService.save(any(MainRunConnectionDto.class))).thenReturn(new MainRunConnectionDto(42L,
+                null, null, null, null, null, null, null, null));
+
         MockHttpServletRequestBuilder builder = post("/connections/");
         builder.contentType("application/json;charset=UTF-8");
         builder.content("{\"id\":42, \"bargeDieselDistance\":1,\"railDieselDistance\":10,\"railElectricDistance\":0,"
@@ -265,6 +270,7 @@ public class MainRunConnectionApiControllerMvcUnitTest {
 
         ResultActions resultActions = perform(builder);
         resultActions.andExpect(status().isCreated());
+        resultActions.andExpect(header().string("location", endsWith("/web/connections/42")));
 
         ArgumentCaptor<MainRunConnectionDto> captor = ArgumentCaptor.forClass(MainRunConnectionDto.class);
 

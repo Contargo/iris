@@ -18,6 +18,7 @@
 <script src="<c:url value="/client/js/connections/models/connection-terminal.js" />"></script>
 <script src="<c:url value="/client/js/connections/models/routetype.js" />"></script>
 <script src="<c:url value="/client/js/connections/models/distances.js" />"></script>
+<script src="<c:url value="/client/js/connections/models/subconnection.js" />"></script>
 <script src="<c:url value="/client/js/connections/models/connection.js" />"></script>
 
 <!-- ################################# VIEWS #################################-->
@@ -26,6 +27,7 @@
 <script src="<c:url value="/client/js/connections/views/terminals-view.js" />"></script>
 <script src="<c:url value="/client/js/connections/views/routetypes-view.js" />"></script>
 <script src="<c:url value="/client/js/connections/views/distances-view.js" />"></script>
+<script src="<c:url value="/client/js/connections/views/subconnection-view.js" />"></script>
 
 <!-- ################################# APPS #################################-->
 <script src="<c:url value="/client/js/connections/connection-app.js" />"></script>

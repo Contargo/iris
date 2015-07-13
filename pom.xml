@@ -676,6 +676,7 @@
                         <include>connections/models/connection-terminal.js</include>
                         <include>connections/models/distances.js</include>
                         <include>connections/models/routetype.js</include>
+                        <include>connections/models/subconnection.js</include>
                         <include>connections/models/connection.js</include>
                         <include>connections/models/*.js</include>
                         <include>connections/views/*.js</include>

@@ -1,0 +1,25 @@
+<div class="controls form-inline">
+    <input class="start" title="start" type="text" readonly value="{{model.endpoint1.name}}">
+    {{#if latest}}
+    <select class="end" title="end">
+    {{else}}
+    <select class="end" title="end" disabled="disabled">
+    {{/if}}
+        {{#each terminals}}
+        {{#if this.selected}}
+        <option value="{{this.uniqueId}}" selected="selected">{{this.name}}</option>
+        {{else}}
+        <option value="{{this.uniqueId}}">{{this.name}}</option>
+        {{/if}}
+        {{/each}}
+    </select>
+    <input class="type" title="type" type="text" readonly value="{{model.routeType.value}}">
+    {{#with model.distances }}
+    <input class="barge comma-replacement-aware" title="barge" type="text" value="{{barge}}"/>
+    <input class="raildiesel comma-replacement-aware" title="raildiesel" type="text" value="{{raildiesel}}"/>
+    <input class="railelectric comma-replacement-aware" title="railelectric" type="text" value="{{railelectric}}"/>
+    {{/with}}
+    {{#if latest}}
+    <button class="new-subconnection btn btn-primary"><i class="icon-plus-sign icon-white"></i></button>
+    {{/if}}
+</div>

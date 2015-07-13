@@ -5,7 +5,8 @@ var Connection = Backbone.Model.extend({
         terminal: new ConnectionTerminal(),
         distances: new Distances(),
         routeType: new RouteType(),
-        enabled: true
+        enabled: true,
+        subconnections: new Subconnections()
     },
 
     updateTerminal: function(updatedValue) {
@@ -17,10 +18,33 @@ var Connection = Backbone.Model.extend({
         'use strict';
         this.get('seaport').set('uniqueId', updatedValue);
     },
-    
+
     updateRouteType: function(updatedValue) {
         'use strict';
         this.get('routeType').set('value', updatedValue);
+    },
+
+    createSubconnection: function () {
+        'use strict';
+        var subconnection;
+        if (this.get('subconnections').size() === 0) {
+            subconnection = new Subconnection({
+                endpoint1: this.get('seaport'),
+                routeType: new RouteType({value: 'BARGE'})
+            });
+        } else {
+            var latest = this.get('subconnections').last();
+            if (latest.get('endpoint2').get('uniqueId') === this.get('terminal').get('uniqueId')) {
+                alert('Connection endpoint and latest subconnection endpoint are the same. Adding more subconnections is not necessary.');
+                return;
+            }
+            subconnection = new Subconnection({
+                endpoint1: latest.get('endpoint2'),
+                endpoint2: latest.get('endpoint2'),
+                routeType: new RouteType({value: 'RAIL'})
+            });
+        }
+        this.get('subconnections').add(subconnection);
     },
 
     createJsonModel: function() {
@@ -34,7 +58,7 @@ var Connection = Backbone.Model.extend({
             railElectricDistance: this.get('distances').get('railelectric'),
             routeType: this.get('routeType').get('value'),
             enabled: this.get('enabled'),
-            subConnections: []
+            subConnections: this.get('subconnections').createJsonModel()
         };
     },
 

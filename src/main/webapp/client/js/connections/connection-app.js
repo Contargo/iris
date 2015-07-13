@@ -8,7 +8,7 @@ function ConnectionApp(connectionServer, connectionId) {
 ConnectionApp.prototype.start = function () {
     'use strict';
 
-    _.bindAll(this, 'update', 'registerEvents', 'updateTerminal', 'updateSeaport', 'updateRouteType', 'loadModels', 'createView');
+    _.bindAll(this, 'update', 'registerEvents', 'updateTerminal', 'updateSeaport', 'updateRouteType', 'loadModels', 'createView', 'addNewSubconnection');
 
     var that = this;
 
@@ -16,6 +16,7 @@ ConnectionApp.prototype.start = function () {
 };
 
 ConnectionApp.prototype.createView = function () {
+    'use strict';
     this.registerEvents();
     this.connectionView = ConnectionView.prototype.create({
         model: this.connection,
@@ -52,12 +53,26 @@ ConnectionApp.prototype.loadModels = function (callback) {
                             railelectric: connection.railElectricDistance
                         }),
                         routeType: new RouteType({value: connection.routeType}),
-                        enabled: connection.enabled
+                        enabled: connection.enabled,
+                        subconnections: new Subconnections(_.map(connection.subConnections, function(sub) {
+                            return new Subconnection({
+                                id: sub.id,
+                                distances: new Distances({
+                                    barge: sub.bargeDieselDistance,
+                                    raildiesel: sub.railDieselDistance,
+                                    railelectric: sub.railElectricDistance
+                                }),
+                                endpoint1: sub.routeType === 'BARGE' ? that.seaports.getByUniqueId(sub.seaportUid) : that.terminals.getByUniqueId(sub.terminalUid),
+                                endpoint2: sub.routeType === 'BARGE' ? that.terminals.getByUniqueId(sub.terminalUid) : that.terminals.getByUniqueId(sub.terminal2Uid),
+                                routeType: new RouteType({value: sub.routeType})
+                            });
+                        }))
                     });
                     callback();
                 });
             } else {
                 that.connection = new Connection();
+                that.subconnections = new Subconnections();
                 callback();
             }
         });
@@ -65,25 +80,31 @@ ConnectionApp.prototype.loadModels = function (callback) {
 };
 
 ConnectionApp.prototype.registerEvents = function () {
+    'use strict';
     this.connection.bind('updateConnection', this.update);
     this.seaports.bind('selectionChange', this.updateSeaport);
     this.terminals.bind('selectionChange', this.updateTerminal);
     this.routeTypes.bind('selectionChange', this.updateRouteType);
+    this.connection.get('subconnections').bind('addNew', this.addNewSubconnection);
 };
 
 ConnectionApp.prototype.updateTerminal = function (updatedValue) {
+    'use strict';
     this.connection.updateTerminal(updatedValue);
 };
 
 ConnectionApp.prototype.updateSeaport = function (updatedValue) {
+    'use strict';
     this.connection.updateSeaport(updatedValue);
 };
 
 ConnectionApp.prototype.updateRouteType = function (updatedValue) {
+    'use strict';
     this.connection.updateRouteType(updatedValue);
 };
 
 ConnectionApp.prototype.update = function () {
+    'use strict';
     var that = this;
     if (this.connection.get('id')) {
         this.server.updateConnection(this.connection.createJsonModel(), function (con) {
@@ -95,4 +116,10 @@ ConnectionApp.prototype.update = function () {
             window.location.href = location;
         });
     }
+};
+
+ConnectionApp.prototype.addNewSubconnection = function () {
+    'use strict';
+    this.connection.createSubconnection();
+    this.connectionView.createSubconnections();
 };

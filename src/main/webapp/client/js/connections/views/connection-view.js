@@ -63,6 +63,24 @@ var ConnectionView = Backbone.View.extend({
             model: this.model.get('distances'),
             el: this.$('#distances')
         });
+
+        this.createSubconnections();
+    },
+
+    createSubconnections: function() {
+        'use strict';
+        this.$('#subconnections').empty();
+        var that = this;
+        this.model.get('subconnections').each(function(subconnection, index) {
+            var subView = SubconnectionView.prototype.create({
+                model: subconnection,
+                terminals: new ConnectionTerminals(that.terminals.map(function(terminal) {
+                    return terminal.clone();
+                })),
+                latest: that.model.get('subconnections').size() -1 === index
+            });
+            that.$('#subconnections').append(subView.el);
+        });
     },
 
     createHeader: function() {
@@ -93,7 +111,7 @@ var ConnectionView = Backbone.View.extend({
         this.model.set('enabled', $(event.target).is(':checked'));
     },
 
-    submitConnection: function(e) {
+    submitConnection: function() {
         'use strict';
         this.model.trigger('updateConnection');
     }

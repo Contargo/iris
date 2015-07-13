@@ -34,5 +34,12 @@ var ConnectionEndpoints = Backbone.Collection.extend({
         return this.find(function(connectionEndpoint) {
             return connectionEndpoint.get('selected');
         });
+    },
+
+    getByUniqueId: function (id) {
+        'use strict';
+        return this.find(function(endpoint) {
+            return endpoint.get('uniqueId') === id;
+        });
     }
 });

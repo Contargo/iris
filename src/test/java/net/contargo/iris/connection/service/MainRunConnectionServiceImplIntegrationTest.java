@@ -50,6 +50,7 @@ public class MainRunConnectionServiceImplIntegrationTest {
     @Before
     public void setUp() {
 
+        em.createQuery("DELETE FROM SubConnection c").executeUpdate();
         em.createQuery("DELETE FROM MainRunConnection c").executeUpdate();
         em.createQuery("DELETE FROM Terminal t").executeUpdate();
         em.createQuery("DELETE FROM Seaport s").executeUpdate();

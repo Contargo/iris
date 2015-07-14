@@ -30,9 +30,12 @@ var ConnectionView = Backbone.View.extend({
     render: function () {
         'use strict';
 
-        this.seaports.setSelected(this.model.get('seaport').get('uniqueId'));
-        this.terminals.setSelected(this.model.get('terminal').get('uniqueId'));
-        this.routeTypes.setSelected(this.model.get('routeType').get('value'));
+        this.seaports.setSelected(this.model.get('seaport').get('uniqueId'), true);
+        this.model.set('seaport', this.seaports.getSelected());
+        this.terminals.setSelected(this.model.get('terminal').get('uniqueId'), true);
+        this.model.set('terminal', this.terminals.getSelected());
+        this.routeTypes.setSelected(this.model.get('routeType').get('value'), true);
+        this.model.set('routeType', this.routeTypes.getSelected());
 
         this.$el.html(this.template({
             header: this.createHeader(),
@@ -59,12 +62,14 @@ var ConnectionView = Backbone.View.extend({
             el: this.$('#routeTypes')
         });
 
-        DistancesView.prototype.create({
-            model: this.model.get('distances'),
-            el: this.$('#distances')
-        });
-
-        this.createSubconnections();
+        if (this.model.get('routeType').get('value') === 'BARGE_RAIL') {
+            this.createSubconnections();
+        } else {
+            DistancesView.prototype.create({
+                model: this.model.get('distances'),
+                el: this.$('#distances')
+            });
+        }
     },
 
     createSubconnections: function() {
@@ -114,5 +119,13 @@ var ConnectionView = Backbone.View.extend({
     submitConnection: function() {
         'use strict';
         this.model.trigger('updateConnection');
+    },
+
+    updateDistanceDisplayForRouteType: function(routeType) {
+        if (routeType === 'BARGE_RAIL') {
+            this.$('#distances').hide();
+        } else {
+            this.$('#distances').show();
+        }
     }
 });

@@ -9,16 +9,25 @@ var RouteType = Backbone.Model.extend({
 var RouteTypes = Backbone.Collection.extend({
     model: RouteType,
 
-    setSelected: function(value) {
+    setSelected: function(value, silent) {
         'use strict';
         if (value) {
             this.each(function (type) {
                 type.set('selected', type.get('value') === value);
             });
-            this.trigger('selectionChange', value);
         } else {
             this.first().set('selected', true);
-            this.trigger('selectionChange', this.first().get('value'));
+            value = this.first().get('value');
         }
+        if (!silent) {
+            this.trigger('selectionChange', value);
+        }
+    },
+
+    getSelected: function () {
+        'use strict';
+        return this.find(function(type) {
+            return type.get('selected');
+        });
     }
 });

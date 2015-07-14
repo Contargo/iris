@@ -1,10 +1,12 @@
 var Subconnection = Backbone.Model.extend({
-    defaults: {
-        id: undefined,
-        endpoint1: new ConnectionEndpoint(),
-        endpoint2: new ConnectionEndpoint(),
-        distances: new Distances(),
-        routeType: new RouteType()
+    defaults: function() {
+        return {
+            id: undefined,
+            endpoint1: new ConnectionEndpoint(),
+            endpoint2: new ConnectionEndpoint(),
+            distances: new Distances(),
+            routeType: new RouteType()
+        };
     },
 
     createTemplateModel: function() {

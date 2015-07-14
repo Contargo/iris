@@ -17,13 +17,13 @@ ConnectionApp.prototype.start = function () {
 
 ConnectionApp.prototype.createView = function () {
     'use strict';
-    this.registerEvents();
     this.connectionView = ConnectionView.prototype.create({
         model: this.connection,
         seaports: this.seaports,
         terminals: this.terminals,
         routeTypes: this.routeTypes
     });
+    this.registerEvents();
     $('#connection').html(this.connectionView.el);
 };
 
@@ -72,7 +72,6 @@ ConnectionApp.prototype.loadModels = function (callback) {
                 });
             } else {
                 that.connection = new Connection();
-                that.subconnections = new Subconnections();
                 callback();
             }
         });
@@ -101,6 +100,7 @@ ConnectionApp.prototype.updateSeaport = function (updatedValue) {
 ConnectionApp.prototype.updateRouteType = function (updatedValue) {
     'use strict';
     this.connection.updateRouteType(updatedValue);
+    this.connectionView.render();
 };
 
 ConnectionApp.prototype.update = function () {
@@ -121,5 +121,5 @@ ConnectionApp.prototype.update = function () {
 ConnectionApp.prototype.addNewSubconnection = function () {
     'use strict';
     this.connection.createSubconnection();
-    this.connectionView.createSubconnections();
+    this.connectionView.render();
 };

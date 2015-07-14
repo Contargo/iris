@@ -11,16 +11,18 @@ var ConnectionEndpoint = Backbone.Model.extend({
 var ConnectionEndpoints = Backbone.Collection.extend({
     model: ConnectionEndpoint,
 
-    setSelected: function(value) {
+    setSelected: function(value, silent) {
         'use strict';
         if (value) {
             this.each(function (connectionEndpoint) {
                 connectionEndpoint.set('selected', connectionEndpoint.get('uniqueId') === value);
             });
-            this.trigger('selectionChange', value);
         } else {
             this.first().set('selected', true);
-            this.trigger('selectionChange', this.first().get('uniqueId'));
+            value = this.first().get('uniqueId');
+        }
+        if (!silent) {
+            this.trigger('selectionChange', this.getSelected());
         }
     },
 

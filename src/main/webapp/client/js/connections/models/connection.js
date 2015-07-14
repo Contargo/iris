@@ -1,27 +1,32 @@
 var Connection = Backbone.Model.extend({
-    defaults: {
-        id: undefined,
-        seaport: new ConnectionSeaport(),
-        terminal: new ConnectionTerminal(),
-        distances: new Distances(),
-        routeType: new RouteType(),
-        enabled: true,
-        subconnections: new Subconnections()
+    defaults: function () {
+        return {
+            id: undefined,
+            seaport: new ConnectionSeaport(),
+            terminal: new ConnectionTerminal(),
+            distances: new Distances(),
+            routeType: new RouteType(),
+            enabled: true,
+            subconnections: new Subconnections()
+        };
     },
 
     updateTerminal: function(updatedValue) {
         'use strict';
-        this.get('terminal').set('uniqueId', updatedValue);
+        this.set('terminal', updatedValue);
     },
 
     updateSeaport: function(updatedValue) {
         'use strict';
-        this.get('seaport').set('uniqueId', updatedValue);
+        this.set('seaport', updatedValue);
     },
 
     updateRouteType: function(updatedValue) {
         'use strict';
         this.get('routeType').set('value', updatedValue);
+        if (updatedValue === 'BARGE_RAIL' && this.get('subconnections').size() === 0) {
+            this.createSubconnection();
+        }
     },
 
     createSubconnection: function () {
@@ -30,6 +35,7 @@ var Connection = Backbone.Model.extend({
         if (this.get('subconnections').size() === 0) {
             subconnection = new Subconnection({
                 endpoint1: this.get('seaport'),
+                endpoint2: this.get('terminal'),
                 routeType: new RouteType({value: 'BARGE'})
             });
         } else {

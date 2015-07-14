@@ -11,6 +11,7 @@
 <!-- ################################# GENERAL #################################-->
 <script src="<c:url value="/client/js/routing/TemplateManager.js" />"></script>
 <script src="<c:url value="/client/js/connections/connection-server.js" />"></script>
+<script src="<c:url value="/client/js/connections/connection-mapper.js" />"></script>
 
 <!-- ################################# MODELS #################################-->
 <script src="<c:url value="/client/js/connections/models/connection-endpoint.js" />"></script>

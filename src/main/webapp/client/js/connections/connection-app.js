@@ -3,6 +3,7 @@ function ConnectionApp(connectionServer, connectionId) {
     this.connectionId = connectionId;
     this.server = connectionServer;
     this.connection = undefined;
+    this.mapper = new ConnectionMapper();
 }
 
 ConnectionApp.prototype.start = function () {
@@ -43,31 +44,7 @@ ConnectionApp.prototype.loadModels = function (callback) {
                 new RouteType({value: 'BARGE_RAIL'})]);
             if (that.connectionId) {
                 that.server.getConnection(that.connectionId, function (connection) {
-                    that.connection = new Connection({
-                        id: connection.id,
-                        seaport: new ConnectionSeaport({uniqueId: connection.seaportUid}),
-                        terminal: new ConnectionTerminal({uniqueId: connection.terminalUid}),
-                        distances: new Distances({
-                            barge: connection.bargeDieselDistance,
-                            raildiesel: connection.railDieselDistance,
-                            railelectric: connection.railElectricDistance
-                        }),
-                        routeType: new RouteType({value: connection.routeType}),
-                        enabled: connection.enabled,
-                        subconnections: new Subconnections(_.map(connection.subConnections, function(sub) {
-                            return new Subconnection({
-                                id: sub.id,
-                                distances: new Distances({
-                                    barge: sub.bargeDieselDistance,
-                                    raildiesel: sub.railDieselDistance,
-                                    railelectric: sub.railElectricDistance
-                                }),
-                                endpoint1: sub.routeType === 'BARGE' ? that.seaports.getByUniqueId(sub.seaportUid) : that.terminals.getByUniqueId(sub.terminalUid),
-                                endpoint2: sub.routeType === 'BARGE' ? that.terminals.getByUniqueId(sub.terminalUid) : that.terminals.getByUniqueId(sub.terminal2Uid),
-                                routeType: new RouteType({value: sub.routeType})
-                            });
-                        }))
-                    });
+                    that.connection = that.mapper.connectionFromJson(connection, that.seaports, that.terminals);
                     callback();
                 });
             } else {
@@ -107,12 +84,12 @@ ConnectionApp.prototype.update = function () {
     'use strict';
     var that = this;
     if (this.connection.get('id')) {
-        this.server.updateConnection(this.connection.createJsonModel(), function (con) {
+        this.server.updateConnection(that.mapper.connectionToJson(this.connection), function (con) {
             that.connection.update(con);
             that.connectionView.render();
         });
     } else {
-        this.server.createConnection(this.connection.createJsonModel(), function (location) {
+        this.server.createConnection(that.mapper.connectionToJson(this.connection), function (location) {
             window.location.href = location;
         });
     }

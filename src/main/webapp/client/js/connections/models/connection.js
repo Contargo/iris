@@ -53,21 +53,6 @@ var Connection = Backbone.Model.extend({
         this.get('subconnections').add(subconnection);
     },
 
-    createJsonModel: function() {
-        'use strict';
-        return {
-            id: this.get('id'),
-            seaportUid: this.get('seaport').get('uniqueId'),
-            terminalUid: this.get('terminal').get('uniqueId'),
-            bargeDieselDistance: this.get('distances').get('barge'),
-            railDieselDistance: this.get('distances').get('raildiesel'),
-            railElectricDistance: this.get('distances').get('railelectric'),
-            routeType: this.get('routeType').get('value'),
-            enabled: this.get('enabled'),
-            subConnections: this.get('subconnections').createJsonModel()
-        };
-    },
-
     update: function(updated) {
         'use strict';
         this.set('id', updated.id);

@@ -51,19 +51,5 @@ var Connection = Backbone.Model.extend({
             });
         }
         this.get('subconnections').add(subconnection);
-    },
-
-    update: function(updated) {
-        'use strict';
-        this.set('id', updated.id);
-        this.get('seaport').set('uniqueId', updated.seaportUid);
-        this.get('terminal').set('uniqueId', updated.terminalUid);
-        this.set('distances', new Distances({
-            barge: updated.bargeDieselDistance,
-            raildiesel: updated.railDieselDistance,
-            railelectric: updated.railElectricDistance
-        }));
-        this.get('routeType').set('value', updated.routeType);
-        this.set('enabled', updated.enabled);
     }
 });

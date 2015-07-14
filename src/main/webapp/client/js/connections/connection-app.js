@@ -85,8 +85,7 @@ ConnectionApp.prototype.update = function () {
     var that = this;
     if (this.connection.get('id')) {
         this.server.updateConnection(that.mapper.connectionToJson(this.connection), function (con) {
-            that.connection.update(con);
-            that.connectionView.render();
+            that.loadModels(that.createView);
         });
     } else {
         this.server.createConnection(that.mapper.connectionToJson(this.connection), function (location) {

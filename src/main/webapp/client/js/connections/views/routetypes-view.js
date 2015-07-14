@@ -24,8 +24,8 @@ var RouteTypesView = Backbone.View.extend({
         this.$el.html(this.template({types: this.model.toJSON()}));
     },
 
-    changeRouteType: function() {
+    changeRouteType: function(event) {
         'use strict';
-        this.model.setSelected(this.$('#routeType').val());
+        this.model.setSelected(event.target.value);
     }
 });

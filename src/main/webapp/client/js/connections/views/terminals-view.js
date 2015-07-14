@@ -23,14 +23,13 @@ var TerminalsView = Backbone.View.extend({
         'use strict';
         var model = this.model.toJSON();
         model.forEach(function(element) {
-            element.nicename = element.name +  (element.enabled ? " (enabled)": "(not enabled)");
+            element.nicename = element.name +  (element.enabled ? " (enabled)": " (not enabled)");
         });
         this.$el.html(this.template({terminals: model}));
     },
 
-    changeTerminal: function () {
+    changeTerminal: function (event) {
         'use strict';
-        var newValue = this.$('#terminal').val();
-        this.model.setSelected(newValue);
+        this.model.setSelected(event.target.value);
     }
 });

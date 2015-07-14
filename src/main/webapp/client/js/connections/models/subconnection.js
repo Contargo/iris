@@ -7,17 +7,6 @@ var Subconnection = Backbone.Model.extend({
             distances: new Distances(),
             routeType: new RouteType()
         };
-    },
-
-    createTemplateModel: function() {
-        'use strict';
-        return {
-            id: this.get('id'),
-            endpoint1: this.get('endpoint1').toJSON(),
-            endpoint2: this.get('endpoint2').toJSON(),
-            distances: this.get('distances').toJSON(),
-            routeType: this.get('routeType').toJSON()
-        }
     }
 });
 

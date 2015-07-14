@@ -119,13 +119,5 @@ var ConnectionView = Backbone.View.extend({
     submitConnection: function() {
         'use strict';
         this.model.trigger('updateConnection');
-    },
-
-    updateDistanceDisplayForRouteType: function(routeType) {
-        if (routeType === 'BARGE_RAIL') {
-            this.$('#distances').hide();
-        } else {
-            this.$('#distances').show();
-        }
     }
 });

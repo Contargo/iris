@@ -655,8 +655,7 @@
                         <include>**Test.js</include>
                         <include>models/**Test.js</include>
                         <include>views/**Test.js</include>
-                        <include>connection/**Test.js</include>
-                        <include>connection/models/**Test.js</include>
+                        <include>connection/**/**Test.js</include>
                     </specIncludes>
                     <sourceIncludes>
                         <include>lib/jquery*.js</include>
@@ -672,9 +671,7 @@
                         <include>routing/models/*.js</include>
                         <include>routing/views/*.js</include>
                         <include>routing/*.js</include>
-                        <include>connections/models/*.js</include>
-                        <include>connections/views/*.js</include>
-                        <include>connections/*.js</include>
+                        <include>connections/**/**.js</include>
                     </sourceIncludes>
 
                 </configuration>

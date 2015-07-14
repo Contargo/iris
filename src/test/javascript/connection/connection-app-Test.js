@@ -29,7 +29,7 @@ describe('ConnectionApp', function () {
     });
 
     it('start', function () {
-        
+        var jQuery = window.$;
         window.$ = function () {
             return {html: function (param) {
                 expect(param).toBe('bar');
@@ -56,5 +56,6 @@ describe('ConnectionApp', function () {
         });
 
         sut.start();
+        window.$ = jQuery;
     });
 });

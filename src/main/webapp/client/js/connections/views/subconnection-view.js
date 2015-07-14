@@ -30,7 +30,7 @@ var SubconnectionView = Backbone.View.extend({
     render: function () {
         'use strict';
         var model = {
-            model: this.model.createTemplateModel(),
+            model: this.createTemplateModel(this.model),
             terminals: this.terminals.toJSON(),
             latest: this.latest
         };
@@ -61,5 +61,16 @@ var SubconnectionView = Backbone.View.extend({
     addNewSubconnection: function () {
         'use strict';
         this.model.collection.trigger('addNew');
+    },
+
+    createTemplateModel: function(model) {
+        'use strict';
+        return {
+            id: model.get('id'),
+            endpoint1: model.get('endpoint1').toJSON(),
+            endpoint2: model.get('endpoint2').toJSON(),
+            distances: model.get('distances').toJSON(),
+            routeType: model.get('routeType').toJSON()
+        }
     }
 });

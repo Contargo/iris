@@ -38,23 +38,23 @@ var ConnectionServer = function (contextpath) {
                 }
             )
         },
-        updateConnection: function (connection, callback) {
+        updateConnection: function (connection, callback, errorCallback) {
             put(connectionUrl.replace('{connectionId}', connection.id), connection,
                 function(responseData) {
                     callback(responseData);
                 },
                 function() {
-                    alert('fehler');//TODO
+                    errorCallback();
                 }
             );
         },
-        createConnection: function (connection, callback) {
+        createConnection: function (connection, callback, errorCallback) {
             post(connectionsUrl, connection,
                 function(responseData, status, request) {
                     callback(request.getResponseHeader('location'));
                 },
                 function() {
-                    alert('fehler');//TODO
+                    errorCallback();
                 }
             );
         }

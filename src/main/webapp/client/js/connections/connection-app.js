@@ -1,9 +1,11 @@
-function ConnectionApp(connectionServer, connectionId) {
+function ConnectionApp(connectionServer, connectionId, newlyCreated) {
     'use strict';
     this.connectionId = connectionId;
     this.server = connectionServer;
+    this.server.errorHandler = this.error;
     this.connection = undefined;
     this.mapper = new ConnectionMapper();
+    this.newlyCreated = newlyCreated;
 }
 
 ConnectionApp.prototype.start = function () {
@@ -11,7 +13,10 @@ ConnectionApp.prototype.start = function () {
 
     _.bindAll(this, 'update', 'registerEvents', 'updateTerminal', 'updateSeaport', 'updateRouteType', 'loadModels', 'createView', 'addNewSubconnection');
 
-    var that = this;
+    if (this.newlyCreated) {
+        MessageView.prototype.create({message: "Created connection."});
+        this.newlyCreated = false;
+    }
 
     this.loadModels(this.createView);
 };
@@ -85,11 +90,16 @@ ConnectionApp.prototype.update = function () {
     var that = this;
     if (this.connection.get('id')) {
         this.server.updateConnection(that.mapper.connectionToJson(this.connection), function () {
+            MessageView.prototype.create({message: "Updated connection."});
             that.loadModels(that.createView);
+        }, function () {
+            MessageView.prototype.create({message: "Failed to update connection.", className: "message message-error message-width"});
         });
     } else {
         this.server.createConnection(that.mapper.connectionToJson(this.connection), function (location) {
-            that.redirect(location);
+            that.redirect(location + '?success=true');
+        }, function () {
+            MessageView.prototype.create({message: "Failed to create connection.", className: "message message-error message-width"});
         });
     }
 };

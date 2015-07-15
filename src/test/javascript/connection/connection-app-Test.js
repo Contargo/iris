@@ -28,6 +28,8 @@ describe('ConnectionApp', function () {
             callback([3, 4]);
         });
 
+        spyOn(MessageView.prototype, 'create');
+
         spyOn(ConnectionView.prototype, 'create').andCallFake(function (options) {
             expect(options.seaports.length).toEqual(2);
             expect(options.terminals.length).toEqual(2);
@@ -105,21 +107,54 @@ describe('ConnectionApp', function () {
 
         sut.connection.trigger('updateConnection');
 
-        expect(serverMock.createConnection).toHaveBeenCalledWith({foo: 'bar'}, jasmine.any(Function));
-        expect(sut.redirect).toHaveBeenCalledWith('location');
+        expect(serverMock.createConnection).toHaveBeenCalledWith({foo: 'bar'}, jasmine.any(Function), jasmine.any(Function));
+        expect(sut.redirect).toHaveBeenCalledWith('location?success=true');
+        expect(MessageView.prototype.create).not.toHaveBeenCalled();
+    });
+
+    it('creates new connection with error', function () {
+        sut.start();
+        sut.connection.unset('id');
+        spyOn(sut.mapper, 'connectionToJson').andReturn({foo: 'bar'});
+        spyOn(sut, 'redirect');
+        serverMock.createConnection.andCallFake(function (connection, callback, errorCallback) {
+            errorCallback();
+        });
+
+        sut.connection.trigger('updateConnection');
+
+        expect(serverMock.createConnection).toHaveBeenCalledWith({foo: 'bar'}, jasmine.any(Function), jasmine.any(Function));
+        expect(sut.redirect).not.toHaveBeenCalled();
+        expect(MessageView.prototype.create).toHaveBeenCalledWith({message : 'Failed to create connection.', className : 'message message-error message-width'});
     });
 
     it('updates connection', function () {
         sut.start();
         spyOn(sut.mapper, 'connectionToJson').andReturn({foo: 'bar'});
         spyOn(sut, 'loadModels');
-        serverMock.updateConnection.andCallFake(function (connection, callback) {
+        serverMock.updateConnection.andCallFake(function (connection, callback, errorcallback) {
             callback();
         });
 
         sut.connection.trigger('updateConnection');
 
-        expect(serverMock.updateConnection).toHaveBeenCalledWith({foo: 'bar'}, jasmine.any(Function));
+        expect(serverMock.updateConnection).toHaveBeenCalledWith({foo: 'bar'}, jasmine.any(Function), jasmine.any(Function));
         expect(sut.loadModels).toHaveBeenCalledWith(sut.createView);
+        expect(MessageView.prototype.create).toHaveBeenCalledWith({message: "Updated connection."});
+    });
+
+    it('updates connection with error', function () {
+        sut.start();
+        spyOn(sut.mapper, 'connectionToJson').andReturn({foo: 'bar'});
+        spyOn(sut, 'loadModels');
+        serverMock.updateConnection.andCallFake(function (connection, callback, errorcallback) {
+            errorcallback();
+        });
+
+        sut.connection.trigger('updateConnection');
+
+        expect(serverMock.updateConnection).toHaveBeenCalledWith({foo: 'bar'}, jasmine.any(Function), jasmine.any(Function));
+        expect(sut.loadModels).not.toHaveBeenCalled();
+        expect(MessageView.prototype.create).toHaveBeenCalledWith({message: "Failed to update connection.", className: "message message-error message-width"});
     });
 });

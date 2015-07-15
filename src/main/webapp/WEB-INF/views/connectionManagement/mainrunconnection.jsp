@@ -2,6 +2,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="iris" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <%@ page session="false" %>
 
@@ -22,14 +23,12 @@
             exportTemplateManagerAsGlobalFunction("<c:url value='/client/js/connections/templates/' />");
             var connectionServer = new ConnectionServer('<c:url value="/" />');
             var app;
-            <c:choose>
-                <c:when test="${mainRunConnection.id == null}">
+            var id = window.location.pathname.split('/').pop();
+            if (id === 'new') {
                 app = new ConnectionApp(connectionServer);
-                </c:when>
-                <c:otherwise>
-                app = new ConnectionApp(connectionServer, ${mainRunConnection.id});
-            </c:otherwise>
-            </c:choose>
+            } else {
+                app = new ConnectionApp(connectionServer, parseInt(id), !!"${param['success']}");
+            }
             app.start();
         });
     </script>

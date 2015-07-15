@@ -119,7 +119,7 @@
 </div>
 
 <div class="container-fluid">
-    <div class="row-fluid">
+    <div class="row-fluid" id="page-message-container">
         <c:if test="${message != null}">
             <div id="page-message" class="row-fluid message message-${fn:toLowerCase(message.type)} message-width">
                 <spring:message code="${message.message}"/>

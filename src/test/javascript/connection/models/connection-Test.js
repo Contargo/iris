@@ -14,7 +14,12 @@ describe('Connection', function () {
             seaport: seaport,
             terminal: terminal,
             routeType: new RouteType({value: 'BARGE'}),
-            subconnection: new Subconnections()
+            subconnection: new Subconnections(),
+            distances: new Distances({
+                barge: 42,
+                raildiesel: 23,
+                railelectric: 65
+            })
         });
     });
 
@@ -50,6 +55,9 @@ describe('Connection', function () {
         sut.updateRouteType(routeType);
         expect(sut.get('routeType')).toBe(routeType);
         expect(sut.createSubconnection).toHaveBeenCalled();
+        expect(sut.get('distances').get('barge')).toBe(0);
+        expect(sut.get('distances').get('raildiesel')).toBe(0);
+        expect(sut.get('distances').get('railelectric')).toBe(0);
     });
 
     it('updates route type to barge-rail with non-empty subconnections', function () {
@@ -63,6 +71,24 @@ describe('Connection', function () {
         sut.updateRouteType(routeType);
         expect(sut.get('routeType')).toBe(routeType);
         expect(sut.createSubconnection).not.toHaveBeenCalled();
+        expect(sut.get('distances').get('barge')).toBe(0);
+        expect(sut.get('distances').get('raildiesel')).toBe(0);
+        expect(sut.get('distances').get('railelectric')).toBe(0);
+    });
+
+    it('updates route type from barge-rail to barge', function () {
+
+        sut.get('subconnections').add(new Subconnection());
+        sut.set('routeType', new RouteType({value: 'BARGE_RAIL'}));
+
+        spyOn(sut, 'createSubconnection');
+        var routeType = new RouteType({
+            value: 'BARGE'
+        });
+        sut.updateRouteType(routeType);
+        expect(sut.get('routeType')).toBe(routeType);
+        expect(sut.createSubconnection).not.toHaveBeenCalled();
+        expect(sut.get('subconnections').size()).toBe(0);
     });
 
     it('creates Subconnection empty list', function () {

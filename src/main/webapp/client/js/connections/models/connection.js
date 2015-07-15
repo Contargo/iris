@@ -23,8 +23,8 @@ var Connection = Backbone.Model.extend({
 
     updateRouteType: function(updatedValue) {
         'use strict';
-        this.get('routeType').set('value', updatedValue);
-        if (updatedValue === 'BARGE_RAIL' && this.get('subconnections').size() === 0) {
+        this.set('routeType', updatedValue);
+        if (updatedValue.get('value') === 'BARGE_RAIL' && this.get('subconnections').size() === 0) {
             this.createSubconnection();
         }
     },

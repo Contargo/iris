@@ -32,8 +32,11 @@ describe('Connection', function () {
 
         spyOn(sut, 'createSubconnection');
 
-        sut.updateRouteType('RAIL');
-        expect(sut.get('routeType').get('value')).toBe('RAIL');
+        var routeType = new RouteType({
+            value: 'RAIL'
+        });
+        sut.updateRouteType(routeType);
+        expect(sut.get('routeType')).toBe(routeType);
         expect(sut.createSubconnection).not.toHaveBeenCalled();
     });
 
@@ -41,8 +44,11 @@ describe('Connection', function () {
 
         spyOn(sut, 'createSubconnection');
 
-        sut.updateRouteType('BARGE_RAIL');
-        expect(sut.get('routeType').get('value')).toBe('BARGE_RAIL');
+        var routeType = new RouteType({
+            value: 'BARGE_RAIL'
+        });
+        sut.updateRouteType(routeType);
+        expect(sut.get('routeType')).toBe(routeType);
         expect(sut.createSubconnection).toHaveBeenCalled();
     });
 
@@ -51,9 +57,11 @@ describe('Connection', function () {
         sut.get('subconnections').add(new Subconnection());
 
         spyOn(sut, 'createSubconnection');
-
-        sut.updateRouteType('BARGE_RAIL');
-        expect(sut.get('routeType').get('value')).toBe('BARGE_RAIL');
+        var routeType = new RouteType({
+            value: 'BARGE_RAIL'
+        });
+        sut.updateRouteType(routeType);
+        expect(sut.get('routeType')).toBe(routeType);
         expect(sut.createSubconnection).not.toHaveBeenCalled();
     });
 

@@ -20,7 +20,7 @@ var RouteTypes = Backbone.Collection.extend({
             value = this.first().get('value');
         }
         if (!silent) {
-            this.trigger('selectionChange', value);
+            this.trigger('selectionChange', this.getSelected());
         }
     },
 

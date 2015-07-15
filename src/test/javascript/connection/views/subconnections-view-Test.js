@@ -38,9 +38,9 @@ describe('Subconnections View', function () {
         });
         expect(sut.$el.html()).toContain('<input class="start" title="start" type="text" readonly="" value="Hinterweiler">');
         expect(sut.$el.html()).toContain('<input class="type" title="type" type="text" readonly="" value="RAIL">');
-        expect(sut.$el.html()).toContain('<input class="barge comma-replacement-aware" title="barge" type="text" value="42">');
-        expect(sut.$el.html()).toContain('<input class="raildiesel comma-replacement-aware" title="raildiesel" type="text" value="23">');
-        expect(sut.$el.html()).toContain('<input class="railelectric comma-replacement-aware" title="railelectric" type="text" value="65">');
+        expect(sut.$el.html()).toContain('<input class="barge comma-replacement-aware number" title="barge" type="text" value="42">');
+        expect(sut.$el.html()).toContain('<input class="raildiesel comma-replacement-aware number" title="raildiesel" type="text" value="23">');
+        expect(sut.$el.html()).toContain('<input class="railelectric comma-replacement-aware number" title="railelectric" type="text" value="65">');
         expect(sut.$('.end > option').length).toBe(2);
         expect(sut.$('.end').attr('disabled')).toBe('disabled');
         expect(sut.$el.html()).toContain('<option value="42">Hinterweiler</option>');
@@ -56,9 +56,9 @@ describe('Subconnections View', function () {
         });
         expect(sut.$el.html()).toContain('<input class="start" title="start" type="text" readonly="" value="Hinterweiler">');
         expect(sut.$el.html()).toContain('<input class="type" title="type" type="text" readonly="" value="RAIL">');
-        expect(sut.$el.html()).toContain('<input class="barge comma-replacement-aware" title="barge" type="text" value="42">');
-        expect(sut.$el.html()).toContain('<input class="raildiesel comma-replacement-aware" title="raildiesel" type="text" value="23">');
-        expect(sut.$el.html()).toContain('<input class="railelectric comma-replacement-aware" title="railelectric" type="text" value="65">');
+        expect(sut.$el.html()).toContain('<input class="barge comma-replacement-aware number" title="barge" type="text" value="42">');
+        expect(sut.$el.html()).toContain('<input class="raildiesel comma-replacement-aware number" title="raildiesel" type="text" value="23">');
+        expect(sut.$el.html()).toContain('<input class="railelectric comma-replacement-aware number" title="railelectric" type="text" value="65">');
         expect(sut.$('.end > option').length).toBe(2);
         expect(sut.$('.end').attr('disabled')).not.toBeDefined();
         expect(sut.$el.html()).toContain('<option value="42">Hinterweiler</option>');

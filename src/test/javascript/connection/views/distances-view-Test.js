@@ -17,9 +17,9 @@ describe('Distances View', function () {
         sut = DistancesView.prototype.create({
             model: distances
         });
-        expect(sut.$('#bargeDieselDistance').val()).toBe('10');
-        expect(sut.$('#railDieselDistance').val()).toBe('20');
-        expect(sut.$('#railElectricDistance').val()).toBe('30');
+        expect(sut.$el.html()).toContain('<input id="bargeDieselDistance" name="bargeDieselDistance" class="comma-replacement-aware number" title="Barge km" type="text" value="10">');
+        expect(sut.$el.html()).toContain('<input id="railDieselDistance" name="railDieselDistance" class="comma-replacement-aware number" title="Rail Diesel km" type="text" value="20">');
+        expect(sut.$el.html()).toContain('<input id="railElectricDistance" name="railElectricDistance" class="comma-replacement-aware number" title="Rail Electrical km" type="text" value="30">');
     });
 
     it('updates barge', function () {

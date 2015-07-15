@@ -671,6 +671,7 @@
                         <include>routing/models/*.js</include>
                         <include>routing/views/*.js</include>
                         <include>routing/*.js</include>
+                        <include>number-enforcer.js</include>
                         <include>connections/**/**.js</include>
                     </sourceIncludes>
 

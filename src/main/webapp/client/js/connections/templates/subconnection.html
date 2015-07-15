@@ -15,9 +15,12 @@
     </select>
     <input class="type" title="type" type="text" readonly value="{{model.routeType.value}}">
     {{#with model.distances }}
-    <input class="barge comma-replacement-aware" title="barge" type="text" value="{{barge}}"/>
-    <input class="raildiesel comma-replacement-aware" title="raildiesel" type="text" value="{{raildiesel}}"/>
-    <input class="railelectric comma-replacement-aware" title="railelectric" type="text" value="{{railelectric}}"/>
+    <input class="barge comma-replacement-aware number" title="barge" type="text" value="{{barge}}"/>
+    <span class="help-inline error"></span>
+    <input class="raildiesel comma-replacement-aware number" title="raildiesel" type="text" value="{{raildiesel}}"/>
+    <span class="help-inline error"></span>
+    <input class="railelectric comma-replacement-aware number" title="railelectric" type="text" value="{{railelectric}}"/>
+    <span class="help-inline error"></span>
     {{/with}}
     {{#if latest}}
     <button class="new-subconnection btn btn-primary"><i class="icon-plus-sign icon-white"></i></button>

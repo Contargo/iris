@@ -43,6 +43,7 @@ var ConnectionView = Backbone.View.extend({
             enabled: this.model.get('enabled')
         }));
         this.createChildren();
+        numberEnforcer();
     },
 
     createChildren: function() {
@@ -118,6 +119,14 @@ var ConnectionView = Backbone.View.extend({
 
     submitConnection: function() {
         'use strict';
-        this.model.trigger('updateConnection');
+        if (this.hasFormError()) {
+            MessageView.prototype.create({message: "Cannot create or update connection: validation errors.", className: "message message-error message-width"});
+        } else {
+            this.model.trigger('updateConnection');
+        }
+    },
+
+    hasFormError: function () {
+        return this.$('input.error').size() > 0;
     }
 });

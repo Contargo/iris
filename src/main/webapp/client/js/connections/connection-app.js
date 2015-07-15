@@ -31,6 +31,7 @@ ConnectionApp.prototype.createView = function () {
     });
     this.registerEvents();
     $('#connection').html(this.connectionView.el);
+    numberEnforcer();
 };
 
 ConnectionApp.prototype.loadModels = function (callback) {

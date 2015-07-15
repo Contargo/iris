@@ -84,14 +84,18 @@ ConnectionApp.prototype.update = function () {
     'use strict';
     var that = this;
     if (this.connection.get('id')) {
-        this.server.updateConnection(that.mapper.connectionToJson(this.connection), function (con) {
+        this.server.updateConnection(that.mapper.connectionToJson(this.connection), function () {
             that.loadModels(that.createView);
         });
     } else {
         this.server.createConnection(that.mapper.connectionToJson(this.connection), function (location) {
-            window.location.href = location;
+            that.redirect(location);
         });
     }
+};
+
+ConnectionApp.prototype.redirect = function (location) {
+    window.location.href = location;
 };
 
 ConnectionApp.prototype.addNewSubconnection = function () {

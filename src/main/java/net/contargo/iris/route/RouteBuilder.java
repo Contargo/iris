@@ -1,9 +1,20 @@
 package net.contargo.iris.route;
 
+import com.google.common.collect.Lists;
+
 import net.contargo.iris.GeoLocation;
+import net.contargo.iris.connection.SeaportSubConnection;
+import net.contargo.iris.connection.SubConnection;
+import net.contargo.iris.connection.TerminalSubConnection;
 import net.contargo.iris.container.ContainerState;
 import net.contargo.iris.container.ContainerType;
+import net.contargo.iris.seaport.Seaport;
 import net.contargo.iris.terminal.Terminal;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static net.contargo.iris.route.RouteType.BARGE_RAIL;
 
 
 /**
@@ -79,5 +90,71 @@ public class RouteBuilder {
     public void changeContainerType(ContainerType type) {
 
         this.containerType = type;
+    }
+
+
+    public void goToSeaportViaSubConnections(Seaport seaport, List<SubConnection> subConnections) {
+
+        List<SubRoutePart> subs = new ArrayList<>();
+
+        for (SubConnection subConnection : Lists.reverse(subConnections)) {
+            SubRoutePart sub = new SubRoutePart();
+
+            if (subConnection instanceof TerminalSubConnection) {
+                sub.setOrigin(((TerminalSubConnection) subConnection).getTerminal2());
+                sub.setDestination(subConnection.getTerminal());
+            } else {
+                sub.setOrigin(subConnection.getTerminal());
+                sub.setDestination(((SeaportSubConnection) subConnection).getSeaport());
+            }
+
+            sub.setRouteType(subConnection.getRouteType());
+            subs.add(sub);
+        }
+
+        RoutePart part = new RoutePart(currentLocation, seaport, BARGE_RAIL);
+
+        part.setContainerType(containerType);
+        part.setContainerState(containerState);
+        part.setSubRouteParts(subs);
+
+        route.getData().getParts().add(part);
+
+        part.setData(null);
+
+        currentLocation = seaport;
+    }
+
+
+    public void goToTerminalViaSubConnections(Terminal terminal, List<SubConnection> subConnections) {
+
+        List<SubRoutePart> subs = new ArrayList<>();
+
+        for (SubConnection subConnection : subConnections) {
+            SubRoutePart sub = new SubRoutePart();
+
+            if (subConnection instanceof TerminalSubConnection) {
+                sub.setOrigin(subConnection.getTerminal());
+                sub.setDestination(((TerminalSubConnection) subConnection).getTerminal2());
+            } else {
+                sub.setOrigin(((SeaportSubConnection) subConnection).getSeaport());
+                sub.setDestination(subConnection.getTerminal());
+            }
+
+            sub.setRouteType(subConnection.getRouteType());
+            subs.add(sub);
+        }
+
+        RoutePart part = new RoutePart(currentLocation, terminal, BARGE_RAIL);
+
+        part.setContainerType(containerType);
+        part.setContainerState(containerState);
+        part.setSubRouteParts(subs);
+
+        route.getData().getParts().add(part);
+
+        part.setData(null);
+
+        currentLocation = terminal;
     }
 }

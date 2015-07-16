@@ -40,4 +40,6 @@
 
     <include file="dbchangelogs/db.changelog-1.7-add-sub-connections.xml"/>
 
+    <include file="dbchangelogs/db.changelog-1.7-drop-connection-unique-constraint.xml"/>
+
 </databaseChangeLog>

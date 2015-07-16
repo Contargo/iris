@@ -43,8 +43,8 @@ var ConnectionServer = function (contextpath) {
                 function(responseData) {
                     callback(responseData);
                 },
-                function() {
-                    errorCallback();
+                function(responseData) {
+                    errorCallback(responseData);
                 }
             );
         },
@@ -53,8 +53,8 @@ var ConnectionServer = function (contextpath) {
                 function(responseData, status, request) {
                     callback(request.getResponseHeader('location'));
                 },
-                function() {
-                    errorCallback();
+                function(responseData) {
+                    errorCallback(responseData);
                 }
             );
         }

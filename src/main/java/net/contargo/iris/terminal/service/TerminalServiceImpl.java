@@ -79,7 +79,7 @@ public class TerminalServiceImpl implements TerminalService {
             LOG.warn("Terminal uniqueId {} already assigned - trying next uniqueId", nextUniqueId);
             nextUniqueId = nextUniqueId.add(BigInteger.ONE);
 
-            if (!(terminalRepository.findByUniqueId(nextUniqueId) != null)) {
+            if (terminalRepository.findByUniqueId(nextUniqueId) == null) {
                 isUniqueIdAlreadyAssigned = false;
                 uniqueIdSequenceService.setNextId(entityName, nextUniqueId);
             }

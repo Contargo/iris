@@ -6,12 +6,14 @@ function ConnectionApp(connectionServer, connectionId, newlyCreated) {
     this.connection = undefined;
     this.mapper = new ConnectionMapper();
     this.newlyCreated = newlyCreated;
+    this.errorSyntaxChecker = new ErrorObjectSyntaxChecker();
+    this.validationMessageService = new ConnectionValidationMessageService();
 }
 
 ConnectionApp.prototype.start = function () {
     'use strict';
 
-    _.bindAll(this, 'update', 'registerEvents', 'updateTerminal', 'updateSeaport', 'updateRouteType', 'loadModels', 'createView', 'addNewSubconnection');
+    _.bindAll(this, 'update', 'registerEvents', 'updateTerminal', 'updateSeaport', 'updateRouteType', 'loadModels', 'createView', 'addNewSubconnection', 'handleSaveError');
 
     if (this.newlyCreated) {
         MessageView.prototype.create({message: "Created connection."});
@@ -93,15 +95,11 @@ ConnectionApp.prototype.update = function () {
         this.server.updateConnection(that.mapper.connectionToJson(this.connection), function () {
             MessageView.prototype.create({message: "Updated connection."});
             that.loadModels(that.createView);
-        }, function () {
-            MessageView.prototype.create({message: "Failed to update connection.", className: "message message-error message-width"});
-        });
+        }, this.handleSaveError);
     } else {
         this.server.createConnection(that.mapper.connectionToJson(this.connection), function (location) {
             that.redirect(location + '?success=true');
-        }, function () {
-            MessageView.prototype.create({message: "Failed to create connection.", className: "message message-error message-width"});
-        });
+        }, this.handleSaveError);
     }
 };
 
@@ -113,4 +111,17 @@ ConnectionApp.prototype.addNewSubconnection = function () {
     'use strict';
     this.connection.createSubconnection();
     this.connectionView.render();
+};
+
+ConnectionApp.prototype.handleSaveError = function (data) {
+    var message;
+    if (this.errorSyntaxChecker.isValidJSONString(data.responseText)) {
+        message = this.validationMessageService.getValidationMessage(data.responseJSON.code, data.responseJSON.message);
+    } else {
+        message = this.validationMessageService.defaultMessage;
+    }
+    MessageView.prototype.create({
+        message: "Failed to update connection: " + message,
+        className: "message message-error message-width"
+    });
 };

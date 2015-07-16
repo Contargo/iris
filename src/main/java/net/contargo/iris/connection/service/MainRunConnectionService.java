@@ -68,30 +68,5 @@ public interface MainRunConnectionService {
         RouteType routeType);
 
 
-    /**
-     * Checks if a connection between a {@link Seaport}, {@link Terminal} and {@link RouteType} is already applied.
-     *
-     * @param  mainrunConnection  Keeps the information of the {@link net.contargo.iris.seaport.Seaport},
-     *                            {@link net.contargo.iris.terminal.Terminal}, and
-     *                            {@link net.contargo.iris.route.RouteType}
-     *
-     * @return  <code>true</code>, if the connection is already applied
-     */
-    Boolean isAlreadyApplied(MainRunConnection mainrunConnection);
-
-
-    /**
-     * Checks if a connection, and not the given connection, between a {@link Seaport}, {@link Terminal} and
-     * {@link RouteType} is already applied.
-     *
-     * @param  mainrunConnection  Keeps the information of the {@link net.contargo.iris.seaport.Seaport},
-     *                            {@link net.contargo.iris.terminal.Terminal}, and
-     *                            {@link net.contargo.iris.route.RouteType}
-     *
-     * @return  <code>true</code>, if the connection is already applied but is not the own connection
-     */
-    Boolean isAlreadyAppliedAndNotThis(MainRunConnection mainrunConnection);
-
-
     List<MainRunConnection> getConnectionsForTerminal(BigInteger terminalUID);
 }

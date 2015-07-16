@@ -3,12 +3,14 @@ package net.contargo.iris.connection.api;
 import com.wordnik.swagger.annotations.ApiOperation;
 
 import net.contargo.iris.api.AbstractController;
+import net.contargo.iris.api.RestApiErrorDto;
 import net.contargo.iris.connection.dto.MainRunConnectionDto;
 import net.contargo.iris.connection.dto.MainRunConnectionDtoService;
 import net.contargo.iris.connection.dto.RouteDto;
 import net.contargo.iris.connection.dto.SeaportConnectionRoutesDtoService;
 import net.contargo.iris.connection.dto.SeaportTerminalConnectionDtoService;
 import net.contargo.iris.connection.dto.SimpleMainRunConnectionDto;
+import net.contargo.iris.connection.service.DuplicateMainRunConnectionException;
 import net.contargo.iris.container.ContainerType;
 import net.contargo.iris.route.RouteCombo;
 import net.contargo.iris.route.RouteInformation;
@@ -26,6 +28,7 @@ import org.springframework.http.ResponseEntity;
 
 import org.springframework.stereotype.Controller;
 
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -49,6 +52,8 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -208,5 +213,12 @@ public class MainRunConnectionApiController extends AbstractController {
         MainRunConnectionDto updatedDto = connectionApiDtoService.save(dto);
 
         return new ResponseEntity<>(updatedDto, HttpStatus.OK);
+    }
+
+
+    @ExceptionHandler(DuplicateMainRunConnectionException.class)
+    ResponseEntity<RestApiErrorDto> handleDuplicateMainRunConnectionException(DuplicateMainRunConnectionException e) {
+
+        return new ResponseEntity<>(new RestApiErrorDto(e.getErrorCode(), e.getMessage()), BAD_REQUEST);
     }
 }

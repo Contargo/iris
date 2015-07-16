@@ -115,15 +115,16 @@ describe('ConnectionApp', function () {
         sut.connection.unset('id');
         spyOn(sut.mapper, 'connectionToJson').andReturn({foo: 'bar'});
         spyOn(sut, 'redirect');
+        spyOn(sut, 'handleSaveError');
         serverMock.createConnection.andCallFake(function (connection, callback, errorCallback) {
-            errorCallback();
+            errorCallback('errorResponse');
         });
 
         sut.connection.trigger('updateConnection');
 
         expect(serverMock.createConnection).toHaveBeenCalledWith({foo: 'bar'}, jasmine.any(Function), jasmine.any(Function));
         expect(sut.redirect).not.toHaveBeenCalled();
-        expect(MessageView.prototype.create).toHaveBeenCalledWith({message : 'Failed to create connection.', className : 'message message-error message-width'});
+        expect(sut.handleSaveError).toHaveBeenCalledWith('errorResponse');
     });
 
     it('updates connection', function () {
@@ -145,14 +146,43 @@ describe('ConnectionApp', function () {
         sut.start();
         spyOn(sut.mapper, 'connectionToJson').andReturn({foo: 'bar'});
         spyOn(sut, 'loadModels');
+        spyOn(sut, 'handleSaveError');
         serverMock.updateConnection.andCallFake(function (connection, callback, errorcallback) {
-            errorcallback();
+            errorcallback('errorResponse');
         });
 
         sut.connection.trigger('updateConnection');
 
         expect(serverMock.updateConnection).toHaveBeenCalledWith({foo: 'bar'}, jasmine.any(Function), jasmine.any(Function));
         expect(sut.loadModels).not.toHaveBeenCalled();
-        expect(MessageView.prototype.create).toHaveBeenCalledWith({message: "Failed to update connection.", className: "message message-error message-width"});
+        expect(sut.handleSaveError).toHaveBeenCalledWith('errorResponse');
+    });
+
+    it('handles save error', function () {
+        spyOn(sut.errorSyntaxChecker, 'isValidJSONString').andReturn(true);
+        spyOn(sut.validationMessageService, 'getValidationMessage').andReturn('wasd');
+
+        sut.handleSaveError({
+            responseText: 'abc',
+            responseJSON: {code: 'def', message: 'foobar'}
+        });
+
+        expect(sut.errorSyntaxChecker.isValidJSONString).toHaveBeenCalledWith('abc');
+        expect(sut.validationMessageService.getValidationMessage).toHaveBeenCalledWith('def', 'foobar');
+        expect(MessageView.prototype.create).toHaveBeenCalledWith({message: "Failed to update connection: wasd", className: "message message-error message-width"});
+    });
+
+    it('handles save error with invalid error object', function () {
+        spyOn(sut.errorSyntaxChecker, 'isValidJSONString').andReturn(false);
+        spyOn(sut.validationMessageService, 'getValidationMessage');
+
+        sut.handleSaveError({
+            responseText: 'abc',
+            responseJSON: {code: 'def', message: 'foobar'}
+        });
+
+        expect(sut.errorSyntaxChecker.isValidJSONString).toHaveBeenCalledWith('abc');
+        expect(sut.validationMessageService.getValidationMessage).not.toHaveBeenCalled();
+        expect(MessageView.prototype.create).toHaveBeenCalledWith({message: "Failed to update connection: unspecified error", className: "message message-error message-width"});
     });
 });

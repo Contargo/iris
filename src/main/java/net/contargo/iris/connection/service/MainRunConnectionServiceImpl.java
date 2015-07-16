@@ -81,6 +81,10 @@ public class MainRunConnectionServiceImpl implements MainRunConnectionService {
         mainrunConnection.setSeaport(seaportService.getByUniqueId(mainrunConnection.getSeaport().getUniqueId()));
         mainrunConnection.setTerminal(terminalService.getByUniqueId(mainrunConnection.getTerminal().getUniqueId()));
 
+        if (combinationExists(mainrunConnection) && mainrunConnection.getRouteType() != RouteType.BARGE_RAIL) {
+            throw new DuplicateMainRunConnectionException();
+        }
+
         for (SubConnection subConnection : mainrunConnection.getSubConnections()) {
             subConnection.setTerminal(terminalService.getByUniqueId(subConnection.getTerminal().getUniqueId()));
 
@@ -114,37 +118,26 @@ public class MainRunConnectionServiceImpl implements MainRunConnectionService {
     }
 
 
-    /**
-     * @see  MainRunConnectionService#isAlreadyApplied(net.contargo.iris.connection.MainRunConnection)
-     */
-    @Override
-    public Boolean isAlreadyApplied(MainRunConnection mainrunConnection) {
-
-        MainRunConnection dbMainrunConnection = mainRunConnectionRepository.findBySeaportAndTerminalAndRouteType(
-                mainrunConnection.getSeaport(), mainrunConnection.getTerminal(), mainrunConnection.getRouteType());
-
-        return null != dbMainrunConnection;
-    }
-
-
-    /**
-     * @see  MainRunConnectionService#isAlreadyAppliedAndNotThis(net.contargo.iris.connection.MainRunConnection)
-     */
-    @Override
-    public Boolean isAlreadyAppliedAndNotThis(MainRunConnection mainrunConnection) {
-
-        MainRunConnection dbMainrunConnection =
-            mainRunConnectionRepository.findBySeaportAndTerminalAndRouteTypeAndIdNot(mainrunConnection.getSeaport(),
-                mainrunConnection.getTerminal(), mainrunConnection.getRouteType(), mainrunConnection.getId());
-
-        return null != dbMainrunConnection;
-    }
-
-
     @Override
     @Transactional(readOnly = true)
     public List<MainRunConnection> getConnectionsForTerminal(BigInteger terminalUID) {
 
         return mainRunConnectionRepository.findConnectionsByTerminalUniqueId(terminalUID);
+    }
+
+
+    private boolean combinationExists(MainRunConnection connection) {
+
+        boolean exists;
+
+        if (connection.getId() == null) {
+            exists = mainRunConnectionRepository.existsBySeaportAndTerminalAndRouteType(connection.getSeaport()
+                    .getId(), connection.getTerminal().getId(), connection.getRouteType());
+        } else {
+            exists = mainRunConnectionRepository.existsBySeaportAndTerminalAndRouteTypeAndIdNot(connection.getSeaport()
+                    .getId(), connection.getTerminal().getId(), connection.getRouteType(), connection.getId());
+        }
+
+        return exists;
     }
 }

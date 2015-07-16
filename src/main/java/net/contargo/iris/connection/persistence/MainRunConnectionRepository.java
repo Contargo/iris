@@ -7,6 +7,7 @@ import net.contargo.iris.terminal.Terminal;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.math.BigInteger;
 
@@ -91,30 +92,42 @@ public interface MainRunConnectionRepository extends JpaRepository<MainRunConnec
 
     /**
      * Checks if a {@link net.contargo.iris.connection.MainRunConnection} by {@link Seaport}, {@link Terminal} and
-     * {@link RouteType} without the own id is already applied.
+     * {@link RouteType} without the own id exists.
      *
-     * @param  seaport  the {@link net.contargo.iris.connection.MainRunConnection}'s {@link Seaport}
-     * @param  terminal  the {@link net.contargo.iris.connection.MainRunConnection}'s {@link Terminal}
+     * @param  seaportId  the {@link net.contargo.iris.connection.MainRunConnection}'s {@link Seaport}'s id
+     * @param  terminalId  the {@link net.contargo.iris.connection.MainRunConnection}'s {@link Terminal}'s id
      * @param  routeType  the {@link net.contargo.iris.connection.MainRunConnection}'s {@link RouteType}
      * @param  id  the id of the own {@link net.contargo.iris.connection.MainRunConnection}
      *
-     * @return  <code>true</code>, if a connection is not found or is found but with the given id
+     * @return  <code>true</code>, if a connection is found
      */
-    MainRunConnection findBySeaportAndTerminalAndRouteTypeAndIdNot(Seaport seaport, Terminal terminal,
-        RouteType routeType, Long id);
+    @Query(
+        "select case when count(c) > 0 then true else false end from MainRunConnection c where c.seaport.id = "
+        + ":seaportId and c.terminal.id = :terminalId and c.routeType = :routeType and c.id <> :id"
+    )
+    boolean existsBySeaportAndTerminalAndRouteTypeAndIdNot(@Param("seaportId") Long seaportId,
+        @Param("terminalId") Long terminalId,
+        @Param("routeType") RouteType routeType,
+        @Param("id") Long id);
 
 
     /**
      * Checks if a {@link net.contargo.iris.connection.MainRunConnection} by {@link Seaport}, {@link Terminal} and
-     * {@link RouteType}is already applied.
+     * {@link RouteType} already exists.
      *
-     * @param  seaport  the {@link net.contargo.iris.connection.MainRunConnection}'s {@link Seaport}
-     * @param  terminal  the {@link net.contargo.iris.connection.MainRunConnection}'s {@link Terminal}
+     * @param  seaportId  the {@link net.contargo.iris.connection.MainRunConnection}'s {@link Seaport}'s id
+     * @param  terminalId  the {@link net.contargo.iris.connection.MainRunConnection}'s {@link Terminal}'s id
      * @param  routeType  the {@link net.contargo.iris.connection.MainRunConnection}'s {@link RouteType}
      *
      * @return  <code>true</code>, if no connection with this attributes are found
      */
-    MainRunConnection findBySeaportAndTerminalAndRouteType(Seaport seaport, Terminal terminal, RouteType routeType);
+    @Query(
+        "select case when count(c) > 0 then true else false end from MainRunConnection c where c.seaport.id = "
+        + ":seaportId and c.terminal.id = :terminalId and c.routeType = :routeType"
+    )
+    boolean existsBySeaportAndTerminalAndRouteType(@Param("seaportId") Long seaportId,
+        @Param("terminalId") Long terminalId,
+        @Param("routeType") RouteType routeType);
 
 
     @Query("SELECT c FROM MainRunConnection c WHERE c.terminal.uniqueId = ?1")

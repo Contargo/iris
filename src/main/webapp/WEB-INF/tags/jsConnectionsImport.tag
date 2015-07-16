@@ -13,6 +13,8 @@
 <script src="<c:url value="/client/js/connections/connection-server.js" />"></script>
 <script src="<c:url value="/client/js/connections/connection-mapper.js" />"></script>
 <script src="<c:url value="/client/js/number-enforcer.js" />"></script>
+<script src="<c:url value="/client/js/error-object-syntax-checker.js" />"></script>
+<script src="<c:url value="/client/js/connections/connection-validation-message-service.js" />"></script>
 
 <!-- ################################# MODELS #################################-->
 <script src="<c:url value="/client/js/connections/models/connection-endpoint.js" />"></script>

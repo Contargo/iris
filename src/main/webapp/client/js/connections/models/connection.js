@@ -43,7 +43,7 @@ var Connection = Backbone.Model.extend({
             subconnection = new Subconnection({
                 endpoint1: this.get('seaport'),
                 endpoint2: this.get('terminal'),
-                routeType: new RouteType({value: 'BARGE'})
+                routeType: new RouteType({value: 'BARGE', name: 'Barge'})
             });
         } else {
             var latest = this.get('subconnections').last();
@@ -54,7 +54,7 @@ var Connection = Backbone.Model.extend({
             subconnection = new Subconnection({
                 endpoint1: latest.get('endpoint2'),
                 endpoint2: latest.get('endpoint2'),
-                routeType: new RouteType({value: 'RAIL'})
+                routeType: new RouteType({value: 'RAIL', name: 'Rail'})
             });
         }
         this.get('subconnections').add(subconnection);

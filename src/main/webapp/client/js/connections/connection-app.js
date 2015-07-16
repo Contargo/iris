@@ -48,8 +48,8 @@ ConnectionApp.prototype.loadModels = function (callback) {
             that.terminals = new ConnectionTerminals(_.map(terminals, function(terminal) {
                 return new ConnectionTerminal(terminal);
             }));
-            that.routeTypes = new RouteTypes([new RouteType({value: 'BARGE'}), new RouteType({value: 'RAIL'}),
-                new RouteType({value: 'BARGE_RAIL'})]);
+            that.routeTypes = new RouteTypes([new RouteType({value: 'BARGE', name: 'Barge'}), new RouteType({value: 'RAIL', name: 'Rail'}),
+                new RouteType({value: 'BARGE_RAIL', name: 'Barge-Rail'})]);
             if (that.connectionId) {
                 that.server.getConnection(that.connectionId, function (connection) {
                     that.connection = that.mapper.connectionFromJson(connection, that.seaports, that.terminals);

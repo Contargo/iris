@@ -13,7 +13,7 @@
         {{/if}}
         {{/each}}
     </select>
-    <input class="type input-small" title="type" type="text" readonly value="{{model.routeType.value}}">
+    <input class="type input-small" title="type" type="text" readonly value="{{model.routeType.name}}">
     {{#with model.distances }}
     <input class="barge comma-replacement-aware number input-small" title="barge" type="text" value="{{barge}}"/>
     <span class="help-inline error"></span>

@@ -6,8 +6,8 @@ describe('Route Types View', function () {
     var sut;
 
     beforeEach(function () {
-        rail = new RouteType({value: 'RAIL'});
-        barge = new RouteType({value: 'BARGE', selected: true});
+        rail = new RouteType({value: 'RAIL', name: 'Rail'});
+        barge = new RouteType({value: 'BARGE', selected: true, name: 'Barge'});
         routeTypes = new RouteTypes([rail, barge]);
 
         exportTemplateManagerAsGlobalFunction("src/connections/templates/");
@@ -18,8 +18,8 @@ describe('Route Types View', function () {
             model: routeTypes
         });
         expect(sut.$('#routeType > option').length).toBe(2);
-        expect(sut.$el.html()).toContain('<option value="RAIL">RAIL</option>');
-        expect(sut.$el.html()).toContain('<option value="BARGE" selected="selected">BARGE</option>');
+        expect(sut.$el.html()).toContain('<option value="RAIL">Rail</option>');
+        expect(sut.$el.html()).toContain('<option value="BARGE" selected="selected">Barge</option>');
     });
 
     it('updates', function () {

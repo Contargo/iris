@@ -2,6 +2,7 @@ var RouteType = Backbone.Model.extend({
 
     defaults: {
         value: undefined,
+        name: undefined,
         selected: false
     }
 });

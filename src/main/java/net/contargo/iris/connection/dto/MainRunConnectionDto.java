@@ -10,7 +10,9 @@ import net.contargo.iris.connection.TerminalSubConnection;
 import net.contargo.iris.route.RouteType;
 import net.contargo.iris.seaport.Seaport;
 import net.contargo.iris.terminal.Terminal;
+import net.contargo.validation.bigdecimal.BigDecimalValidate;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
@@ -25,13 +27,31 @@ import static java.util.stream.Collectors.toList;
  */
 public final class MainRunConnectionDto {
 
+    private static final long TEN = 10l;
     private final Long id;
+    
+    @NotNull
     private final String seaportUid;
+
+    @NotNull
     private final String terminalUid;
+
+    @BigDecimalValidate(minValue = 0, minDecimalPlaces = 1L, maxDecimalPlaces = TEN, maxFractionalPlaces = TEN)
+    @NotNull
     private final BigDecimal bargeDieselDistance;
+
+    @BigDecimalValidate(minValue = 0, minDecimalPlaces = 1L, maxDecimalPlaces = TEN, maxFractionalPlaces = TEN)
+    @NotNull
     private final BigDecimal railDieselDistance;
+
+    @BigDecimalValidate(minValue = 0, minDecimalPlaces = 1L, maxDecimalPlaces = TEN, maxFractionalPlaces = TEN)
+    @NotNull
     private final BigDecimal railElectricDistance;
+
+    @NotNull
     private final RouteType routeType;
+
+    @NotNull
     private final Boolean enabled;
     private final List<SubConnectionDto> subConnections;
 

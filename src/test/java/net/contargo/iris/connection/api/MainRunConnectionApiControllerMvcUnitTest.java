@@ -7,6 +7,7 @@ import net.contargo.iris.connection.dto.SeaportConnectionRoutesDtoService;
 import net.contargo.iris.connection.dto.SeaportTerminalConnectionDtoService;
 import net.contargo.iris.connection.dto.SimpleMainRunConnectionDto;
 import net.contargo.iris.connection.dto.SubConnectionDto;
+import net.contargo.iris.connection.service.DuplicateMainRunConnectionException;
 import net.contargo.iris.container.ContainerType;
 import net.contargo.iris.route.Route;
 import net.contargo.iris.route.RouteInformation;
@@ -281,6 +282,44 @@ public class MainRunConnectionApiControllerMvcUnitTest {
 
 
     @Test
+    public void createConnectionDuplicate() throws Exception {
+
+        when(connectionApiDtoService.save(any(MainRunConnectionDto.class))).thenThrow(
+            new DuplicateMainRunConnectionException());
+
+        MockHttpServletRequestBuilder builder = post("/connections/");
+        builder.contentType("application/json;charset=UTF-8");
+        builder.content("{\"id\":42, \"bargeDieselDistance\":1,\"railDieselDistance\":10,\"railElectricDistance\":0,"
+            + "\"routeType\":\"BARGE\",\"subConnections\":[],\"seaportUid\":\"1\",\"terminalUid\":\"2\","
+            + "\"enabled\":true}");
+
+        ResultActions resultActions = perform(builder);
+        resultActions.andExpect(status().isBadRequest());
+        resultActions.andExpect(jsonPath("$.message",
+                is("Mainrun connection with given seaport, terminal und route type exists")));
+        resultActions.andExpect(jsonPath("$.code", is("mainrunconnection.duplicate")));
+    }
+
+
+    @Test
+    public void createConnectionWithValidationErrors() throws Exception {
+
+        MockHttpServletRequestBuilder builder = post("/connections/");
+        builder.contentType("application/json;charset=UTF-8");
+        builder.content(
+            "{\"id\":42, \"bargeDieselDistance\":11111111111,\"railDieselDistance\":10,\"railElectricDistance\":0,"
+            + "\"routeType\":\"BARGE\",\"subConnections\":[],"
+            + "\"seaportUid\":\"1\",\"terminalUid\":\"2\",\"enabled\":true}");
+
+        ResultActions resultActions = perform(builder);
+        resultActions.andExpect(status().isBadRequest());
+        resultActions.andExpect(jsonPath("$.message",
+                is("bargeDieselDistance: The count of the digits before the point is out of range. "
+                    + "It should be in the range 1 - 10 but is 11.")));
+    }
+
+
+    @Test
     public void updateConnection() throws Exception {
 
         MockHttpServletRequestBuilder builder = put("/connections/42");
@@ -297,6 +336,21 @@ public class MainRunConnectionApiControllerMvcUnitTest {
         verify(connectionApiDtoService).save(captor.capture());
 
         assertThat(captor.getValue().getId(), is(42L));
+    }
+
+
+    @Test
+    public void updateConnectionWithValidationErrors() throws Exception {
+
+        MockHttpServletRequestBuilder builder = put("/connections/42");
+        builder.contentType("application/json;charset=UTF-8");
+        builder.content("{\"id\":42, \"bargeDieselDistance\":1,\"railDieselDistance\":\"\",\"railElectricDistance\":0,"
+            + "\"routeType\":\"BARGE\",\"subConnections\":[],\"seaportUid\":\"1\",\"terminalUid\":\"2\","
+            + "\"enabled\":true}");
+
+        ResultActions resultActions = perform(builder);
+        resultActions.andExpect(status().isBadRequest());
+        resultActions.andExpect(jsonPath("$.message", is("railDieselDistance: may not be null")));
     }
 
 

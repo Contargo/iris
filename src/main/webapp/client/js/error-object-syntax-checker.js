@@ -20,5 +20,5 @@ ErrorObjectSyntaxChecker.prototype.hasAllProperties = function (errorObject) {
 };
 
 ErrorObjectSyntaxChecker.prototype.allPropertiesDefined = function (errorObject) {
-    return (!!errorObject.code && !!errorObject.message);
+    return ((!!errorObject.code || errorObject.code === '') && (!!errorObject.message || errorObject.message === ''));
 };

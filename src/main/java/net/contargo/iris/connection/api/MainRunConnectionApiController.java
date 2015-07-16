@@ -4,6 +4,7 @@ import com.wordnik.swagger.annotations.ApiOperation;
 
 import net.contargo.iris.api.AbstractController;
 import net.contargo.iris.api.RestApiErrorDto;
+import net.contargo.iris.api.ValidationException;
 import net.contargo.iris.connection.dto.MainRunConnectionDto;
 import net.contargo.iris.connection.dto.MainRunConnectionDtoService;
 import net.contargo.iris.connection.dto.RouteDto;
@@ -27,6 +28,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.stereotype.Controller;
+
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
 
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -81,18 +85,20 @@ public class MainRunConnectionApiController extends AbstractController {
     private final RouteUrlSerializationService routeUrlSerializationService;
     private final MainRunConnectionDtoService connectionApiDtoService;
     private final SeaportTerminalConnectionDtoService seaportTerminalConnectionDtoService;
+    private final Validator validator;
 
     @Autowired
     public MainRunConnectionApiController(SeaportDtoService seaportDtoService,
         SeaportConnectionRoutesDtoService seaportConnectionRoutesDtoService,
         RouteUrlSerializationService routeUrlSerializationService, MainRunConnectionDtoService connectionApiDtoService,
-        SeaportTerminalConnectionDtoService seaportTerminalConnectionDtoService) {
+        SeaportTerminalConnectionDtoService seaportTerminalConnectionDtoService, Validator validator) {
 
         this.seaportDtoService = seaportDtoService;
         this.seaportConnectionRoutesDtoService = seaportConnectionRoutesDtoService;
         this.routeUrlSerializationService = routeUrlSerializationService;
         this.connectionApiDtoService = connectionApiDtoService;
         this.seaportTerminalConnectionDtoService = seaportTerminalConnectionDtoService;
+        this.validator = validator;
     }
 
     @ApiOperation(
@@ -190,7 +196,13 @@ public class MainRunConnectionApiController extends AbstractController {
 
 
     @RequestMapping(method = POST, value = "")
-    public ResponseEntity createConnection(@RequestBody MainRunConnectionDto dto) {
+    public ResponseEntity createConnection(@RequestBody MainRunConnectionDto dto, Errors errors) {
+
+        validator.validate(dto, errors);
+
+        if (errors.hasErrors()) {
+            throw new ValidationException(errors);
+        }
 
         MainRunConnectionDto savedDto = connectionApiDtoService.save(dto);
 
@@ -208,7 +220,13 @@ public class MainRunConnectionApiController extends AbstractController {
 
 
     @RequestMapping(method = PUT, value = "/{id}")
-    public ResponseEntity<MainRunConnectionDto> updateConnection(@RequestBody MainRunConnectionDto dto) {
+    public ResponseEntity<MainRunConnectionDto> updateConnection(@RequestBody MainRunConnectionDto dto, Errors errors) {
+
+        validator.validate(dto, errors);
+
+        if (errors.hasErrors()) {
+            throw new ValidationException(errors);
+        }
 
         MainRunConnectionDto updatedDto = connectionApiDtoService.save(dto);
 
@@ -220,5 +238,14 @@ public class MainRunConnectionApiController extends AbstractController {
     ResponseEntity<RestApiErrorDto> handleDuplicateMainRunConnectionException(DuplicateMainRunConnectionException e) {
 
         return new ResponseEntity<>(new RestApiErrorDto(e.getErrorCode(), e.getMessage()), BAD_REQUEST);
+    }
+
+
+    @ExceptionHandler(ValidationException.class)
+    ResponseEntity<RestApiErrorDto> handleValidationException(ValidationException e) {
+
+        return new ResponseEntity<>(new RestApiErrorDto("",
+                    e.getErrors().getFieldError().getField() + ": "
+                    + e.getErrors().getFieldError().getDefaultMessage()), BAD_REQUEST);
     }
 }

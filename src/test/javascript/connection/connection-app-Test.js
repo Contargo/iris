@@ -12,6 +12,7 @@ describe('ConnectionApp', function () {
         "routeType": "BARGE_RAIL",
         "subConnections": []
     };
+    var callback;
 
     beforeEach(function() {
 
@@ -39,8 +40,9 @@ describe('ConnectionApp', function () {
                 render: function() {}
             };
         });
+        callback = jasmine.createSpy();
+        spyOn(sut, 'handleCriticalError');
     });
-
     it('can be instantiated', function () {
         expect(sut).toBeDefined();
         expect(sut.server).toBe(serverMock);
@@ -48,19 +50,123 @@ describe('ConnectionApp', function () {
         expect(sut.mapper).toBeDefined();
     });
 
-    it('start', function () {
-        var jQuery = window.$;
-        window.$.html = function (param) {
-            expect(param).toBe('bar');
-        };
+    it('start create', function () {
+        sut = new ConnectionApp(serverMock, 2, true);
+
+        spyOn(sut.__proto__, 'loadModels');
 
         sut.start();
-        window.$ = jQuery;
+
+        expect(MessageView.prototype.create).toHaveBeenCalledWith({message: "Created connection."});
+        expect(sut.__proto__.loadModels).toHaveBeenCalledWith(sut.createView);
+    });
+
+    it('start update', function () {
+        sut = new ConnectionApp(serverMock, 2);
+
+        spyOn(sut.__proto__, 'loadModels');
+
+        sut.start();
+
+        expect(MessageView.prototype.create).not.toHaveBeenCalledWith();
+        expect(sut.__proto__.loadModels).toHaveBeenCalledWith(sut.createView);
+    });
+
+    it('loadModels', function () {
+        sut.loadModels(callback);
+        
+        expect(callback).toHaveBeenCalled();
+        expect(sut.seaports.length).toBe(2);
+        expect(sut.terminals.length).toBe(2);
+        expect(sut.routeTypes.length).toBe(3);
+        expect(sut.connection.get('id')).toBe(5);
+    });
+
+    it('loadModels empty seaports', function () {
+
+        
+
+        serverMock.getSeaports.andCallFake(function (callback) {
+            callback([]);
+        });
+
+        sut.loadModels(callback);
+
+        expect(sut.handleCriticalError).toHaveBeenCalledWith('No seaports available');
+        expect(callback).not.toHaveBeenCalled();
+        
+    });
+
+    it('loadModels with seaport loading error', function () {
+
+        
+
+        serverMock.getSeaports.andCallFake(function (callback, errorCallback) {
+            errorCallback('errorCallback');
+        });
+
+        sut.loadModels();
+
+        expect(sut.handleCriticalError).toHaveBeenCalledWith('errorCallback');
+        expect(callback).not.toHaveBeenCalled();
+    });
+
+    it('loadModels empty terminals', function () {
+
+        
+
+        serverMock.getTerminals.andCallFake(function (callback) {
+            callback([]);
+        });
+
+        sut.loadModels();
+
+        expect(sut.handleCriticalError).toHaveBeenCalledWith('No terminals available');
+        expect(callback).not.toHaveBeenCalled();
+    });
+
+    it('loadModels with terminal loading error', function () {
+
+        
+
+        serverMock.getTerminals.andCallFake(function (callback, errorCallback) {
+            errorCallback('errorCallback');
+        });
+
+        sut.loadModels();
+
+        expect(sut.handleCriticalError).toHaveBeenCalledWith('errorCallback');
+        expect(callback).not.toHaveBeenCalled();
+    });
+
+    it('loadModels without connectionId', function () {
+        sut.connectionId = undefined;
+        sut.loadModels(callback);
+
+        expect(callback).toHaveBeenCalled();
+        expect(sut.seaports.length).toBe(2);
+        expect(sut.terminals.length).toBe(2);
+        expect(sut.routeTypes.length).toBe(3);
+        expect(sut.connection.get('id')).toBe(undefined);
+    });
+
+    it('loadModels with connection loading error', function () {
+        
+        serverMock.getConnection.andCallFake(function (id, callback, errorCallback) {
+            errorCallback('errorCallback');
+        });
+
+
+        sut.loadModels(callback);
+
+        expect(callback).not.toHaveBeenCalled();
+        expect(sut.handleCriticalError).toHaveBeenCalledWith('errorCallback');
     });
 
     it('registers update seaport event', function () {
         sut.start();
         spyOn(sut.connection, 'updateSeaport');
+        
         sut.seaports.trigger('selectionChange', 'updatedSeaport');
         
         expect(sut.connection.updateSeaport).toHaveBeenCalledWith('updatedSeaport');

@@ -123,7 +123,7 @@ public class MainRunConnectionServiceImplUnitTest {
 
         when(mainRunConnectionRepositoryMock.save(con1)).thenReturn(con);
         when(seaportServiceMock.getByUniqueId(BigInteger.ONE)).thenReturn(seaport);
-        when(terminalServiceMock.getByUniqueId(BigInteger.ONE)).thenReturn(terminal);
+        when(terminalServiceMock.getByUniqueId(BigInteger.TEN)).thenReturn(terminal);
 
         MainRunConnection savedMainrunConnection = sut.save(con1);
 
@@ -139,14 +139,18 @@ public class MainRunConnectionServiceImplUnitTest {
         con.setRouteType(RouteType.BARGE);
 
         Seaport seaport = new Seaport();
+        seaport.setUniqueId(BigInteger.ONE);
         seaport.setId(42L);
 
         Terminal terminal = new Terminal();
+        terminal.setUniqueId(BigInteger.ONE);
         terminal.setId(23L);
 
         con.setSeaport(seaport);
         con.setTerminal(terminal);
 
+        when(seaportServiceMock.getByUniqueId(BigInteger.ONE)).thenReturn(seaport);
+        when(terminalServiceMock.getByUniqueId(BigInteger.ONE)).thenReturn(terminal);
         when(mainRunConnectionRepositoryMock.existsBySeaportAndTerminalAndRouteType(42L, 23L, RouteType.BARGE))
             .thenReturn(true);
 
@@ -162,14 +166,19 @@ public class MainRunConnectionServiceImplUnitTest {
         con.setRouteType(RouteType.BARGE);
 
         Seaport seaport = new Seaport();
+        seaport.setUniqueId(BigInteger.ONE);
         seaport.setId(42L);
 
         Terminal terminal = new Terminal();
+        terminal.setUniqueId(BigInteger.ONE);
         terminal.setId(23L);
+        ;
 
         con.setSeaport(seaport);
         con.setTerminal(terminal);
 
+        when(seaportServiceMock.getByUniqueId(BigInteger.ONE)).thenReturn(seaport);
+        when(terminalServiceMock.getByUniqueId(BigInteger.ONE)).thenReturn(terminal);
         when(mainRunConnectionRepositoryMock.existsBySeaportAndTerminalAndRouteTypeAndIdNot(42L, 23L, RouteType.BARGE,
                     65L)).thenReturn(true);
 
@@ -184,14 +193,18 @@ public class MainRunConnectionServiceImplUnitTest {
         con.setRouteType(RouteType.BARGE_RAIL);
 
         Seaport seaport = new Seaport();
+        seaport.setUniqueId(BigInteger.ONE);
         seaport.setId(42L);
 
         Terminal terminal = new Terminal();
+        terminal.setUniqueId(BigInteger.ONE);
         terminal.setId(23L);
 
         con.setSeaport(seaport);
         con.setTerminal(terminal);
 
+        when(seaportServiceMock.getByUniqueId(BigInteger.ONE)).thenReturn(seaport);
+        when(terminalServiceMock.getByUniqueId(BigInteger.ONE)).thenReturn(terminal);
         when(mainRunConnectionRepositoryMock.existsBySeaportAndTerminalAndRouteType(42L, 23L, RouteType.BARGE_RAIL))
             .thenReturn(true);
         when(mainRunConnectionRepositoryMock.save(con)).thenReturn(con);
@@ -208,14 +221,18 @@ public class MainRunConnectionServiceImplUnitTest {
         con.setRouteType(RouteType.BARGE_RAIL);
 
         Seaport seaport = new Seaport();
+        seaport.setUniqueId(BigInteger.ONE);
         seaport.setId(42L);
 
         Terminal terminal = new Terminal();
+        terminal.setUniqueId(BigInteger.ONE);
         terminal.setId(23L);
 
         con.setSeaport(seaport);
         con.setTerminal(terminal);
 
+        when(seaportServiceMock.getByUniqueId(BigInteger.ONE)).thenReturn(seaport);
+        when(terminalServiceMock.getByUniqueId(BigInteger.ONE)).thenReturn(terminal);
         when(mainRunConnectionRepositoryMock.existsBySeaportAndTerminalAndRouteTypeAndIdNot(42L, 23L,
                     RouteType.BARGE_RAIL, 65L)).thenReturn(true);
         when(mainRunConnectionRepositoryMock.save(con)).thenReturn(con);

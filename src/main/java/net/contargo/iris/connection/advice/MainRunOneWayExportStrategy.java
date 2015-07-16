@@ -17,14 +17,19 @@ import net.contargo.iris.route.RouteType;
 class MainRunOneWayExportStrategy implements MainRunStrategy {
 
     @Override
-    public Route getRoute(MainRunConnection connection, GeoLocation destination, ContainerType containerType,
-        RouteType mainRunRouteType) {
+    public Route getRoute(MainRunConnection connection, GeoLocation destination, ContainerType containerType) {
 
         RouteBuilder routeBuilder = new RouteBuilder(connection.getTerminal(), containerType, ContainerState.EMPTY);
         routeBuilder.goTo(destination, RouteType.TRUCK);
         routeBuilder.loadContainer();
         routeBuilder.goTo(connection.getTerminal(), RouteType.TRUCK);
-        routeBuilder.goTo(connection.getSeaport(), mainRunRouteType);
+
+        if (connection.getSubConnections().isEmpty()) {
+            routeBuilder.goTo(connection.getSeaport(), connection.getRouteType());
+        } else {
+            routeBuilder.goToSeaportViaSubConnections(connection.getSeaport(), connection.getSubConnections());
+        }
+
         routeBuilder.responsibleTerminal(connection.getTerminal());
 
         return routeBuilder.getRoute();

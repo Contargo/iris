@@ -10,6 +10,7 @@ import net.contargo.iris.seaport.Seaport;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -37,7 +38,7 @@ public class SeaportConnectionRoutesServiceImpl implements SeaportConnectionRout
                 routeInformation.getRouteDirection());
 
         return mainRunStrategy.getRoute(connection, routeInformation.getDestination(),
-                routeInformation.getContainerType(), routeType);
+                routeInformation.getContainerType());
     }
 
 
@@ -51,9 +52,8 @@ public class SeaportConnectionRoutesServiceImpl implements SeaportConnectionRout
             List<MainRunConnection> connections = seaportTerminalConnectionService.getConnectionsToSeaPortByRouteType(
                     origin, routeType);
 
-            for (MainRunConnection connection : connections) {
-                routes.add(getMainRunRoute(connection, routeInformation, routeType));
-            }
+            routes.addAll(connections.stream().map(connection ->
+                        getMainRunRoute(connection, routeInformation, routeType)).collect(Collectors.toList()));
         }
 
         return routes;

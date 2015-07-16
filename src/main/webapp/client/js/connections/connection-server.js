@@ -12,29 +12,29 @@ var ConnectionServer = function (contextpath) {
     var terminalsUrl = api + 'terminals';
 
     return {
-        getConnection: function (connectionId, callback) {
+        getConnection: function (connectionId, callback, errorCallback) {
             get(connectionUrl.replace('{connectionId}', connectionId),
                 function (responseData) {
                     callback(responseData);
                 },
                 function () {
-                    alert('fehler');//TODO
+                    errorCallback('Could not find connection with id ' + connectionId);
                 }
             );
         },
-        getSeaports: function (callback) {
+        getSeaports: function (callback, errorCallback) {
             get(seaportsUrl, function (response) {
                 callback(response.seaports)
             }, function () {
-                    alert('fehler');//TODO
+                    errorCallback('Error retrieving seaports');
                 }
             )
         },
-        getTerminals: function (callback) {
+        getTerminals: function (callback, errorCallback) {
             get(terminalsUrl, function (response) {
                 callback(response.response.terminals)
             }, function () {
-                    alert('fehler');//TODO
+                    errorCallback('Error retrieving terminals');
                 }
             )
         },

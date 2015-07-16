@@ -18,21 +18,23 @@
 <body>
 <div id="connection">
 
-    <script type="text/javascript">
-        $(function () {
-            exportTemplateManagerAsGlobalFunction("<c:url value='/client/js/connections/templates/' />");
-            var connectionServer = new ConnectionServer('<c:url value="/" />');
-            var app;
-            var id = window.location.pathname.split('/').pop();
-            if (id === 'new') {
-                app = new ConnectionApp(connectionServer);
-            } else {
-                app = new ConnectionApp(connectionServer, parseInt(id), !!"${param['success']}");
-            }
-            app.start();
-        });
-    </script>
 </div>
+<div class='notifications bottom-left'></div>
 <iris:jsConnectionsImport/>
+<script type="text/javascript">
+    $(function () {
+        exportTemplateManagerAsGlobalFunction("<c:url value='/client/js/connections/templates/' />");
+        var connectionServer = new ConnectionServer('<c:url value="/" />');
+        var app;
+        var id = window.location.pathname.split('/').pop();
+        if (id === 'new') {
+            app = new ConnectionApp(connectionServer);
+        } else {
+            app = new ConnectionApp(connectionServer, parseInt(id), !!"${param['success']}");
+        }
+        app.start();
+    });
+</script>
+
 </body>
 </html>

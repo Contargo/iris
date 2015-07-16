@@ -41,7 +41,16 @@ ConnectionApp.prototype.loadModels = function (callback) {
 
     var that = this;
     this.server.getSeaports(function (seaports) {
+        if(seaports.length === 0) {
+            that.handleCriticalError('No seaports available');
+            return;
+        }
         that.server.getTerminals(function (terminals) {
+            if(terminals.length === 0) {
+                that.handleCriticalError('No terminals available');
+                return;
+            }
+
             that.seaports = new ConnectionSeaports(_.map(seaports, function(seaport) {
                 return new ConnectionSeaport(seaport);
             }));
@@ -54,13 +63,13 @@ ConnectionApp.prototype.loadModels = function (callback) {
                 that.server.getConnection(that.connectionId, function (connection) {
                     that.connection = that.mapper.connectionFromJson(connection, that.seaports, that.terminals);
                     callback();
-                });
+                }, that.handleCriticalError);
             } else {
                 that.connection = new Connection();
                 callback();
             }
-        });
-    });
+        }, that.handleCriticalError);
+    },this.handleCriticalError);
 };
 
 ConnectionApp.prototype.registerEvents = function () {
@@ -124,4 +133,17 @@ ConnectionApp.prototype.handleSaveError = function (data) {
         message: "Failed to update connection: " + message,
         className: "message message-error message-width"
     });
+};
+
+ConnectionApp.prototype.handleCriticalError = function (msg) {
+        $('.notifications').notify({
+            type: "error",
+            message: {
+                text: msg
+            },
+            fadeOut: {
+                enabled: false
+            },
+            closable: true
+        }).show();
 };

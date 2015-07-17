@@ -1,12 +1,18 @@
 package net.contargo.iris.enricher.service;
 
+import com.google.common.collect.Lists;
+
 import net.contargo.iris.connection.MainRunConnection;
+import net.contargo.iris.connection.SubConnection;
 import net.contargo.iris.connection.service.MainRunConnectionService;
 import net.contargo.iris.distance.service.ConnectionDistanceService;
 import net.contargo.iris.mainrun.service.MainRunDurationService;
 import net.contargo.iris.route.RoutePart;
 import net.contargo.iris.route.RoutePartData;
 import net.contargo.iris.route.RouteType;
+import net.contargo.iris.route.SubRoutePart;
+
+import java.util.List;
 
 
 /**
@@ -36,7 +42,8 @@ class MainRunPartEnricher implements RoutePartEnricher {
     @Override
     public void enrich(RoutePart routePart, EnricherContext context) throws CriticalEnricherException {
 
-        if (routePart.isOfType(RouteType.BARGE) || routePart.isOfType(RouteType.RAIL)) {
+        if (routePart.isOfType(RouteType.BARGE) || routePart.isOfType(RouteType.RAIL)
+                || routePart.isOfType(RouteType.BARGE_RAIL)) {
             RoutePartData routePartData = routePart.getData();
 
             MainRunConnection mainRunConnection;
@@ -53,12 +60,42 @@ class MainRunPartEnricher implements RoutePartEnricher {
                     "Enriching not possible: missing terminal or seaport to determine main run connection", e);
             }
 
+            if (routePart.getRouteType() == RouteType.BARGE_RAIL) {
+                prepareSubRouteParts(routePart, mainRunConnection);
+            }
+
             routePartData.setDistance(connectionDistanceService.getDistance(mainRunConnection));
             routePartData.setDieselDistance(connectionDistanceService.getDieselDistance(mainRunConnection));
             routePartData.setElectricDistance(connectionDistanceService.getElectricDistance(mainRunConnection));
             routePartData.setRailDieselDistance(connectionDistanceService.getRailDieselDistance(mainRunConnection));
             routePartData.setBargeDieselDistance(connectionDistanceService.getBargeDieselDistance(mainRunConnection));
             routePartData.setDuration(mainRunDurationService.getMainRunRoutePartDuration(mainRunConnection, routePart));
+        }
+    }
+
+
+    private void prepareSubRouteParts(RoutePart routePart, MainRunConnection mainRunConnection) {
+
+        List<SubConnection> subConnectionList;
+
+        if (routePart.getOrigin().equals(mainRunConnection.getSeaport())) {
+            subConnectionList = mainRunConnection.getSubConnections();
+        } else {
+            subConnectionList = Lists.reverse(mainRunConnection.getSubConnections());
+        }
+
+        int i = 0;
+
+        for (SubConnection subConnection : subConnectionList) {
+            SubRoutePart subRoutePart = routePart.getSubRouteParts().get(i);
+            subRoutePart.setBargeDieselDistance(connectionDistanceService.getBargeDieselDistance(subConnection));
+            subRoutePart.setRailDieselDistance(connectionDistanceService.getRailDieselDistance(subConnection));
+            subRoutePart.setElectricDistance(connectionDistanceService.getRailElectricDistance(subConnection));
+            subRoutePart.setDieselDistance(connectionDistanceService.getDieselDistance(subConnection));
+            subRoutePart.setDistance(connectionDistanceService.getDistance(subConnection));
+            subRoutePart.setDuration(mainRunDurationService.getSubRoutePartDuration(subConnection, subRoutePart,
+                    routePart.getDirection()));
+            i++;
         }
     }
 }

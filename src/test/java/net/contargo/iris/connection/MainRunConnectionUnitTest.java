@@ -8,9 +8,18 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 
+import java.util.List;
+
+import static net.contargo.iris.route.RouteType.BARGE;
+import static net.contargo.iris.route.RouteType.BARGE_RAIL;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import static org.hamcrest.Matchers.is;
+
+import static java.math.BigDecimal.TEN;
+
+import static java.util.Arrays.asList;
 
 
 /**
@@ -23,27 +32,104 @@ public class MainRunConnectionUnitTest {
     private MainRunConnection sut;
     private Seaport seaport;
     private Terminal terminal;
+    private List<SubConnection> subConnections;
 
     @Before
     public void setUp() {
 
         sut = new MainRunConnection();
+        sut.setRouteType(BARGE);
 
         seaport = new Seaport();
         terminal = new Terminal();
+
+        SubConnection sub1 = new TerminalSubConnection();
+        sub1.setRailDieselDistance(TEN);
+        sub1.setRailElectricDistance(TEN);
+        sub1.setBargeDieselDistance(TEN);
+
+        SubConnection sub2 = new TerminalSubConnection();
+        sub2.setRailDieselDistance(TEN);
+        sub2.setRailElectricDistance(TEN);
+        sub2.setBargeDieselDistance(TEN);
+
+        subConnections = asList(sub1, sub2);
     }
 
 
     @Test
     public void getTotalDistance() {
 
-        sut.setRailDieselDistance(BigDecimal.TEN);
-        sut.setRailElectricDistance(BigDecimal.TEN);
-        sut.setBargeDieselDistance(BigDecimal.TEN);
+        sut.setRailDieselDistance(TEN);
+        sut.setRailElectricDistance(TEN);
+        sut.setBargeDieselDistance(TEN);
 
         BigDecimal totalDistance = sut.getTotalDistance();
 
         assertThat(totalDistance, is(new BigDecimal(30)));
+    }
+
+
+    @Test
+    public void getTotalDistanceWithSubConnections() {
+
+        sut.setRouteType(BARGE_RAIL);
+        sut.setSubConnections(subConnections);
+
+        BigDecimal totalDistance = sut.getTotalDistance();
+
+        assertThat(totalDistance, is(new BigDecimal(60)));
+    }
+
+
+    @Test
+    public void getBargeDieselDistance() {
+
+        sut.setBargeDieselDistance(TEN);
+        assertThat(sut.getBargeDieselDistance(), is(TEN));
+    }
+
+
+    @Test
+    public void getBargeDieselDistanceWithSubConnections() {
+
+        sut.setRouteType(BARGE_RAIL);
+        sut.setSubConnections(subConnections);
+        assertThat(sut.getBargeDieselDistance(), is(new BigDecimal(20)));
+    }
+
+
+    @Test
+    public void getRailDieselDistance() {
+
+        sut.setRailDieselDistance(TEN);
+        assertThat(sut.getRailDieselDistance(), is(TEN));
+    }
+
+
+    @Test
+    public void getRailDieselDistanceWithSubConnections() {
+
+        sut.setRouteType(BARGE_RAIL);
+        sut.setSubConnections(subConnections);
+        assertThat(sut.getRailDieselDistance(), is(new BigDecimal(20)));
+    }
+
+
+    @Test
+    public void getRailElectricDistance() {
+
+        sut.setRailElectricDistance(TEN);
+        assertThat(sut.getRailElectricDistance(), is(TEN));
+    }
+
+
+    @Test
+    public void getRailElectricDistanceWithSubConnections() {
+
+        sut.setRouteType(BARGE_RAIL);
+        sut.setSubConnections(subConnections);
+        assertThat(sut.getRailElectricDistance(), is(new BigDecimal(20)));
     }
 
 

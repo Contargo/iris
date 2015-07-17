@@ -132,4 +132,10 @@ public abstract class SubConnection {
 
         return terminal != null && terminal.isEnabled();
     }
+
+
+    public BigDecimal getTotalDistance() {
+
+        return getBargeDieselDistance().add(getRailDieselDistance()).add(getRailElectricDistance());
+    }
 }

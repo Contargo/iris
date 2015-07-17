@@ -25,6 +25,8 @@ import javax.persistence.UniqueConstraint;
 
 import javax.validation.constraints.NotNull;
 
+import static net.contargo.iris.route.RouteType.BARGE_RAIL;
+
 
 /**
  * Represents a connection between a {@link Terminal} and a {@link Seaport}.
@@ -140,7 +142,17 @@ public class MainRunConnection {
 
     public BigDecimal getBargeDieselDistance() {
 
-        return bargeDieselDistance;
+        if (routeType == BARGE_RAIL) {
+            BigDecimal distance = BigDecimal.ZERO;
+
+            for (SubConnection subConnection : subConnections) {
+                distance = distance.add(subConnection.getBargeDieselDistance());
+            }
+
+            return distance;
+        } else {
+            return bargeDieselDistance;
+        }
     }
 
 
@@ -152,7 +164,17 @@ public class MainRunConnection {
 
     public BigDecimal getRailDieselDistance() {
 
-        return railDieselDistance;
+        if (routeType == BARGE_RAIL) {
+            BigDecimal distance = BigDecimal.ZERO;
+
+            for (SubConnection subConnection : subConnections) {
+                distance = distance.add(subConnection.getRailDieselDistance());
+            }
+
+            return distance;
+        } else {
+            return railDieselDistance;
+        }
     }
 
 
@@ -164,7 +186,17 @@ public class MainRunConnection {
 
     public BigDecimal getRailElectricDistance() {
 
-        return railElectricDistance;
+        if (routeType == BARGE_RAIL) {
+            BigDecimal distance = BigDecimal.ZERO;
+
+            for (SubConnection subConnection : subConnections) {
+                distance = distance.add(subConnection.getRailElectricDistance());
+            }
+
+            return distance;
+        } else {
+            return railElectricDistance;
+        }
     }
 
 

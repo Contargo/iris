@@ -121,6 +121,12 @@ public class RoutePartDto {
     }
 
 
+    public List<SubRoutePartDto> getSubRouteParts() {
+
+        return subRouteParts;
+    }
+
+
     public void setName(String name) {
 
         this.name = name;
@@ -169,8 +175,8 @@ public class RoutePartDto {
     }
 
 
-    public List<SubRoutePartDto> getSubRouteParts() {
+    public void setSubRouteParts(List<SubRoutePartDto> subRouteParts) {
 
-        return subRouteParts;
+        this.subRouteParts = subRouteParts;
     }
 }

@@ -23,6 +23,12 @@ public class SubRoutePartDto {
     private BigDecimal bargeDieselDistance;
     private BigDecimal railDieselDistance;
 
+    public SubRoutePartDto() {
+
+        // needed for jackson instantiation
+    }
+
+
     public SubRoutePartDto(SubRoutePart subRoutePart) {
 
         origin = GeolocationDtoFactory.createGeolocationDto(subRoutePart.getOrigin());
@@ -116,5 +122,65 @@ public class SubRoutePartDto {
     public BigDecimal getRailDieselDistance() {
 
         return railDieselDistance;
+    }
+
+
+    public void setOrigin(GeoLocationDto origin) {
+
+        this.origin = origin;
+    }
+
+
+    public void setDestination(GeoLocationDto destination) {
+
+        this.destination = destination;
+    }
+
+
+    public void setRouteType(RouteType routeType) {
+
+        this.routeType = routeType;
+    }
+
+
+    public void setCo2(BigDecimal co2) {
+
+        this.co2 = co2;
+    }
+
+
+    public void setDuration(BigDecimal duration) {
+
+        this.duration = duration;
+    }
+
+
+    public void setDistance(BigDecimal distance) {
+
+        this.distance = distance;
+    }
+
+
+    public void setDieselDistance(BigDecimal dieselDistance) {
+
+        this.dieselDistance = dieselDistance;
+    }
+
+
+    public void setElectricDistance(BigDecimal electricDistance) {
+
+        this.electricDistance = electricDistance;
+    }
+
+
+    public void setBargeDieselDistance(BigDecimal bargeDieselDistance) {
+
+        this.bargeDieselDistance = bargeDieselDistance;
+    }
+
+
+    public void setRailDieselDistance(BigDecimal railDieselDistance) {
+
+        this.railDieselDistance = railDieselDistance;
     }
 }

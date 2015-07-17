@@ -4,6 +4,8 @@ package net.contargo.iris.enricher.service;
 import net.contargo.iris.address.nominatim.service.AddressResolutionException;
 import net.contargo.iris.location.GeoLocationService;
 import net.contargo.iris.route.RoutePart;
+import net.contargo.iris.route.RouteType;
+import net.contargo.iris.route.SubRoutePart;
 
 
 /**
@@ -26,8 +28,19 @@ class GeoLocationPartEnricher implements RoutePartEnricher {
         try {
             part.setOrigin(geoLocationService.getDetailedGeoLocation(part.getOrigin()));
             part.setDestination(geoLocationService.getDetailedGeoLocation(part.getDestination()));
+
+            if (part.getRouteType() == RouteType.BARGE_RAIL) {
+                part.getSubRouteParts().stream().forEach(this::enrichSubRoutePart);
+            }
         } catch (AddressResolutionException e) {
             throw new CriticalEnricherException("Not possible to enrich geolocation", e);
         }
+    }
+
+
+    private void enrichSubRoutePart(SubRoutePart part) {
+
+        part.setOrigin(geoLocationService.getDetailedGeoLocation(part.getOrigin()));
+        part.setDestination(geoLocationService.getDetailedGeoLocation(part.getDestination()));
     }
 }

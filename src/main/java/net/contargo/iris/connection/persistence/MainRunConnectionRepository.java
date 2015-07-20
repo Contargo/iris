@@ -43,7 +43,7 @@ public interface MainRunConnectionRepository extends JpaRepository<MainRunConnec
      *
      * @return  a {@link net.contargo.iris.connection.MainRunConnection} with the specified properties
      */
-    MainRunConnection findByTerminalAndSeaportAndRouteTypeAndEnabled(Terminal terminal, Seaport seaport,
+    List<MainRunConnection> findByTerminalAndSeaportAndRouteTypeAndEnabled(Terminal terminal, Seaport seaport,
         RouteType routeType, boolean enabled);
 
 

@@ -26,6 +26,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 
+import java.util.Collections;
+import java.util.List;
+
 import static net.contargo.iris.route.RouteType.BARGE_RAIL;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -97,7 +100,7 @@ public class MainRunPartEnricherUnitTest {
         routePart.setRouteType(routeType);
 
         when(mainRunConnectionServiceMock.findRoutingConnectionBetweenTerminalAndSeaportByType(terminal, seaport,
-                    routeType)).thenReturn(mainrunConnection);
+                    routeType, Collections.<SubRoutePart>emptyList())).thenReturn(mainrunConnection);
         when(connectionDistanceServiceMock.getElectricDistance(mainrunConnection)).thenReturn(ELECTRICAL_DISTANCE);
         when(connectionDistanceServiceMock.getDistance(mainrunConnection)).thenReturn(DISTANCE);
         when(connectionDistanceServiceMock.getDieselDistance(mainrunConnection)).thenReturn(DIESEL_DISTANCE);
@@ -159,12 +162,14 @@ public class MainRunPartEnricherUnitTest {
     @Test
     public void enrichBargeRailSeaportToTerminal() throws CriticalEnricherException {
 
+        List<SubRoutePart> subRouteParts = asList(new SubRoutePart(), new SubRoutePart());
+
         routePart.setRouteType(BARGE_RAIL);
-        routePart.setSubRouteParts(asList(new SubRoutePart(), new SubRoutePart()));
+        routePart.setSubRouteParts(subRouteParts);
         mainrunConnection.setRouteType(BARGE_RAIL);
 
         when(mainRunConnectionServiceMock.findRoutingConnectionBetweenTerminalAndSeaportByType(any(Terminal.class),
-                    any(Seaport.class), eq(BARGE_RAIL))).thenReturn(mainrunConnection);
+                    any(Seaport.class), eq(BARGE_RAIL), eq(subRouteParts))).thenReturn(mainrunConnection);
         when(connectionDistanceServiceMock.getBargeDieselDistance(any(SubConnection.class))).thenReturn(TEN);
         when(connectionDistanceServiceMock.getRailDieselDistance(any(SubConnection.class))).thenReturn(TEN);
         when(connectionDistanceServiceMock.getRailElectricDistance(any(SubConnection.class))).thenReturn(TEN);
@@ -197,14 +202,16 @@ public class MainRunPartEnricherUnitTest {
     @Test
     public void enrichBargeRailTerminalToSeaport() throws CriticalEnricherException {
 
+        List<SubRoutePart> subRouteParts = asList(new SubRoutePart(), new SubRoutePart());
+
         routePart.setRouteType(BARGE_RAIL);
-        routePart.setSubRouteParts(asList(new SubRoutePart(), new SubRoutePart()));
+        routePart.setSubRouteParts(subRouteParts);
         routePart.setOrigin(terminal);
         routePart.setDestination(seaport);
         mainrunConnection.setRouteType(BARGE_RAIL);
 
         when(mainRunConnectionServiceMock.findRoutingConnectionBetweenTerminalAndSeaportByType(any(Terminal.class),
-                    any(Seaport.class), eq(BARGE_RAIL))).thenReturn(mainrunConnection);
+                    any(Seaport.class), eq(BARGE_RAIL), eq(subRouteParts))).thenReturn(mainrunConnection);
         when(connectionDistanceServiceMock.getBargeDieselDistance(any(SubConnection.class))).thenReturn(TEN);
         when(connectionDistanceServiceMock.getRailDieselDistance(any(SubConnection.class))).thenReturn(TEN);
         when(connectionDistanceServiceMock.getRailElectricDistance(any(SubConnection.class))).thenReturn(TEN);
@@ -238,7 +245,8 @@ public class MainRunPartEnricherUnitTest {
     public void enrichWithoutMainRunConnection() throws CriticalEnricherException {
 
         when(mainRunConnectionServiceMock.findRoutingConnectionBetweenTerminalAndSeaportByType(any(Terminal.class),
-                    any(Seaport.class), any(RouteType.class))).thenReturn(null);
+                    any(Seaport.class), any(RouteType.class), eq(Collections.<SubRoutePart>emptyList()))).thenReturn(
+            null);
 
         sut.enrich(routePart, enricherContext);
     }

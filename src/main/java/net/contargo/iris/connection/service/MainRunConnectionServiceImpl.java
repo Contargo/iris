@@ -6,6 +6,7 @@ import net.contargo.iris.connection.SubConnection;
 import net.contargo.iris.connection.TerminalSubConnection;
 import net.contargo.iris.connection.persistence.MainRunConnectionRepository;
 import net.contargo.iris.route.RouteType;
+import net.contargo.iris.route.SubRoutePart;
 import net.contargo.iris.seaport.Seaport;
 import net.contargo.iris.seaport.service.SeaportService;
 import net.contargo.iris.terminal.Terminal;
@@ -33,13 +34,16 @@ public class MainRunConnectionServiceImpl implements MainRunConnectionService {
     private final MainRunConnectionRepository mainRunConnectionRepository;
     private final SeaportService seaportService;
     private final TerminalService terminalService;
+    private final BargeRailConnectionFinderService bargeRailConnectionFinderService;
 
     public MainRunConnectionServiceImpl(MainRunConnectionRepository mainRunConnectionRepository,
-        SeaportService seaportService, TerminalService terminalService) {
+        SeaportService seaportService, TerminalService terminalService,
+        BargeRailConnectionFinderService bargeRailConnectionFinderService) {
 
         this.mainRunConnectionRepository = mainRunConnectionRepository;
         this.seaportService = seaportService;
         this.terminalService = terminalService;
+        this.bargeRailConnectionFinderService = bargeRailConnectionFinderService;
     }
 
     /**
@@ -101,20 +105,32 @@ public class MainRunConnectionServiceImpl implements MainRunConnectionService {
     }
 
 
-    /**
-     * @see  MainRunConnectionService#findRoutingConnectionBetweenTerminalAndSeaportByType(
-     *       net.contargo.iris.terminal.Terminal, net.contargo.iris.seaport.Seaport, net.contargo.iris.route.RouteType)
-     */
     @Override
+    @Transactional(readOnly = true)
     public MainRunConnection findRoutingConnectionBetweenTerminalAndSeaportByType(Terminal terminal, Seaport seaport,
-        RouteType routeType) {
+        RouteType routeType, List<SubRoutePart> subRouteParts) {
 
         Assert.notNull(terminal);
         Assert.notNull(seaport);
         Assert.notNull(routeType);
 
-        return mainRunConnectionRepository.findByTerminalAndSeaportAndRouteTypeAndEnabled(terminal, seaport, routeType,
+        List<MainRunConnection> connections =
+            mainRunConnectionRepository.findByTerminalAndSeaportAndRouteTypeAndEnabled(terminal, seaport, routeType,
                 true);
+
+        if (connections.isEmpty()) {
+            return null;
+        }
+
+        if (routeType == RouteType.BARGE_RAIL) {
+            if (connections.size() == 1) {
+                return connections.get(0);
+            } else {
+                return bargeRailConnectionFinderService.findMatchingBargeRailConnection(connections, subRouteParts);
+            }
+        } else {
+            return connections.get(0);
+        }
     }
 
 

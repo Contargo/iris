@@ -1,11 +1,9 @@
 package net.contargo.iris.connection;
 
+import net.contargo.iris.GeoLocation;
 import net.contargo.iris.route.RouteType;
 import net.contargo.iris.terminal.Terminal;
-
 import net.contargo.validation.bigdecimal.BigDecimalValidate;
-
-import java.math.BigDecimal;
 
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
@@ -15,8 +13,8 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 
 
 /**
@@ -138,4 +136,7 @@ public abstract class SubConnection {
 
         return getBargeDieselDistance().add(getRailDieselDistance()).add(getRailElectricDistance());
     }
+
+
+    public abstract boolean matchesOriginAndDestination(GeoLocation origin, GeoLocation destination, boolean reverse);
 }

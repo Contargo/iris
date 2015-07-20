@@ -1,5 +1,6 @@
 package net.contargo.iris.connection;
 
+import net.contargo.iris.GeoLocation;
 import net.contargo.iris.route.RouteType;
 import net.contargo.iris.terminal.Terminal;
 
@@ -44,5 +45,16 @@ public class TerminalSubConnection extends SubConnection {
     public boolean isEnabled() {
 
         return super.isEnabled() && terminal2 != null && terminal2.isEnabled();
+    }
+
+
+    @Override
+    public boolean matchesOriginAndDestination(GeoLocation origin, GeoLocation destination, boolean reverse) {
+
+        if (reverse) {
+            return getTerminal().equals(destination) && terminal2.equals(origin);
+        } else {
+            return getTerminal().equals(origin) && terminal2.equals(destination);
+        }
     }
 }

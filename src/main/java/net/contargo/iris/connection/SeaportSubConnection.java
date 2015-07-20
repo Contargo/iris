@@ -1,5 +1,6 @@
 package net.contargo.iris.connection;
 
+import net.contargo.iris.GeoLocation;
 import net.contargo.iris.route.RouteType;
 import net.contargo.iris.seaport.Seaport;
 
@@ -44,5 +45,16 @@ public class SeaportSubConnection extends SubConnection {
     public boolean isEnabled() {
 
         return super.isEnabled() && seaport != null && seaport.isEnabled();
+    }
+
+
+    @Override
+    public boolean matchesOriginAndDestination(GeoLocation origin, GeoLocation destination, boolean reverse) {
+
+        if (reverse) {
+            return seaport.equals(destination) && getTerminal().equals(origin);
+        } else {
+            return seaport.equals(origin) && getTerminal().equals(destination);
+        }
     }
 }

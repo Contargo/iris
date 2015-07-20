@@ -8,10 +8,9 @@ import java.math.BigDecimal;
 
 
 /**
- * Co2 strategy for the main run connection with route type barge.
+ * Co2 strategy for the main run connection with route type barge-rail.
  *
- * @author  Oliver Messner - messner@synyx.de
- * @author  Tobias Schneider - schneider@synyx.de
+ * @author  Sandra Thieme - thieme@synyx.de
  */
 class Co2PartBargeStrategy implements Co2PartStrategy {
 
@@ -30,7 +29,8 @@ class Co2PartBargeStrategy implements Co2PartStrategy {
 
         BigDecimal distance1 = routePartData.getBargeDieselDistance();
 
-        BigDecimal co2Factor = co2BargeRegionMap.getCo2Factor(terminal.getRegion(), routePart);
+        BigDecimal co2Factor = co2BargeRegionMap.getCo2Factor(terminal.getRegion(), routePart.getDirection(),
+                routePart.getContainerState());
 
         return distance1.multiply(co2Factor);
     }

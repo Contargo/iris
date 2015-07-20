@@ -1,5 +1,6 @@
 package net.contargo.iris.co2.advice;
 
+import net.contargo.iris.container.ContainerState;
 import net.contargo.iris.route.RoutePart;
 import net.contargo.iris.terminal.Region;
 
@@ -57,18 +58,18 @@ class Co2BargeRegionMap {
         SCHELDE_CO2_MAP = unmodifiableMap(map);
     }
 
-    BigDecimal getCo2Factor(Region region, RoutePart routePart) {
+    BigDecimal getCo2Factor(Region region, RoutePart.Direction direction, ContainerState state) {
 
-        return getCo2Map(region).get(getCo2FactorsKey(routePart));
+        return getCo2Map(region).get(getCo2FactorsKey(direction, state));
     }
 
 
-    String getCo2FactorsKey(RoutePart routePart) {
+    String getCo2FactorsKey(RoutePart.Direction direction, ContainerState state) {
 
-        if (routePart.getContainerState() == FULL) {
-            return routePart.getDirection() == DOWNSTREAM ? FULL_DOWNSTREAM : FULL_UPSTREAM;
+        if (state == FULL) {
+            return direction == DOWNSTREAM ? FULL_DOWNSTREAM : FULL_UPSTREAM;
         } else {
-            return routePart.getDirection() == DOWNSTREAM ? EMPTY_DOWNSTREAM : EMPTY_UPSTREAM;
+            return direction == DOWNSTREAM ? EMPTY_DOWNSTREAM : EMPTY_UPSTREAM;
         }
     }
 

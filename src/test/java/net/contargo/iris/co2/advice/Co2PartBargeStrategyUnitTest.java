@@ -63,7 +63,8 @@ public class Co2PartBargeStrategyUnitTest {
         routePart.getData().setBargeDieselDistance(new BigDecimal("2"));
 
         when(terminalMock.getRegion()).thenReturn(OBERRHEIN);
-        when(co2BargeRegionMapMock.getCo2Factor(OBERRHEIN, routePart)).thenReturn(new BigDecimal("0.4"));
+        when(co2BargeRegionMapMock.getCo2Factor(OBERRHEIN, routePart.getDirection(), EMPTY)).thenReturn(new BigDecimal(
+                "0.4"));
 
         BigDecimal expected = BigDecimal.valueOf(2 * 0.4);
         assertThat(sut.getEmissionForRoutePart(routePart), comparesEqualTo(expected));

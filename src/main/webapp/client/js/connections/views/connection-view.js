@@ -121,6 +121,8 @@ var ConnectionView = Backbone.View.extend({
         'use strict';
         if (this.hasFormError()) {
             MessageView.prototype.create({message: "Cannot create or update connection: validation errors.", className: "message message-error message-width"});
+        } else if (this.hasSubConnectionMatchingError()) {
+            MessageView.prototype.create({message: "Cannot create or update connection: last subconnection terminal does not match connection terminal.", className: "message message-error message-width"});
         } else {
             this.model.trigger('updateConnection');
         }
@@ -128,5 +130,9 @@ var ConnectionView = Backbone.View.extend({
 
     hasFormError: function () {
         return this.$('input.error').size() > 0;
+    },
+
+    hasSubConnectionMatchingError: function () {
+        return !this.model.hasValidLastSubConnectionTerminal();
     }
 });

@@ -105,4 +105,55 @@ describe('Connection View', function () {
         sut.$('#submit-button').click();
         expect(updateConnection).toBe(true);
     });
+
+    it('has a subconnection matching error', function () {
+        sut = ConnectionView.prototype.create({
+            model: connection,
+            seaports: seaports,
+            terminals: terminals,
+            routeTypes: routeTypes
+        });
+        spyOn(sut.model, 'hasValidLastSubConnectionTerminal').andReturn(false);
+        expect(sut.hasSubConnectionMatchingError()).toBeTruthy();
+    });
+
+    it('has no subconnection matching error', function () {
+        sut = ConnectionView.prototype.create({
+            model: connection,
+            seaports: seaports,
+            terminals: terminals,
+            routeTypes: routeTypes
+        });
+        spyOn(sut.model, 'hasValidLastSubConnectionTerminal').andReturn(true);
+        expect(sut.hasSubConnectionMatchingError()).toBeFalsy();
+    });
+
+    it('displays error if an input has a form error', function() {
+        spyOn(MessageView.prototype, 'create');
+        sut = ConnectionView.prototype.create({
+            model: connection,
+            seaports: seaports,
+            terminals: terminals,
+            routeTypes: routeTypes
+        });
+        spyOn(sut, 'hasFormError').andReturn(true);
+        sut.$('#submit-button').click();
+        expect(MessageView.prototype.create).toHaveBeenCalledWith({ message : 'Cannot create or update connection:' +
+            ' validation errors.', className : 'message message-error message-width' });
+    });
+
+    it('displays error if subconnection has matching error', function() {
+        spyOn(MessageView.prototype, 'create');
+        sut = ConnectionView.prototype.create({
+            model: connection,
+            seaports: seaports,
+            terminals: terminals,
+            routeTypes: routeTypes
+        });
+        spyOn(sut, 'hasSubConnectionMatchingError').andReturn(true);
+        sut.$('#submit-button').click();
+        expect(MessageView.prototype.create).toHaveBeenCalledWith({message: "Cannot create or update connection: " +
+            "last subconnection terminal does not match connection terminal.", className: "message message-error " +
+            "message-width"});
+    });
 });

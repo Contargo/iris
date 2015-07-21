@@ -58,5 +58,14 @@ var Connection = Backbone.Model.extend({
             });
         }
         this.get('subconnections').add(subconnection);
+    },
+
+    hasValidLastSubConnectionTerminal: function () {
+        if (this.get('routeType').get('value') === 'BARGE_RAIL') {
+            var lastSubConnection = this.get('subconnections').last();
+            return lastSubConnection.get('endpoint2').get('uniqueId') === this.get('terminal').get('uniqueId');
+        } else {
+            return true;
+        }
     }
 });

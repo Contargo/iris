@@ -124,4 +124,21 @@ describe('Connection', function () {
         expect(window.alert).toHaveBeenCalledWith('Connection endpoint and latest subconnection endpoint are the ' +
             'same. Adding more subconnections is not necessary.');
     });
+
+    it('has a valid terminal in its last subconnection', function () {
+        sut.set('routeType', new RouteType({value: 'BARGE_RAIL'}));
+        sut.createSubconnection();
+        expect(sut.hasValidLastSubConnectionTerminal()).toBeTruthy();
+    });
+
+    it('has no valid terminal in its last subconnection', function () {
+        sut.set('routeType', new RouteType({value: 'BARGE_RAIL'}));
+        sut.createSubconnection();
+        sut.get('subconnections').last().set('endpoint2', new ConnectionTerminal({'uniqueId': '42'}));
+        expect(sut.hasValidLastSubConnectionTerminal()).toBeFalsy();
+    });
+
+    it('has valid terminal in its last subconnection because it\'s not a barge-rail type', function () {
+        expect(sut.hasValidLastSubConnectionTerminal()).toBeTruthy();
+    });
 });

@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigInteger;
@@ -61,14 +62,19 @@ public class SeaportApiController extends AbstractController {
     @ApiOperation(value = "Returns all active seaports.", notes = "Returns all active seaports.")
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public SeaportsResponse getSeaports() {
+    public SeaportsResponse getSeaports(@RequestParam(value = "activeOnly", defaultValue = "true") boolean activeOnly) {
 
         SeaportsResponse response = new SeaportsResponse();
 
-        response.add(linkTo(methodOn(getClass()).getSeaports()).withSelfRel());
+        response.add(linkTo(methodOn(getClass()).getSeaports(activeOnly)).withSelfRel());
 
         Set<SeaportDto> ports = new HashSet<>();
-        ports.addAll(seaportDtoService.getAllActive());
+
+        if (activeOnly) {
+            ports.addAll(seaportDtoService.getAllActive());
+        } else {
+            ports.addAll(seaportDtoService.getAll());
+        }
 
         response.setSeaports(ports);
 
@@ -86,7 +92,7 @@ public class SeaportApiController extends AbstractController {
         SeaportResponse response = new SeaportResponse();
 
         response.add(linkTo(methodOn(getClass()).getSeaportById(seaportUID)).withSelfRel());
-        response.add(linkTo(methodOn(getClass()).getSeaports()).withRel("seaports"));
+        response.add(linkTo(methodOn(getClass()).getSeaports(true)).withRel("seaports"));
 
         SeaportDto port = seaportDtoService.getByUid(seaportUID);
 

@@ -68,16 +68,24 @@ public class TerminalApiController extends AbstractController {
     @ApiOperation(value = "Returns all active terminals.", notes = "Returns all active terminals.")
     @RequestMapping(method = RequestMethod.GET)
     @ModelAttribute(RESPONSE)
-    public TerminalsResponse getTerminals() {
+    public TerminalsResponse getTerminals(
+        @RequestParam(value = "activeOnly", defaultValue = "true") boolean activeOnly) {
 
         TerminalsResponse response = new TerminalsResponse();
 
-        response.add(linkTo(methodOn(getClass()).getTerminals()).withSelfRel());
+        response.add(linkTo(methodOn(getClass()).getTerminals(activeOnly)).withSelfRel());
 
-        List<TerminalDto> allActive = terminalDtoService.getAllActive();
-        response.setTerminals(allActive);
+        List<TerminalDto> terminals;
 
-        LOG.info("API: Returning {} active terminals", allActive.size());
+        if (activeOnly) {
+            terminals = terminalDtoService.getAllActive();
+        } else {
+            terminals = terminalDtoService.getAll();
+        }
+
+        response.setTerminals(terminals);
+
+        LOG.info("API: Returning {} active terminals", terminals.size());
 
         return response;
     }
@@ -131,7 +139,7 @@ public class TerminalApiController extends AbstractController {
         TerminalResponse response = new TerminalResponse();
 
         response.add(linkTo(methodOn(getClass()).getTerminalByUid(uid)).withSelfRel());
-        response.add(linkTo(methodOn(getClass()).getTerminals()).withRel("terminals"));
+        response.add(linkTo(methodOn(getClass()).getTerminals(true)).withRel("terminals"));
 
         TerminalDto t = terminalDtoService.getByUid(uid);
 

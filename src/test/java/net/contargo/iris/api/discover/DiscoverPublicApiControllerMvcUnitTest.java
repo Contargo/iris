@@ -63,8 +63,11 @@ public class DiscoverPublicApiControllerMvcUnitTest {
 
         resultActions.andExpect(jsonPath("$.response.links", hasSize(12)));
 
-        String responseContent = new ObjectMapper().readTree(resultActions.andReturn().getResponse()
-                .getContentAsString()).get("response").toString();
+        String responseContent = new ObjectMapper().readTree(resultActions.andReturn()
+                    .getResponse()
+                    .getContentAsString())
+            .get("response")
+            .toString();
 
         DiscoverResponse response =
             new ObjectMapper().readValue(responseContent, new TypeReference<DiscoverResponse>() {
@@ -81,7 +84,7 @@ public class DiscoverPublicApiControllerMvcUnitTest {
         assertThat(response.getLink(REL_SEAPORTS_OF_CONNECTIONS_FILTERED).getHref(),
             is("http://localhost/connections/seaports?combo=RAILWAY"));
         assertThat(response.getLink(REL_SEAPORT_EXAMPLE).getHref(), is("http://localhost/seaports/1301000000000001"));
-        assertThat(response.getLink(REL_TERMINALS).getHref(), is("http://localhost/terminals"));
+        assertThat(response.getLink(REL_TERMINALS).getHref(), is("http://localhost/terminals?activeOnly=true"));
         assertThat(response.getLink(REL_TERMINAL_EXAMPLE).getHref(), is("http://localhost/terminals/1301000000000001"));
         assertThat(response.getLink(REL_CONNECTIONS).getHref(),
             is("http://localhost/connections/1301000000000001/49.0:8.41/true?containerType=TWENTY_LIGHT&isImport=false&combo=WATERWAY"));

@@ -8,8 +8,8 @@ var ConnectionServer = function (contextpath) {
     var api = contextpath + 'api/';
     var connectionsUrl = api + 'connections/';
     var connectionUrl = api + 'connections/{connectionId}';
-    var seaportsUrl = api + 'seaports';
-    var terminalsUrl = api + 'terminals';
+    var seaportsUrl = api + 'seaports?activeOnly=false';
+    var terminalsUrl = api + 'terminals?activeOnly=false';
 
     return {
         getConnection: function (connectionId, callback, errorCallback) {

@@ -71,7 +71,7 @@ public class RoutePart {
      */
     public Direction getDirection() {
 
-        if (!isOfType(RouteType.BARGE)) {
+        if (!(isOfType(RouteType.BARGE) || isOfType(RouteType.BARGE_RAIL))) {
             return Direction.NOT_SET;
         }
 

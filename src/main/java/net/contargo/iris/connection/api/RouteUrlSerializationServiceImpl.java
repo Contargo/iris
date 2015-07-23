@@ -1,6 +1,8 @@
 package net.contargo.iris.connection.api;
 
 import net.contargo.iris.connection.dto.RouteDto;
+import net.contargo.iris.connection.dto.RoutePartDto;
+import net.contargo.iris.connection.dto.SubRoutePartDto;
 
 
 /**
@@ -25,26 +27,51 @@ public class RouteUrlSerializationServiceImpl implements RouteUrlSerializationSe
                 url.append('&');
             }
 
+            RoutePartDto routePart = route.getData().getParts().get(i);
+
             url.append("data.parts[").append(i).append("].origin.longitude=");
-            url.append(route.getData().getParts().get(i).getOrigin().getLongitude().doubleValue());
+            url.append(routePart.getOrigin().getLongitude().doubleValue());
 
             url.append(DATA_PARTS).append(i).append("].origin.latitude=");
-            url.append(route.getData().getParts().get(i).getOrigin().getLatitude().doubleValue());
+            url.append(routePart.getOrigin().getLatitude().doubleValue());
 
             url.append(DATA_PARTS).append(i).append("].destination.longitude=");
-            url.append(route.getData().getParts().get(i).getDestination().getLongitude().doubleValue());
+            url.append(routePart.getDestination().getLongitude().doubleValue());
 
             url.append(DATA_PARTS).append(i).append("].destination.latitude=");
-            url.append(route.getData().getParts().get(i).getDestination().getLatitude().doubleValue());
+            url.append(routePart.getDestination().getLatitude().doubleValue());
 
             url.append(DATA_PARTS).append(i).append("].routeType=");
-            url.append(route.getData().getParts().get(i).getRouteType());
+            url.append(routePart.getRouteType());
 
             url.append(DATA_PARTS).append(i).append("].containerType=");
-            url.append(route.getData().getParts().get(i).getContainerType());
+            url.append(routePart.getContainerType());
 
             url.append(DATA_PARTS).append(i).append("].containerState=");
-            url.append(route.getData().getParts().get(i).getContainerState());
+            url.append(routePart.getContainerState());
+
+            for (int j = 0; j < routePart.getSubRouteParts().size(); j++) {
+                SubRoutePartDto subRoutePart = routePart.getSubRouteParts().get(j);
+
+                url.append(DATA_PARTS).append(i).append("].subRouteParts[").append(j).append("].origin.longitude=");
+                url.append(subRoutePart.getOrigin().getLongitude());
+
+                url.append(DATA_PARTS).append(i).append("].subRouteParts[").append(j).append("].origin.latitude=");
+                url.append(subRoutePart.getOrigin().getLatitude());
+
+                url.append(DATA_PARTS)
+                    .append(i)
+                    .append("].subRouteParts[")
+                    .append(j)
+                    .append("].destination.longitude=");
+                url.append(subRoutePart.getDestination().getLongitude());
+
+                url.append(DATA_PARTS).append(i).append("].subRouteParts[").append(j).append("].destination.latitude=");
+                url.append(subRoutePart.getDestination().getLatitude());
+
+                url.append(DATA_PARTS).append(i).append("].subRouteParts[").append(j).append("].routeType=");
+                url.append(subRoutePart.getRouteType());
+            }
         }
 
         route.setUrl(url.toString());

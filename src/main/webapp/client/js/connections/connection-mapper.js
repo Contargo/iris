@@ -1,6 +1,11 @@
 function ConnectionMapper() {
 }
 
+ConnectionMapper.prototype.getRouteTypeName = function (value) {
+    var map = {BARGE: 'Barge', RAIL: 'Rail'};
+    return map[value];
+};
+
 ConnectionMapper.prototype.connectionFromJson = function (connection, seaports, terminals) {
     'use strict';
     var that = this;
@@ -32,7 +37,7 @@ ConnectionMapper.prototype.subconnectionFromJson = function (subconnection, seap
         }),
         endpoint1: subconnection.routeType === 'BARGE' ? seaports.getByUniqueId(subconnection.seaportUid) : terminals.getByUniqueId(subconnection.terminalUid),
         endpoint2: subconnection.routeType === 'BARGE' ? terminals.getByUniqueId(subconnection.terminalUid) : terminals.getByUniqueId(subconnection.terminal2Uid),
-        routeType: new RouteType({value: subconnection.routeType})
+        routeType: new RouteType({value: subconnection.routeType, name: this.getRouteTypeName(subconnection.routeType)})
     });
 };
 

@@ -30,6 +30,7 @@ describe('ConnectionMapper', function () {
 
         expect(subconnection.get('id')).toBe(20);
         expect(subconnection.get('routeType').get('value')).toBe('BARGE');
+        expect(subconnection.get('routeType').get('name')).toBe('Barge');
         expect(subconnection.get('distances').get('barge')).toBe(200);
         expect(subconnection.get('distances').get('raildiesel')).toBe(0);
         expect(subconnection.get('distances').get('railelectric')).toBe(0);
@@ -51,6 +52,7 @@ describe('ConnectionMapper', function () {
 
         expect(subconnection.get('id')).toBe(20);
         expect(subconnection.get('routeType').get('value')).toBe('RAIL');
+        expect(subconnection.get('routeType').get('name')).toBe('Rail');
         expect(subconnection.get('distances').get('barge')).toBe(0);
         expect(subconnection.get('distances').get('raildiesel')).toBe(50);
         expect(subconnection.get('distances').get('railelectric')).toBe(40);

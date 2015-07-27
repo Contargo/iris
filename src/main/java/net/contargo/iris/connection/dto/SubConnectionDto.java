@@ -9,14 +9,13 @@ import net.contargo.iris.route.RouteType;
 
 import java.math.BigDecimal;
 
-import static com.fasterxml.jackson.annotation.JsonTypeInfo.As.PROPERTY;
 import static com.fasterxml.jackson.annotation.JsonTypeInfo.Id.NAME;
 
 
 /**
  * @author  Sandra Thieme - thieme@synyx.de
  */
-@JsonTypeInfo(use = NAME, include = PROPERTY, property = "routeType")
+@JsonTypeInfo(use = NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "routeType")
 @JsonSubTypes(
     {
         @JsonSubTypes.Type(value = SeaportSubConnectionDto.class, name = "BARGE"),

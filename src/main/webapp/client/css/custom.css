@@ -208,6 +208,10 @@ a.accordion-heading-open {
     margin-bottom: 5px;
 }
 
+.btn-danger {
+    background-color: red !important;
+}
+
 /* Form */
 .form-horizontal {
     padding-top: 25px;

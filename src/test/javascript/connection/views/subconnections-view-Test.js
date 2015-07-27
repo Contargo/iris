@@ -34,7 +34,8 @@ describe('Subconnections View', function () {
         sut = SubconnectionView.prototype.create({
             model: subconnection,
             terminals: terminals,
-            latest: false
+            latest: false,
+            first: false
         });
         expect(sut.$el.html()).toContain('<input class="start" title="start" type="text" readonly="" value="Hinterweiler">');
         expect(sut.$el.html()).toContain('<input class="type input-small" title="type" type="text" readonly="" value="Rail">');
@@ -46,13 +47,15 @@ describe('Subconnections View', function () {
         expect(sut.$el.html()).toContain('<option value="42">Hinterweiler</option>');
         expect(sut.$el.html()).toContain('<option value="23" selected="selected">Wimmelburg</option>');
         expect(sut.$el.html()).not.toContain('<button class="new-subconnection btn btn-primary"><i class="icon-plus-sign icon-white"></i></button>');
+        expect(sut.$el.html()).not.toContain('<button class="remove-subconnection btn btn-primary btn-danger"><i class="icon-trash icon-white"></i></button>');
     });
 
     it('renders for latest subconnection', function () {
         sut = SubconnectionView.prototype.create({
             model: subconnection,
             terminals: terminals,
-            latest: true
+            latest: true,
+            first: false
         });
         expect(sut.$el.html()).toContain('<input class="start" title="start" type="text" readonly="" value="Hinterweiler">');
         expect(sut.$el.html()).toContain('<input class="type input-small" title="type" type="text" readonly="" value="Rail">');
@@ -64,6 +67,17 @@ describe('Subconnections View', function () {
         expect(sut.$el.html()).toContain('<option value="42">Hinterweiler</option>');
         expect(sut.$el.html()).toContain('<option value="23" selected="selected">Wimmelburg</option>');
         expect(sut.$el.html()).toContain('<button class="new-subconnection btn btn-primary"><i class="icon-plus-sign icon-white"></i></button>');
+        expect(sut.$el.html()).toContain('<button class="remove-subconnection btn btn-primary btn-danger"><i class="icon-trash icon-white"></i></button>');
+    });
+
+    it('renders for latest and only subconnection', function () {
+        sut = SubconnectionView.prototype.create({
+            model: subconnection,
+            terminals: terminals,
+            latest: true,
+            first: true
+        });
+        expect(sut.$el.html()).not.toContain('<button class="remove-subconnection btn btn-primary btn-danger"><i class="icon-trash icon-white"></i></button>');
     });
 
     it('updates barge', function () {
@@ -130,5 +144,23 @@ describe('Subconnections View', function () {
         sut.$('.new-subconnection').click();
 
         expect(addNew).toBe(true);
+    });
+
+    it('removes a new subconnection', function () {
+        var subconnections = new Subconnections(subconnection);
+        var removeLast = false;
+        subconnections.trigger = function (event) {
+            if(event === 'removeLast'){
+                removeLast = true;
+            }
+        };
+        sut = SubconnectionView.prototype.create({
+            model: subconnection,
+            terminals: terminals,
+            latest: true
+        });
+        sut.$('.remove-subconnection').click();
+
+        expect(removeLast).toBe(true);
     });
 });

@@ -83,7 +83,8 @@ var ConnectionView = Backbone.View.extend({
                 terminals: new ConnectionTerminals(that.terminals.map(function(terminal) {
                     return terminal.clone();
                 })),
-                latest: that.model.get('subconnections').size() -1 === index
+                latest: that.model.get('subconnections').size() -1 === index,
+                first: index === 0
             });
             that.$('#subconnections').append(subView.el);
         });

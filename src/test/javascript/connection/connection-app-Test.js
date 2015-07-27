@@ -200,6 +200,24 @@ describe('ConnectionApp', function () {
         expect(sut.connectionView.render).toHaveBeenCalled();
     });
 
+    it('removes subconnections', function () {
+        sut.start();
+
+        sut.connection.get('subconnections').add(new Subconnection({
+            foo: 'bar'
+        }));
+        sut.connection.get('subconnections').add(new Subconnection({
+            foo: 'baz'
+        }));
+
+        spyOn(sut.connectionView, 'render');
+        sut.connection.get('subconnections').trigger('removeLast');
+
+        expect(sut.connection.get('subconnections').length).toBe(1);
+        expect(sut.connection.get('subconnections').first().get('foo')).toBe('bar');
+        expect(sut.connectionView.render).toHaveBeenCalled();
+    });
+
     it('creates new connection', function () {
         sut.start();
         sut.connection.unset('id');

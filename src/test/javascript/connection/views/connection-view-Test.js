@@ -61,6 +61,8 @@ describe('Connection View', function () {
     it('renders barge-rail connection', function () {
         connection.set('routeType', barge_rail);
         connection.createSubconnection();
+        connection.get('subconnections').last().set('endpoint2', new ConnectionTerminal());
+        connection.createSubconnection();
         sut = ConnectionView.prototype.create({
             model: connection,
             seaports: seaports,
@@ -72,7 +74,12 @@ describe('Connection View', function () {
         expect(TerminalsView.prototype.create).toHaveBeenCalled();
         expect(RouteTypesView.prototype.create).toHaveBeenCalled();
         expect(DistancesView.prototype.create).not.toHaveBeenCalled();
-        expect(SubconnectionView.prototype.create).toHaveBeenCalled();
+        expect(SubconnectionView.prototype.create).toHaveBeenCalledWith(
+            {model: jasmine.any(Object), terminals: jasmine.any(Object), latest: false, first: true}
+        );
+        expect(SubconnectionView.prototype.create).toHaveBeenCalledWith(
+            {model: jasmine.any(Object), terminals: jasmine.any(Object), latest: true, first: false}
+        );
         expect(sut.$el.html()).toContain('<h2>Edit main run connection - Seaport seaport to Terminal terminal</h2>');
         expect(sut.$el.html()).toContain('<input id="enabled" name="enabled" type="checkbox" checked="checked">');
     });

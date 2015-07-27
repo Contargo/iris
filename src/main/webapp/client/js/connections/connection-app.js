@@ -13,7 +13,8 @@ function ConnectionApp(connectionServer, connectionId, newlyCreated) {
 ConnectionApp.prototype.start = function () {
     'use strict';
 
-    _.bindAll(this, 'update', 'registerEvents', 'updateTerminal', 'updateSeaport', 'updateRouteType', 'loadModels', 'createView', 'addNewSubconnection', 'handleSaveError');
+    _.bindAll(this, 'update', 'registerEvents', 'updateTerminal', 'updateSeaport', 'updateRouteType', 'loadModels',
+        'createView', 'addNewSubconnection', 'handleSaveError', 'removeLastSubconnection');
 
     if (this.newlyCreated) {
         MessageView.prototype.create({message: "Created connection."});
@@ -79,6 +80,7 @@ ConnectionApp.prototype.registerEvents = function () {
     this.terminals.bind('selectionChange', this.updateTerminal);
     this.routeTypes.bind('selectionChange', this.updateRouteType);
     this.connection.get('subconnections').bind('addNew', this.addNewSubconnection);
+    this.connection.get('subconnections').bind('removeLast', this.removeLastSubconnection);
 };
 
 ConnectionApp.prototype.updateTerminal = function (updatedValue) {
@@ -119,6 +121,13 @@ ConnectionApp.prototype.redirect = function (location) {
 ConnectionApp.prototype.addNewSubconnection = function () {
     'use strict';
     this.connection.createSubconnection();
+    this.connectionView.render();
+};
+
+ConnectionApp.prototype.removeLastSubconnection = function () {
+    'use strict';
+    var subconnections = this.connection.get('subconnections');
+    subconnections.remove(subconnections.last());
     this.connectionView.render();
 };
 

@@ -7,7 +7,8 @@ var SubconnectionView = Backbone.View.extend({
         'change .raildiesel': 'updateRailDiesel',
         'change .railelectric': 'updateRailElectric',
         'change .end': 'updateEndpoint2',
-        'click .new-subconnection': 'addNewSubconnection'
+        'click .new-subconnection': 'addNewSubconnection',
+        'click .remove-subconnection': 'removeSubconnection'
     },
 
     initialize: function (options) {
@@ -17,6 +18,7 @@ var SubconnectionView = Backbone.View.extend({
         this.terminals = options.terminals;
         this.terminals.setSelected(this.model.get('endpoint2').get('uniqueId'));
         this.latest = options.latest;
+        this.first = options.first;
 
         this.template = getTemplate(this.templateName);
         this.render();
@@ -32,7 +34,8 @@ var SubconnectionView = Backbone.View.extend({
         var model = {
             model: this.createTemplateModel(this.model),
             terminals: this.terminals.toJSON(),
-            latest: this.latest
+            latest: this.latest,
+            latestAndNotFirst: this.latest && !this.first
         };
         this.$el.html(this.template(model));
     },
@@ -61,6 +64,11 @@ var SubconnectionView = Backbone.View.extend({
     addNewSubconnection: function () {
         'use strict';
         this.model.collection.trigger('addNew');
+    },
+
+    removeSubconnection: function () {
+        'use strict';
+        this.model.collection.trigger('removeLast');
     },
 
     createTemplateModel: function(model) {

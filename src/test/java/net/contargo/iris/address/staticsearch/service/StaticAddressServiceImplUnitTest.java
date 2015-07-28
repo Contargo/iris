@@ -307,9 +307,9 @@ public class StaticAddressServiceImplUnitTest {
         String country = "";
 
         when(staticAddressRepositoryMock.findByPostalCodeAndCity(postalCode,
-                CITY_NEUSTADT_AN_DER_WEINSTRASSE_NORMALIZED + "%")).thenReturn(new ArrayList<>());
+                    CITY_NEUSTADT_AN_DER_WEINSTRASSE_NORMALIZED + "%")).thenReturn(new ArrayList<>());
         when(staticAddressRepositoryMock.findByPostalCodeOrCity(postalCode,
-                CITY_NEUSTADT_AN_DER_WEINSTRASSE_NORMALIZED + "%")).thenReturn(new ArrayList<>());
+                    CITY_NEUSTADT_AN_DER_WEINSTRASSE_NORMALIZED + "%")).thenReturn(new ArrayList<>());
 
         sut.findAddresses(postalCode, CITY_NEUSTADT_AN_DER_WEINSTRASSE, country);
 
@@ -463,8 +463,8 @@ public class StaticAddressServiceImplUnitTest {
         berlinSchoenefeld.setSuburbNormalized(CITY_SCHOENEFELD_NORMALIZED);
 
         when(staticAddressRepositoryMock.findByCityNormalizedAndSuburbNormalizedAndPostalcode(
-                berlinSchoenefeld.getCityNormalized(), berlinSchoenefeld.getSuburbNormalized(),
-                berlinSchoenefeld.getPostalcode())).thenReturn(staticAddresses);
+                    berlinSchoenefeld.getCityNormalized(), berlinSchoenefeld.getSuburbNormalized(),
+                    berlinSchoenefeld.getPostalcode())).thenReturn(staticAddresses);
 
         sut.saveStaticAddress(berlinSchoenefeld);
     }
@@ -555,8 +555,8 @@ public class StaticAddressServiceImplUnitTest {
         when(staticAddressRepositoryMock.findOne(berlinSchoenefeld.getId())).thenReturn(
             berlinSchoenefeldWithoutPostalcode);
         when(staticAddressRepositoryMock.findByCityNormalizedAndSuburbNormalizedAndPostalcode(
-                berlinSchoenefeld.getCityNormalized(), berlinSchoenefeld.getSuburbNormalized(),
-                berlinSchoenefeld.getPostalcode())).thenReturn(new ArrayList<>());
+                    berlinSchoenefeld.getCityNormalized(), berlinSchoenefeld.getSuburbNormalized(),
+                    berlinSchoenefeld.getPostalcode())).thenReturn(new ArrayList<>());
         when(staticAddressRepositoryMock.save(berlinSchoenefeld)).thenReturn(berlinSchoenefeld);
 
         sut.saveStaticAddress(berlinSchoenefeld);
@@ -579,8 +579,8 @@ public class StaticAddressServiceImplUnitTest {
             berlinSchoenefeldWithoutPostalcode);
 
         when(staticAddressRepositoryMock.findByCityNormalizedAndSuburbNormalizedAndPostalcode(
-                berlinSchoenefeld.getCityNormalized(), berlinSchoenefeld.getSuburbNormalized(),
-                berlinSchoenefeld.getPostalcode())).thenReturn(staticAddresses);
+                    berlinSchoenefeld.getCityNormalized(), berlinSchoenefeld.getSuburbNormalized(),
+                    berlinSchoenefeld.getPostalcode())).thenReturn(staticAddresses);
 
         sut.saveStaticAddress(berlinSchoenefeld);
     }
@@ -689,7 +689,9 @@ public class StaticAddressServiceImplUnitTest {
         Pageable pageable2 = new PageRequest(0, 3);
         Page<StaticAddress> lastPage = new PageImpl<>(emptyList(), pageable2, 50);
 
-        when(staticAddressRepositoryMock.findMissingHashKeys(any(Pageable.class))).thenReturn(page, page, lastPage);
+        when(staticAddressRepositoryMock.findMissingHashKeys(any(Pageable.class))).thenReturn(page)
+            .thenReturn(page)
+            .thenReturn(lastPage);
 
         sut.fillMissingHashKeys();
 
@@ -710,8 +712,9 @@ public class StaticAddressServiceImplUnitTest {
         when(boundingBox.getLowerLeft()).thenReturn(corner);
         when(boundingBox.getUpperRight()).thenReturn(corner);
         when(staticAddressRepositoryMock.findByBoundingBox(argThat(closeTo(BigDecimal.ONE, BigDecimal.ZERO)),
-                argThat(closeTo(BigDecimal.ONE, BigDecimal.ZERO)), argThat(closeTo(BigDecimal.TEN, BigDecimal.ZERO)),
-                argThat(closeTo(BigDecimal.TEN, BigDecimal.ZERO)))).thenReturn(asList(berlinSchoenefeld));
+                    argThat(closeTo(BigDecimal.ONE, BigDecimal.ZERO)),
+                    argThat(closeTo(BigDecimal.TEN, BigDecimal.ZERO)),
+                    argThat(closeTo(BigDecimal.TEN, BigDecimal.ZERO)))).thenReturn(asList(berlinSchoenefeld));
 
         List<StaticAddress> addresses = sut.getAddressesInBoundingBox(location, distance);
 

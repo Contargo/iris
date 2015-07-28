@@ -45,9 +45,9 @@ public class RouteDataRevisionPartEnricher implements RoutePartEnricher {
                 RouteDataRevision routeDataRevision = routeDataRevisionService.getRouteDataRevision(terminal, address);
 
                 if (routeDataRevision != null) {
-                    routePart.getData().setDistance(routeDataRevision.getTruckDistanceOneWay());
-                    routePart.getData().setTollDistance(routeDataRevision.getTollDistanceOneWay());
-                    routePart.getData().setAirLineDistance(routeDataRevision.getAirlineDistance());
+                    routePart.getData().setDistance(routeDataRevision.getTruckDistanceOneWayInMeter());
+                    routePart.getData().setTollDistance(routeDataRevision.getTollDistanceOneWayInMeter());
+                    routePart.getData().setAirLineDistance(routeDataRevision.getAirlineDistanceInMeter());
                 }
             } catch (NotFoundException e) {
                 LOG.debug(e.getMessage());

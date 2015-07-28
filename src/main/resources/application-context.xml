@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:util="http://www.springframework.org/schema/util"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
-        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.1.xsd">
 
     <!--
     Configuring Context Parameters
@@ -40,26 +43,13 @@
     </bean>
 
     <bean id="ehCacheFactory" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
-        <property name="cacheManager">
-            <ref local="ehCacheManager"/>
-        </property>
+        <property name="cacheManager" ref="ehCacheManager"/>
         <property name="cacheName" value="addressCache"/>
     </bean>
 
     <bean id="addressCache" class="org.springframework.cache.ehcache.EhCacheCache">
         <constructor-arg name="ehcache" ref="ehCacheFactory"/>
     </bean>
-
-    <!-- 
-    Utils, Helpers and supporting Services 
-    -->
-    <bean id="httpUtil" class="net.contargo.iris.util.HttpUtil">
-        <constructor-arg ref="httpClient"/>
-    </bean>
-
-    <bean id="httpClientBuilder" class="org.apache.http.impl.client.HttpClientBuilder" factory-method="create"/>
-
-    <bean id="httpClient" factory-bean="httpClientBuilder" factory-method="build"/>
 
     <bean id="roundingService" class="net.contargo.iris.rounding.RoundingServiceImpl"/>
 
@@ -90,8 +80,9 @@
         </constructor-arg>
         <constructor-arg>
             <bean class="net.contargo.iris.address.nominatim.service.NominatimJsonResponseParser">
-                <constructor-arg name="httpUtil" ref="httpUtil"/>
-                <constructor-arg name="objectMapper" ref="duplicateDetectionObjectMapper"/>
+                <constructor-arg name="nominatimRestClient">
+                    <bean class="org.springframework.web.client.RestTemplate"/>
+                </constructor-arg>
             </bean>
         </constructor-arg>
         <constructor-arg name="addressSorter" ref="addressSorter"/>
@@ -189,8 +180,9 @@
 
     <bean id="osrmQueryService" class="net.contargo.iris.osrm.service.OSRMQueryServiceImpl">
         <constructor-arg name="baseUrl" value="${osrm.url}"/>
-        <constructor-arg ref="httpUtil"/>
-        <constructor-arg ref="duplicateDetectionObjectMapper"/>
+        <constructor-arg name="osrmRestClient">
+            <bean class="org.springframework.web.client.RestTemplate"/>
+        </constructor-arg>
     </bean>
 
     <bean id="truckRouteService" class="net.contargo.iris.truck.service.OSRMTruckRouteService">
@@ -315,6 +307,12 @@
     <bean id="routeDataRevisionService"
           class="net.contargo.iris.routedatarevision.service.RouteDataRevisionServiceImpl">
         <constructor-arg name="routeDataRevisionRepository" ref="routeDataRevisionRepository"/>
+    </bean>
+
+    <bean id="routeDataRevisionDtoService"
+          class="net.contargo.iris.routedatarevision.dto.RouteDataRevisionDtoServiceImpl">
+        <constructor-arg name="routeDataRevisionService" ref="routeDataRevisionService"/>
+        <constructor-arg name="terminalService" ref="terminalService"/>
     </bean>
 
     <bean id="enricherDtoService" class="net.contargo.iris.enricher.dto.EnricherDtoServiceImpl">

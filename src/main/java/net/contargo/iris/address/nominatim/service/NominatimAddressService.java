@@ -2,7 +2,6 @@ package net.contargo.iris.address.nominatim.service;
 
 import net.contargo.iris.GeoLocation;
 import net.contargo.iris.address.Address;
-import net.contargo.iris.util.HttpUtilException;
 
 import org.slf4j.Logger;
 
@@ -74,7 +73,7 @@ public class NominatimAddressService implements AddressService {
         } else {
             String url = nominatimUrlBuilder.buildUrl(street, postalCode, city, country, name);
 
-            List<Address> addresses = nominatimResponder.getAddressesForUrl(url);
+            List<Address> addresses = nominatimResponder.getAddresses(url);
 
             Collections.sort(addresses, addressSorter);
 
@@ -84,9 +83,9 @@ public class NominatimAddressService implements AddressService {
 
 
     @Override
-    public List<Address> getAdressesWherePlaceIsIn(Long placeId) {
+    public List<Address> getAddressesWherePlaceIsIn(Long placeId) {
 
-        return searchSuburbsViaNominatimsDetailPage(placeId, SuburbType.ADDRESSES, new HashSet<String>());
+        return searchSuburbsViaNominatimsDetailPage(placeId, SuburbType.ADDRESSES, new HashSet<>());
     }
 
 
@@ -94,7 +93,7 @@ public class NominatimAddressService implements AddressService {
     public Address getAddressByOsmId(long osmId) {
 
         String suburbUrl = nominatimUrlBuilder.buildOsmUrl(osmId);
-        List<Address> foundAddresses = nominatimResponder.getAddressesForUrlForOsmId(suburbUrl);
+        List<Address> foundAddresses = nominatimResponder.getAddressesFromOSMId(suburbUrl);
 
         return foundAddresses.get(0);
     }
@@ -106,8 +105,8 @@ public class NominatimAddressService implements AddressService {
         try {
             String url = nominatimUrlBuilder.buildUrl(geoLocation);
 
-            return nominatimResponder.getAddressForUrl(url);
-        } catch (IllegalArgumentException | HttpUtilException e) {
+            return nominatimResponder.getAddress(url);
+        } catch (IllegalArgumentException e) {
             throw new AddressResolutionException("Failed to resolve address for " + geoLocation, e);
         }
     }
@@ -119,7 +118,7 @@ public class NominatimAddressService implements AddressService {
         List<Address> suburbs = new ArrayList<>();
 
         String suburbUrl = nominatimUrlBuilder.buildSuburbUrl(osmPlaceId, suburbType.getType());
-        List<Address> foundSuburbs = nominatimResponder.getAddressesForUrl(suburbUrl);
+        List<Address> foundSuburbs = nominatimResponder.getAddresses(suburbUrl);
 
         if (!foundSuburbs.isEmpty()) {
             // check for possible redundant address display names
@@ -129,7 +128,7 @@ public class NominatimAddressService implements AddressService {
                     // add to suburbs list
                     suburbs.add(foundSuburb);
 
-                    // add to golbal display names, for next iteration
+                    // add to global display names, for next iteration
                     suburbGlobalDisplayNames.add(foundSuburb.getDisplayName());
                 }
             }
@@ -141,17 +140,17 @@ public class NominatimAddressService implements AddressService {
 
     private List<Address> geocodeByName(String street, String postalCode, String city, String country, String name) {
 
-        // make 2 querys: 1 query for search by name, 1 query for search by street
+        // make 2 queries: 1 query for search by name, 1 query for search by street
         String url1 = nominatimUrlBuilder.buildUrl(null, postalCode, city, country, name);
         String url2 = nominatimUrlBuilder.buildUrl(street, postalCode, city, country, null);
 
-        List<Address> one = nominatimResponder.getAddressesForUrl(url1);
-        List<Address> two = nominatimResponder.getAddressesForUrl(url2);
+        List<Address> one = nominatimResponder.getAddresses(url1);
+        List<Address> two = nominatimResponder.getAddresses(url2);
 
         // avoid duplication of places by osm_id
         List<Address> mergedList = addressHelper.mergeSearchResultsWithoutDuplications(one, two);
 
-        // sort list so that unplausible results (e.g., not in europe) appear last
+        // sort list so that no plausible results (e.g., not in europe) appear last
         Collections.sort(mergedList, addressSorter);
 
         return mergedList;

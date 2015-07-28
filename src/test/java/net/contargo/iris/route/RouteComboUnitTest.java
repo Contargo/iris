@@ -34,16 +34,6 @@ public class RouteComboUnitTest {
 
 
     @Test
-    public void getDirectTruckRouteTypes() {
-
-        RouteType[] routeTypes = RouteCombo.DIRECT_TRUCK.getRouteTypes();
-
-        assertThat(routeTypes, arrayWithSize(1));
-        assertThat(routeTypes, arrayContainingInAnyOrder(RouteType.TRUCK));
-    }
-
-
-    @Test
     public void getAllRouteTypes() {
 
         RouteType[] routeTypes = RouteCombo.ALL.getRouteTypes();

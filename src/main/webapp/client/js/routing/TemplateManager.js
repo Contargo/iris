@@ -1,19 +1,19 @@
 var TemplateManager = Backbone.Model.extend({
 
-    defaults  : {
-        prefix : "templates/",
-        postfix : ".html"
+    defaults: {
+        prefix: "templates/",
+        postfix: ".html"
     },
 
-    initialize: function() {
+    initialize: function () {
         this.set("cache", {});
     },
 
-    getUrl: function(name) {
+    getUrl: function (name) {
         return this.get("prefix") + name + this.get("postfix");
     },
 
-    loadTemplate: function(url) {
+    loadTemplate: function (url) {
         var result = "Problem loading the Template from url " + url;
 
         $.ajax({
@@ -23,10 +23,10 @@ var TemplateManager = Backbone.Model.extend({
             dataType: "html",
             cache: false,
 
-            success: function(data) {
+            success: function (data) {
                 result = data;
             },
-            error: function(jqXHR, textStatus, errorThrown) {
+            error: function (jqXHR, textStatus) {
                 throw "Could not load template " + url + ": " + textStatus;
             }
 
@@ -34,11 +34,11 @@ var TemplateManager = Backbone.Model.extend({
         return this.getHandleBarsTemplateFromResult(result);
     },
 
-    getHandleBarsTemplateFromResult : function(result) {
+    getHandleBarsTemplateFromResult: function (result) {
         return Handlebars.compile(result);
     },
 
-    getTemplate : function(name) {
+    getTemplate: function (name) {
         var url = this.getUrl(name);
         var template = this.get("cache")[url];
         if (template === undefined) {
@@ -52,11 +52,11 @@ var TemplateManager = Backbone.Model.extend({
 function exportTemplateManagerAsGlobalFunction(prefix) {
 
     // define global method getTemplate
-    window.getTemplate = function() {
+    window.getTemplate = function () {
         var templateManager = new TemplateManager({
-            prefix : prefix
+            prefix: prefix
         });
-        return function(name) {
+        return function (name) {
             return templateManager.getTemplate(name);
         };
     }();

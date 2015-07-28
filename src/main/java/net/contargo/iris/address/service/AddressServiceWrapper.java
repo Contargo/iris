@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +22,8 @@ import static net.contargo.iris.address.nominatim.service.AddressDetailKey.CITY;
 import static net.contargo.iris.address.nominatim.service.AddressDetailKey.COUNTRY;
 import static net.contargo.iris.address.nominatim.service.AddressDetailKey.POSTAL_CODE;
 import static net.contargo.iris.address.nominatim.service.AddressDetailKey.STREET;
+
+import static java.util.Arrays.asList;
 
 
 /**
@@ -82,7 +83,7 @@ public class AddressServiceWrapper {
             // the geo coordinates in the 'loc' object
             address.setLatitude(geoLocation.getLatitude());
             address.setLongitude(geoLocation.getLongitude());
-            addressCache.cache(getSimpleAddressList(Arrays.asList(address)));
+            addressCache.cache(getSimpleAddressList(asList(address)));
         }
 
         return address;

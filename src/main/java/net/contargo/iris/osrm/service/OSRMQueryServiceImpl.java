@@ -1,16 +1,13 @@
 package net.contargo.iris.osrm.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import net.contargo.iris.GeoLocation;
-import net.contargo.iris.util.HttpUtil;
-import net.contargo.iris.util.HttpUtilException;
 
-import java.io.IOException;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 
 
 /**
- * Implementation of the osrm query service.
+ * Implementation of the OSRM query service.
  *
  * @author  Sven Mueller - mueller@synyx.de
  * @author  Tobias Schneider - schneider@synyx.de
@@ -31,14 +28,12 @@ public class OSRMQueryServiceImpl implements OSRMQueryService {
     private static final String Q_ALTERNATIVE = "alt";
 
     private final String baseUrl;
-    private final HttpUtil httpUtil;
-    private final ObjectMapper objectMapper;
+    private final RestTemplate osrmRestClient;
 
-    public OSRMQueryServiceImpl(HttpUtil httpUtil, String baseUrl, ObjectMapper objectMapper) {
+    public OSRMQueryServiceImpl(RestTemplate osrmRestClient, String baseUrl) {
 
-        this.httpUtil = httpUtil;
+        this.osrmRestClient = osrmRestClient;
         this.baseUrl = baseUrl;
-        this.objectMapper = objectMapper;
     }
 
     @Override
@@ -46,18 +41,15 @@ public class OSRMQueryServiceImpl implements OSRMQueryService {
 
         try {
             return createOSRMQueryResult(route(start, destination));
-        } catch (HttpUtilException | IOException e) {
+        } catch (RestClientException e) {
             throw new RoutingException("Error querying OSRM service: ", e);
         }
     }
 
 
-    private OSRMJsonResponse route(GeoLocation start, GeoLocation destination) throws IOException {
+    private OSRMJsonResponse route(GeoLocation start, GeoLocation destination) {
 
-        String query = createOSRMQueryString(start, destination);
-        String response = httpUtil.getResponseContent(query);
-
-        return objectMapper.readValue(response, OSRMJsonResponse.class);
+        return osrmRestClient.getForEntity(createOSRMQueryString(start, destination), OSRMJsonResponse.class).getBody();
     }
 
 

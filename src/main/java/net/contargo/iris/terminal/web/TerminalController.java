@@ -35,7 +35,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 
 /**
- * Controller Class for all operations with {@link net.contargo.iris.terminal.api.Terminal}s.
+ * Controller Class for all operations with {@link net.contargo.iris.terminal.Terminal}s.
  *
  * @author  Arnold Franke - franke@synyx.de
  * @author  Tobias Schneider - schneider@synyx.de

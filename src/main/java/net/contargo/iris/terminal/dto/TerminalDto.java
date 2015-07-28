@@ -1,13 +1,16 @@
 package net.contargo.iris.terminal.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import net.contargo.iris.address.dto.GeoLocationDto;
 import net.contargo.iris.terminal.Region;
 import net.contargo.iris.terminal.Terminal;
+
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.validation.constraints.Size;
 import java.math.BigInteger;
+
+import javax.validation.constraints.Size;
 
 
 /**

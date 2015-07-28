@@ -2,16 +2,17 @@ package net.contargo.iris.routedatarevision;
 
 import net.contargo.iris.terminal.Terminal;
 
-import net.contargo.validation.bigdecimal.BigDecimalValidate;
+import org.hibernate.validator.constraints.Range;
 
 import java.math.BigDecimal;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 
 /**
@@ -22,49 +23,37 @@ import javax.validation.constraints.NotNull;
 @Entity
 public class RouteDataRevision {
 
-    private static final int DEG_180 = 180;
-
-    private static final int MAX_DEC_15 = 15;
-    private static final int MAX_FRAC_2 = 2;
-    private static final int MAX_FRAC_10 = 10;
-    private static final int MAX_DEC_3 = 3;
-    private static final int MIN_0 = 0;
+    private static final int MAX_VALUE_COORD = 180;
+    private static final int MIN_VALUE_COORD = -180;
+    private static final int COMMENT_SIZE = 5000;
 
     @Id
     @GeneratedValue
     private Long id;
 
-    @NotNull
     @ManyToOne
     private Terminal terminal;
 
-    @NotNull
-    @BigDecimalValidate(maxFractionalPlaces = MAX_FRAC_2, maxDecimalPlaces = MAX_DEC_15)
-    private BigDecimal truckDistanceOneWay;
+    @Column(name = "truckDistanceOneWay")
+    private BigDecimal truckDistanceOneWayInMeter;
 
-    @NotNull
-    @BigDecimalValidate(maxFractionalPlaces = MAX_FRAC_2, maxDecimalPlaces = MAX_DEC_15)
-    private BigDecimal tollDistanceOneWay;
+    @Column(name = "tollDistanceOneWay")
+    private BigDecimal tollDistanceOneWayInMeter;
 
-    @NotNull
-    @BigDecimalValidate(maxFractionalPlaces = MAX_FRAC_2, maxDecimalPlaces = MAX_DEC_15)
-    private BigDecimal airlineDistance;
+    @Column(name = "airlineDistance")
+    private BigDecimal airlineDistanceInMeter;
 
-    @NotNull
-    @BigDecimalValidate(
-        minValue = -DEG_180, maxValue = DEG_180, maxFractionalPlaces = MAX_FRAC_10, maxDecimalPlaces = MAX_DEC_3
-    )
+    @Range(min = MIN_VALUE_COORD, max = MAX_VALUE_COORD)
     private BigDecimal latitude;
 
-    @NotNull
-    @BigDecimalValidate(
-        minValue = -DEG_180, maxValue = DEG_180, maxFractionalPlaces = MAX_FRAC_10, maxDecimalPlaces = MAX_DEC_3
-    )
+    @Range(min = MIN_VALUE_COORD, max = MAX_VALUE_COORD)
     private BigDecimal longitude;
 
-    @NotNull
-    @BigDecimalValidate(minValue = MIN_0, maxFractionalPlaces = MAX_FRAC_2, maxDecimalPlaces = MAX_DEC_15)
-    private BigDecimal radius;
+    @Column(name = "radius")
+    private BigDecimal radiusInMeter;
+
+    @Size(max = COMMENT_SIZE)
+    private String comment;
 
     public Long getId() {
 
@@ -90,39 +79,39 @@ public class RouteDataRevision {
     }
 
 
-    public BigDecimal getTruckDistanceOneWay() {
+    public BigDecimal getTruckDistanceOneWayInMeter() {
 
-        return truckDistanceOneWay;
+        return truckDistanceOneWayInMeter;
     }
 
 
-    public void setTruckDistanceOneWay(BigDecimal truckDistanceOneWay) {
+    public void setTruckDistanceOneWayInMeter(BigDecimal truckDistanceOneWayInMeter) {
 
-        this.truckDistanceOneWay = truckDistanceOneWay;
+        this.truckDistanceOneWayInMeter = truckDistanceOneWayInMeter;
     }
 
 
-    public BigDecimal getTollDistanceOneWay() {
+    public BigDecimal getTollDistanceOneWayInMeter() {
 
-        return tollDistanceOneWay;
+        return tollDistanceOneWayInMeter;
     }
 
 
-    public void setTollDistanceOneWay(BigDecimal tollDistanceOneWay) {
+    public void setTollDistanceOneWayInMeter(BigDecimal tollDistanceOneWayInMeter) {
 
-        this.tollDistanceOneWay = tollDistanceOneWay;
+        this.tollDistanceOneWayInMeter = tollDistanceOneWayInMeter;
     }
 
 
-    public BigDecimal getAirlineDistance() {
+    public BigDecimal getAirlineDistanceInMeter() {
 
-        return airlineDistance;
+        return airlineDistanceInMeter;
     }
 
 
-    public void setAirlineDistance(BigDecimal airlineDistance) {
+    public void setAirlineDistanceInMeter(BigDecimal airlineDistanceInMeter) {
 
-        this.airlineDistance = airlineDistance;
+        this.airlineDistanceInMeter = airlineDistanceInMeter;
     }
 
 
@@ -150,14 +139,26 @@ public class RouteDataRevision {
     }
 
 
-    public BigDecimal getRadius() {
+    public BigDecimal getRadiusInMeter() {
 
-        return radius;
+        return radiusInMeter;
     }
 
 
-    public void setRadius(BigDecimal radius) {
+    public void setRadiusInMeter(BigDecimal radiusInMeter) {
 
-        this.radius = radius;
+        this.radiusInMeter = radiusInMeter;
+    }
+
+
+    public String getComment() {
+
+        return comment;
+    }
+
+
+    public void setComment(String comment) {
+
+        this.comment = comment;
     }
 }

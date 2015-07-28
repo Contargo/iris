@@ -3,11 +3,15 @@ package net.contargo.iris.routedatarevision.persistence;
 import net.contargo.iris.routedatarevision.RouteDataRevision;
 import net.contargo.iris.terminal.Terminal;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
+
+import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -15,7 +19,7 @@ import java.math.BigDecimal;
  *
  * @author  Tobias Schneider - schneider@synyx.de
  */
-public interface RouteDataRevisionRepository extends Repository<RouteDataRevision, Long> {
+public interface RouteDataRevisionRepository extends JpaRepository<RouteDataRevision, Long> {
 
     @Query(
         value = "SELECT * "
@@ -35,4 +39,13 @@ public interface RouteDataRevisionRepository extends Repository<RouteDataRevisio
     RouteDataRevision findNearest(@Param("terminal") Terminal terminal,
         @Param("latitude") BigDecimal latitude,
         @Param("longitude") BigDecimal longitude);
+
+
+    @Query("SELECT r FROM RouteDataRevision r WHERE r.terminal.id = ?1")
+    List<RouteDataRevision> findByTerminalId(Long id);
+
+
+    @Query("SELECT r FROM RouteDataRevision r WHERE r.terminal.uniqueId = ?1 and r.latitude = ?2 and longitude = ?3")
+    Optional<RouteDataRevision> findByTerminalAndLatitudeAndLongitude(BigInteger terminalUniqueId, BigDecimal latitude,
+        BigDecimal longitude);
 }

@@ -21,12 +21,10 @@ import static net.contargo.iris.address.nominatim.service.AddressDetailKey.NAME;
 import static net.contargo.iris.address.nominatim.service.AddressDetailKey.POSTAL_CODE;
 import static net.contargo.iris.address.nominatim.service.AddressDetailKey.STREET;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
 
 
 /**
@@ -55,9 +53,7 @@ public class NominatimAddressServiceIntegrationTest {
 
         List<Address> addresses = addressService.getAddressesByDetails(addressDetails);
 
-        // assert that there is a result
-        assertFalse(addresses.isEmpty());
-        assertThat(addresses.size(), is(greaterThanOrEqualTo(1)));
+        assertThat(addresses, hasSize(greaterThanOrEqualTo(1)));
     }
 
 
@@ -70,8 +66,6 @@ public class NominatimAddressServiceIntegrationTest {
 
         List<Address> addresses = addressService.getAddressesByDetails(addressDetails);
 
-        // assert that there is a result
-        assertFalse(addresses.isEmpty());
-        assertThat(addresses.size(), greaterThanOrEqualTo(1));
+        assertThat(addresses, hasSize(greaterThanOrEqualTo(1)));
     }
 }

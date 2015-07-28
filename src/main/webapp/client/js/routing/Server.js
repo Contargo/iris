@@ -5,7 +5,6 @@ var Server = function (contextpath, errorhandler) {
     }
 
     var api = contextpath + "api/";
-    var management = "management/";
     var countriesUrl = api + "countries";
     var geoCodeUrl = api + "geocodes/";
     var seaPortsUrl = api + "seaports";
@@ -19,7 +18,6 @@ var Server = function (contextpath, errorhandler) {
     var thrownPermanentFailurs = {};
 
     var req = function (url, callback, what, async, permanentFailureMessage, errorFunction) {
-
         var mode = true;
         if (async !== undefined) {
             mode = async;
@@ -32,7 +30,7 @@ var Server = function (contextpath, errorhandler) {
             dataType: "json",
             async: mode,
             cache: false,
-            error: function (jqXHR, textStatus, errorThrown) {
+            error: function (jqXHR) {
                 if (permanentFailureMessage === undefined) {
                     if (!what) {
                         what = "Abfrage des Servers";
@@ -43,10 +41,9 @@ var Server = function (contextpath, errorhandler) {
                     reportError(permanentFailureMessage, true);
                     thrownPermanentFailurs[jqXHR.status] = jqXHR;
                 }
-                if(typeof  errorFunction === "function"){
+                if (typeof  errorFunction === "function") {
                     errorFunction();
                 }
-
             }
         });
     };
@@ -60,7 +57,6 @@ var Server = function (contextpath, errorhandler) {
             var query = "routedetails?";
 
             var i = 0;
-
             parts.each(function (e) {
                 if (e.get("from")) {
                     query += "data.parts[" + i + "].origin.latitude=" + e.get("from").get("latitude") + "&";
@@ -73,7 +69,6 @@ var Server = function (contextpath, errorhandler) {
                     i++;
                 }
             });
-
             return query;
         },
 
@@ -81,22 +76,18 @@ var Server = function (contextpath, errorhandler) {
             var query = api + this.generateDetailsUrl(parts);
 
             if (parts.size() > 0) {
-
                 req(query, function (data) {
                     if (data === undefined || data.response === undefined || data.response.route === undefined) {
                         reportError("invalid response");
                         return;
                     }
                     callback(data.response.route);
-
                 }, "der Dreiecksroutinganfrage", true, "Routing must be checked. Please contact iris@contargo.net for further information.");
-
             }
         },
 
         geoCode: function (request, callback) {
             var url = geoCodeUrl + "?" + request.getQueryString();
-
             req(url, function (data) {
                 if (data === undefined || data.geoCodeResponse === undefined
                     || data.geoCodeResponse.addresses === undefined) {
@@ -104,19 +95,16 @@ var Server = function (contextpath, errorhandler) {
                     return;
                 }
                 callback(data.geoCodeResponse.addresses);
-
             }, "der Adressauflösung");
         },
 
         countries: function (callback) {
             req(countriesUrl, function (data) {
-
                 if (data === undefined || data.countriesResponse === undefined || data.countriesResponse.countries === undefined) {
                     reportError("invalid response");
                     return;
                 }
                 callback(data.countriesResponse.countries);
-
             }, "dem Abrufen der möglichen Länder", false);
         },
 
@@ -127,7 +115,6 @@ var Server = function (contextpath, errorhandler) {
                     return;
                 }
                 callback(data.seaports);
-
             }, "dem Abrufen der Seehäfen", false);
         },
 
@@ -138,7 +125,6 @@ var Server = function (contextpath, errorhandler) {
                     return;
                 }
                 callback(data.response.terminals);
-
             }, "dem Abrufen der Terminals", false);
         }
     };

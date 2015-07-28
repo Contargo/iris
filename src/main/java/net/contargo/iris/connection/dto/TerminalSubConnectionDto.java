@@ -3,8 +3,8 @@ package net.contargo.iris.connection.dto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import net.contargo.iris.connection.AbstractSubConnection;
 import net.contargo.iris.connection.MainRunConnection;
-import net.contargo.iris.connection.SubConnection;
 import net.contargo.iris.connection.TerminalSubConnection;
 import net.contargo.iris.route.RouteType;
 import net.contargo.iris.terminal.Terminal;
@@ -17,7 +17,7 @@ import java.math.BigInteger;
  * @author  Sandra Thieme - thieme@synyx.de
  * @author  David Schilling - schilling@synyx.de
  */
-public class TerminalSubConnectionDto extends SubConnectionDto {
+public class TerminalSubConnectionDto extends AbstractSubConnectionDto {
 
     private final String terminal2Uid;
 
@@ -54,7 +54,7 @@ public class TerminalSubConnectionDto extends SubConnectionDto {
 
 
     @Override
-    public SubConnection toEntity(MainRunConnection parent) {
+    public AbstractSubConnection toEntity(MainRunConnection parent) {
 
         TerminalSubConnection terminalSubConnection = new TerminalSubConnection();
 

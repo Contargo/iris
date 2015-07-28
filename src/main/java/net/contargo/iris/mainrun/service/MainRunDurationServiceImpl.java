@@ -1,7 +1,7 @@
 package net.contargo.iris.mainrun.service;
 
+import net.contargo.iris.connection.AbstractSubConnection;
 import net.contargo.iris.connection.MainRunConnection;
-import net.contargo.iris.connection.SubConnection;
 import net.contargo.iris.rounding.RoundingService;
 import net.contargo.iris.route.RoutePart;
 import net.contargo.iris.route.SubRoutePart;
@@ -79,7 +79,7 @@ public class MainRunDurationServiceImpl implements MainRunDurationService {
 
 
     @Override
-    public BigDecimal getSubRoutePartDuration(SubConnection subConnection, SubRoutePart subRoutePart,
+    public BigDecimal getSubRoutePartDuration(AbstractSubConnection subConnection, SubRoutePart subRoutePart,
         RoutePart.Direction direction) {
 
         BigDecimal distance = subConnection.getTotalDistance();

@@ -1,7 +1,7 @@
 package net.contargo.iris.mainrun.service;
 
+import net.contargo.iris.connection.AbstractSubConnection;
 import net.contargo.iris.connection.MainRunConnection;
-import net.contargo.iris.connection.SubConnection;
 import net.contargo.iris.route.RoutePart;
 import net.contargo.iris.route.SubRoutePart;
 
@@ -24,6 +24,6 @@ public interface MainRunDurationService {
     BigDecimal getMainRunRoutePartDuration(MainRunConnection mainrunConnection, RoutePart routePart);
 
 
-    BigDecimal getSubRoutePartDuration(SubConnection subConnection, SubRoutePart subRoutePart,
+    BigDecimal getSubRoutePartDuration(AbstractSubConnection subConnection, SubRoutePart subRoutePart,
         RoutePart.Direction direction);
 }

@@ -1,8 +1,8 @@
 package net.contargo.iris.mainrun.service;
 
+import net.contargo.iris.connection.AbstractSubConnection;
 import net.contargo.iris.connection.MainRunConnection;
 import net.contargo.iris.connection.SeaportSubConnection;
-import net.contargo.iris.connection.SubConnection;
 import net.contargo.iris.connection.TerminalSubConnection;
 import net.contargo.iris.rounding.RoundingService;
 import net.contargo.iris.route.RoutePart;
@@ -174,7 +174,7 @@ public class MainRunDurationServiceImplUnitTest {
 
         subRoutePart.setRouteType(BARGE);
 
-        SubConnection subConnection = new SeaportSubConnection();
+        AbstractSubConnection subConnection = new SeaportSubConnection();
         subConnection.setBargeDieselDistance(new BigDecimal("18"));
         subConnection.setRailDieselDistance(ZERO);
         subConnection.setRailElectricDistance(ZERO);
@@ -193,7 +193,7 @@ public class MainRunDurationServiceImplUnitTest {
 
         subRoutePart.setRouteType(BARGE);
 
-        SubConnection subConnection = new SeaportSubConnection();
+        AbstractSubConnection subConnection = new SeaportSubConnection();
         subConnection.setBargeDieselDistance(TEN);
         subConnection.setRailDieselDistance(ZERO);
         subConnection.setRailElectricDistance(ZERO);
@@ -212,7 +212,7 @@ public class MainRunDurationServiceImplUnitTest {
 
         subRoutePart.setRouteType(RAIL);
 
-        SubConnection subConnection = new TerminalSubConnection();
+        AbstractSubConnection subConnection = new TerminalSubConnection();
         subConnection.setBargeDieselDistance(ZERO);
         subConnection.setRailDieselDistance(new BigDecimal("20"));
         subConnection.setRailElectricDistance(new BigDecimal("25"));

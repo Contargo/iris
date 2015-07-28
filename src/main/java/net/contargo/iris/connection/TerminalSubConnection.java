@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @DiscriminatorValue("T")
-public class TerminalSubConnection extends SubConnection {
+public class TerminalSubConnection extends AbstractSubConnection {
 
     @NotNull
     @ManyToOne

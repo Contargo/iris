@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @DiscriminatorValue("S")
-public class SeaportSubConnection extends SubConnection {
+public class SeaportSubConnection extends AbstractSubConnection {
 
     @NotNull
     @ManyToOne

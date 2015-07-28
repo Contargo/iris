@@ -108,7 +108,7 @@ public class MainRunConnectionDtoServiceImplUnitTest {
 
         MainRunConnectionDto dto = new MainRunConnectionDto(42L, BigInteger.ONE.toString(), BigInteger.TEN.toString(),
                 BigDecimal.ONE, BigDecimal.TEN, BigDecimal.ZERO, BARGE, true,
-                Collections.<SubConnectionDto>emptyList());
+                Collections.<AbstractSubConnectionDto>emptyList());
 
         MainRunConnection connection = newConnection(seaportOne, terminal, BARGE);
         connection.setId(42L);

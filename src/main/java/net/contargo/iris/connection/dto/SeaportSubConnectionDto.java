@@ -3,9 +3,9 @@ package net.contargo.iris.connection.dto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import net.contargo.iris.connection.AbstractSubConnection;
 import net.contargo.iris.connection.MainRunConnection;
 import net.contargo.iris.connection.SeaportSubConnection;
-import net.contargo.iris.connection.SubConnection;
 import net.contargo.iris.route.RouteType;
 import net.contargo.iris.seaport.Seaport;
 import net.contargo.iris.terminal.Terminal;
@@ -18,7 +18,7 @@ import java.math.BigInteger;
  * @author  Sandra Thieme - thieme@synyx.de
  * @author  David Schilling - schilling@synyx.de
  */
-public class SeaportSubConnectionDto extends SubConnectionDto {
+public class SeaportSubConnectionDto extends AbstractSubConnectionDto {
 
     private final String seaportUid;
 
@@ -55,7 +55,7 @@ public class SeaportSubConnectionDto extends SubConnectionDto {
 
 
     @Override
-    public SubConnection toEntity(MainRunConnection parent) {
+    public AbstractSubConnection toEntity(MainRunConnection parent) {
 
         SeaportSubConnection seaportSubConnection = new SeaportSubConnection();
 

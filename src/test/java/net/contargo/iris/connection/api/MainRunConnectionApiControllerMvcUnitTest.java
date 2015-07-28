@@ -1,12 +1,12 @@
 package net.contargo.iris.connection.api;
 
+import net.contargo.iris.connection.dto.AbstractSubConnectionDto;
 import net.contargo.iris.connection.dto.MainRunConnectionDto;
 import net.contargo.iris.connection.dto.MainRunConnectionDtoService;
 import net.contargo.iris.connection.dto.RouteDto;
 import net.contargo.iris.connection.dto.SeaportConnectionRoutesDtoService;
 import net.contargo.iris.connection.dto.SeaportTerminalConnectionDtoService;
 import net.contargo.iris.connection.dto.SimpleMainRunConnectionDto;
-import net.contargo.iris.connection.dto.SubConnectionDto;
 import net.contargo.iris.connection.service.DuplicateMainRunConnectionException;
 import net.contargo.iris.container.ContainerType;
 import net.contargo.iris.route.Route;
@@ -236,7 +236,7 @@ public class MainRunConnectionApiControllerMvcUnitTest {
     public void getConnection() throws Exception {
 
         MainRunConnectionDto dto = new MainRunConnectionDto(42L, "1", "2", BigDecimal.ONE, BigDecimal.TEN,
-                BigDecimal.ZERO, BARGE, true, Collections.<SubConnectionDto>emptyList());
+                BigDecimal.ZERO, BARGE, true, Collections.<AbstractSubConnectionDto>emptyList());
 
         when(connectionApiDtoService.get(42L)).thenReturn(dto);
 

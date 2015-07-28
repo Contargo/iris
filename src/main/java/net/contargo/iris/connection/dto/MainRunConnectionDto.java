@@ -3,21 +3,23 @@ package net.contargo.iris.connection.dto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import net.contargo.iris.connection.AbstractSubConnection;
 import net.contargo.iris.connection.MainRunConnection;
 import net.contargo.iris.connection.SeaportSubConnection;
-import net.contargo.iris.connection.SubConnection;
 import net.contargo.iris.connection.TerminalSubConnection;
 import net.contargo.iris.route.RouteType;
 import net.contargo.iris.seaport.Seaport;
 import net.contargo.iris.terminal.Terminal;
+
 import net.contargo.validation.bigdecimal.BigDecimalValidate;
 
-import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import java.util.List;
 import java.util.function.Function;
+
+import javax.validation.constraints.NotNull;
 
 import static java.util.stream.Collectors.toList;
 
@@ -27,9 +29,9 @@ import static java.util.stream.Collectors.toList;
  */
 public final class MainRunConnectionDto {
 
-    private static final long TEN = 10l;
+    private static final long TEN = 10L;
     private final Long id;
-    
+
     @NotNull
     private final String seaportUid;
 
@@ -53,7 +55,7 @@ public final class MainRunConnectionDto {
 
     @NotNull
     private final Boolean enabled;
-    private final List<SubConnectionDto> subConnections;
+    private final List<AbstractSubConnectionDto> subConnections;
 
     @JsonCreator
     public MainRunConnectionDto(@JsonProperty("id") Long id,
@@ -64,7 +66,7 @@ public final class MainRunConnectionDto {
         @JsonProperty("railElectricDistance") BigDecimal railElectricDistance,
         @JsonProperty("routeType") RouteType routeType,
         @JsonProperty("enabled") Boolean enabled,
-        @JsonProperty("subConnections") List<SubConnectionDto> subConnections) {
+        @JsonProperty("subConnections") List<AbstractSubConnectionDto> subConnections) {
 
         this.id = id;
         this.seaportUid = seaportUid;
@@ -91,10 +93,10 @@ public final class MainRunConnectionDto {
         this.subConnections = mainRunConnection.getSubConnections().stream().map(toDto()).collect(toList());
     }
 
-    private Function<SubConnection, SubConnectionDto> toDto() {
+    private Function<AbstractSubConnection, AbstractSubConnectionDto> toDto() {
 
         return
-            (SubConnection subConnection) -> {
+            (AbstractSubConnection subConnection) -> {
             if (subConnection instanceof SeaportSubConnection) {
                 return new SeaportSubConnectionDto((SeaportSubConnection) subConnection);
             } else {
@@ -152,7 +154,7 @@ public final class MainRunConnectionDto {
     }
 
 
-    public List<SubConnectionDto> getSubConnections() {
+    public List<AbstractSubConnectionDto> getSubConnections() {
 
         return subConnections;
     }

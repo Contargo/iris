@@ -1,9 +1,9 @@
 package net.contargo.iris.enricher.service;
 
 import net.contargo.iris.GeoLocation;
+import net.contargo.iris.connection.AbstractSubConnection;
 import net.contargo.iris.connection.MainRunConnection;
 import net.contargo.iris.connection.SeaportSubConnection;
-import net.contargo.iris.connection.SubConnection;
 import net.contargo.iris.connection.TerminalSubConnection;
 import net.contargo.iris.connection.service.MainRunConnectionService;
 import net.contargo.iris.distance.service.ConnectionDistanceService;
@@ -170,13 +170,13 @@ public class MainRunPartEnricherUnitTest {
 
         when(mainRunConnectionServiceMock.findRoutingConnectionBetweenTerminalAndSeaportByType(any(Terminal.class),
                     any(Seaport.class), eq(BARGE_RAIL), eq(subRouteParts))).thenReturn(mainrunConnection);
-        when(connectionDistanceServiceMock.getBargeDieselDistance(any(SubConnection.class))).thenReturn(TEN);
-        when(connectionDistanceServiceMock.getRailDieselDistance(any(SubConnection.class))).thenReturn(TEN);
-        when(connectionDistanceServiceMock.getRailElectricDistance(any(SubConnection.class))).thenReturn(TEN);
-        when(connectionDistanceServiceMock.getDieselDistance(any(SubConnection.class))).thenReturn(TEN);
-        when(connectionDistanceServiceMock.getDistance(any(SubConnection.class))).thenReturn(TEN);
-        when(mainRunDurationServiceMock.getSubRoutePartDuration(any(SubConnection.class), any(SubRoutePart.class),
-                    any(RoutePart.Direction.class))).thenReturn(TEN);
+        when(connectionDistanceServiceMock.getBargeDieselDistance(any(AbstractSubConnection.class))).thenReturn(TEN);
+        when(connectionDistanceServiceMock.getRailDieselDistance(any(AbstractSubConnection.class))).thenReturn(TEN);
+        when(connectionDistanceServiceMock.getRailElectricDistance(any(AbstractSubConnection.class))).thenReturn(TEN);
+        when(connectionDistanceServiceMock.getDieselDistance(any(AbstractSubConnection.class))).thenReturn(TEN);
+        when(connectionDistanceServiceMock.getDistance(any(AbstractSubConnection.class))).thenReturn(TEN);
+        when(mainRunDurationServiceMock.getSubRoutePartDuration(any(AbstractSubConnection.class),
+                    any(SubRoutePart.class), any(RoutePart.Direction.class))).thenReturn(TEN);
 
         sut.enrich(routePart, enricherContext);
 
@@ -212,13 +212,13 @@ public class MainRunPartEnricherUnitTest {
 
         when(mainRunConnectionServiceMock.findRoutingConnectionBetweenTerminalAndSeaportByType(any(Terminal.class),
                     any(Seaport.class), eq(BARGE_RAIL), eq(subRouteParts))).thenReturn(mainrunConnection);
-        when(connectionDistanceServiceMock.getBargeDieselDistance(any(SubConnection.class))).thenReturn(TEN);
-        when(connectionDistanceServiceMock.getRailDieselDistance(any(SubConnection.class))).thenReturn(TEN);
-        when(connectionDistanceServiceMock.getRailElectricDistance(any(SubConnection.class))).thenReturn(TEN);
-        when(connectionDistanceServiceMock.getDieselDistance(any(SubConnection.class))).thenReturn(TEN);
-        when(connectionDistanceServiceMock.getDistance(any(SubConnection.class))).thenReturn(TEN);
-        when(mainRunDurationServiceMock.getSubRoutePartDuration(any(SubConnection.class), any(SubRoutePart.class),
-                    any(RoutePart.Direction.class))).thenReturn(TEN);
+        when(connectionDistanceServiceMock.getBargeDieselDistance(any(AbstractSubConnection.class))).thenReturn(TEN);
+        when(connectionDistanceServiceMock.getRailDieselDistance(any(AbstractSubConnection.class))).thenReturn(TEN);
+        when(connectionDistanceServiceMock.getRailElectricDistance(any(AbstractSubConnection.class))).thenReturn(TEN);
+        when(connectionDistanceServiceMock.getDieselDistance(any(AbstractSubConnection.class))).thenReturn(TEN);
+        when(connectionDistanceServiceMock.getDistance(any(AbstractSubConnection.class))).thenReturn(TEN);
+        when(mainRunDurationServiceMock.getSubRoutePartDuration(any(AbstractSubConnection.class),
+                    any(SubRoutePart.class), any(RoutePart.Direction.class))).thenReturn(TEN);
 
         sut.enrich(routePart, enricherContext);
 

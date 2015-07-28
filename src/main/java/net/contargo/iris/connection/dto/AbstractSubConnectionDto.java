@@ -3,8 +3,8 @@ package net.contargo.iris.connection.dto;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+import net.contargo.iris.connection.AbstractSubConnection;
 import net.contargo.iris.connection.MainRunConnection;
-import net.contargo.iris.connection.SubConnection;
 import net.contargo.iris.route.RouteType;
 
 import java.math.BigDecimal;
@@ -24,7 +24,7 @@ import static com.fasterxml.jackson.annotation.JsonTypeInfo.Id.NAME;
         )
     }
 )
-public abstract class SubConnectionDto {
+public abstract class AbstractSubConnectionDto {
 
     private final Long id;
     private final String terminalUid;
@@ -32,8 +32,8 @@ public abstract class SubConnectionDto {
     private final BigDecimal railDieselDistance;
     private final BigDecimal railElectricDistance;
 
-    public SubConnectionDto(Long id, String terminalUid, BigDecimal bargeDieselDistance, BigDecimal railDieselDistance,
-        BigDecimal railElectricDistance) {
+    public AbstractSubConnectionDto(Long id, String terminalUid, BigDecimal bargeDieselDistance,
+        BigDecimal railDieselDistance, BigDecimal railElectricDistance) {
 
         this.id = id;
         this.terminalUid = terminalUid;
@@ -43,7 +43,7 @@ public abstract class SubConnectionDto {
     }
 
 
-    public SubConnectionDto(SubConnection subConnection) {
+    public AbstractSubConnectionDto(AbstractSubConnection subConnection) {
 
         this.id = subConnection.getId();
         this.terminalUid = subConnection.getTerminal().getUniqueId().toString();
@@ -85,5 +85,5 @@ public abstract class SubConnectionDto {
     public abstract RouteType getRouteType();
 
 
-    public abstract SubConnection toEntity(MainRunConnection parent);
+    public abstract AbstractSubConnection toEntity(MainRunConnection parent);
 }

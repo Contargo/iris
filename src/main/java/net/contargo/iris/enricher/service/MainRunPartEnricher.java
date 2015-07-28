@@ -2,8 +2,8 @@ package net.contargo.iris.enricher.service;
 
 import com.google.common.collect.Lists;
 
+import net.contargo.iris.connection.AbstractSubConnection;
 import net.contargo.iris.connection.MainRunConnection;
-import net.contargo.iris.connection.SubConnection;
 import net.contargo.iris.connection.service.MainRunConnectionService;
 import net.contargo.iris.distance.service.ConnectionDistanceService;
 import net.contargo.iris.mainrun.service.MainRunDurationService;
@@ -77,7 +77,7 @@ class MainRunPartEnricher implements RoutePartEnricher {
 
     private void prepareSubRouteParts(RoutePart routePart, MainRunConnection mainRunConnection) {
 
-        List<SubConnection> subConnectionList;
+        List<AbstractSubConnection> subConnectionList;
 
         if (routePart.getOrigin().equals(mainRunConnection.getSeaport())) {
             subConnectionList = mainRunConnection.getSubConnections();
@@ -87,7 +87,7 @@ class MainRunPartEnricher implements RoutePartEnricher {
 
         int i = 0;
 
-        for (SubConnection subConnection : subConnectionList) {
+        for (AbstractSubConnection subConnection : subConnectionList) {
             SubRoutePart subRoutePart = routePart.getSubRouteParts().get(i);
             subRoutePart.setBargeDieselDistance(connectionDistanceService.getBargeDieselDistance(subConnection));
             subRoutePart.setRailDieselDistance(connectionDistanceService.getRailDieselDistance(subConnection));

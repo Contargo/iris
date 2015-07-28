@@ -1,7 +1,7 @@
 package net.contargo.iris.distance.service;
 
+import net.contargo.iris.connection.AbstractSubConnection;
 import net.contargo.iris.connection.MainRunConnection;
-import net.contargo.iris.connection.SubConnection;
 import net.contargo.iris.connection.TerminalSubConnection;
 import net.contargo.iris.rounding.RoundingService;
 
@@ -42,7 +42,7 @@ public class ConnectionDistanceServiceImplUnitTest {
 
     private ConnectionDistanceServiceImpl sut;
 
-    private SubConnection subConnection;
+    private AbstractSubConnection subConnection;
 
     @Before
     public void setUp() {

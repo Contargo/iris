@@ -1,7 +1,7 @@
 package net.contargo.iris.distance.service;
 
+import net.contargo.iris.connection.AbstractSubConnection;
 import net.contargo.iris.connection.MainRunConnection;
-import net.contargo.iris.connection.SubConnection;
 
 import java.math.BigDecimal;
 
@@ -61,17 +61,17 @@ public interface ConnectionDistanceService {
     BigDecimal getBargeDieselDistance(MainRunConnection mainrunConnection);
 
 
-    BigDecimal getBargeDieselDistance(SubConnection subConnection);
+    BigDecimal getBargeDieselDistance(AbstractSubConnection subConnection);
 
 
-    BigDecimal getRailElectricDistance(SubConnection subConnection);
+    BigDecimal getRailElectricDistance(AbstractSubConnection subConnection);
 
 
-    BigDecimal getRailDieselDistance(SubConnection subConnection);
+    BigDecimal getRailDieselDistance(AbstractSubConnection subConnection);
 
 
-    BigDecimal getDieselDistance(SubConnection subConnection);
+    BigDecimal getDieselDistance(AbstractSubConnection subConnection);
 
 
-    BigDecimal getDistance(SubConnection subConnection);
+    BigDecimal getDistance(AbstractSubConnection subConnection);
 }

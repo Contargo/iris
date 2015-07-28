@@ -3,7 +3,10 @@ package net.contargo.iris.connection;
 import net.contargo.iris.GeoLocation;
 import net.contargo.iris.route.RouteType;
 import net.contargo.iris.terminal.Terminal;
+
 import net.contargo.validation.bigdecimal.BigDecimalValidate;
+
+import java.math.BigDecimal;
 
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
@@ -13,8 +16,8 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+
 import javax.validation.constraints.NotNull;
-import java.math.BigDecimal;
 
 
 /**
@@ -23,7 +26,7 @@ import java.math.BigDecimal;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "subconnectionType")
-public abstract class SubConnection {
+public abstract class AbstractSubConnection {
 
     private static final long TEN = 10L;
 

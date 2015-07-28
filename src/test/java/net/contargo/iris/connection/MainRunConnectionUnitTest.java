@@ -32,7 +32,7 @@ public class MainRunConnectionUnitTest {
     private MainRunConnection sut;
     private Seaport seaport;
     private Terminal terminal;
-    private List<SubConnection> subConnections;
+    private List<AbstractSubConnection> subConnections;
 
     @Before
     public void setUp() {
@@ -43,12 +43,12 @@ public class MainRunConnectionUnitTest {
         seaport = new Seaport();
         terminal = new Terminal();
 
-        SubConnection sub1 = new TerminalSubConnection();
+        AbstractSubConnection sub1 = new TerminalSubConnection();
         sub1.setRailDieselDistance(TEN);
         sub1.setRailElectricDistance(TEN);
         sub1.setBargeDieselDistance(TEN);
 
-        SubConnection sub2 = new TerminalSubConnection();
+        AbstractSubConnection sub2 = new TerminalSubConnection();
         sub2.setRailDieselDistance(TEN);
         sub2.setRailElectricDistance(TEN);
         sub2.setBargeDieselDistance(TEN);

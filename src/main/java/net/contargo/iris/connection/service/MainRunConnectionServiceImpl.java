@@ -1,8 +1,8 @@
 package net.contargo.iris.connection.service;
 
+import net.contargo.iris.connection.AbstractSubConnection;
 import net.contargo.iris.connection.MainRunConnection;
 import net.contargo.iris.connection.SeaportSubConnection;
-import net.contargo.iris.connection.SubConnection;
 import net.contargo.iris.connection.TerminalSubConnection;
 import net.contargo.iris.connection.persistence.MainRunConnectionRepository;
 import net.contargo.iris.route.RouteType;
@@ -89,7 +89,7 @@ public class MainRunConnectionServiceImpl implements MainRunConnectionService {
             throw new DuplicateMainRunConnectionException();
         }
 
-        for (SubConnection subConnection : mainrunConnection.getSubConnections()) {
+        for (AbstractSubConnection subConnection : mainrunConnection.getSubConnections()) {
             subConnection.setTerminal(terminalService.getByUniqueId(subConnection.getTerminal().getUniqueId()));
 
             if (subConnection instanceof SeaportSubConnection) {

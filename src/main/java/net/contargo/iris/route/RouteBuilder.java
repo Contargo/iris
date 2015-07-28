@@ -3,8 +3,8 @@ package net.contargo.iris.route;
 import com.google.common.collect.Lists;
 
 import net.contargo.iris.GeoLocation;
+import net.contargo.iris.connection.AbstractSubConnection;
 import net.contargo.iris.connection.SeaportSubConnection;
-import net.contargo.iris.connection.SubConnection;
 import net.contargo.iris.connection.TerminalSubConnection;
 import net.contargo.iris.container.ContainerState;
 import net.contargo.iris.container.ContainerType;
@@ -93,11 +93,11 @@ public class RouteBuilder {
     }
 
 
-    public void goToSeaportViaSubConnections(Seaport seaport, List<SubConnection> subConnections) {
+    public void goToSeaportViaSubConnections(Seaport seaport, List<AbstractSubConnection> subConnections) {
 
         List<SubRoutePart> subs = new ArrayList<>();
 
-        for (SubConnection subConnection : Lists.reverse(subConnections)) {
+        for (AbstractSubConnection subConnection : Lists.reverse(subConnections)) {
             SubRoutePart sub = new SubRoutePart();
 
             if (subConnection instanceof TerminalSubConnection) {
@@ -126,11 +126,11 @@ public class RouteBuilder {
     }
 
 
-    public void goToTerminalViaSubConnections(Terminal terminal, List<SubConnection> subConnections) {
+    public void goToTerminalViaSubConnections(Terminal terminal, List<AbstractSubConnection> subConnections) {
 
         List<SubRoutePart> subs = new ArrayList<>();
 
-        for (SubConnection subConnection : subConnections) {
+        for (AbstractSubConnection subConnection : subConnections) {
             SubRoutePart sub = new SubRoutePart();
 
             if (subConnection instanceof TerminalSubConnection) {

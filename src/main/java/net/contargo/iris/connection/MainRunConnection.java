@@ -76,7 +76,7 @@ public class MainRunConnection {
     private Boolean enabled = Boolean.TRUE;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "parentConnection", orphanRemoval = true, cascade = CascadeType.ALL)
-    private List<SubConnection> subConnections;
+    private List<AbstractSubConnection> subConnections;
 
     public MainRunConnection() {
 
@@ -145,7 +145,7 @@ public class MainRunConnection {
         if (routeType == BARGE_RAIL) {
             BigDecimal distance = BigDecimal.ZERO;
 
-            for (SubConnection subConnection : subConnections) {
+            for (AbstractSubConnection subConnection : subConnections) {
                 distance = distance.add(subConnection.getBargeDieselDistance());
             }
 
@@ -167,7 +167,7 @@ public class MainRunConnection {
         if (routeType == BARGE_RAIL) {
             BigDecimal distance = BigDecimal.ZERO;
 
-            for (SubConnection subConnection : subConnections) {
+            for (AbstractSubConnection subConnection : subConnections) {
                 distance = distance.add(subConnection.getRailDieselDistance());
             }
 
@@ -189,7 +189,7 @@ public class MainRunConnection {
         if (routeType == BARGE_RAIL) {
             BigDecimal distance = BigDecimal.ZERO;
 
-            for (SubConnection subConnection : subConnections) {
+            for (AbstractSubConnection subConnection : subConnections) {
                 distance = distance.add(subConnection.getRailElectricDistance());
             }
 
@@ -230,13 +230,13 @@ public class MainRunConnection {
     }
 
 
-    public List<SubConnection> getSubConnections() {
+    public List<AbstractSubConnection> getSubConnections() {
 
         return subConnections;
     }
 
 
-    public void setSubConnections(List<SubConnection> subConnections) {
+    public void setSubConnections(List<AbstractSubConnection> subConnections) {
 
         this.subConnections = subConnections;
     }
@@ -270,7 +270,7 @@ public class MainRunConnection {
         }
 
         if (!subConnections.isEmpty()) {
-            for (SubConnection subConnection : subConnections) {
+            for (AbstractSubConnection subConnection : subConnections) {
                 if (!subConnection.isEnabled()) {
                     return false;
                 }

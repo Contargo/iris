@@ -2,8 +2,8 @@ package net.contargo.iris.connection.service;
 
 import com.google.common.collect.Lists;
 
+import net.contargo.iris.connection.AbstractSubConnection;
 import net.contargo.iris.connection.MainRunConnection;
-import net.contargo.iris.connection.SubConnection;
 import net.contargo.iris.route.SubRoutePart;
 import net.contargo.iris.seaport.Seaport;
 
@@ -26,7 +26,7 @@ public class BargeRailConnectionFinderService {
                 continue;
             }
 
-            List<SubConnection> subConnectionList = connection.getSubConnections();
+            List<AbstractSubConnection> subConnectionList = connection.getSubConnections();
 
             boolean reverse = false;
 
@@ -45,13 +45,13 @@ public class BargeRailConnectionFinderService {
 
 
     private boolean subRoutePartsAndSubconnectionsMatch(List<SubRoutePart> subRouteParts,
-        List<SubConnection> subConnections, boolean reverse) {
+        List<AbstractSubConnection> subConnections, boolean reverse) {
 
         int i = 0;
 
         while (i < subRouteParts.size()) {
             SubRoutePart subRoutePart = subRouteParts.get(i);
-            SubConnection subConnection = subConnections.get(i);
+            AbstractSubConnection subConnection = subConnections.get(i);
 
             if (!subConnection.matchesOriginAndDestination(subRoutePart.getOrigin(), subRoutePart.getDestination(),
                         reverse)) {

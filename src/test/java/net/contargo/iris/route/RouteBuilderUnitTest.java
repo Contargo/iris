@@ -1,8 +1,8 @@
 package net.contargo.iris.route;
 
 import net.contargo.iris.GeoLocation;
+import net.contargo.iris.connection.AbstractSubConnection;
 import net.contargo.iris.connection.SeaportSubConnection;
-import net.contargo.iris.connection.SubConnection;
 import net.contargo.iris.connection.TerminalSubConnection;
 import net.contargo.iris.container.ContainerType;
 import net.contargo.iris.seaport.Seaport;
@@ -119,7 +119,7 @@ public class RouteBuilderUnitTest {
         subConnection2.setTerminal(terminal2);
         subConnection2.setTerminal2(terminal);
 
-        List<SubConnection> subconnections = asList(subConnection1, subConnection2);
+        List<AbstractSubConnection> subconnections = asList(subConnection1, subConnection2);
 
         sut = new RouteBuilder(terminal, THIRTY, FULL);
 
@@ -158,7 +158,7 @@ public class RouteBuilderUnitTest {
         subConnection2.setTerminal(terminal2);
         subConnection2.setTerminal2(terminal);
 
-        List<SubConnection> subconnections = asList(subConnection1, subConnection2);
+        List<AbstractSubConnection> subconnections = asList(subConnection1, subConnection2);
 
         sut = new RouteBuilder(seaport, THIRTY, FULL);
 

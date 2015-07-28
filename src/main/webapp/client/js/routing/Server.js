@@ -5,7 +5,6 @@ var Server = function (contextpath, errorhandler) {
     }
 
     var api = contextpath + "api/";
-    var management = "management/";
     var countriesUrl = api + "countries";
     var geoCodeUrl = api + "geocodes/";
     var seaPortsUrl = api + "seaports";
@@ -32,7 +31,7 @@ var Server = function (contextpath, errorhandler) {
             dataType: "json",
             async: mode,
             cache: false,
-            error: function (jqXHR, textStatus, errorThrown) {
+            error: function (jqXHR) {
                 if (permanentFailureMessage === undefined) {
                     if (!what) {
                         what = "Abfrage des Servers";
@@ -43,7 +42,7 @@ var Server = function (contextpath, errorhandler) {
                     reportError(permanentFailureMessage, true);
                     thrownPermanentFailurs[jqXHR.status] = jqXHR;
                 }
-                if(typeof  errorFunction === "function"){
+                if (typeof  errorFunction === "function") {
                     errorFunction();
                 }
 

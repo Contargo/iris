@@ -1,10 +1,12 @@
 var TriangleDropDownWithAddButtonView = Backbone.View.extend({
-    templateName : "TriangleDropDownWithAddButtonView",
-    events : {
-        "click .add" : "addclicked"
+
+    templateName: "TriangleDropDownWithAddButtonView",
+    events: {
+        "click .add": "addclicked"
     },
-    initialize : function(options) {
-        _.bindAll(this, "render", "saveselected", "addclicked" );
+
+    initialize: function (options) {
+        _.bindAll(this, "render", "saveselected", "addclicked");
 
         Helper.isDefined(options, "options");
         Helper.isDefined(this.model, "model");
@@ -16,19 +18,21 @@ var TriangleDropDownWithAddButtonView = Backbone.View.extend({
         this.render();
     },
 
-    render : function() {
+    render: function () {
 
-        var model = {};
-        this.$el.html(this.template(model));
+        this.$el.html(this.template({}));
 
-        var node = this.$(".autoComplete");
-        var dropdown = new TriangularTrafficDropDownView({el: node, model: this.model});
+        new TriangularTrafficDropDownView({
+            el: this.$(".autoComplete"),
+            model: this.model
+        });
     },
 
-    saveselected : function(e) {
+    saveselected: function (e) {
         this.current = e;
     },
-    addclicked : function() {
+
+    addclicked: function () {
         if (this.current) {
             this.model.trigger("selectedadded", this.current);
         }
@@ -36,10 +40,9 @@ var TriangleDropDownWithAddButtonView = Backbone.View.extend({
     }
 });
 
-
 var TriangularTrafficDropDownView = Backbone.View.extend({
 
-    initialize : function(options) {
+    initialize: function (options) {
 
         _.bindAll(this, "render", "addOne", "selectedchanged");
         this.model.bind("add", this.render);
@@ -66,36 +69,34 @@ var TriangularTrafficDropDownView = Backbone.View.extend({
 
         this.render();
     },
-    render: function() {
+
+    render: function () {
         this.$el.empty();
-        var model = this.model.toJSON();
         this.addAll();
-        this.$el.select2({ width: 'resolve'});
+        this.$el.select2({width: 'resolve'});
+
         var that = this;
-        this.$el.on('change', function(e){
+        this.$el.on('change', function (e) {
             that.selectedchanged(e);
         });
-
     },
-    addOne: function(model) {
-        if(model.get("invisible")){
+
+    addOne: function (model) {
+        if (model.get("invisible")) {
             return;
         }
         var option = $("<option/>").html(model.get("name"));
-        if(model.get("defaultValue")){
+        if (model.get("defaultValue")) {
             option.attr("selected", "selected");
         }
         this.$el.append(option);
-
     },
-    addAll : function() {
+
+    addAll: function () {
         this.model.forEach(this.addOne);
     },
-    selectedchanged : function(element) {
-        var elementName = element.val;
-        var selectedElement = this.model.getByName(elementName);
-        this.model.trigger("selectedchanged", selectedElement);
+
+    selectedchanged: function (element) {
+        this.model.trigger("selectedchanged", this.model.getByName(element.val));
     }
 });
-
-

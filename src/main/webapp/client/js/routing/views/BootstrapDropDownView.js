@@ -1,7 +1,6 @@
 var BootstrapDropDownView = Backbone.View.extend({
 
     initialize: function (options) {
-
         _.bindAll(this, "render", "addOne", "selectedchanged");
 
         this.model.bind("add", this.render);
@@ -25,7 +24,7 @@ var BootstrapDropDownView = Backbone.View.extend({
 
     getOutputField: function (outputField) {
         if (outputField !== undefined && outputField !== null) {
-           return outputField;
+            return outputField;
         } else {
             return "name";
         }
@@ -37,10 +36,8 @@ var BootstrapDropDownView = Backbone.View.extend({
             this.model.setDefaultToSelected();
         }
 
-        var model = this.model.toJSON();
         this.$el.html("<div class='btn-group'><ul class='dropdown-menu'></ul></div>");
         this.addAll();
-
     },
 
     addOne: function (model) {
@@ -70,7 +67,7 @@ var BootstrapDropDownView = Backbone.View.extend({
         var dropdownToggle;
 
         this.$("a.dropdown-toggle").remove();
-        if(this.title !== undefined && this.title !== null){
+        if (this.title !== undefined && this.title !== null) {
             dropdownToggle = $("<a class='btn dropdown-toggle' data-toggle='dropdown'></a>").html(this.title + "&nbsp;<span class='caret'></span>");
         } else {
             dropdownToggle = $("<a class='btn dropdown-toggle' data-toggle='dropdown'></a>").attr("id", cid).html(selectedElement.get(this.outputField) + "&nbsp;<span class='caret'></span>");
@@ -79,7 +76,8 @@ var BootstrapDropDownView = Backbone.View.extend({
 
         this.changeSelectStrategy(selectedElement);
     },
-    changeSelectStrategy: function(selectedElement){
+
+    changeSelectStrategy: function (selectedElement) {
         selectedElement.set('selected', true);
     }
 });

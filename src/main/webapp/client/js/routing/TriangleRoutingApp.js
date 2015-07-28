@@ -70,11 +70,11 @@ var TriangleRoutingApp = Backbone.Model.extend({
 
     queryCountries: function () {
         var countries = this.countries;
-        
+
         this.server.countries(function (countryList) {
             countries.reset(countryList);
         });
-        
+
         countries.setDefaultByValue("DE");
     },
 

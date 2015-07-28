@@ -1,45 +1,3 @@
-var TriangleDropDownWithAddButtonView = Backbone.View.extend({
-
-    templateName: "TriangleDropDownWithAddButtonView",
-    events: {
-        "click .add": "addclicked"
-    },
-
-    initialize: function (options) {
-        _.bindAll(this, "render", "saveselected", "addclicked");
-
-        Helper.isDefined(options, "options");
-        Helper.isDefined(this.model, "model");
-
-        this.template = getTemplate(this.templateName);
-
-        this.model.bind("selectedchanged", this.saveselected);
-
-        this.render();
-    },
-
-    render: function () {
-
-        this.$el.html(this.template({}));
-
-        new TriangularTrafficDropDownView({
-            el: this.$(".autoComplete"),
-            model: this.model
-        });
-    },
-
-    saveselected: function (e) {
-        this.current = e;
-    },
-
-    addclicked: function () {
-        if (this.current) {
-            this.model.trigger("selectedadded", this.current);
-        }
-        return false;
-    }
-});
-
 var TriangularTrafficDropDownView = Backbone.View.extend({
 
     initialize: function (options) {
@@ -98,5 +56,47 @@ var TriangularTrafficDropDownView = Backbone.View.extend({
 
     selectedchanged: function (element) {
         this.model.trigger("selectedchanged", this.model.getByName(element.val));
+    }
+});
+
+var TriangleDropDownWithAddButtonView = Backbone.View.extend({
+
+    templateName: "TriangleDropDownWithAddButtonView",
+    events: {
+        "click .add": "addclicked"
+    },
+
+    initialize: function (options) {
+        _.bindAll(this, "render", "saveselected", "addclicked");
+
+        Helper.isDefined(options, "options");
+        Helper.isDefined(this.model, "model");
+
+        this.template = getTemplate(this.templateName);
+
+        this.model.bind("selectedchanged", this.saveselected);
+
+        this.render();
+    },
+
+    render: function () {
+
+        this.$el.html(this.template({}));
+
+        new TriangularTrafficDropDownView({
+            el: this.$(".autoComplete"),
+            model: this.model
+        });
+    },
+
+    saveselected: function (e) {
+        this.current = e;
+    },
+
+    addclicked: function () {
+        if (this.current) {
+            this.model.trigger("selectedadded", this.current);
+        }
+        return false;
     }
 });

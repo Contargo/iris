@@ -477,3 +477,26 @@ span.error {
 .margin-bottom-5 {
     margin-bottom: 5px;
 }
+
+.float-left {
+    float: left;
+}
+
+.subconnection-header-normal {
+    width: 210px;
+    padding-left: 5px;
+    padding-right: 5px;
+    text-align: center;
+}
+
+.subconnection-header-small {
+    width: 90px;
+    padding-left: 5px;
+    padding-right: 5px;
+    margin-right: 5px;
+    text-align: center;
+}
+
+.subconnection-header-normal:first-child {
+    margin-right: 7px;
+}

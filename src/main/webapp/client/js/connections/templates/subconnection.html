@@ -1,4 +1,15 @@
 <div class="controls form-inline">
+    {{#if first}}
+    <div class="subconnection-headers">
+        <div class="float-left subconnection-header-normal">Endpoint 1</div>
+        <div class="float-left subconnection-header-normal">Endpoint 2</div>
+        <div class="subconnection-header-small float-left">Routetype</div>
+        <div class="subconnection-header-small float-left">Barge km</div>
+        <div class="subconnection-header-small float-left">Rail km (Diesel)</div>
+        <div class="subconnection-header-small float-left clearfix">Rail km (El.)</div>
+    </div>
+    <br>
+    {{/if}}
     <input class="start" title="start" type="text" readonly value="{{model.endpoint1.name}}">
     {{#if latest}}
     <select class="end" title="end">

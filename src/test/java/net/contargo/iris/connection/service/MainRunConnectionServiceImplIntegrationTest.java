@@ -52,6 +52,7 @@ public class MainRunConnectionServiceImplIntegrationTest {
 
         em.createQuery("DELETE FROM SubConnection c").executeUpdate();
         em.createQuery("DELETE FROM MainRunConnection c").executeUpdate();
+        em.createQuery("DELETE FROM RouteDataRevision r").executeUpdate();
         em.createQuery("DELETE FROM Terminal t").executeUpdate();
         em.createQuery("DELETE FROM Seaport s").executeUpdate();
 

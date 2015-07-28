@@ -35,7 +35,8 @@ var SubconnectionView = Backbone.View.extend({
             model: this.createTemplateModel(this.model),
             terminals: this.terminals.toJSON(),
             latest: this.latest,
-            latestAndNotFirst: this.latest && !this.first
+            latestAndNotFirst: this.latest && !this.first,
+            first: this.first
         };
         this.$el.html(this.template(model));
     },

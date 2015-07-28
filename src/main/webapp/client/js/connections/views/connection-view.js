@@ -75,7 +75,6 @@ var ConnectionView = Backbone.View.extend({
 
     createSubconnections: function() {
         'use strict';
-        this.$('#subconnections').empty();
         var that = this;
         this.model.get('subconnections').each(function(subconnection, index) {
             var subView = SubconnectionView.prototype.create({

@@ -57,7 +57,6 @@ var AddressListView = Backbone.View.extend({
     },
 
     collapsables: function () {
-
         this.$('.collapsableindicator').on('hide', function (e) {
 
             var $header = $(e.target).parent(".accordion-group").find(".collapsable-indicator");
@@ -68,11 +67,9 @@ var AddressListView = Backbone.View.extend({
             var $header = $(e.target).parent(".accordion-group").find(".collapsable-indicator");
             $header.addClass("accordion-heading-open");
         });
-
     },
 
     addOne: function (address) {
-
         var view = new AddressView({
             model: address
         });
@@ -86,9 +83,7 @@ var AddressListView = Backbone.View.extend({
     },
 
     expand: function (value) {
-
         if (value) {
-
             $(this.$(".accordion-body")).addClass('in');
             $(this.$(".accordion-toggle")).addClass('accordion-heading-open');
             $(this.$(".accordion-body")).css('height', 'auto');
@@ -98,7 +93,6 @@ var AddressListView = Backbone.View.extend({
             $(this.$(".accordion-body")).css('height', '0px');
         }
     }
-
 });
 
 var AddressCategoryView = Backbone.View.extend({
@@ -106,9 +100,7 @@ var AddressCategoryView = Backbone.View.extend({
     templateName: "AddressCategoryView",
 
     initialize: function (options) {
-
         Helper.isDefined(options.searchStatus, "searchStatus");
-
         this.searchStatus = options.searchStatus;
 
         this.template = getTemplate(this.templateName);
@@ -125,7 +117,6 @@ var AddressCategoryView = Backbone.View.extend({
     },
 
     render: function () {
-
         this.$el.html("");
 
         if (this.model.length === 0 && this.searchStatus.haveSearched()) {
@@ -145,14 +136,14 @@ var AddressCategoryView = Backbone.View.extend({
             var addressListHasNonEmptyAddresses = false;
 
             this.model.each(function (addressList) {
-                if(typeof addressList.get("addresses").first() !== "undefined") {
+                if (typeof addressList.get("addresses").first() !== "undefined") {
                     addressListHasNonEmptyAddresses = true;
                 }
             });
             var expand = (this.model.size() === 1);
-            var self = this;
+            var that = this;
             this.model.each(function (addressList) {
-                if(!(typeof addressList.get("addresses").first() === "undefined" && addressListHasNonEmptyAddresses)) {
+                if (!(typeof addressList.get("addresses").first() === "undefined" && addressListHasNonEmptyAddresses)) {
                     var view = new AddressListView({
                         model: addressList
                     });
@@ -161,14 +152,13 @@ var AddressCategoryView = Backbone.View.extend({
                         view.expand(true);
                     }
 
-                    self.$("#addressCategoryAccordion").append(view.el);
+                    that.$("#addressCategoryAccordion").append(view.el);
                 }
-            });           
+            });
         }
     },
 
     selectedChanged: function (address) {
-
         var oneElement = (this.model.size() === 1);
 
         this.model.each(function (addressList) {
@@ -198,7 +188,7 @@ var DetailledAddressView = Backbone.View.extend({
 
     templateName: "DetailedAddress",
 
-    initialize: function (options) {
+    initialize: function () {
         _.bindAll(this, "render");
 
         this.template = getTemplate(this.templateName);
@@ -257,12 +247,10 @@ var AddressView = Backbone.View.extend({
     },
 
     render: function () {
-
-        var model = this.model.toJSON();
-        this.$el.html(this.template(model));
+        this.$el.html(this.template(this.model.toJSON()));
 
         if (this.showdetails) {
-            this.addressView = new DetailledAddressView({
+            new DetailledAddressView({
                 el: this.$(".address"),
                 model: this.model
             });

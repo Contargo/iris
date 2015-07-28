@@ -23,7 +23,7 @@ import javax.validation.constraints.NotNull;
 /**
  * @author  Sandra Thieme - thieme@synyx.de
  */
-@Entity
+@Entity(name = "SubConnection")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "subconnectionType")
 public abstract class AbstractSubConnection {

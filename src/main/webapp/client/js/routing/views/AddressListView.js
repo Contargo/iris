@@ -1,3 +1,81 @@
+var DetailledAddressView = Backbone.View.extend({
+
+    templateName: "DetailedAddress",
+
+    initialize: function () {
+        _.bindAll(this, "render");
+
+        this.template = getTemplate(this.templateName);
+
+        this.model.bind("change", this.render);
+
+        this.render();
+    },
+
+    render: function () {
+
+        var model = this.model.toJSON();
+
+        var details = "";
+        if (model.address) {
+            _.each(model.address, function (e, f) {
+                details = details + "<strong>" + f + ":</strong> " + e + "<br />";
+            });
+        }
+
+        details = details + "<strong>latitude:</strong> " + model.latitude + "<br />";
+        details = details + "<strong>longitude:</strong> " + model.longitude + "<br />";
+
+        model.hasDetails = (details.length > 0);
+        model.details = details;
+
+        this.$el.html(this.template(model));
+
+        this.$(".info").popover();
+
+        Helper.setPopoverOnClickCloseEvent(this);
+    }
+});
+
+var AddressView = Backbone.View.extend({
+
+    tagName: "tr",
+    className: "address",
+    templateName: "Address",
+
+    initialize: function (options) {
+        _.bindAll(this, "render", "selectAddress");
+
+        Helper.isDefined(options, "options");
+        Helper.isDefined(this.model, "model");
+
+        this.template = getTemplate(this.templateName);
+
+        this.model.bind("change", this.render);
+
+        this.showdetails = true;
+    },
+
+    events: {
+        "click .selectAddressRow": "selectAddress"
+    },
+
+    render: function () {
+        this.$el.html(this.template(this.model.toJSON()));
+
+        if (this.showdetails) {
+            new DetailledAddressView({
+                el: this.$(".address"),
+                model: this.model
+            });
+        }
+    },
+
+    selectAddress: function () {
+        this.model.set("selected", !this.model.get("selected"));
+    }
+});
+
 var AddressListView = Backbone.View.extend({
 
     templateName: "AddressList",
@@ -181,83 +259,5 @@ var AddressCategoryView = Backbone.View.extend({
                 this.$("#collapse" + addressList.cid).css('height', '0px');
             }
         });
-    }
-});
-
-var DetailledAddressView = Backbone.View.extend({
-
-    templateName: "DetailedAddress",
-
-    initialize: function () {
-        _.bindAll(this, "render");
-
-        this.template = getTemplate(this.templateName);
-
-        this.model.bind("change", this.render);
-
-        this.render();
-    },
-
-    render: function () {
-
-        var model = this.model.toJSON();
-
-        var details = "";
-        if (model.address) {
-            _.each(model.address, function (e, f) {
-                details = details + "<strong>" + f + ":</strong> " + e + "<br />";
-            });
-        }
-
-        details = details + "<strong>latitude:</strong> " + model.latitude + "<br />";
-        details = details + "<strong>longitude:</strong> " + model.longitude + "<br />";
-
-        model.hasDetails = (details.length > 0);
-        model.details = details;
-
-        this.$el.html(this.template(model));
-
-        this.$(".info").popover();
-
-        Helper.setPopoverOnClickCloseEvent(this);
-    }
-});
-
-var AddressView = Backbone.View.extend({
-
-    tagName: "tr",
-    className: "address",
-    templateName: "Address",
-
-    initialize: function (options) {
-        _.bindAll(this, "render", "selectAddress");
-
-        Helper.isDefined(options, "options");
-        Helper.isDefined(this.model, "model");
-
-        this.template = getTemplate(this.templateName);
-
-        this.model.bind("change", this.render);
-
-        this.showdetails = true;
-    },
-
-    events: {
-        "click .selectAddressRow": "selectAddress"
-    },
-
-    render: function () {
-        this.$el.html(this.template(this.model.toJSON()));
-
-        if (this.showdetails) {
-            new DetailledAddressView({
-                el: this.$(".address"),
-                model: this.model
-            });
-        }
-    },
-
-    selectAddress: function () {
-        this.model.set("selected", !this.model.get("selected"));
     }
 });

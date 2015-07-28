@@ -9,11 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
-import java.io.UnsupportedEncodingException;
-
 import java.lang.invoke.MethodHandles;
-
-import java.net.URLEncoder;
 
 import java.util.Map;
 
@@ -73,7 +69,7 @@ class NominatimUrlBuilder {
     String buildUrl(String street, String postalCode, String city, String country, String name) {
 
         String url = baseUrl + SEARCH_URL + buildQuery(street, postalCode, city, name) + COUNTRY
-            + encodeUrl(buildCountryCodeList(country)) + FORMAT + ADDRESS_DETAILS + ACCEPT_LANGUAGE + language;
+            + buildCountryCodeList(country) + FORMAT + ADDRESS_DETAILS + ACCEPT_LANGUAGE + language;
 
         LOG.debug(LOG_TWO_PLACEHOLDERS, LOG_BUILT_URL, url);
 
@@ -111,24 +107,6 @@ class NominatimUrlBuilder {
 
 
     /**
-     * Appends the query to the base URL using Nominatim's special phrases like 'suburb' for specific searching.
-     *
-     * @param  city  the city
-     * @param  specialPhrase  'suburb' or 'village' or any other specific place type
-     *
-     * @return  ready URL to send a GET request to Nominatim
-     */
-    String buildSpecialPhrasesUrl(String city, String specialPhrase) {
-
-        String specialPhrasesUrl = baseUrl + SEARCH_URL + buildSpecialPhraseQuery(city, specialPhrase) + "&limit=100"
-            + FORMAT + ACCEPT_LANGUAGE + language + ADDRESS_DETAILS;
-        LOG.debug(LOG_TWO_PLACEHOLDERS, LOG_BUILT_URL, specialPhrasesUrl);
-
-        return specialPhrasesUrl;
-    }
-
-
-    /**
      * Build the osm url within the osm id.
      *
      * @param  osmId  to build osm url
@@ -145,8 +123,7 @@ class NominatimUrlBuilder {
 
 
     /**
-     * Builds the query and converts it to URL encoded format with {@link java.net.URLEncoder} (e.g. replaces
-     * whitespaces by plus and commas by %2C).
+     * Builds the query.
      *
      * @param  street:  street name + house number
      * @param  postalCode
@@ -163,54 +140,7 @@ class NominatimUrlBuilder {
         appendStringWithSeparatorIfHasText(queryBuilder, city, WHITESPACE);
         appendStringWithSeparatorIfHasText(queryBuilder, name, WHITESPACE);
 
-        String query = queryBuilder.toString();
-        String encodedUrl = encodeUrl(query);
-
-        return encodedUrl == null ? query : encodedUrl;
-    }
-
-
-    /**
-     * Builds the query with special phrase and city and converts it to URL encoded format with
-     * {@link java.net.URLEncoder}.
-     *
-     * @param  city
-     * @param  specialPhrase
-     *
-     * @return  special phrases query
-     */
-    String buildSpecialPhraseQuery(String city, String specialPhrase) {
-
-        StringBuilder queryBuilder = new StringBuilder();
-
-        appendStringWithSeparatorIfHasText(queryBuilder, specialPhrase, WHITESPACE);
-        appendStringWithSeparatorIfHasText(queryBuilder, city, "");
-
-        String query = queryBuilder.toString();
-        String encodedUrl = encodeUrl(query);
-
-        return encodedUrl == null ? query : encodedUrl;
-    }
-
-
-    /**
-     * Encodes an URL with {@link java.net.URLEncoder}.
-     *
-     * @param  url  String
-     *
-     * @return  encoded URL String
-     */
-    private String encodeUrl(String url) {
-
-        String result = null;
-
-        try {
-            result = URLEncoder.encode(url, "UTF-8");
-        } catch (UnsupportedEncodingException ex) {
-            LOG.warn("Could not encode this String to URL: {} ", url);
-        }
-
-        return result;
+        return queryBuilder.toString();
     }
 
 

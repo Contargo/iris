@@ -74,7 +74,7 @@ public class NominatimUrlBuilderUnitTest {
         assertThat(url, containsString("format=json"));
 
         // URL encoding results in: whitespaces are replaced by plus and commas by %2C
-        assertThat(url, containsString("karlstrasse+68%2C76137+karlsruhe"));
+        assertThat(url, containsString("karlstrasse 68,76137 karlsruhe"));
         assertThat(url, containsString("countrycodes=de"));
     }
 
@@ -89,21 +89,7 @@ public class NominatimUrlBuilderUnitTest {
         assertThat(url, containsString("format=json"));
         assertThat(url, containsString("karlsruhe"));
 
-        assertThat(url, anyOf(containsString("countrycodes=DE%2CNL"), containsString("countrycodes=NL%2CDE")));
-    }
-
-
-    @Test
-    public void testConstructorAndBuildUrlWithSpecialPhrases() {
-
-        String url = sut.buildSpecialPhrasesUrl("karlsruhe", "suburb");
-
-        assertThat(url, startsWith("http://maps.contargo.net/nominatim/search.php?"));
-        assertThat(url, containsString("accept-language=de"));
-        assertThat(url, containsString("format=json"));
-        assertThat(url, containsString("q=suburb+karlsruhe"));
-        assertThat(url, containsString("addressdetails=1"));
-        assertThat(url, containsString("limit=100"));
+        assertThat(url, anyOf(containsString("countrycodes=DE,NL"), containsString("countrycodes=NL,DE")));
     }
 
 
@@ -113,24 +99,16 @@ public class NominatimUrlBuilderUnitTest {
         // URL encoding results in: whitespaces are replaced by plus and commas by %2C
 
         String query = sut.buildQuery("karlstrasse 68", "76137", "karlsruhe", null);
-        assertThat(query, containsString("karlstrasse+68%2C76137+karlsruhe"));
+        assertThat(query, containsString("karlstrasse 68,76137 karlsruhe"));
 
         query = sut.buildQuery("karlstrasse 68", "76137", "karlsruhe", null);
-        assertThat(query, containsString("karlstrasse+68%2C76137+karlsruhe"));
+        assertThat(query, containsString("karlstrasse 68,76137 karlsruhe"));
 
         query = sut.buildQuery("", "", "karlsruhe", null);
         assertThat(query, containsString("karlsruhe"));
 
         query = sut.buildQuery(null, "76137", "karlsruhe", "Fotostudio Becker");
-        assertThat(query, containsString("76137+karlsruhe+Fotostudio+Becker"));
-    }
-
-
-    @Test
-    public void testBuildSpecialPhraseQuery() {
-
-        String query = sut.buildSpecialPhraseQuery("karlsruhe", "suburb");
-        assertThat(query, containsString("suburb+karlsruhe"));
+        assertThat(query, containsString("76137 karlsruhe Fotostudio Becker"));
     }
 
 

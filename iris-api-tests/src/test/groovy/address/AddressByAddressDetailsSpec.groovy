@@ -30,6 +30,9 @@ class AddressByAddressDetailsSpec extends Specification {
         then: "response status code should be 200 (OK)"
         response.status == 200
 
+        and: "there should be 4 objects in the response list"
+        listOfAddressLists.size() == 4
+
         and: "the staticAddressesObject contains a parent address and a list of static addresses"
         def parentAddressStatic = staticAddressesObject.parentAddress
         def staticaddresses = staticAddressesObject.addresses
@@ -56,25 +59,25 @@ class AddressByAddressDetailsSpec extends Specification {
         and: "the nominatimAddressesObject contains a parent address and a list of static addresses"
         def parentAddressNominatim = nominatimAddressesObject.parentAddress
         def nominatimaddresses = nominatimAddressesObject.addresses
-        nominatimaddresses.size() >= 1
+        nominatimaddresses.size() == 1
 
         and: "the parent address object has certain attributes"
         parentAddressNominatim.size() == 10
         parentAddressNominatim.keySet().containsAll("countryCode", "niceName", "displayName", "osmId", "placeId", "shortName", "address", "type", "longitude", "latitude")
         parentAddressNominatim.type == "ADDRESS"
 
-        and: "a static address contains certain attributes"
-        def nominatimaddress = staticaddresses[0]
+        and: "a nominatim address contains certain attributes"
+        def nominatimaddress = nominatimaddresses[0]
         nominatimaddress.size() == 10
         nominatimaddress.keySet().containsAll("countryCode", "niceName", "displayName", "osmId", "placeId", "shortName", "address", "type", "longitude", "latitude")
 
-        and: "the type of a static address is ADDRESS"
+        and: "the type of a nominatim address is ADDRESS"
         nominatimaddress.type == "ADDRESS"
 
-        and: "a static address contains a address map with certain attributes"
-        def addressmapNominatim = staticaddress.address
-        addressmapNominatim.size() == 6
-        addressmapNominatim.keySet().containsAll("suburb", "static_id", "postcode", "country_code", "city", "hashkey")
+        and: "a nominatim address contains a address map with certain attributes"
+        def addressmapNominatim = nominatimaddress.address
+        addressmapNominatim.size() >= 8
+        addressmapNominatim.keySet().containsAll("suburb", "postcode", "country_code", "city", "country", "road", "state_district", "state")
     
     }
 }

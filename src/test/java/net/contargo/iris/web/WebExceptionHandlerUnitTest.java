@@ -39,7 +39,7 @@ import static org.mockito.Mockito.when;
  * @author  Arnold Franke - franke@synyx.de
  */
 @RunWith(MockitoJUnitRunner.class)
-public class WebExceptionHandlerTest {
+public class WebExceptionHandlerUnitTest {
 
     private static final String REPORT_PATH = "test-tmp";
 

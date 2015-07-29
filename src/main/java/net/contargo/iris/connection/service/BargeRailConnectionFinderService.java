@@ -11,13 +11,21 @@ import java.util.List;
 
 
 /**
- * Checks whether a list of {@link MainRunConnection}s contains one such connection that matches with a given list of
- * {@link SubRoutePart} in regard of origin, destination and direction.
+ * Service providing functionality to find a {@link MainRunConnection} corresponding to {@link SubRoutePart}s.
  *
  * @author  Sandra Thieme - thieme@synyx.de
  */
 public class BargeRailConnectionFinderService {
 
+    /**
+     * Checks whether a list of {@link MainRunConnection}s contains one such connection that matches with a given list
+     * of {@link SubRoutePart}s in regard of origin, destination and direction.
+     *
+     * @param  connections  a list of {@link MainRunConnection} candidates to be checked
+     * @param  subRouteParts  a list of {@link SubRoutePart}s to check against
+     *
+     * @return  a matching {@link MainRunConnection} or null
+     */
     MainRunConnection findMatchingBargeRailConnection(List<MainRunConnection> connections,
         List<SubRoutePart> subRouteParts) {
 

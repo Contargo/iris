@@ -6,6 +6,8 @@ import net.contargo.iris.terminal.Terminal;
 import org.junit.Before;
 import org.junit.Test;
 
+import org.mockito.Mockito;
+
 import java.math.BigDecimal;
 
 import java.util.List;
@@ -16,6 +18,8 @@ import static net.contargo.iris.route.RouteType.BARGE_RAIL;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import static org.hamcrest.Matchers.is;
+
+import static org.mockito.Mockito.when;
 
 import static java.math.BigDecimal.TEN;
 
@@ -191,7 +195,30 @@ public class MainRunConnectionUnitTest {
 
 
     @Test
+    public void getEveryThingEnabledDisabledSubconnection() {
+
+        AbstractSubConnection subConnection = Mockito.mock(AbstractSubConnection.class);
+        when(subConnection.isEnabled()).thenReturn(false);
+        sut.getSubConnections().add(subConnection);
+
+        sut.setEnabled(true);
+
+        seaport.setEnabled(true);
+        sut.setSeaport(seaport);
+
+        terminal.setEnabled(true);
+        sut.setTerminal(terminal);
+
+        assertThat(sut.getEverythingEnabled(), is(false));
+    }
+
+
+    @Test
     public void getEveryThingEnabledTrue() {
+
+        AbstractSubConnection subConnection = Mockito.mock(AbstractSubConnection.class);
+        when(subConnection.isEnabled()).thenReturn(true);
+        sut.getSubConnections().add(subConnection);
 
         sut.setEnabled(true);
 

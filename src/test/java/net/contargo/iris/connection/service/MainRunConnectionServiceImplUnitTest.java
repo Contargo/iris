@@ -272,19 +272,6 @@ public class MainRunConnectionServiceImplUnitTest {
 
 
     @Test
-    public void findRoutingConnectionBetweenTerminalAndSeaportByTypeForBargeRailWithSingleConnection() {
-
-        when(mainRunConnectionRepositoryMock.findByTerminalAndSeaportAndRouteTypeAndEnabled(terminal, seaport,
-                    RouteType.BARGE_RAIL, true)).thenReturn(singletonList(con1));
-
-        MainRunConnection mainrunConnection = sut.findRoutingConnectionBetweenTerminalAndSeaportByType(terminal,
-                seaport, RouteType.BARGE_RAIL, emptyList());
-
-        assertThat(mainrunConnection, is(con1));
-    }
-
-
-    @Test
     public void findRoutingConnectionBetweenTerminalAndSeaportByTypeForBargeRailWithSeveralConnection() {
 
         when(mainRunConnectionRepositoryMock.findByTerminalAndSeaportAndRouteTypeAndEnabled(terminal, seaport,

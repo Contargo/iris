@@ -123,11 +123,7 @@ public class MainRunConnectionServiceImpl implements MainRunConnectionService {
         }
 
         if (routeType == RouteType.BARGE_RAIL) {
-            if (connections.size() == 1) {
-                return connections.get(0);
-            } else {
-                return bargeRailConnectionFinderService.findMatchingBargeRailConnection(connections, subRouteParts);
-            }
+            return bargeRailConnectionFinderService.findMatchingBargeRailConnection(connections, subRouteParts);
         } else {
             return connections.get(0);
         }

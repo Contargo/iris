@@ -21,6 +21,8 @@ import javax.validation.constraints.NotNull;
 
 
 /**
+ * Represents a part of a {@link MainRunConnection}.
+ *
  * @author  Sandra Thieme - thieme@synyx.de
  */
 @Entity(name = "SubConnection")

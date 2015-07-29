@@ -8,6 +8,8 @@ import java.math.BigDecimal;
 
 
 /**
+ * Dto object for {@link SubRoutePart}s.
+ *
  * @author  Sandra Thieme - thieme@synyx.de
  */
 public class SubRoutePartDto {

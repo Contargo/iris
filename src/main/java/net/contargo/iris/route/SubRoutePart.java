@@ -6,6 +6,8 @@ import java.math.BigDecimal;
 
 
 /**
+ * Represents a part of a {@link RoutePart}. This is only relevant if the part is of {@link RouteType} BARGE_RAIL.
+ *
  * @author  Sandra Thieme - thieme@synyx.de
  */
 public class SubRoutePart {

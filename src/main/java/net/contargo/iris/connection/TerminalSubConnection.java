@@ -12,6 +12,8 @@ import javax.validation.constraints.NotNull;
 
 
 /**
+ * Represents a rail part of a {@link MainRunConnection} that's between a {@link Terminal} and a {@link Terminal}.
+ *
  * @author  Sandra Thieme - thieme@synyx.de
  */
 @Entity

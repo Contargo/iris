@@ -93,6 +93,15 @@ public class RouteBuilder {
     }
 
 
+    /**
+     * Adds a barge-rail {@link RoutePart} to {@link Route} setting information about origin, route type, container
+     * type, container state (full or empty), direction and {@link SubRoutePart}s. The destination will be the specified
+     * {@link Seaport}, that's why the subconnections will be traversed in reverse order to create the
+     * {@link SubRoutePart}s.
+     *
+     * @param  seaport  the {@link RoutePart}'s destination seaport
+     * @param  subConnections  the {@link AbstractSubConnection}s the resulting {@link SubRoutePart}s are based on
+     */
     public void goToSeaportViaSubConnections(Seaport seaport, List<AbstractSubConnection> subConnections) {
 
         List<SubRoutePart> subs = new ArrayList<>();
@@ -126,6 +135,15 @@ public class RouteBuilder {
     }
 
 
+    /**
+     * Adds a barge-rail {@link RoutePart} to {@link Route} setting information about origin, route type, container
+     * type, container state (full or empty), direction and {@link SubRoutePart}s. The destination will be the specified
+     * {@link Terminal}, that's why the subconnections will be traversed in original order to create the
+     * {@link SubRoutePart}s.
+     *
+     * @param  terminal  the {@link RoutePart}'s destination terminal
+     * @param  subConnections  the {@link AbstractSubConnection}s the resulting {@link SubRoutePart}s are based on
+     */
     public void goToTerminalViaSubConnections(Terminal terminal, List<AbstractSubConnection> subConnections) {
 
         List<SubRoutePart> subs = new ArrayList<>();

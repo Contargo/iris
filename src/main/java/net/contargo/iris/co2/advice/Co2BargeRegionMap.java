@@ -16,6 +16,9 @@ import static java.util.Collections.unmodifiableMap;
 
 
 /**
+ * Map object containing all co2 factors for every possible barge routing combination of
+ * {@link net.contargo.iris.route.RoutePart.Direction}, {@link Region} and {@link ContainerState}.
+ *
  * @author  Oliver Messner - messner@synyx.de
  */
 class Co2BargeRegionMap {

@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 
 
 /**
- * Co2 strategy for the main run connection with route type barge-rail.
+ * Co2 strategy for main run connections with route type barge.
  *
  * @author  Sandra Thieme - thieme@synyx.de
  */

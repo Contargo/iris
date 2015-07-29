@@ -8,6 +8,8 @@ import java.math.BigDecimal;
 
 
 /**
+ * Co2 strategy for main run connections with route type rail.
+ *
  * @author  Oliver Messner - messner@synyx.de
  */
 class Co2PartRailStrategy implements Co2PartStrategy {

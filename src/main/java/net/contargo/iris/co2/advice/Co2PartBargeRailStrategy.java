@@ -11,6 +11,8 @@ import java.math.BigDecimal;
 
 
 /**
+ * Co2 strategy for main run connections with route type barge-rail.
+ *
  * @author  Sandra Thieme - thieme@synyx.de
  */
 public class Co2PartBargeRailStrategy implements Co2PartStrategy {

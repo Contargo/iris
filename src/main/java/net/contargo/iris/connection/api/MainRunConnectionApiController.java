@@ -24,7 +24,6 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.stereotype.Controller;
@@ -58,6 +57,8 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -191,7 +192,7 @@ public class MainRunConnectionApiController extends AbstractController {
 
         MainRunConnectionDto dto = connectionApiDtoService.get(id);
 
-        return new ResponseEntity<>(dto, HttpStatus.OK);
+        return new ResponseEntity<>(dto, OK);
     }
 
 
@@ -215,7 +216,7 @@ public class MainRunConnectionApiController extends AbstractController {
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(location);
 
-        return new ResponseEntity<>(headers, HttpStatus.CREATED);
+        return new ResponseEntity<>(headers, CREATED);
     }
 
 
@@ -230,7 +231,7 @@ public class MainRunConnectionApiController extends AbstractController {
 
         MainRunConnectionDto updatedDto = connectionApiDtoService.save(dto);
 
-        return new ResponseEntity<>(updatedDto, HttpStatus.OK);
+        return new ResponseEntity<>(updatedDto, OK);
     }
 
 

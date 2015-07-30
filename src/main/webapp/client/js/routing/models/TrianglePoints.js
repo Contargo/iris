@@ -48,7 +48,6 @@ var TrianglePoints = Backbone.Collection.extend({
     },
 
     getPosition : function(item) {
-
         for (var i = 0; i < this.size(); i++) {
             if (this.at(i) === item) {
                 return i;
@@ -58,21 +57,19 @@ var TrianglePoints = Backbone.Collection.extend({
     },
 
     getRoutePairs : function() {
+        this.pairs.reset([]);
 
-        var self = this;
-        self.pairs.reset([]);
-
+        var that = this;
         this.each(function(e,i){
 
             var from = undefined;
             // skip the from of the first entry
             if (i > 0) {
-                from = self.at(i-1);
+                from = that.at(i-1);
             }
 
             // all others are "the one before me to me"
-            var to = e;
-            self.pairs.add(new TriangleRoutePart({from : from, to: to}));
+            that.pairs.add(new TriangleRoutePart({from : from, to: e}));
         });
 
         this.totals.set({
@@ -82,15 +79,12 @@ var TrianglePoints = Backbone.Collection.extend({
             duration: undefined
         });
 
-        this.server.getRouteDetails(self.pairs, this.routeArrived);
+        this.server.getRouteDetails(this.pairs, this.routeArrived);
 
-        return self.pairs;
+        return this.pairs;
     },
 
     routeArrived : function(route) {
-
-        var self = this;
-
         this.totals.set({
             distance : Helper.formatKM(route.data.totalDistance),
             toll : Helper.formatKM(route.data.totalTollDistance)  ,

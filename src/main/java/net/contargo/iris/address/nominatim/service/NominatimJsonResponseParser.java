@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -17,8 +16,10 @@ import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.MediaType.TEXT_HTML;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 
 
 /**
@@ -72,7 +73,7 @@ class NominatimJsonResponseParser {
         List<Address> addresses;
 
         try {
-            addresses = asList(nominatimRestClient.exchange(url, GET, getHttpEntity(), Address.class).getBody());
+            addresses = singletonList(nominatimRestClient.exchange(url, GET, getHttpEntity(), Address.class).getBody());
             LOG.debug("{} search result(s) found for URL {}", addresses.size(), url);
         } catch (RestClientException e) {
             addresses = null;
@@ -106,7 +107,7 @@ class NominatimJsonResponseParser {
     private HttpEntity<Address> getHttpEntity() {
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(asList(MediaType.TEXT_HTML));
+        headers.setAccept(singletonList(TEXT_HTML));
 
         return new HttpEntity<>(headers);
     }

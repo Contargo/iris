@@ -1,15 +1,9 @@
 var TriangleRoutingApp = Backbone.Model.extend({
 
-    appname: "r",
-
     defaults: {
         contextpath: "/"
     },
     initialize: function () {
-
-        console.log("Exporting Application to r");
-        window[this.appname] = this;
-
         // initializing
         this.server = new Server(this.get("contextpath"), this.error);
         this.countries = new SelectableAwareCollection([
@@ -76,11 +70,11 @@ var TriangleRoutingApp = Backbone.Model.extend({
 
     queryCountries: function () {
         var countries = this.countries;
-        
+
         this.server.countries(function (countryList) {
             countries.reset(countryList);
         });
-        
+
         countries.setDefaultByValue("DE");
     },
 

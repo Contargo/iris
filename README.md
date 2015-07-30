@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/Contargo/iris.svg?branch=development)](https://travis-ci.org/Contargo/iris)
+[![Build Status](https://travis-ci.org/Contargo/iris.svg?branch=master)](https://travis-ci.org/Contargo/iris)
 
 IRIS - Intermodal Routing Information System
 =========

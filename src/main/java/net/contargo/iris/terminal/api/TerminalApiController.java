@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigInteger;
@@ -38,6 +37,9 @@ import javax.validation.Valid;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 
 /**
@@ -66,7 +68,7 @@ public class TerminalApiController extends AbstractController {
     }
 
     @ApiOperation(value = "Returns all active terminals.", notes = "Returns all active terminals.")
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(method = GET)
     @ModelAttribute(RESPONSE)
     public TerminalsResponse getTerminals(
         @RequestParam(value = "activeOnly", defaultValue = "true") boolean activeOnly) {
@@ -97,7 +99,7 @@ public class TerminalApiController extends AbstractController {
         notes =
             "Returns all terminals that are part of a connection with the given routetype and the specified seaport."
     )
-    @RequestMapping(params = { "seaportUid", }, method = RequestMethod.GET)
+    @RequestMapping(params = { "seaportUid", }, method = GET)
     @ModelAttribute(RESPONSE)
     public TerminalsResponse getTerminalsForSeaportAndRouteType(
         @RequestParam(value = "seaportUid") BigInteger seaportUID,
@@ -132,7 +134,7 @@ public class TerminalApiController extends AbstractController {
         value = "Return the terminal with the given terminalUID.",
         notes = "Return the terminal with the given terminalUID."
     )
-    @RequestMapping(value = SLASH + "{terminalUid}", method = RequestMethod.GET)
+    @RequestMapping(value = SLASH + "{terminalUid}", method = GET)
     @ModelAttribute(RESPONSE)
     public TerminalResponse getTerminalByUid(@PathVariable("terminalUid") BigInteger uid) {
 
@@ -159,9 +161,11 @@ public class TerminalApiController extends AbstractController {
         value = "Saves the terminal with the given terminalUID.",
         notes = "Saves the terminal with the given terminalUID.", response = Void.class
     )
-    @RequestMapping(value = SLASH + "{terminalUid}", method = RequestMethod.PUT)
+    @RequestMapping(value = SLASH + "{terminalUid}", method = PUT)
     public ResponseEntity syncTerminal(@PathVariable("terminalUid") BigInteger terminalUid,
         @Valid @RequestBody TerminalDto terminalDto) {
+
+        ResponseEntity response;
 
         boolean update = terminalDtoService.existsByUniqueId(terminalUid);
 
@@ -170,7 +174,7 @@ public class TerminalApiController extends AbstractController {
 
             LOG.info("API: Updating terminal with unique id {}", terminalUid);
 
-            return new ResponseEntity(HttpStatus.NO_CONTENT);
+            response = new ResponseEntity(HttpStatus.NO_CONTENT);
         } else {
             terminalDto.setUniqueId(terminalUid.toString());
 
@@ -178,7 +182,9 @@ public class TerminalApiController extends AbstractController {
 
             LOG.info("API: Creating terminal with unique id {}", terminalUid);
 
-            return new ResponseEntity(HttpStatus.CREATED);
+            response = new ResponseEntity(HttpStatus.CREATED);
         }
+
+        return response;
     }
 }

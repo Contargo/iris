@@ -42,24 +42,28 @@ ConnectionApp.prototype.loadModels = function (callback) {
 
     var that = this;
     this.server.getSeaports(function (seaports) {
-        if(seaports.length === 0) {
+        if (seaports.length === 0) {
             that.handleCriticalError('No seaports available');
             return;
         }
         that.server.getTerminals(function (terminals) {
-            if(terminals.length === 0) {
+            if (terminals.length === 0) {
                 that.handleCriticalError('No terminals available');
                 return;
             }
 
-            that.seaports = new ConnectionSeaports(_.map(seaports, function(seaport) {
+            that.seaports = new ConnectionSeaports(_.map(seaports, function (seaport) {
                 return new ConnectionSeaport(seaport);
             }));
-            that.terminals = new ConnectionTerminals(_.map(terminals, function(terminal) {
+            that.terminals = new ConnectionTerminals(_.map(terminals, function (terminal) {
                 return new ConnectionTerminal(terminal);
             }));
-            that.routeTypes = new RouteTypes([new RouteType({value: 'BARGE', name: 'Barge'}), new RouteType({value: 'RAIL', name: 'Rail'}),
+            that.routeTypes = new RouteTypes([new RouteType({
+                value: 'BARGE',
+                name: 'Barge'
+            }), new RouteType({value: 'RAIL', name: 'Rail'}),
                 new RouteType({value: 'BARGE_RAIL', name: 'Barge-Rail'})]);
+
             if (that.connectionId) {
                 that.server.getConnection(that.connectionId, function (connection) {
                     that.connection = that.mapper.connectionFromJson(connection, that.seaports, that.terminals);
@@ -69,8 +73,9 @@ ConnectionApp.prototype.loadModels = function (callback) {
                 that.connection = new Connection();
                 callback();
             }
+
         }, that.handleCriticalError);
-    },this.handleCriticalError);
+    }, this.handleCriticalError);
 };
 
 ConnectionApp.prototype.registerEvents = function () {
@@ -115,6 +120,7 @@ ConnectionApp.prototype.update = function () {
 };
 
 ConnectionApp.prototype.redirect = function (location) {
+    'use strict';
     window.location.href = location;
 };
 
@@ -132,6 +138,7 @@ ConnectionApp.prototype.removeLastSubconnection = function () {
 };
 
 ConnectionApp.prototype.handleSaveError = function (data) {
+    'use strict';
     var message;
     if (this.errorSyntaxChecker.isValidJSONString(data.responseText)) {
         message = this.validationMessageService.getValidationMessage(data.responseJSON.code, data.responseJSON.message);
@@ -145,14 +152,15 @@ ConnectionApp.prototype.handleSaveError = function (data) {
 };
 
 ConnectionApp.prototype.handleCriticalError = function (msg) {
-        $('.notifications').notify({
-            type: "error",
-            message: {
-                text: msg
-            },
-            fadeOut: {
-                enabled: false
-            },
-            closable: true
-        }).show();
+    'use strict';
+    $('.notifications').notify({
+        type: "error",
+        message: {
+            text: msg
+        },
+        fadeOut: {
+            enabled: false
+        },
+        closable: true
+    }).show();
 };

@@ -24,36 +24,36 @@ var ConnectionServer = function (contextpath) {
         },
         getSeaports: function (callback, errorCallback) {
             get(seaportsUrl, function (response) {
-                callback(response.seaports)
-            }, function () {
+                    callback(response.seaports)
+                }, function () {
                     errorCallback('Error retrieving seaports');
                 }
             )
         },
         getTerminals: function (callback, errorCallback) {
             get(terminalsUrl, function (response) {
-                callback(response.response.terminals)
-            }, function () {
+                    callback(response.response.terminals)
+                }, function () {
                     errorCallback('Error retrieving terminals');
                 }
             )
         },
         updateConnection: function (connection, callback, errorCallback) {
             put(connectionUrl.replace('{connectionId}', connection.id), connection,
-                function(responseData) {
+                function (responseData) {
                     callback(responseData);
                 },
-                function(responseData) {
+                function (responseData) {
                     errorCallback(responseData);
                 }
             );
         },
         createConnection: function (connection, callback, errorCallback) {
             post(connectionsUrl, connection,
-                function(responseData, status, request) {
+                function (responseData, status, request) {
                     callback(request.getResponseHeader('location'));
                 },
-                function(responseData) {
+                function (responseData) {
                     errorCallback(responseData);
                 }
             );

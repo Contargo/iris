@@ -2,6 +2,7 @@ function ConnectionMapper() {
 }
 
 ConnectionMapper.prototype.getRouteTypeName = function (value) {
+    'use strict';
     var map = {BARGE: 'Barge', RAIL: 'Rail'};
     return map[value];
 };
@@ -20,7 +21,7 @@ ConnectionMapper.prototype.connectionFromJson = function (connection, seaports, 
         }),
         routeType: new RouteType({value: connection.routeType}),
         enabled: connection.enabled,
-        subconnections: new Subconnections(_.map(connection.subConnections, function(sub) {
+        subconnections: new Subconnections(_.map(connection.subConnections, function (sub) {
             return that.subconnectionFromJson(sub, seaports, terminals);
         }))
     });
@@ -60,14 +61,14 @@ ConnectionMapper.prototype.connectionToJson = function (connection) {
 ConnectionMapper.prototype.subconnectionsToJson = function (subconnections) {
     'use strict';
     var that = this;
-    return subconnections.map(function(subconnection) {
+    return subconnections.map(function (subconnection) {
         return that.subconnectionToJson(subconnection);
     });
 };
 
 ConnectionMapper.prototype.subconnectionToJson = function (subconnection) {
     'use strict';
-    var json =  {
+    var json = {
         id: subconnection.get('id'),
         routeType: subconnection.get('routeType').get('value'),
         bargeDieselDistance: subconnection.get('distances').get('barge'),

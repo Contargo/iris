@@ -16,7 +16,6 @@ import org.mockito.Mock;
 
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import java.util.Collections;
@@ -34,10 +33,16 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import static java.math.BigDecimal.ONE;
+import static java.math.BigDecimal.TEN;
+import static java.math.BigDecimal.ZERO;
+
 import static java.util.Arrays.asList;
 
 
 /**
+ * Unit test of {@link MainRunConnectionDtoServiceImpl}.
+ *
  * @author  Oliver Messner - messner@synyx.de
  */
 @RunWith(MockitoJUnitRunner.class)
@@ -47,6 +52,7 @@ public class MainRunConnectionDtoServiceImplUnitTest {
 
     @Mock
     private MainRunConnectionService mainRunConnectionServiceMock;
+
     private BigInteger terminalUID;
     private Terminal terminal;
     private BigInteger seaportOneUID;
@@ -86,9 +92,7 @@ public class MainRunConnectionDtoServiceImplUnitTest {
         SimpleMainRunConnectionDto dto2 = new SimpleMainRunConnectionDto(seaportTwoUID.toString(),
                 terminalUID.toString(), BARGE);
 
-        List<SimpleMainRunConnectionDto> expectedConnections = asList(dto1, dto2);
-
-        assertConnections(sut.getConnectionsForTerminal(terminalUID), expectedConnections);
+        assertConnections(sut.getConnectionsForTerminal(terminalUID), asList(dto1, dto2));
     }
 
 
@@ -107,8 +111,7 @@ public class MainRunConnectionDtoServiceImplUnitTest {
     public void save() {
 
         MainRunConnectionDto dto = new MainRunConnectionDto(42L, BigInteger.ONE.toString(), BigInteger.TEN.toString(),
-                BigDecimal.ONE, BigDecimal.TEN, BigDecimal.ZERO, BARGE, true,
-                Collections.<AbstractSubConnectionDto>emptyList());
+                ONE, TEN, ZERO, BARGE, true, Collections.<AbstractSubConnectionDto>emptyList());
 
         MainRunConnection connection = newConnection(seaportOne, terminal, BARGE);
         connection.setId(42L);

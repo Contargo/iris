@@ -17,7 +17,10 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 
-public class RouteDataRevisionDtoTest {
+/**
+ * Unit test of {@link RouteDataRevisionDto}.
+ */
+public class RouteDataRevisionDtoUnitTest {
 
     private Long id;
     private Long terminalId;
@@ -46,7 +49,7 @@ public class RouteDataRevisionDtoTest {
 
 
     @Test
-    public void testInstantiation() {
+    public void instantiation() {
 
         String uniqueId = "12345";
         Terminal terminal = new Terminal();
@@ -78,7 +81,7 @@ public class RouteDataRevisionDtoTest {
 
 
     @Test
-    public void testToEntity() throws Exception {
+    public void toEntity() throws Exception {
 
         TerminalDto terminalDto = createTerminalDto();
 

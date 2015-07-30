@@ -14,13 +14,15 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import static org.hamcrest.Matchers.is;
 
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 
 
 /**
+ * Unit test of {@link SpringUserAuthenticationService}.
+ *
  * @author  David Schilling - schilling@synyx.de
  */
-public class SpringUserAuthenticationServiceTest {
+public class SpringUserAuthenticationServiceUnitTest {
 
     private SpringUserAuthenticationService sut;
 
@@ -34,13 +36,13 @@ public class SpringUserAuthenticationServiceTest {
     @Test
     public void getCurrentUser() {
 
-        UserDetails userDetails = new User("user", "password", asList(new SimpleGrantedAuthority("USER")));
+        UserDetails userDetails = new User("user", "password", singletonList(new SimpleGrantedAuthority("USER")));
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
             new UsernamePasswordAuthenticationToken(userDetails, null);
         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
 
         Authentication currentUser = sut.getCurrentUser();
-        assertThat((UserDetails) currentUser.getPrincipal(), is(userDetails));
+        assertThat(currentUser.getPrincipal(), is(userDetails));
         assertThat(currentUser.getName(), is("user"));
     }
 }

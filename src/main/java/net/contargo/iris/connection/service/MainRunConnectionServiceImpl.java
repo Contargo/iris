@@ -46,9 +46,6 @@ public class MainRunConnectionServiceImpl implements MainRunConnectionService {
         this.bargeRailConnectionFinderService = bargeRailConnectionFinderService;
     }
 
-    /**
-     * @see  MainRunConnectionService#getAll()
-     */
     @Override
     public List<MainRunConnection> getAll() {
 
@@ -56,9 +53,6 @@ public class MainRunConnectionServiceImpl implements MainRunConnectionService {
     }
 
 
-    /**
-     * @see  MainRunConnectionService#getAllActive()
-     */
     @Override
     public List<MainRunConnection> getAllActive() {
 
@@ -66,9 +60,6 @@ public class MainRunConnectionServiceImpl implements MainRunConnectionService {
     }
 
 
-    /**
-     * @see  MainRunConnectionService#getById(Long)
-     */
     @Override
     public MainRunConnection getById(Long id) {
 
@@ -76,9 +67,6 @@ public class MainRunConnectionServiceImpl implements MainRunConnectionService {
     }
 
 
-    /**
-     * @see  MainRunConnectionService#save(net.contargo.iris.connection.MainRunConnection)
-     */
     @Override
     public MainRunConnection save(MainRunConnection mainrunConnection) {
 

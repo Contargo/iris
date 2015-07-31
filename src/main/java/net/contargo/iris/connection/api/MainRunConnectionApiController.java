@@ -29,7 +29,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
 import org.springframework.validation.Errors;
-import org.springframework.validation.Validator;
 
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -50,6 +49,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import javax.validation.Valid;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -86,20 +87,18 @@ public class MainRunConnectionApiController extends AbstractController {
     private final RouteUrlSerializationService routeUrlSerializationService;
     private final MainRunConnectionDtoService connectionApiDtoService;
     private final SeaportTerminalConnectionDtoService seaportTerminalConnectionDtoService;
-    private final Validator validator;
 
     @Autowired
     public MainRunConnectionApiController(SeaportDtoService seaportDtoService,
         SeaportConnectionRoutesDtoService seaportConnectionRoutesDtoService,
         RouteUrlSerializationService routeUrlSerializationService, MainRunConnectionDtoService connectionApiDtoService,
-        SeaportTerminalConnectionDtoService seaportTerminalConnectionDtoService, Validator validator) {
+        SeaportTerminalConnectionDtoService seaportTerminalConnectionDtoService) {
 
         this.seaportDtoService = seaportDtoService;
         this.seaportConnectionRoutesDtoService = seaportConnectionRoutesDtoService;
         this.routeUrlSerializationService = routeUrlSerializationService;
         this.connectionApiDtoService = connectionApiDtoService;
         this.seaportTerminalConnectionDtoService = seaportTerminalConnectionDtoService;
-        this.validator = validator;
     }
 
     @ApiOperation(
@@ -197,9 +196,7 @@ public class MainRunConnectionApiController extends AbstractController {
 
 
     @RequestMapping(method = POST, value = "")
-    public ResponseEntity createConnection(@RequestBody MainRunConnectionDto dto, Errors errors) {
-
-        validator.validate(dto, errors);
+    public ResponseEntity createConnection(@Valid @RequestBody MainRunConnectionDto dto, Errors errors) {
 
         if (errors.hasErrors()) {
             throw new ValidationException(errors);
@@ -221,9 +218,8 @@ public class MainRunConnectionApiController extends AbstractController {
 
 
     @RequestMapping(method = PUT, value = "/{id}")
-    public ResponseEntity<MainRunConnectionDto> updateConnection(@RequestBody MainRunConnectionDto dto, Errors errors) {
-
-        validator.validate(dto, errors);
+    public ResponseEntity<MainRunConnectionDto> updateConnection(@Valid @RequestBody MainRunConnectionDto dto,
+        Errors errors) {
 
         if (errors.hasErrors()) {
             throw new ValidationException(errors);

@@ -33,6 +33,13 @@ describe('Connection', function () {
         expect(sut.get('seaport')).toBe('seaport');
     });
 
+    it('updates seaport with subconnections', function () {
+        sut.get('subconnections').add(new Subconnection());
+        sut.updateSeaport('seaport');
+        expect(sut.get('seaport')).toBe('seaport');
+        expect(sut.get('subconnections').first().get('endpoint1')).toEqual('seaport');
+    });
+
     it('updates route type', function () {
 
         spyOn(sut, 'createSubconnection');

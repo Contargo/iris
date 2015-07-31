@@ -19,6 +19,9 @@ var Connection = Backbone.Model.extend({
     updateSeaport: function(updatedValue) {
         'use strict';
         this.set('seaport', updatedValue);
+        if (this.get('subconnections').size() > 0) {
+            this.get('subconnections').first().set('endpoint1', updatedValue);
+        }
     },
 
     updateRouteType: function(updatedValue) {

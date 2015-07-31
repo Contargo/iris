@@ -96,6 +96,7 @@ ConnectionApp.prototype.updateTerminal = function (updatedValue) {
 ConnectionApp.prototype.updateSeaport = function (updatedValue) {
     'use strict';
     this.connection.updateSeaport(updatedValue);
+    this.connectionView.render();
 };
 
 ConnectionApp.prototype.updateRouteType = function (updatedValue) {

@@ -166,10 +166,12 @@ describe('ConnectionApp', function () {
     it('registers update seaport event', function () {
         sut.start();
         spyOn(sut.connection, 'updateSeaport');
-        
+        spyOn(sut.connectionView, 'render');
+
         sut.seaports.trigger('selectionChange', 'updatedSeaport');
-        
+
         expect(sut.connection.updateSeaport).toHaveBeenCalledWith('updatedSeaport');
+        expect(sut.connectionView.render).toHaveBeenCalled();
     });
 
     it('registers update terminal event', function () {

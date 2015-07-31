@@ -4,7 +4,6 @@ import com.wordnik.swagger.annotations.ApiOperation;
 
 import net.contargo.iris.api.AbstractController;
 import net.contargo.iris.api.RestApiErrorDto;
-import net.contargo.iris.api.ValidationException;
 import net.contargo.iris.connection.dto.MainRunConnectionDto;
 import net.contargo.iris.connection.dto.MainRunConnectionDtoService;
 import net.contargo.iris.connection.dto.RouteDto;

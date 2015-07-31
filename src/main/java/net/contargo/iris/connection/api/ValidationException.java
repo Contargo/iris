@@ -1,4 +1,4 @@
-package net.contargo.iris.api;
+package net.contargo.iris.connection.api;
 
 import org.springframework.validation.Errors;
 

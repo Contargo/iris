@@ -69,5 +69,12 @@ public interface MainRunConnectionService {
         RouteType routeType, List<SubRoutePart> subRouteParts);
 
 
+    /**
+     * Finds all {@link MainRunConnection}s that are connected to a {@link Terminal} with the given uid.
+     *
+     * @param  terminalUID  a {@link Terminal}'s uid
+     *
+     * @return  a list of matching {@link MainRunConnection}s
+     */
     List<MainRunConnection> getConnectionsForTerminal(BigInteger terminalUID);
 }

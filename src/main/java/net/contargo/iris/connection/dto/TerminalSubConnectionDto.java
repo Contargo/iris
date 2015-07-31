@@ -17,7 +17,7 @@ import java.math.BigInteger;
  * @author  Sandra Thieme - thieme@synyx.de
  * @author  David Schilling - schilling@synyx.de
  */
-public class TerminalSubConnectionDto extends AbstractSubConnectionDto {
+public final class TerminalSubConnectionDto extends AbstractSubConnectionDto {
 
     private final String terminal2Uid;
 

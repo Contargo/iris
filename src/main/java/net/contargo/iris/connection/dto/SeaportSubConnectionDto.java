@@ -18,7 +18,7 @@ import java.math.BigInteger;
  * @author  Sandra Thieme - thieme@synyx.de
  * @author  David Schilling - schilling@synyx.de
  */
-public class SeaportSubConnectionDto extends AbstractSubConnectionDto {
+public final class SeaportSubConnectionDto extends AbstractSubConnectionDto {
 
     private final String seaportUid;
 

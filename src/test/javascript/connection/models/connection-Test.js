@@ -115,7 +115,7 @@ describe('Connection', function () {
 
         expect(sut.get('subconnections').length).toBe(2);
         expect(sut.get('subconnections').last().get('endpoint1')).toBe(t);
-        expect(sut.get('subconnections').last().get('endpoint2')).toBe(t);
+        expect(sut.get('subconnections').last().get('endpoint2')).toBe(terminal);
         expect(sut.get('subconnections').last().get('routeType').get('value')).toBe('RAIL');
     });
 

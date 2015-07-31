@@ -56,7 +56,7 @@ var Connection = Backbone.Model.extend({
             }
             subconnection = new Subconnection({
                 endpoint1: latest.get('endpoint2'),
-                endpoint2: latest.get('endpoint2'),
+                endpoint2: this.get('terminal'),
                 routeType: new RouteType({value: 'RAIL', name: 'Rail'})
             });
         }

@@ -39,15 +39,37 @@ describe('Subconnections View', function () {
         });
         expect(sut.$el.html()).toContain('<input class="start" title="start" type="text" readonly="" value="Hinterweiler">');
         expect(sut.$el.html()).toContain('<input class="type input-small" title="type" type="text" readonly="" value="Rail">');
-        expect(sut.$el.html()).toContain('<input class="barge comma-replacement-aware number input-small" title="barge" type="text" value="42">');
-        expect(sut.$el.html()).toContain('<input class="raildiesel comma-replacement-aware number input-small" title="raildiesel" type="text" value="23">');
-        expect(sut.$el.html()).toContain('<input class="railelectric comma-replacement-aware number input-small" title="railelectric" type="text" value="65">');
         expect(sut.$('.end > option').length).toBe(2);
         expect(sut.$('.end').attr('disabled')).toBe('disabled');
         expect(sut.$el.html()).toContain('<option value="42">Hinterweiler</option>');
         expect(sut.$el.html()).toContain('<option value="23" selected="selected">Wimmelburg</option>');
         expect(sut.$el.html()).not.toContain('<button class="new-subconnection btn btn-primary"><i class="icon-plus-sign icon-white"></i></button>');
         expect(sut.$el.html()).not.toContain('<button class="remove-subconnection btn btn-primary btn-danger"><i class="icon-trash icon-white"></i></button>');
+    });
+
+    it('renders barge subconnection', function () {
+        subconnection.set('routeType',new RouteType({value: 'BARGE', name: 'Barge'}));
+        sut = SubconnectionView.prototype.create({
+            model: subconnection,
+            terminals: terminals,
+            latest: false,
+            first: false
+        });
+        expect(sut.$el.html()).toContain('<input class="barge comma-replacement-aware number input-small" title="barge" type="text" value="42">');
+        expect(sut.$el.html()).toContain('<input class="raildiesel comma-replacement-aware number input-small" title="raildiesel" type="text" value="23" readonly="readonly">');
+        expect(sut.$el.html()).toContain('<input class="railelectric comma-replacement-aware number input-small" title="railelectric" type="text" value="65" readonly="readonly">');
+    });
+
+    it('renders rail subconnection', function () {
+        sut = SubconnectionView.prototype.create({
+            model: subconnection,
+            terminals: terminals,
+            latest: false,
+            first: false
+        });
+        expect(sut.$el.html()).toContain('<input class="barge comma-replacement-aware number input-small" title="barge" type="text" value="42" readonly="readonly">');
+        expect(sut.$el.html()).toContain('<input class="raildiesel comma-replacement-aware number input-small" title="raildiesel" type="text" value="23">');
+        expect(sut.$el.html()).toContain('<input class="railelectric comma-replacement-aware number input-small" title="railelectric" type="text" value="65">');
     });
 
     it('renders for latest subconnection', function () {
@@ -59,7 +81,7 @@ describe('Subconnections View', function () {
         });
         expect(sut.$el.html()).toContain('<input class="start" title="start" type="text" readonly="" value="Hinterweiler">');
         expect(sut.$el.html()).toContain('<input class="type input-small" title="type" type="text" readonly="" value="Rail">');
-        expect(sut.$el.html()).toContain('<input class="barge comma-replacement-aware number input-small" title="barge" type="text" value="42">');
+        expect(sut.$el.html()).toContain('<input class="barge comma-replacement-aware number input-small" title="barge" type="text" value="42" readonly="readonly">');
         expect(sut.$el.html()).toContain('<input class="raildiesel comma-replacement-aware number input-small" title="raildiesel" type="text" value="23">');
         expect(sut.$el.html()).toContain('<input class="railelectric comma-replacement-aware number input-small" title="railelectric" type="text" value="65">');
         expect(sut.$('.end > option').length).toBe(2);

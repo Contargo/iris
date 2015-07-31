@@ -43,6 +43,7 @@ describe('ConnectionApp', function () {
         callback = jasmine.createSpy();
         spyOn(sut, 'handleCriticalError');
     });
+
     it('can be instantiated', function () {
         expect(sut).toBeDefined();
         expect(sut.server).toBe(serverMock);
@@ -74,7 +75,7 @@ describe('ConnectionApp', function () {
 
     it('loadModels', function () {
         sut.loadModels(callback);
-        
+
         expect(callback).toHaveBeenCalled();
         expect(sut.seaports.length).toBe(2);
         expect(sut.terminals.length).toBe(2);
@@ -83,8 +84,6 @@ describe('ConnectionApp', function () {
     });
 
     it('loadModels empty seaports', function () {
-
-        
 
         serverMock.getSeaports.andCallFake(function (callback) {
             callback([]);
@@ -99,8 +98,6 @@ describe('ConnectionApp', function () {
 
     it('loadModels with seaport loading error', function () {
 
-        
-
         serverMock.getSeaports.andCallFake(function (callback, errorCallback) {
             errorCallback('errorCallback');
         });
@@ -113,8 +110,6 @@ describe('ConnectionApp', function () {
 
     it('loadModels empty terminals', function () {
 
-        
-
         serverMock.getTerminals.andCallFake(function (callback) {
             callback([]);
         });
@@ -126,8 +121,6 @@ describe('ConnectionApp', function () {
     });
 
     it('loadModels with terminal loading error', function () {
-
-        
 
         serverMock.getTerminals.andCallFake(function (callback, errorCallback) {
             errorCallback('errorCallback');
@@ -151,11 +144,10 @@ describe('ConnectionApp', function () {
     });
 
     it('loadModels with connection loading error', function () {
-        
+
         serverMock.getConnection.andCallFake(function (id, callback, errorCallback) {
             errorCallback('errorCallback');
         });
-
 
         sut.loadModels(callback);
 

@@ -36,7 +36,9 @@ var SubconnectionView = Backbone.View.extend({
             terminals: this.terminals.toJSON(),
             latest: this.latest,
             latestAndNotFirst: this.latest && !this.first,
-            first: this.first
+            first: this.first,
+            isBarge: this.model.get('routeType').get('value') === 'BARGE',
+            isRail: this.model.get('routeType').get('value') === 'RAIL'
         };
         this.$el.html(this.template(model));
     },

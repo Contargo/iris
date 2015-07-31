@@ -13,18 +13,33 @@ describe('Distances View', function () {
         exportTemplateManagerAsGlobalFunction("src/connections/templates/");
     });
 
-    it('renders', function () {
+    it('renders for barge connection', function () {
         sut = DistancesView.prototype.create({
-            model: distances
+            model: distances,
+            isBarge: true,
+            isRail: false
         });
         expect(sut.$el.html()).toContain('<input id="bargeDieselDistance" name="bargeDieselDistance" class="comma-replacement-aware number" title="Barge km" type="text" value="10">');
+        expect(sut.$el.html()).toContain('<input id="railDieselDistance" name="railDieselDistance" class="comma-replacement-aware number" title="Rail Diesel km" type="text" value="20" readonly="readonly">');
+        expect(sut.$el.html()).toContain('<input id="railElectricDistance" name="railElectricDistance" class="comma-replacement-aware number" title="Rail Electrical km" type="text" value="30" readonly="readonly">');
+    });
+
+    it('renders for rail connection', function () {
+        sut = DistancesView.prototype.create({
+            model: distances,
+            isBarge: false,
+            isRail: true
+        });
+        expect(sut.$el.html()).toContain('<input id="bargeDieselDistance" name="bargeDieselDistance" class="comma-replacement-aware number" title="Barge km" type="text" value="10" readonly="readonly">');
         expect(sut.$el.html()).toContain('<input id="railDieselDistance" name="railDieselDistance" class="comma-replacement-aware number" title="Rail Diesel km" type="text" value="20">');
         expect(sut.$el.html()).toContain('<input id="railElectricDistance" name="railElectricDistance" class="comma-replacement-aware number" title="Rail Electrical km" type="text" value="30">');
     });
 
     it('updates barge', function () {
         sut = DistancesView.prototype.create({
-            model: distances
+            model: distances,
+            isBarge: true,
+            isRail: false
         });
 
         spyOn(sut, 'update');
@@ -37,7 +52,9 @@ describe('Distances View', function () {
 
     it('updates rail diesel', function () {
         sut = DistancesView.prototype.create({
-            model: distances
+            model: distances,
+            isBarge: false,
+            isRail: true
         });
 
         spyOn(sut, 'update');
@@ -50,7 +67,9 @@ describe('Distances View', function () {
 
     it('updates rail electric', function () {
         sut = DistancesView.prototype.create({
-            model: distances
+            model: distances,
+            isBarge: false,
+            isRail: true
         });
 
         spyOn(sut, 'update');
@@ -63,7 +82,9 @@ describe('Distances View', function () {
 
     it('updates its model attributes', function () {
         sut = DistancesView.prototype.create({
-            model: distances
+            model: distances,
+            isBarge: true,
+            isRail: false
         });
         sut.update('barge', '42');
         expect(distances.get('barge')).toBe(42);

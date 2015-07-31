@@ -8,10 +8,12 @@ var DistancesView = Backbone.View.extend({
         'change #railElectricDistance': 'updateRailElectric'
     },
 
-    initialize: function () {
+    initialize: function (options) {
         'use strict';
         _.bindAll(this, 'render');
 
+        this.isBarge = options.isBarge;
+        this.isRail = options.isRail;
         this.template = getTemplate(this.templateName);
         this.render();
     },
@@ -23,7 +25,10 @@ var DistancesView = Backbone.View.extend({
 
     render: function () {
         'use strict';
-        this.$el.html(this.template(this.model.toJSON()));
+        var model = this.model.toJSON();
+        model.isRail = this.isRail;
+        model.isBarge = this.isBarge;
+        this.$el.html(this.template(model));
     },
 
     updateBarge: function(event) {

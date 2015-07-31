@@ -25,14 +25,24 @@
         {{/each}}
     </select>
     <input class="type input-small" title="type" type="text" readonly value="{{model.routeType.name}}">
-    {{#with model.distances }}
-    <input class="barge comma-replacement-aware number input-small" title="barge" type="text" value="{{barge}}"/>
+    {{#if isBarge}}
+    <input class="barge comma-replacement-aware number input-small" title="barge" type="text" value="{{model.distances.barge}}"/>
+    {{else}}
+    <input class="barge comma-replacement-aware number input-small" title="barge" type="text" value="{{model.distances.barge}}" readonly="readonly"/>
+    {{/if}}
     <span class="help-inline error"></span>
-    <input class="raildiesel comma-replacement-aware number input-small" title="raildiesel" type="text" value="{{raildiesel}}"/>
+    {{#if isRail}}
+    <input class="raildiesel comma-replacement-aware number input-small" title="raildiesel" type="text" value="{{model.distances.raildiesel}}"/>
+    {{else}}
+    <input class="raildiesel comma-replacement-aware number input-small" title="raildiesel" type="text" value="{{model.distances.raildiesel}}" readonly="readonly"/>
+    {{/if}}
     <span class="help-inline error"></span>
-    <input class="railelectric comma-replacement-aware number input-small" title="railelectric" type="text" value="{{railelectric}}"/>
+    {{#if isRail}}
+    <input class="railelectric comma-replacement-aware number input-small" title="railelectric" type="text" value="{{model.distances.railelectric}}"/>
+    {{else}}
+    <input class="railelectric comma-replacement-aware number input-small" title="railelectric" type="text" value="{{model.distances.railelectric}}" readonly="readonly"/>
+    {{/if}}
     <span class="help-inline error"></span>
-    {{/with}}
     {{#if latest}}
     <button class="new-subconnection btn btn-primary"><i class="icon-plus-sign icon-white"></i></button>
     {{/if}}

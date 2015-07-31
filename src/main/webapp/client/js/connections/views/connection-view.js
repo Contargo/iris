@@ -68,7 +68,9 @@ var ConnectionView = Backbone.View.extend({
         } else {
             DistancesView.prototype.create({
                 model: this.model.get('distances'),
-                el: this.$('#distances')
+                el: this.$('#distances'),
+                isBarge: this.model.get('routeType').get('value') === 'BARGE',
+                isRail: this.model.get('routeType').get('value') === 'RAIL'
             });
         }
     },

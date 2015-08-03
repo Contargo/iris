@@ -111,7 +111,10 @@
             </bean>
         </constructor-arg>
         <constructor-arg name="normalizerService" ref="normalizerService"/>
+        <constructor-arg name="addressListFilter" ref="addressListFilter"/>
     </bean>
+    
+    <bean id="addressListFilter" class="net.contargo.iris.address.service.AddressListFilterImpl"/>
 
     <bean id="addressDtoService" class="net.contargo.iris.address.dto.AddressDtoServiceImpl">
         <constructor-arg name="addressService" ref="addressService"/>

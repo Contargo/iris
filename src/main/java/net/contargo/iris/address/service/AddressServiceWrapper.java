@@ -23,7 +23,7 @@ import static net.contargo.iris.address.nominatim.service.AddressDetailKey.COUNT
 import static net.contargo.iris.address.nominatim.service.AddressDetailKey.POSTAL_CODE;
 import static net.contargo.iris.address.nominatim.service.AddressDetailKey.STREET;
 
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 
 
 /**
@@ -41,14 +41,16 @@ public class AddressServiceWrapper {
     private final StaticAddressService staticAddressService;
     private final AddressCache addressCache;
     private final NormalizerService normalizerService;
+    private final AddressListFilter addressListFilter;
 
     public AddressServiceWrapper(AddressService addressService, StaticAddressService staticAddressService,
-        AddressCache cache, NormalizerService normalizerService) {
+        AddressCache cache, NormalizerService normalizerService, AddressListFilter addressListFilter) {
 
         this.addressService = addressService;
         this.staticAddressService = staticAddressService;
         this.addressCache = cache;
         this.normalizerService = normalizerService;
+        this.addressListFilter = addressListFilter;
     }
 
     /**
@@ -83,7 +85,7 @@ public class AddressServiceWrapper {
             // the geo coordinates in the 'loc' object
             address.setLatitude(geoLocation.getLatitude());
             address.setLongitude(geoLocation.getLongitude());
-            addressCache.cache(getSimpleAddressList(asList(address)));
+            addressCache.cache(getSimpleAddressList(singletonList(address)));
         }
 
         return address;
@@ -114,12 +116,19 @@ public class AddressServiceWrapper {
         }
 
         if (street != null && !"".equals(street)) {
-            result.addAll(resolveByNominatim(addressDetails));
+            List<AddressList> nominatimResult = resolveByNominatim(addressDetails);
+            result.addAll(filterSwissAddresses(nominatimResult));
         }
 
         addressCache.cache(result);
 
         return result;
+    }
+
+
+    private List<AddressList> filterSwissAddresses(List<AddressList> nominatimResult) {
+
+        return addressListFilter.filterByCountryCode(nominatimResult, "CH");
     }
 
 

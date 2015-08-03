@@ -18,15 +18,20 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
+import org.mockito.invocation.InvocationOnMock;
+
 import org.mockito.runners.MockitoJUnitRunner;
+
+import org.mockito.stubbing.Answer;
 
 import java.math.BigDecimal;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Collections.singletonList;
 import static net.contargo.iris.address.nominatim.service.AddressDetailKey.CITY;
 import static net.contargo.iris.address.nominatim.service.AddressDetailKey.COUNTRY;
 import static net.contargo.iris.address.nominatim.service.AddressDetailKey.NAME;
@@ -37,9 +42,14 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import static org.hamcrest.Matchers.is;
 
+import static org.mockito.Matchers.eq;
+
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
+
+import static java.util.Arrays.asList;
 
 
 /**
@@ -61,7 +71,7 @@ public class AddressServiceWrapperUnitTest {
     public static final String STREETNAME_KARLSTRASSE = "Karlstrasse";
     public static final String POSTAL_CODE_76133 = "76133";
     public static final String POSTAL_CODE_76137 = "76137";
-    private AddressServiceWrapper addressServiceWrapper;
+    private AddressServiceWrapper sut;
     @Mock
     private AddressService addressServiceMock;
     @Mock
@@ -70,6 +80,8 @@ public class AddressServiceWrapperUnitTest {
     private AddressCache cache;
     @Mock
     private NormalizerService normalizerServiceMock;
+    @Mock
+    AddressListFilter addressListFilterMock;
     private Map<String, String> addressDetails;
 
     @Before
@@ -84,8 +96,8 @@ public class AddressServiceWrapperUnitTest {
 
         when(normalizerServiceMock.normalize(CITYNAME_KARLSRUHE)).thenReturn(CITYNAME_KARLSRUHE_NORMALIZED);
 
-        addressServiceWrapper = new AddressServiceWrapper(addressServiceMock, staticAddressServiceMock, cache,
-                normalizerServiceMock);
+        sut = new AddressServiceWrapper(addressServiceMock, staticAddressServiceMock, cache, normalizerServiceMock,
+                addressListFilterMock);
     }
 
 
@@ -97,14 +109,16 @@ public class AddressServiceWrapperUnitTest {
 
         AddressList value = Mockito.mock(AddressList.class);
         Mockito.when(staticAddressServiceMock.findAddresses(addressDetails.get(POSTAL_CODE.getKey()),
-                CITYNAME_KARLSRUHE_NORMALIZED, addressDetails.get(COUNTRY.getKey()))).thenReturn(value);
+                    CITYNAME_KARLSRUHE_NORMALIZED, addressDetails.get(COUNTRY.getKey())))
+            .thenReturn(value);
 
         addressDetails.put(CITY.getKey(), CITYNAME_KARLSRUHE);
 
-        List<AddressList> result = addressServiceWrapper.getAddressesByDetails(addressDetails);
+        List<AddressList> result = sut.getAddressesByDetails(addressDetails);
 
-        Mockito.verify(staticAddressServiceMock).findAddresses(addressDetails.get(POSTAL_CODE.getKey()),
-            CITYNAME_KARLSRUHE_NORMALIZED, addressDetails.get(COUNTRY.getKey()));
+        verify(staticAddressServiceMock)
+            .findAddresses(addressDetails.get(POSTAL_CODE.getKey()), CITYNAME_KARLSRUHE_NORMALIZED,
+                addressDetails.get(COUNTRY.getKey()));
 
         Assert.assertEquals(result.get(0), value);
     }
@@ -117,8 +131,8 @@ public class AddressServiceWrapperUnitTest {
         loc.setLatitude(BigDecimal.valueOf(LATITUDE));
         loc.setLongitude(BigDecimal.valueOf(LONGITUDE));
 
-        Mockito.when(addressServiceMock.getAddressByGeolocation(Mockito.any(GeoLocation.class))).thenReturn(
-            new Address());
+        Mockito.when(addressServiceMock.getAddressByGeolocation(Mockito.any(GeoLocation.class)))
+            .thenReturn(new Address());
         Mockito.when(staticAddressServiceMock.getForLocation(Mockito.any(GeoLocation.class))).thenReturn(null);
         Mockito.when(cache.getForLocation(loc)).thenReturn(null);
 
@@ -126,7 +140,7 @@ public class AddressServiceWrapperUnitTest {
         expectedAddress.setLongitude(loc.getLongitude());
         expectedAddress.setLatitude(loc.getLatitude());
 
-        Assert.assertEquals(expectedAddress, addressServiceWrapper.getAddressForGeoLocation(loc));
+        Assert.assertEquals(expectedAddress, sut.getAddressForGeoLocation(loc));
     }
 
 
@@ -139,19 +153,21 @@ public class AddressServiceWrapperUnitTest {
         Address a = new Address();
         a.setOsmId(23L);
 
-        Mockito.when(addressServiceMock.getAddressesByDetails(addressDetails)).thenReturn(Arrays.asList(a));
+        Mockito.when(addressServiceMock.getAddressesByDetails(addressDetails)).thenReturn(singletonList(a));
+        when(addressListFilterMock.filterByCountryCode(Mockito.any(), eq("CH"))).thenAnswer(invocation -> invocation.getArguments()[0]);
 
         Address suburb = new Address();
         suburb.setDisplayName("suburb of address");
         suburb.setOsmId(42L);
 
-        List<AddressList> result = addressServiceWrapper.getAddressesByDetails(addressDetails);
+        List<AddressList> result = sut.getAddressesByDetails(addressDetails);
 
         Assert.assertThat(result.size(), Matchers.equalTo(2));
         Assert.assertThat(result.get(1).getAddresses().size(), Matchers.equalTo(1)); // only address
         Assert.assertThat(result.get(1).getAddresses().get(0), Matchers.equalTo(a));
 
-        Mockito.verify(cache).cache(result);
+        verify(cache).cache(result);
+        verify(addressListFilterMock).filterByCountryCode(Mockito.any(), eq("CH"));
     }
 
 
@@ -178,15 +194,17 @@ public class AddressServiceWrapperUnitTest {
         detailsNeustadt.put(COUNTRY.getKey(), "DE");
         detailsNeustadt.put(NAME.getKey(), null);
 
-        Mockito.when(addressServiceMock.getAddressesByDetails(detailsNeustadt)).thenReturn(Arrays.asList(neustadtHessen,
-                neustadtSachsen));
+        List<Address> nominatimAddresses = asList(neustadtHessen, neustadtSachsen);
+        Mockito.when(addressServiceMock.getAddressesByDetails(detailsNeustadt)).thenReturn(nominatimAddresses);
+        when(addressListFilterMock.filterByCountryCode(Mockito.any(), eq("CH"))).thenAnswer(invocation -> invocation.getArguments()[0]);
         when(normalizerServiceMock.normalize(CITYNAME_NEUSTADT)).thenReturn(CITYNAME_NEUSTADT_NORMALIZED);
 
-        List<AddressList> addresses = addressServiceWrapper.getAddressesByDetails(detailsNeustadt);
+        List<AddressList> addresses = sut.getAddressesByDetails(detailsNeustadt);
 
         Assert.assertEquals(3, addresses.size());
         Assert.assertThat(addresses.get(1).getParentAddress(), Matchers.equalTo(neustadtHessen));
         Assert.assertThat(addresses.get(2).getParentAddress(), Matchers.equalTo(neustadtSachsen));
+        verify(addressListFilterMock).filterByCountryCode(Mockito.any(), eq("CH"));
     }
 
 
@@ -197,7 +215,7 @@ public class AddressServiceWrapperUnitTest {
         GeoLocation geoLocation = new GeoLocation(new BigDecimal(48.07506), new BigDecimal(8.6362987));
         when(cache.getForLocation(geoLocation)).thenReturn(address);
 
-        assertThat(addressServiceWrapper.getAddressForGeoLocation(geoLocation), is(address));
+        assertThat(sut.getAddressForGeoLocation(geoLocation), is(address));
         verifyZeroInteractions(addressServiceMock);
     }
 
@@ -208,7 +226,7 @@ public class AddressServiceWrapperUnitTest {
         GeoLocation geoLocation = new GeoLocation(new BigDecimal(48.07506), new BigDecimal(8.6362987));
         when(cache.getForLocation(geoLocation)).thenReturn(null); // cache miss
 
-        addressServiceWrapper.getAddressForGeoLocation(geoLocation);
+        sut.getAddressForGeoLocation(geoLocation);
         verify(addressServiceMock).getAddressByGeolocation(geoLocation);
     }
 
@@ -223,7 +241,7 @@ public class AddressServiceWrapperUnitTest {
         details.put(COUNTRY.getKey(), null);
         details.put(NAME.getKey(), null);
 
-        addressServiceWrapper.getAddressesByDetails(details);
+        sut.getAddressesByDetails(details);
 
         verifyZeroInteractions(staticAddressServiceMock);
     }
@@ -239,7 +257,7 @@ public class AddressServiceWrapperUnitTest {
         details.put(COUNTRY.getKey(), null);
         details.put(NAME.getKey(), null);
 
-        addressServiceWrapper.getAddressesByDetails(details);
+        sut.getAddressesByDetails(details);
 
         verify(staticAddressServiceMock).findAddresses(POSTAL_CODE_76133, null, null);
     }
@@ -254,7 +272,7 @@ public class AddressServiceWrapperUnitTest {
         details.put(POSTAL_CODE.getKey(), POSTAL_CODE_76133);
         details.put(COUNTRY.getKey(), null);
         details.put(NAME.getKey(), null);
-        addressServiceWrapper.getAddressesByDetails(details);
+        sut.getAddressesByDetails(details);
 
         verify(staticAddressServiceMock).findAddresses(POSTAL_CODE_76133, null, null);
     }
@@ -269,7 +287,7 @@ public class AddressServiceWrapperUnitTest {
         details.put(POSTAL_CODE.getKey(), null);
         details.put(COUNTRY.getKey(), null);
         details.put(NAME.getKey(), null);
-        addressServiceWrapper.getAddressesByDetails(details);
+        sut.getAddressesByDetails(details);
 
         verify(staticAddressServiceMock).findAddresses(null, CITYNAME_KARLSRUHE_NORMALIZED, null);
     }
@@ -284,7 +302,7 @@ public class AddressServiceWrapperUnitTest {
         details.put(POSTAL_CODE.getKey(), null);
         details.put(COUNTRY.getKey(), null);
         details.put(NAME.getKey(), null);
-        addressServiceWrapper.getAddressesByDetails(details);
+        sut.getAddressesByDetails(details);
 
         verify(staticAddressServiceMock).findAddresses(null, CITYNAME_KARLSRUHE_NORMALIZED, null);
     }
@@ -299,7 +317,7 @@ public class AddressServiceWrapperUnitTest {
         details.put(POSTAL_CODE.getKey(), POSTAL_CODE_76133);
         details.put(COUNTRY.getKey(), null);
         details.put(NAME.getKey(), null);
-        addressServiceWrapper.getAddressesByDetails(details);
+        sut.getAddressesByDetails(details);
 
         verify(staticAddressServiceMock).findAddresses(POSTAL_CODE_76133, CITYNAME_KARLSRUHE_NORMALIZED, null);
     }
@@ -314,7 +332,7 @@ public class AddressServiceWrapperUnitTest {
         details.put(POSTAL_CODE.getKey(), POSTAL_CODE_76137);
         details.put(COUNTRY.getKey(), null);
         details.put(NAME.getKey(), null);
-        addressServiceWrapper.getAddressesByDetails(details);
+        sut.getAddressesByDetails(details);
 
         verify(staticAddressServiceMock).findAddresses(POSTAL_CODE_76137, null, null);
 
@@ -331,7 +349,7 @@ public class AddressServiceWrapperUnitTest {
         details.put(POSTAL_CODE.getKey(), POSTAL_CODE_76137);
         details.put(COUNTRY.getKey(), null);
         details.put(NAME.getKey(), null);
-        addressServiceWrapper.getAddressesByDetails(details);
+        sut.getAddressesByDetails(details);
 
         verify(staticAddressServiceMock).findAddresses(POSTAL_CODE_76137, CITYNAME_KARLSRUHE_NORMALIZED, null);
         verify(addressServiceMock).getAddressesByDetails(details);
@@ -348,7 +366,7 @@ public class AddressServiceWrapperUnitTest {
         details.put(COUNTRY.getKey(), null);
         details.put(NAME.getKey(), null);
         when(normalizerServiceMock.normalize(CITYNAME_NOT_NORMALIZED_AT_ALL)).thenReturn("");
-        addressServiceWrapper.getAddressesByDetails(details);
+        sut.getAddressesByDetails(details);
         verifyZeroInteractions(staticAddressServiceMock);
     }
 
@@ -362,7 +380,7 @@ public class AddressServiceWrapperUnitTest {
         details.put(POSTAL_CODE.getKey(), POSTAL_CODE_76137);
         details.put(COUNTRY.getKey(), null);
         details.put(NAME.getKey(), null);
-        addressServiceWrapper.getAddressesByDetails(details);
+        sut.getAddressesByDetails(details);
         verifyZeroInteractions(addressServiceMock);
     }
 
@@ -376,7 +394,7 @@ public class AddressServiceWrapperUnitTest {
         details.put(POSTAL_CODE.getKey(), POSTAL_CODE_76137);
         details.put(COUNTRY.getKey(), null);
         details.put(NAME.getKey(), null);
-        addressServiceWrapper.getAddressesByDetails(details);
+        sut.getAddressesByDetails(details);
         verifyZeroInteractions(addressServiceMock);
     }
 }

@@ -17,7 +17,6 @@ import org.mockito.Mockito;
 import java.math.BigDecimal;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,8 +27,12 @@ import static net.contargo.iris.address.nominatim.service.AddressDetailKey.NAME;
 import static net.contargo.iris.address.nominatim.service.AddressDetailKey.POSTAL_CODE;
 import static net.contargo.iris.address.nominatim.service.AddressDetailKey.STREET;
 
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import static java.util.Collections.singletonList;
 
 
 /**
@@ -46,23 +49,25 @@ public class AddressServiceWrapperCachingUnitTest {
     private AddressService addressService;
 
     private StaticAddressService staticAddressServiceMock;
+    private AddressListFilter addressListFilterMock;
 
     // object to test
-    private AddressServiceWrapper addressServiceWrapper;
+    private AddressServiceWrapper sut;
     private AddressCache addressCache;
 
     @Before
     public void setup() {
 
-        addressService = Mockito.mock(AddressService.class);
-        staticAddressServiceMock = Mockito.mock(StaticAddressService.class);
-        addressCache = Mockito.mock(AddressCache.class);
+        addressService = mock(AddressService.class);
+        staticAddressServiceMock = mock(StaticAddressService.class);
+        addressCache = mock(AddressCache.class);
+        addressListFilterMock = mock(AddressListFilter.class);
 
         NormalizerService normalizerServiceMock = mock(NormalizerService.class);
         when(normalizerServiceMock.normalize(CITY_NAME)).thenReturn(CITY_NAME_NORMALIZED);
 
-        addressServiceWrapper = new AddressServiceWrapper(addressService, staticAddressServiceMock, addressCache,
-                normalizerServiceMock);
+        sut = new AddressServiceWrapper(addressService, staticAddressServiceMock, addressCache, normalizerServiceMock,
+                addressListFilterMock);
     }
 
 
@@ -80,17 +85,18 @@ public class AddressServiceWrapperCachingUnitTest {
         addressDetails.put(POSTAL_CODE.getKey(), "42");
         addressDetails.put(NAME.getKey(), "bla");
 
-        List<Address> addresses = Arrays.asList(a);
-        Mockito.when(addressService.getAddressesByDetails(addressDetails)).thenReturn(addresses);
+        List<Address> addresses = singletonList(a);
+        when(addressService.getAddressesByDetails(addressDetails)).thenReturn(addresses);
+        when(addressListFilterMock.filterByCountryCode(any(), eq("CH"))).thenAnswer(invocation -> invocation.getArguments()[0]);
 
         List<AddressList> expectedList = new ArrayList<>();
         AddressList expectedAddressList = new AddressList(a, addresses);
         expectedList.add(null);
         expectedList.add(expectedAddressList);
 
-        addressServiceWrapper.getAddressesByDetails(addressDetails);
+        sut.getAddressesByDetails(addressDetails);
 
-        Mockito.verify(addressCache).cache(expectedList);
+        verify(addressCache).cache(expectedList);
     }
 
 
@@ -103,7 +109,8 @@ public class AddressServiceWrapperCachingUnitTest {
         a.setLongitude(new BigDecimal(8.425742155221));
 
         GeoLocation loc = new GeoLocation(a.getLatitude(), a.getLongitude());
-        Mockito.when(addressCache.getForLocation(loc)).thenReturn(a);
+        when(addressCache.getForLocation(loc)).thenReturn(a);
+        when(addressListFilterMock.filterByCountryCode(any(), eq("CH"))).thenAnswer(invocation -> invocation.getArguments()[0]);
 
         Map<String, String> addressDetails = new HashMap<>();
         addressDetails.put(CITY.getKey(), CITY_NAME);
@@ -111,9 +118,9 @@ public class AddressServiceWrapperCachingUnitTest {
         addressDetails.put(STREET.getKey(), "foo");
         addressDetails.put(POSTAL_CODE.getKey(), "42");
         addressDetails.put(NAME.getKey(), "bla");
-        addressServiceWrapper.getAddressesByDetails(addressDetails);
+        sut.getAddressesByDetails(addressDetails);
 
-        Address b = addressServiceWrapper.getAddressForGeoLocation(loc);
+        Address b = sut.getAddressForGeoLocation(loc);
 
         Assert.assertEquals(a, b);
     }
@@ -127,16 +134,16 @@ public class AddressServiceWrapperCachingUnitTest {
         a.setLatitude(new BigDecimal(49.01542167885));
         a.setLongitude(new BigDecimal(8.425742155221));
 
-        StaticAddress sa = Mockito.mock(StaticAddress.class);
+        StaticAddress sa = mock(StaticAddress.class);
 
-        Mockito.when(sa.toAddress()).thenReturn(a);
+        when(sa.toAddress()).thenReturn(a);
 
         GeoLocation loc = new GeoLocation(a.getLatitude(), a.getLongitude());
 
-        Mockito.when(addressCache.getForLocation(loc)).thenReturn(null);
-        Mockito.when(staticAddressServiceMock.getForLocation(loc)).thenReturn(sa);
+        when(addressCache.getForLocation(loc)).thenReturn(null);
+        when(staticAddressServiceMock.getForLocation(loc)).thenReturn(sa);
 
-        Address b = addressServiceWrapper.getAddressForGeoLocation(loc);
+        Address b = sut.getAddressForGeoLocation(loc);
 
         Assert.assertEquals(a, b);
     }

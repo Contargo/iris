@@ -8,9 +8,11 @@ import net.contargo.iris.address.staticsearch.StaticAddress;
 import net.contargo.iris.address.staticsearch.service.StaticAddressService;
 import net.contargo.iris.normalizer.NormalizerService;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 
@@ -25,6 +27,8 @@ import static net.contargo.iris.address.nominatim.service.AddressDetailKey.NAME;
 import static net.contargo.iris.address.nominatim.service.AddressDetailKey.POSTAL_CODE;
 import static net.contargo.iris.address.nominatim.service.AddressDetailKey.STREET;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.mock;
@@ -32,45 +36,42 @@ import static org.mockito.Mockito.when;
 
 import static java.util.Collections.singletonList;
 
-
 /**
- * Tests Caching-Aspects of AddressServiceWrapper.
+ * Tests Caching-Aspects of {@link AddressServiceWrapper}.
  *
- * @author  Sven Mueller - mueller@synyx.de
+ * @author Sven Mueller - mueller@synyx.de
+ * @author Tobias Schneider - schneider@synyx.de
  */
+@RunWith(MockitoJUnitRunner.class)
 public class AddressServiceWrapperCachingUnitTest {
 
     public static final String CITY_NAME = "bar";
     public static final String CITY_NAME_NORMALIZED = "BAR";
 
-    // mocked
-    private AddressService addressService;
-
-    private StaticAddressService staticAddressServiceMock;
-    private AddressListFilter addressListFilterMock;
-
-    // object to test
     private AddressServiceWrapper sut;
-    private AddressCache addressCache;
+
+    @Mock
+    private AddressService addressServiceMock;
+    @Mock
+    private StaticAddressService staticAddressServiceMock;
+    @Mock
+    private AddressCache addressCacheMock;
+    @Mock
+    private AddressListFilter addressListFilterMock;
 
     @Before
     public void setup() {
 
-        addressService = mock(AddressService.class);
-        staticAddressServiceMock = mock(StaticAddressService.class);
-        addressCache = mock(AddressCache.class);
-        addressListFilterMock = mock(AddressListFilter.class);
-
         NormalizerService normalizerServiceMock = mock(NormalizerService.class);
         when(normalizerServiceMock.normalize(CITY_NAME)).thenReturn(CITY_NAME_NORMALIZED);
 
-        sut = new AddressServiceWrapper(addressService, staticAddressServiceMock, addressCache, normalizerServiceMock,
+        sut = new AddressServiceWrapper(addressServiceMock, staticAddressServiceMock, addressCacheMock, normalizerServiceMock,
                 addressListFilterMock);
     }
 
 
     @Test
-    public void cachesOnRetrieve() {
+    public void getAddressForGeoLocationCachesOnRetrieve() {
 
         Address a = new Address();
         a.setLatitude(new BigDecimal(49.01542167885));
@@ -84,7 +85,7 @@ public class AddressServiceWrapperCachingUnitTest {
         addressDetails.put(NAME.getKey(), "bla");
 
         List<Address> addresses = singletonList(a);
-        when(addressService.getAddressesByDetails(addressDetails)).thenReturn(addresses);
+        when(addressServiceMock.getAddressesByDetails(addressDetails)).thenReturn(addresses);
         when(addressListFilterMock.filterOutByCountryCode(any(), eq("CH"))).thenAnswer(invocation -> invocation.getArguments()[0]);
 
         List<AddressList> expectedList = new ArrayList<>();
@@ -94,20 +95,20 @@ public class AddressServiceWrapperCachingUnitTest {
 
         sut.getAddressesByDetails(addressDetails);
 
-        verify(addressCache).cache(expectedList);
+        verify(addressCacheMock).cache(expectedList);
     }
 
 
     @Test
-    public void testCaching() {
+    public void getAddressForGeoLocationCaching() {
 
-        Address a = new Address();
-        a.setOsmId(123L);
-        a.setLatitude(new BigDecimal(49.01542167885));
-        a.setLongitude(new BigDecimal(8.425742155221));
+        Address expectedAddress = new Address();
+        expectedAddress.setOsmId(123L);
+        expectedAddress.setLatitude(new BigDecimal(49.01542167885));
+        expectedAddress.setLongitude(new BigDecimal(8.425742155221));
 
-        GeoLocation loc = new GeoLocation(a.getLatitude(), a.getLongitude());
-        when(addressCache.getForLocation(loc)).thenReturn(a);
+        GeoLocation loc = new GeoLocation(expectedAddress.getLatitude(), expectedAddress.getLongitude());
+        when(addressCacheMock.getForLocation(loc)).thenReturn(expectedAddress);
         when(addressListFilterMock.filterOutByCountryCode(any(), eq("CH"))).thenAnswer(invocation -> invocation.getArguments()[0]);
 
         Map<String, String> addressDetails = new HashMap<>();
@@ -118,31 +119,30 @@ public class AddressServiceWrapperCachingUnitTest {
         addressDetails.put(NAME.getKey(), "bla");
         sut.getAddressesByDetails(addressDetails);
 
-        Address b = sut.getAddressForGeoLocation(loc);
+        Address addressForGeoLocation = sut.getAddressForGeoLocation(loc);
 
-        Assert.assertEquals(a, b);
+        assertThat(addressForGeoLocation, is(expectedAddress));
     }
 
 
     @Test
-    public void testAlsoChecksStaticAddressesBeforeCache() {
+    public void getAddressForGeoLocationAlsoChecksStaticAddressesBeforeCache() {
 
-        Address a = new Address();
-        a.setOsmId(123L);
-        a.setLatitude(new BigDecimal(49.01542167885));
-        a.setLongitude(new BigDecimal(8.425742155221));
+        Address expectedAddress = new Address();
+        expectedAddress.setOsmId(123L);
+        expectedAddress.setLatitude(new BigDecimal(49.01542167885));
+        expectedAddress.setLongitude(new BigDecimal(8.425742155221));
 
-        StaticAddress sa = mock(StaticAddress.class);
+        StaticAddress staticAddressMock = mock(StaticAddress.class);
+        when(staticAddressMock.toAddress()).thenReturn(expectedAddress);
 
-        when(sa.toAddress()).thenReturn(a);
+        GeoLocation loc = new GeoLocation(expectedAddress.getLatitude(), expectedAddress.getLongitude());
+        when(addressCacheMock.getForLocation(loc)).thenReturn(null);
 
-        GeoLocation loc = new GeoLocation(a.getLatitude(), a.getLongitude());
+        when(staticAddressServiceMock.getForLocation(loc)).thenReturn(staticAddressMock);
 
-        when(addressCache.getForLocation(loc)).thenReturn(null);
-        when(staticAddressServiceMock.getForLocation(loc)).thenReturn(sa);
+        Address addressForGeoLocation = sut.getAddressForGeoLocation(loc);
 
-        Address b = sut.getAddressForGeoLocation(loc);
-
-        Assert.assertEquals(a, b);
+        assertThat(addressForGeoLocation, is(expectedAddress));
     }
 }

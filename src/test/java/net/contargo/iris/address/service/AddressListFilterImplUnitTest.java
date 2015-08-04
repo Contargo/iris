@@ -24,11 +24,14 @@ import static java.util.Collections.singletonList;
 
 
 /**
+ * Unit test of {@link AddressListFilterImpl}.
+ *
  * @author  David Schilling - schilling@synyx.de
  */
 public class AddressListFilterImplUnitTest {
 
     private AddressListFilterImpl sut;
+
     private Address swissAddress;
     private Address germanAddress;
 

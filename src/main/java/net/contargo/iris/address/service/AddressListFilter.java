@@ -13,12 +13,12 @@ import java.util.List;
 public interface AddressListFilter {
 
     /**
-     * Filters the given list so that it does not contain a Address with the given countrycode.
+     * Filters the given list so that it does not contain a Address with the given countryCode.
      *
      * @param  addressLists  the Addresses to filter.
      * @param  countryCode  the value to filter out.
      *
      * @return  the filtered list.
      */
-    List<AddressList> filterByCountryCode(List<AddressList> addressLists, String countryCode);
+    List<AddressList> filterOutByCountryCode(List<AddressList> addressLists, String countryCode);
 }

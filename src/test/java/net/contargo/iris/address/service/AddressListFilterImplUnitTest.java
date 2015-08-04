@@ -58,7 +58,7 @@ public class AddressListFilterImplUnitTest {
         List<AddressList> addressesList = new ArrayList<>();
         addressesList.add(addressList);
 
-        List<AddressList> result = sut.filterByCountryCode(addressesList, "CH");
+        List<AddressList> result = sut.filterOutByCountryCode(addressesList, "CH");
 
         assertThat(result, hasSize(1));
     }
@@ -72,7 +72,7 @@ public class AddressListFilterImplUnitTest {
         List<AddressList> addressesList = new ArrayList<>();
         addressesList.add(addressList);
 
-        List<AddressList> result = sut.filterByCountryCode(addressesList, "CH");
+        List<AddressList> result = sut.filterOutByCountryCode(addressesList, "CH");
 
         assertThat(result, hasSize(0));
     }
@@ -86,7 +86,7 @@ public class AddressListFilterImplUnitTest {
         List<AddressList> addressesList = new ArrayList<>();
         addressesList.add(addressList);
 
-        List<AddressList> result = sut.filterByCountryCode(addressesList, "CH");
+        List<AddressList> result = sut.filterOutByCountryCode(addressesList, "CH");
 
         assertThat(result, hasSize(1));
     }
@@ -103,7 +103,7 @@ public class AddressListFilterImplUnitTest {
         addressList.add(swissAddressList);
         addressList.add(germanAddressList);
 
-        List<AddressList> result = sut.filterByCountryCode(addressList, "CH");
+        List<AddressList> result = sut.filterOutByCountryCode(addressList, "CH");
 
         assertThat(result, hasSize(1));
         assertThat(result.get(0), is(germanAddressList));
@@ -119,7 +119,7 @@ public class AddressListFilterImplUnitTest {
         List<AddressList> addressList = new ArrayList<>();
         addressList.add(germanAddressList);
 
-        List<AddressList> result = sut.filterByCountryCode(addressList, "CH");
+        List<AddressList> result = sut.filterOutByCountryCode(addressList, "CH");
 
         assertThat(result, hasSize(1));
     }

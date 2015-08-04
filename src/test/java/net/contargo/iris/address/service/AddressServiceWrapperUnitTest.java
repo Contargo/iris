@@ -18,15 +18,10 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
-import org.mockito.invocation.InvocationOnMock;
-
 import org.mockito.runners.MockitoJUnitRunner;
-
-import org.mockito.stubbing.Answer;
 
 import java.math.BigDecimal;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,7 +40,6 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.eq;
 
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
@@ -154,7 +148,7 @@ public class AddressServiceWrapperUnitTest {
         a.setOsmId(23L);
 
         Mockito.when(addressServiceMock.getAddressesByDetails(addressDetails)).thenReturn(singletonList(a));
-        when(addressListFilterMock.filterByCountryCode(Mockito.any(), eq("CH"))).thenAnswer(invocation -> invocation.getArguments()[0]);
+        when(addressListFilterMock.filterOutByCountryCode(Mockito.any(), eq("CH"))).thenAnswer(invocation -> invocation.getArguments()[0]);
 
         Address suburb = new Address();
         suburb.setDisplayName("suburb of address");
@@ -167,7 +161,7 @@ public class AddressServiceWrapperUnitTest {
         Assert.assertThat(result.get(1).getAddresses().get(0), Matchers.equalTo(a));
 
         verify(cache).cache(result);
-        verify(addressListFilterMock).filterByCountryCode(Mockito.any(), eq("CH"));
+        verify(addressListFilterMock).filterOutByCountryCode(Mockito.any(), eq("CH"));
     }
 
 
@@ -196,7 +190,7 @@ public class AddressServiceWrapperUnitTest {
 
         List<Address> nominatimAddresses = asList(neustadtHessen, neustadtSachsen);
         Mockito.when(addressServiceMock.getAddressesByDetails(detailsNeustadt)).thenReturn(nominatimAddresses);
-        when(addressListFilterMock.filterByCountryCode(Mockito.any(), eq("CH"))).thenAnswer(invocation -> invocation.getArguments()[0]);
+        when(addressListFilterMock.filterOutByCountryCode(Mockito.any(), eq("CH"))).thenAnswer(invocation -> invocation.getArguments()[0]);
         when(normalizerServiceMock.normalize(CITYNAME_NEUSTADT)).thenReturn(CITYNAME_NEUSTADT_NORMALIZED);
 
         List<AddressList> addresses = sut.getAddressesByDetails(detailsNeustadt);
@@ -204,7 +198,7 @@ public class AddressServiceWrapperUnitTest {
         Assert.assertEquals(3, addresses.size());
         Assert.assertThat(addresses.get(1).getParentAddress(), Matchers.equalTo(neustadtHessen));
         Assert.assertThat(addresses.get(2).getParentAddress(), Matchers.equalTo(neustadtSachsen));
-        verify(addressListFilterMock).filterByCountryCode(Mockito.any(), eq("CH"));
+        verify(addressListFilterMock).filterOutByCountryCode(Mockito.any(), eq("CH"));
     }
 
 

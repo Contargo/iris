@@ -12,8 +12,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.mockito.Mockito;
-
 import java.math.BigDecimal;
 
 import java.util.ArrayList;
@@ -87,7 +85,7 @@ public class AddressServiceWrapperCachingUnitTest {
 
         List<Address> addresses = singletonList(a);
         when(addressService.getAddressesByDetails(addressDetails)).thenReturn(addresses);
-        when(addressListFilterMock.filterByCountryCode(any(), eq("CH"))).thenAnswer(invocation -> invocation.getArguments()[0]);
+        when(addressListFilterMock.filterOutByCountryCode(any(), eq("CH"))).thenAnswer(invocation -> invocation.getArguments()[0]);
 
         List<AddressList> expectedList = new ArrayList<>();
         AddressList expectedAddressList = new AddressList(a, addresses);
@@ -110,7 +108,7 @@ public class AddressServiceWrapperCachingUnitTest {
 
         GeoLocation loc = new GeoLocation(a.getLatitude(), a.getLongitude());
         when(addressCache.getForLocation(loc)).thenReturn(a);
-        when(addressListFilterMock.filterByCountryCode(any(), eq("CH"))).thenAnswer(invocation -> invocation.getArguments()[0]);
+        when(addressListFilterMock.filterOutByCountryCode(any(), eq("CH"))).thenAnswer(invocation -> invocation.getArguments()[0]);
 
         Map<String, String> addressDetails = new HashMap<>();
         addressDetails.put(CITY.getKey(), CITY_NAME);

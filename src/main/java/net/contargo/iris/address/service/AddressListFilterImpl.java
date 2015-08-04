@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public class AddressListFilterImpl implements AddressListFilter {
 
     @Override
-    public List<AddressList> filterByCountryCode(List<AddressList> addressLists, String countryCode) {
+    public List<AddressList> filterOutByCountryCode(List<AddressList> addressLists, String countryCode) {
 
         return addressLists.stream().filter(byFirstCountryCode(countryCode)).collect(Collectors.toList());
     }

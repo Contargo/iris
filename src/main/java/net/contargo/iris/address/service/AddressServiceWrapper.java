@@ -117,7 +117,7 @@ public class AddressServiceWrapper {
 
         if (street != null && !"".equals(street)) {
             List<AddressList> nominatimResult = resolveByNominatim(addressDetails);
-            result.addAll(filterSwissAddresses(nominatimResult));
+            result.addAll(filterOutSwissAddresses(nominatimResult));
         }
 
         addressCache.cache(result);
@@ -126,9 +126,13 @@ public class AddressServiceWrapper {
     }
 
 
-    private List<AddressList> filterSwissAddresses(List<AddressList> nominatimResult) {
+    /**
+     * In Swiss only the results of the static addresses (ASTAG) are relevant. So all swiss nominatim results are
+     * filtered out.
+     */
+    private List<AddressList> filterOutSwissAddresses(List<AddressList> nominatimResult) {
 
-        return addressListFilter.filterByCountryCode(nominatimResult, "CH");
+        return addressListFilter.filterOutByCountryCode(nominatimResult, "CH");
     }
 
 

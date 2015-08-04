@@ -48,3 +48,16 @@ Barge transport only happens between seaports and inland terminals or between in
 * **Direct Truck:** Transport only per truck from or to the seaport and the loading site.
 * **Roundtrip:** Waterway, Railway or Direct Truck transport from seaport to loading / unloading site and back to seaports.
 * **All:** A list of all the possibilities for transport for a given loading site.
+
+##Route Revision
+
+A Route Revision gives the possibility to override the calculated distances between a geolocation and a terminal given by OSRM.
+It is defined by a Geolocation, the responsible terminal, a radius and the three distances that would replace the distances provided by OSRM - Truckdistance Oneway, Tolldistance Oneway, Airline Distance.
+
+###Example
+
+1. A Route Revision exists with Terminal **Mannheim**, geolocation 49.451369,8.1030178 and radius 100m.
+2. There is a routing between the Terminal **Mannheim** and the geolocation 49.451367,8.1030177.
+3. The Routing Geolocation is in the radius of the Route Revision, so the distances defined are used.
+
+If a destination is in more than one radius of different Route Revisions, than the nearest (calculated by the air line distance) will override the values described above.

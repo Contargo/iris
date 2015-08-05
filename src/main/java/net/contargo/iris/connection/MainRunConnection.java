@@ -8,16 +8,24 @@ import net.contargo.validation.bigdecimal.BigDecimalValidate;
 
 import java.math.BigDecimal;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import javax.validation.constraints.NotNull;
+
+import static net.contargo.iris.route.RouteType.BARGE_RAIL;
 
 
 /**
@@ -29,8 +37,8 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @Table(
-    name = "Connection",
-    uniqueConstraints = @UniqueConstraint(columnNames = { "seaport_id", "terminal_id", "routeType" })
+    name = "Connection", uniqueConstraints =
+        @UniqueConstraint(columnNames = { "seaport_id", "terminal_id", "routeType" })
 )
 public class MainRunConnection {
 
@@ -50,11 +58,15 @@ public class MainRunConnection {
 
     @NotNull
     @BigDecimalValidate(minValue = 0, minDecimalPlaces = 1L, maxDecimalPlaces = TEN, maxFractionalPlaces = TEN)
-    private BigDecimal dieselDistance;
+    private BigDecimal bargeDieselDistance;
 
     @NotNull
     @BigDecimalValidate(minValue = 0, minDecimalPlaces = 1L, maxDecimalPlaces = TEN, maxFractionalPlaces = TEN)
-    private BigDecimal electricDistance;
+    private BigDecimal railDieselDistance;
+
+    @NotNull
+    @BigDecimalValidate(minValue = 0, minDecimalPlaces = 1L, maxDecimalPlaces = TEN, maxFractionalPlaces = TEN)
+    private BigDecimal railElectricDistance;
 
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -63,9 +75,13 @@ public class MainRunConnection {
     @NotNull
     private Boolean enabled = Boolean.TRUE;
 
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "parentConnection", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<AbstractSubConnection> subConnections;
+
     public MainRunConnection() {
 
         // JPA needs no-arg constructor
+        this.subConnections = new ArrayList<>();
     }
 
 
@@ -73,17 +89,18 @@ public class MainRunConnection {
 
         super();
         this.seaport = seaport;
+        this.subConnections = new ArrayList<>();
     }
 
     /**
-     * Computes the total distance of this {@link MainRunConnection} as the sum of its diesel distance and its
-     * electrical distance.
+     * Computes the total distance of this {@link MainRunConnection} as the sum of its barge distance, its diesel rail
+     * distance and its electrical rail distance.
      *
      * @return  total distance
      */
     public BigDecimal getTotalDistance() {
 
-        return getDieselDistance().add(getElectricDistance());
+        return getRailDieselDistance().add(getRailElectricDistance()).add(getBargeDieselDistance());
     }
 
 
@@ -123,27 +140,69 @@ public class MainRunConnection {
     }
 
 
-    public BigDecimal getDieselDistance() {
+    public BigDecimal getBargeDieselDistance() {
 
-        return dieselDistance;
+        if (routeType == BARGE_RAIL) {
+            BigDecimal distance = BigDecimal.ZERO;
+
+            for (AbstractSubConnection subConnection : subConnections) {
+                distance = distance.add(subConnection.getBargeDieselDistance());
+            }
+
+            return distance;
+        } else {
+            return bargeDieselDistance;
+        }
     }
 
 
-    public void setDieselDistance(BigDecimal dieselDistance) {
+    public void setBargeDieselDistance(BigDecimal bargeDistance) {
 
-        this.dieselDistance = dieselDistance;
+        this.bargeDieselDistance = bargeDistance;
     }
 
 
-    public BigDecimal getElectricDistance() {
+    public BigDecimal getRailDieselDistance() {
 
-        return electricDistance;
+        if (routeType == BARGE_RAIL) {
+            BigDecimal distance = BigDecimal.ZERO;
+
+            for (AbstractSubConnection subConnection : subConnections) {
+                distance = distance.add(subConnection.getRailDieselDistance());
+            }
+
+            return distance;
+        } else {
+            return railDieselDistance;
+        }
     }
 
 
-    public void setElectricDistance(BigDecimal electricDistance) {
+    public void setRailDieselDistance(BigDecimal dieselDistance) {
 
-        this.electricDistance = electricDistance;
+        this.railDieselDistance = dieselDistance;
+    }
+
+
+    public BigDecimal getRailElectricDistance() {
+
+        if (routeType == BARGE_RAIL) {
+            BigDecimal distance = BigDecimal.ZERO;
+
+            for (AbstractSubConnection subConnection : subConnections) {
+                distance = distance.add(subConnection.getRailElectricDistance());
+            }
+
+            return distance;
+        } else {
+            return railElectricDistance;
+        }
+    }
+
+
+    public void setRailElectricDistance(BigDecimal electricDistance) {
+
+        this.railElectricDistance = electricDistance;
     }
 
 
@@ -168,6 +227,18 @@ public class MainRunConnection {
     public void setEnabled(Boolean enabled) {
 
         this.enabled = enabled;
+    }
+
+
+    public List<AbstractSubConnection> getSubConnections() {
+
+        return subConnections;
+    }
+
+
+    public void setSubConnections(List<AbstractSubConnection> subConnections) {
+
+        this.subConnections = subConnections;
     }
 
 
@@ -198,6 +269,14 @@ public class MainRunConnection {
             return false;
         }
 
+        if (!subConnections.isEmpty()) {
+            for (AbstractSubConnection subConnection : subConnections) {
+                if (!subConnection.isEnabled()) {
+                    return false;
+                }
+            }
+        }
+
         return true;
     }
 
@@ -206,7 +285,9 @@ public class MainRunConnection {
     public String toString() {
 
         return "MainRunConnection [id=" + id + ", seaport=" + seaport
-            + ", location=" + terminal + ", dieselDistance=" + dieselDistance + ", electricDistance=" + electricDistance
+            + ", location=" + terminal + ", bargeDieselDistance=" + bargeDieselDistance + ", railDieselDistance="
+            + railDieselDistance
+            + ", railElectricDistance=" + railElectricDistance
             + ", routeType=" + routeType + "]";
     }
 }

@@ -8,6 +8,8 @@ import java.math.BigDecimal;
 
 
 /**
+ * Co2 strategy for main run connections with route type rail.
+ *
  * @author  Oliver Messner - messner@synyx.de
  */
 class Co2PartRailStrategy implements Co2PartStrategy {
@@ -24,7 +26,7 @@ class Co2PartRailStrategy implements Co2PartStrategy {
 
         RoutePartData routePartData = routePart.getData();
 
-        BigDecimal distance1 = routePartData.getDieselDistance();
+        BigDecimal distance1 = routePartData.getRailDieselDistance();
         BigDecimal distance2 = routePartData.getElectricDistance();
 
         BigDecimal co2DieselFactor;

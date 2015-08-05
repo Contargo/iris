@@ -1,0 +1,13 @@
+<label for="routeType" class="control-label">Type</label>
+
+<div class="controls">
+    <select id="routeType" name="routeType">
+        {{#each types}}
+        {{#if this.selected}}
+        <option value="{{this.value}}" selected="selected">{{this.name}}</option>
+        {{else}}
+        <option value="{{this.value}}">{{this.name}}</option>
+        {{/if}}
+        {{/each}}
+    </select>
+</div>

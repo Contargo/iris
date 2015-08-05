@@ -71,8 +71,9 @@ public class DiscoverPublicApiController extends AbstractController {
 
         // connections_url
         discoverResponse.add(linkTo(
-                methodOn(MainRunConnectionApiController.class).getSeaportRoutes(SEAPORT_UID, SEAPORTS_LAT, SEAPORTS_LON,
-                    true, ContainerType.TWENTY_LIGHT, false, RouteCombo.WATERWAY)).withRel(REL_CONNECTIONS));
+                    methodOn(MainRunConnectionApiController.class).getSeaportRoutes(SEAPORT_UID, SEAPORTS_LAT,
+                        SEAPORTS_LON, true, ContainerType.TWENTY_LIGHT, false, RouteCombo.WATERWAY)).withRel(
+                REL_CONNECTIONS));
 
         // countries
         discoverResponse.add(linkTo(CountriesApiController.class).withRel(REL_COUNTRIES));
@@ -84,8 +85,8 @@ public class DiscoverPublicApiController extends AbstractController {
         // reverse_geocode
         Method method = AddressApiController.class.getMethod(AddressApiController.METHOD_ADDRESS_BY_GEOLOCATION,
                 BigDecimal.class, BigDecimal.class);
-        discoverResponse.add(linkTo(method, new BigDecimal("49.123"), new BigDecimal("8.12")).slash(".").withRel(
-                REL_REVERSE_GEOCODE));
+        discoverResponse.add(linkTo(method, new BigDecimal("49.123"), new BigDecimal("8.12")).slash(".")
+            .withRel(REL_REVERSE_GEOCODE));
 
         // geocode
         discoverResponse.add(linkTo(AddressApiController.class).slash(GEOCODES + "?city=Karlsruhe&postalcode=76137")
@@ -95,40 +96,40 @@ public class DiscoverPublicApiController extends AbstractController {
         discoverResponse.add(linkTo(methodOn(SeaportApiController.class).getSeaportById(SEAPORT_UID)).withRel(
                 REL_SEAPORT_EXAMPLE));
         discoverResponse.add(linkTo(
-                methodOn(MainRunConnectionApiController.class).getSeaportsInConnections(RouteCombo.ALL)).withRel(
+                    methodOn(MainRunConnectionApiController.class).getSeaportsInConnections(RouteCombo.ALL)).withRel(
                 REL_SEAPORTS_OF_CONNECTIONS));
         discoverResponse.add(linkTo(
-                methodOn(MainRunConnectionApiController.class).getSeaportsInConnections(RouteCombo.RAILWAY)).withRel(
-                REL_SEAPORTS_OF_CONNECTIONS_FILTERED));
+                    methodOn(MainRunConnectionApiController.class).getSeaportsInConnections(RouteCombo.RAILWAY))
+            .withRel(REL_SEAPORTS_OF_CONNECTIONS_FILTERED));
 
         // terminal (by uid)
         discoverResponse.add(linkTo(methodOn(TerminalApiController.class).getTerminalByUid(TERMINAL_UID)).withRel(
                 REL_TERMINAL_EXAMPLE));
 
         // terminals
-        discoverResponse.add(linkTo(methodOn(TerminalApiController.class).getTerminals()).withRel(REL_TERMINALS));
+        discoverResponse.add(linkTo(methodOn(TerminalApiController.class).getTerminals(true)).withRel(REL_TERMINALS));
 
         discoverResponse.add(linkTo(AddressApiController.class).slash(
                 "simplegeocodes?city=Karlsruhe&postalcode=76137").withRel(REL_SIMPLE_GEOCODES_EXAMPLE));
 
         discoverResponse.add(linkTo(RouteEnricherApiController.class).slash(
-                "?data.parts[0].origin.longitude=4.3&data.parts[0].origin.latitude=51.36833"
-                + "&data.parts[0].destination.longitude=8.2852700000&data.parts[0].destination.latitude=49.0690300000"
-                + "&data.parts[0].routeType=BARGE&data.parts[0].containerType=TWENTY_LIGHT"
-                + "&data.parts[0].containerState=FULL"
-                + "&data.parts[1].origin.longitude=8.2852700000&data.parts[1].origin.latitude=49.0690300000"
-                + "&data.parts[1].destination.longitude=8.41&data.parts[1].destination.latitude=49.0"
-                + "&data.parts[1].routeType=TRUCK&data.parts[1].containerType=TWENTY_LIGHT"
-                + "&data.parts[1].containerState=FULL"
-                + "&data.parts[2].origin.longitude=8.41&data.parts[2].origin.latitude=49.0"
-                + "&data.parts[2].destination.longitude=8.2852700000&data.parts[2].destination.latitude=49.0690300000"
-                + "&data.parts[2].routeType=TRUCK&data.parts[2].containerType=TWENTY_LIGHT"
-                + "&data.parts[2].containerState=EMPTY"
-                + "&data.parts[3].origin.longitude=8.2852700000&data.parts[3].origin.latitude=49.0690300000"
-                + "&data.parts[3].destination.longitude=4.3&data.parts[3].destination.latitude=51.36833"
-                + "&data.parts[3].routeType=BARGE"
-                + "&data.parts[3].containerType=TWENTY_LIGHT&data.parts[3].containerState=EMPTY").withRel(
-                REL_ROUTE_DETAILS_EXAMPLE));
+                    "?data.parts[0].origin.longitude=4.3&data.parts[0].origin.latitude=51.36833"
+                    + "&data.parts[0].destination.longitude=8.2852700000&data.parts[0].destination.latitude=49.0690300000"
+                    + "&data.parts[0].routeType=BARGE&data.parts[0].containerType=TWENTY_LIGHT"
+                    + "&data.parts[0].containerState=FULL"
+                    + "&data.parts[1].origin.longitude=8.2852700000&data.parts[1].origin.latitude=49.0690300000"
+                    + "&data.parts[1].destination.longitude=8.41&data.parts[1].destination.latitude=49.0"
+                    + "&data.parts[1].routeType=TRUCK&data.parts[1].containerType=TWENTY_LIGHT"
+                    + "&data.parts[1].containerState=FULL"
+                    + "&data.parts[2].origin.longitude=8.41&data.parts[2].origin.latitude=49.0"
+                    + "&data.parts[2].destination.longitude=8.2852700000&data.parts[2].destination.latitude=49.0690300000"
+                    + "&data.parts[2].routeType=TRUCK&data.parts[2].containerType=TWENTY_LIGHT"
+                    + "&data.parts[2].containerState=EMPTY"
+                    + "&data.parts[3].origin.longitude=8.2852700000&data.parts[3].origin.latitude=49.0690300000"
+                    + "&data.parts[3].destination.longitude=4.3&data.parts[3].destination.latitude=51.36833"
+                    + "&data.parts[3].routeType=BARGE"
+                    + "&data.parts[3].containerType=TWENTY_LIGHT&data.parts[3].containerState=EMPTY")
+            .withRel(REL_ROUTE_DETAILS_EXAMPLE));
 
         return discoverResponse;
     }

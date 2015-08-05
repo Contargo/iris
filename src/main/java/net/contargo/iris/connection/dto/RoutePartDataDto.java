@@ -15,6 +15,8 @@ public class RoutePartDataDto {
     private BigDecimal airlineDistance;
     private BigDecimal distance;
     private BigDecimal dieselDistance;
+    private BigDecimal bargeDieselDistance;
+    private BigDecimal railDieselDistance;
     private BigDecimal electricDistance;
     private BigDecimal tollDistance;
     private BigDecimal duration;
@@ -32,6 +34,8 @@ public class RoutePartDataDto {
             this.airlineDistance = data.getAirLineDistance();
             this.distance = data.getDistance();
             this.dieselDistance = data.getDieselDistance();
+            this.bargeDieselDistance = data.getBargeDieselDistance();
+            this.railDieselDistance = data.getRailDieselDistance();
             this.electricDistance = data.getElectricDistance();
             this.tollDistance = data.getTollDistance();
             this.duration = data.getDuration();
@@ -45,6 +49,8 @@ public class RoutePartDataDto {
         routePartData.setAirLineDistance(airlineDistance);
         routePartData.setDistance(distance);
         routePartData.setDieselDistance(dieselDistance);
+        routePartData.setBargeDieselDistance(bargeDieselDistance);
+        routePartData.setRailDieselDistance(railDieselDistance);
         routePartData.setElectricDistance(electricDistance);
         routePartData.setTollDistance(tollDistance);
         routePartData.setDuration(duration);
@@ -69,6 +75,18 @@ public class RoutePartDataDto {
     public BigDecimal getDieselDistance() {
 
         return dieselDistance;
+    }
+
+
+    public BigDecimal getBargeDieselDistance() {
+
+        return bargeDieselDistance;
+    }
+
+
+    public BigDecimal getRailDieselDistance() {
+
+        return railDieselDistance;
     }
 
 

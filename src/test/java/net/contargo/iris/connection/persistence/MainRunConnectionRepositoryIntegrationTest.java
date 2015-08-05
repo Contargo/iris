@@ -81,10 +81,63 @@ public class MainRunConnectionRepositoryIntegrationTest {
 
         List<MainRunConnection> connections = sut.findConnectionsByTerminalUniqueId(connectedTerminalUID);
         List<MainRunConnection> expectedConnections = em.createQuery(
-                "SELECT c FROM MainRunConnection c WHERE c.terminal.uniqueId = " + connectedTerminalUID,
-                MainRunConnection.class).getResultList();
+                    "SELECT c FROM MainRunConnection c WHERE c.terminal.uniqueId = " + connectedTerminalUID,
+                    MainRunConnection.class)
+            .getResultList();
 
         assertThat(connections, is(expectedConnections));
+    }
+
+
+    @Test
+    public void existsWithoutId() {
+
+        Seaport seaport = new Seaport(new GeoLocation(BigDecimal.TEN, BigDecimal.ONE));
+        seaport.setName("seaport");
+        seaport.setUniqueId(BigInteger.ONE);
+
+        Terminal terminal = new Terminal(new GeoLocation(BigDecimal.TEN, BigDecimal.TEN));
+        terminal.setName("terminal");
+        terminal.setUniqueId(BigInteger.TEN);
+        em.persist(seaport);
+        em.persist(terminal);
+
+        MainRunConnection connection = newConnection(seaport, terminal);
+        em.persist(connection);
+
+        em.flush();
+
+        boolean exists = sut.existsBySeaportAndTerminalAndRouteType(seaport.getId(), terminal.getId(), BARGE);
+
+        assertThat(exists, is(true));
+    }
+
+
+    @Test
+    public void existsWithId() {
+
+        Seaport seaport = new Seaport(new GeoLocation(BigDecimal.TEN, BigDecimal.ONE));
+        seaport.setName("seaport");
+        seaport.setUniqueId(BigInteger.ONE);
+
+        Terminal terminal = new Terminal(new GeoLocation(BigDecimal.TEN, BigDecimal.TEN));
+        terminal.setName("terminal");
+        terminal.setUniqueId(BigInteger.TEN);
+        em.persist(seaport);
+        em.persist(terminal);
+
+        MainRunConnection connection = newConnection(seaport, terminal);
+        em.persist(connection);
+
+        MainRunConnection connection2 = newConnection(seaport, terminal);
+        em.persist(connection2);
+
+        em.flush();
+
+        boolean exists = sut.existsBySeaportAndTerminalAndRouteTypeAndIdNot(seaport.getId(), terminal.getId(), BARGE,
+                connection.getId());
+
+        assertThat(exists, is(true));
     }
 
 
@@ -94,8 +147,9 @@ public class MainRunConnectionRepositoryIntegrationTest {
         connection.setSeaport(seaport);
         connection.setTerminal(terminal);
         connection.setRouteType(BARGE);
-        connection.setElectricDistance(new BigDecimal("300"));
-        connection.setDieselDistance(new BigDecimal("200"));
+        connection.setRailElectricDistance(new BigDecimal("300"));
+        connection.setRailDieselDistance(new BigDecimal("200"));
+        connection.setBargeDieselDistance(new BigDecimal("400"));
 
         return connection;
     }

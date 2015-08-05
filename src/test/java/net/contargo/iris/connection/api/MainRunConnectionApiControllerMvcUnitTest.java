@@ -1,10 +1,13 @@
 package net.contargo.iris.connection.api;
 
+import net.contargo.iris.connection.dto.AbstractSubConnectionDto;
 import net.contargo.iris.connection.dto.MainRunConnectionDto;
 import net.contargo.iris.connection.dto.MainRunConnectionDtoService;
 import net.contargo.iris.connection.dto.RouteDto;
 import net.contargo.iris.connection.dto.SeaportConnectionRoutesDtoService;
 import net.contargo.iris.connection.dto.SeaportTerminalConnectionDtoService;
+import net.contargo.iris.connection.dto.SimpleMainRunConnectionDto;
+import net.contargo.iris.connection.service.DuplicateMainRunConnectionException;
 import net.contargo.iris.container.ContainerType;
 import net.contargo.iris.route.Route;
 import net.contargo.iris.route.RouteInformation;
@@ -17,6 +20,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.junit.runner.RunWith;
+
+import org.mockito.ArgumentCaptor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -31,9 +36,15 @@ import org.springframework.web.context.WebApplicationContext;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import java.util.Collections;
+
 import static net.contargo.iris.route.RouteType.BARGE;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 
@@ -47,12 +58,16 @@ import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 
 
 /**
@@ -117,7 +132,7 @@ public class MainRunConnectionApiControllerMvcUnitTest {
 
         when(seaportDtoServiceMock.getByUid(seaportUid)).thenReturn(seaportDto);
         when(seaportConnectionRoutesDtoServiceMock.getAvailableSeaportConnectionRoutes(eq(seaportDto),
-                any(RouteInformation.class))).thenReturn(asList(routeDto));
+                    any(RouteInformation.class))).thenReturn(singletonList(routeDto));
 
         MockHttpServletRequestBuilder builder = get(url);
         builder.param("containerType", ContainerType.TWENTY_LIGHT.toString());
@@ -139,8 +154,9 @@ public class MainRunConnectionApiControllerMvcUnitTest {
         String terminalUid = "5";
         String seaportUid = "23";
 
-        MainRunConnectionDto dto = new MainRunConnectionDto(seaportUid, terminalUid, BARGE);
-        when(connectionApiDtoService.getConnectionsForTerminal(new BigInteger(terminalUid))).thenReturn(asList(dto));
+        SimpleMainRunConnectionDto dto = new SimpleMainRunConnectionDto(seaportUid, terminalUid, BARGE);
+        when(connectionApiDtoService.getConnectionsForTerminal(new BigInteger(terminalUid))).thenReturn(singletonList(
+                dto));
 
         MockHttpServletRequestBuilder builder = get("/connections");
         builder.accept(APPLICATION_JSON);
@@ -159,8 +175,8 @@ public class MainRunConnectionApiControllerMvcUnitTest {
     @Test
     public void getSeaportsOfConnections() throws Exception {
 
-        when(seaportTerminalConnectionDtoService.findSeaportsConnectedByRouteType(RouteType.BARGE)).thenReturn(asList(
-                seaportDto1));
+        when(seaportTerminalConnectionDtoService.findSeaportsConnectedByRouteType(RouteType.BARGE)).thenReturn(
+            singletonList(seaportDto1));
         when(seaportTerminalConnectionDtoService.findSeaportsConnectedByRouteType(RouteType.RAIL)).thenReturn(asList(
                 seaportDto1, seaportDto2));
 
@@ -187,8 +203,8 @@ public class MainRunConnectionApiControllerMvcUnitTest {
     @Test
     public void getSeaportsOfConnectionsForCombo() throws Exception {
 
-        when(seaportTerminalConnectionDtoService.findSeaportsConnectedByRouteType(RouteType.RAIL)).thenReturn(asList(
-                seaportDto1));
+        when(seaportTerminalConnectionDtoService.findSeaportsConnectedByRouteType(RouteType.RAIL)).thenReturn(
+            singletonList(seaportDto1));
 
         MockHttpServletRequestBuilder builder = get("/connections/seaports?combo=RAILWAY");
         builder.accept(APPLICATION_JSON);
@@ -210,10 +226,131 @@ public class MainRunConnectionApiControllerMvcUnitTest {
     public void getSeaportsOfConnectionsForBadRequest() throws Exception {
 
         MockHttpServletRequestBuilder builder = get("/connections/seaports?combo=FOO");
-        builder.accept(APPLICATION_JSON);
 
         ResultActions resultActions = perform(builder);
         resultActions.andExpect(status().isBadRequest());
+    }
+
+
+    @Test
+    public void getConnection() throws Exception {
+
+        MainRunConnectionDto dto = new MainRunConnectionDto(42L, "1", "2", BigDecimal.ONE, BigDecimal.TEN,
+                BigDecimal.ZERO, BARGE, true, Collections.<AbstractSubConnectionDto>emptyList());
+
+        when(connectionApiDtoService.get(42L)).thenReturn(dto);
+
+        MockHttpServletRequestBuilder builder = get("/connections/42").accept(APPLICATION_JSON);
+
+        ResultActions resultActions = perform(builder);
+        resultActions.andExpect(status().isOk());
+        resultActions.andExpect(content().contentType("application/json;charset=UTF-8"));
+        resultActions.andExpect(jsonPath("$.id", is(42)));
+        resultActions.andExpect(jsonPath("$.bargeDieselDistance", is(1)));
+        resultActions.andExpect(jsonPath("$.railDieselDistance", is(10)));
+        resultActions.andExpect(jsonPath("$.railElectricDistance", is(0)));
+        resultActions.andExpect(jsonPath("$.routeType", is("BARGE")));
+        resultActions.andExpect(jsonPath("$.subConnections", empty()));
+        resultActions.andExpect(jsonPath("$.seaportUid", is("1")));
+        resultActions.andExpect(jsonPath("$.terminalUid", is("2")));
+        resultActions.andExpect(jsonPath("$.enabled", is(true)));
+    }
+
+
+    @Test
+    public void createConnection() throws Exception {
+
+        when(connectionApiDtoService.save(any(MainRunConnectionDto.class))).thenReturn(new MainRunConnectionDto(42L,
+                null, null, null, null, null, null, null, null));
+
+        MockHttpServletRequestBuilder builder = post("/connections/");
+        builder.contentType("application/json;charset=UTF-8");
+        builder.content("{\"id\":42, \"bargeDieselDistance\":1,\"railDieselDistance\":10,\"railElectricDistance\":0,"
+            + "\"routeType\":\"BARGE\",\"subConnections\":[],\"seaportUid\":\"1\",\"terminalUid\":\"2\","
+            + "\"enabled\":true}");
+
+        ResultActions resultActions = perform(builder);
+        resultActions.andExpect(status().isCreated());
+        resultActions.andExpect(header().string("location", endsWith("/web/connections/42")));
+
+        ArgumentCaptor<MainRunConnectionDto> captor = ArgumentCaptor.forClass(MainRunConnectionDto.class);
+
+        verify(connectionApiDtoService).save(captor.capture());
+
+        assertThat(captor.getValue().getId(), is(42L));
+    }
+
+
+    @Test
+    public void createConnectionDuplicate() throws Exception {
+
+        when(connectionApiDtoService.save(any(MainRunConnectionDto.class))).thenThrow(
+            new DuplicateMainRunConnectionException());
+
+        MockHttpServletRequestBuilder builder = post("/connections/");
+        builder.contentType("application/json;charset=UTF-8");
+        builder.content("{\"id\":42, \"bargeDieselDistance\":1,\"railDieselDistance\":10,\"railElectricDistance\":0,"
+            + "\"routeType\":\"BARGE\",\"subConnections\":[],\"seaportUid\":\"1\",\"terminalUid\":\"2\","
+            + "\"enabled\":true}");
+
+        ResultActions resultActions = perform(builder);
+        resultActions.andExpect(status().isBadRequest());
+        resultActions.andExpect(jsonPath("$.message",
+                is("Mainrun connection with given seaport, terminal und route type exists")));
+        resultActions.andExpect(jsonPath("$.code", is("mainrunconnection.duplicate")));
+    }
+
+
+    @Test
+    public void createConnectionWithValidationErrors() throws Exception {
+
+        MockHttpServletRequestBuilder builder = post("/connections/");
+        builder.contentType("application/json;charset=UTF-8");
+        builder.content(
+            "{\"id\":42, \"bargeDieselDistance\":11111111111,\"railDieselDistance\":10,\"railElectricDistance\":0,"
+            + "\"routeType\":\"BARGE\",\"subConnections\":[],"
+            + "\"seaportUid\":\"1\",\"terminalUid\":\"2\",\"enabled\":true}");
+
+        ResultActions resultActions = perform(builder);
+        resultActions.andExpect(status().isBadRequest());
+        resultActions.andExpect(jsonPath("$.message",
+                is("bargeDieselDistance: The count of the digits before the point is out of range. "
+                    + "It should be in the range 1 - 10 but is 11.")));
+    }
+
+
+    @Test
+    public void updateConnection() throws Exception {
+
+        MockHttpServletRequestBuilder builder = put("/connections/42");
+        builder.contentType("application/json;charset=UTF-8");
+        builder.content("{\"id\":42, \"bargeDieselDistance\":1,\"railDieselDistance\":10,\"railElectricDistance\":0,"
+            + "\"routeType\":\"BARGE\",\"subConnections\":[],\"seaportUid\":\"1\",\"terminalUid\":\"2\","
+            + "\"enabled\":true}");
+
+        ResultActions resultActions = perform(builder);
+        resultActions.andExpect(status().isOk());
+
+        ArgumentCaptor<MainRunConnectionDto> captor = ArgumentCaptor.forClass(MainRunConnectionDto.class);
+
+        verify(connectionApiDtoService).save(captor.capture());
+
+        assertThat(captor.getValue().getId(), is(42L));
+    }
+
+
+    @Test
+    public void updateConnectionWithValidationErrors() throws Exception {
+
+        MockHttpServletRequestBuilder builder = put("/connections/42");
+        builder.contentType("application/json;charset=UTF-8");
+        builder.content("{\"id\":42, \"bargeDieselDistance\":1,\"railDieselDistance\":\"\",\"railElectricDistance\":0,"
+            + "\"routeType\":\"BARGE\",\"subConnections\":[],\"seaportUid\":\"1\",\"terminalUid\":\"2\","
+            + "\"enabled\":true}");
+
+        ResultActions resultActions = perform(builder);
+        resultActions.andExpect(status().isBadRequest());
+        resultActions.andExpect(jsonPath("$.message", is("railDieselDistance: may not be null")));
     }
 
 

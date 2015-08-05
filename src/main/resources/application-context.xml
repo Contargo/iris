@@ -208,6 +208,9 @@
     <!-- All Beans for Connection -->
     <bean id="connectionService" class="net.contargo.iris.connection.service.MainRunConnectionServiceImpl">
         <constructor-arg name="mainRunConnectionRepository" ref="mainRunConnectionRepository"/>
+        <constructor-arg name="seaportService" ref="seaportService"/>
+        <constructor-arg name="terminalService" ref="terminalService"/>
+        <constructor-arg name="bargeRailConnectionFinderService" ref="bargeRailConnectionFinderService"/>
     </bean>
 
     <bean id="seaportTerminalConnectionService"
@@ -270,6 +273,8 @@
         <constructor-arg name="seaportConnectionRoutesService" ref="seaportConnectionRoutesService"/>
     </bean>
 
+    <bean id="bargeRailConnectionFinderService" class="net.contargo.iris.connection.service.BargeRailConnectionFinderService"/>
+
     <bean id="enricherService" class="net.contargo.iris.enricher.service.EnricherServiceImpl">
         <constructor-arg name="routePartEnricherList">
             <!-- Please keep in mind that the order of the enrichers is very important - before you add or remove something -->
@@ -331,12 +336,12 @@
         <constructor-arg name="co2PartStrategyAdvisor" ref="co2PartStrategyAdvisor"/>
     </bean>
 
+    <bean id="co2BargeRegionMap" class="net.contargo.iris.co2.advice.Co2BargeRegionMap"/>
+
     <bean id="co2PartStrategyAdvisor" class="net.contargo.iris.co2.advice.Co2PartStrategyAdvisor">
         <constructor-arg name="bargeStrategy">
             <bean class="net.contargo.iris.co2.advice.Co2PartBargeStrategy">
-                <constructor-arg name="co2BargeRegionMap">
-                    <bean class="net.contargo.iris.co2.advice.Co2BargeRegionMap"/>
-                </constructor-arg>
+                <constructor-arg name="co2BargeRegionMap" ref="co2BargeRegionMap"/>
             </bean>
         </constructor-arg>
         <constructor-arg name="railStrategy">
@@ -344,6 +349,11 @@
         </constructor-arg>
         <constructor-arg name="truckStrategy">
             <bean class="net.contargo.iris.co2.advice.Co2PartTruckStrategy"/>
+        </constructor-arg>
+        <constructor-arg name="bargeRailStrategy">
+            <bean class="net.contargo.iris.co2.advice.Co2PartBargeRailStrategy">
+                <constructor-arg name="co2BargeRegionMap" ref="co2BargeRegionMap"/>
+            </bean>
         </constructor-arg>
     </bean>
 

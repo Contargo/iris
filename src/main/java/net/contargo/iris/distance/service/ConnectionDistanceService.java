@@ -1,5 +1,6 @@
 package net.contargo.iris.distance.service;
 
+import net.contargo.iris.connection.AbstractSubConnection;
 import net.contargo.iris.connection.MainRunConnection;
 
 import java.math.BigDecimal;
@@ -21,7 +22,7 @@ public interface ConnectionDistanceService {
 
 
     /**
-     * Extracts the dieselDistance of a {@link net.contargo.iris.connection.MainRunConnection}.
+     * Extracts the total diesel distance of a {@link net.contargo.iris.connection.MainRunConnection}.
      *
      * @param  mainrunConnection
      *
@@ -38,4 +39,39 @@ public interface ConnectionDistanceService {
      * @return  BigDecimal
      */
     BigDecimal getElectricDistance(MainRunConnection mainrunConnection);
+
+
+    /**
+     * Extracts the railDieselDistance of a {@link net.contargo.iris.connection.MainRunConnection}.
+     *
+     * @param  mainrunConnection
+     *
+     * @return  BigDecimal
+     */
+    BigDecimal getRailDieselDistance(MainRunConnection mainrunConnection);
+
+
+    /**
+     * Extracts the bargeDieselDistance of a {@link net.contargo.iris.connection.MainRunConnection}.
+     *
+     * @param  mainrunConnection
+     *
+     * @return  BigDecimal
+     */
+    BigDecimal getBargeDieselDistance(MainRunConnection mainrunConnection);
+
+
+    BigDecimal getBargeDieselDistance(AbstractSubConnection subConnection);
+
+
+    BigDecimal getRailElectricDistance(AbstractSubConnection subConnection);
+
+
+    BigDecimal getRailDieselDistance(AbstractSubConnection subConnection);
+
+
+    BigDecimal getDieselDistance(AbstractSubConnection subConnection);
+
+
+    BigDecimal getDistance(AbstractSubConnection subConnection);
 }

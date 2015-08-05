@@ -1,5 +1,6 @@
 package net.contargo.iris.distance.service;
 
+import net.contargo.iris.connection.AbstractSubConnection;
 import net.contargo.iris.connection.MainRunConnection;
 import net.contargo.iris.rounding.RoundingService;
 
@@ -36,7 +37,8 @@ public class ConnectionDistanceServiceImpl implements ConnectionDistanceService 
     @Override
     public BigDecimal getDieselDistance(MainRunConnection mainrunConnection) {
 
-        return roundingService.roundDistance(mainrunConnection.getDieselDistance());
+        return roundingService.roundDistance(mainrunConnection.getRailDieselDistance()
+                .add(mainrunConnection.getBargeDieselDistance()));
     }
 
 
@@ -46,6 +48,56 @@ public class ConnectionDistanceServiceImpl implements ConnectionDistanceService 
     @Override
     public BigDecimal getElectricDistance(MainRunConnection mainrunConnection) {
 
-        return roundingService.roundDistance(mainrunConnection.getElectricDistance());
+        return roundingService.roundDistance(mainrunConnection.getRailElectricDistance());
+    }
+
+
+    @Override
+    public BigDecimal getRailDieselDistance(MainRunConnection mainrunConnection) {
+
+        return roundingService.roundDistance(mainrunConnection.getRailDieselDistance());
+    }
+
+
+    @Override
+    public BigDecimal getBargeDieselDistance(MainRunConnection mainrunConnection) {
+
+        return roundingService.roundDistance(mainrunConnection.getBargeDieselDistance());
+    }
+
+
+    @Override
+    public BigDecimal getBargeDieselDistance(AbstractSubConnection subConnection) {
+
+        return roundingService.roundDistance(subConnection.getBargeDieselDistance());
+    }
+
+
+    @Override
+    public BigDecimal getRailElectricDistance(AbstractSubConnection subConnection) {
+
+        return roundingService.roundDistance(subConnection.getRailElectricDistance());
+    }
+
+
+    @Override
+    public BigDecimal getRailDieselDistance(AbstractSubConnection subConnection) {
+
+        return roundingService.roundDistance(subConnection.getRailDieselDistance());
+    }
+
+
+    @Override
+    public BigDecimal getDieselDistance(AbstractSubConnection subConnection) {
+
+        return roundingService.roundDistance(subConnection.getRailDieselDistance()
+                .add(subConnection.getBargeDieselDistance()));
+    }
+
+
+    @Override
+    public BigDecimal getDistance(AbstractSubConnection subConnection) {
+
+        return roundingService.roundDistance(subConnection.getTotalDistance());
     }
 }

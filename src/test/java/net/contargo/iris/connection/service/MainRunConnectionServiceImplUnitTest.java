@@ -4,7 +4,9 @@ import net.contargo.iris.connection.MainRunConnection;
 import net.contargo.iris.connection.persistence.MainRunConnectionRepository;
 import net.contargo.iris.route.RouteType;
 import net.contargo.iris.seaport.Seaport;
+import net.contargo.iris.seaport.service.SeaportService;
 import net.contargo.iris.terminal.Terminal;
+import net.contargo.iris.terminal.service.TerminalService;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -24,10 +26,13 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 
 import static org.mockito.Mockito.when;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 
 
 /**
@@ -45,16 +50,22 @@ public class MainRunConnectionServiceImplUnitTest {
 
     @Mock
     private MainRunConnectionRepository mainRunConnectionRepositoryMock;
+    @Mock
+    private SeaportService seaportServiceMock;
+    @Mock
+    private TerminalService terminalServiceMock;
+    @Mock
+    private BargeRailConnectionFinderService bargeRailConnectionFinderServiceMock;
 
-    private MainRunConnection con1;
-    private MainRunConnection con2;
+    private MainRunConnection con1, con2;
     private Terminal terminal;
     private Seaport seaport;
 
     @Before
     public void setUp() {
 
-        sut = new MainRunConnectionServiceImpl(mainRunConnectionRepositoryMock);
+        sut = new MainRunConnectionServiceImpl(mainRunConnectionRepositoryMock, seaportServiceMock, terminalServiceMock,
+                bargeRailConnectionFinderServiceMock);
 
         con1 = new MainRunConnection();
         con2 = new MainRunConnection();
@@ -103,7 +114,20 @@ public class MainRunConnectionServiceImplUnitTest {
         MainRunConnection con = new MainRunConnection();
         con.setId(CONNECTION_ID);
 
+        Seaport seaport = new Seaport();
+        seaport.setUniqueId(BigInteger.ONE);
+        seaport.setId(42L);
+
+        Terminal terminal = new Terminal();
+        terminal.setUniqueId(BigInteger.TEN);
+        terminal.setId(23L);
+
+        con1.setSeaport(seaport);
+        con1.setTerminal(terminal);
+
         when(mainRunConnectionRepositoryMock.save(con1)).thenReturn(con);
+        when(seaportServiceMock.getByUniqueId(BigInteger.ONE)).thenReturn(seaport);
+        when(terminalServiceMock.getByUniqueId(BigInteger.TEN)).thenReturn(terminal);
 
         MainRunConnection savedMainrunConnection = sut.save(con1);
 
@@ -112,14 +136,151 @@ public class MainRunConnectionServiceImplUnitTest {
     }
 
 
+    @Test(expected = DuplicateMainRunConnectionException.class)
+    public void saveNewConnectionThatExists() {
+
+        MainRunConnection con = new MainRunConnection();
+        con.setRouteType(RouteType.BARGE);
+
+        Seaport seaport = new Seaport();
+        seaport.setUniqueId(BigInteger.ONE);
+        seaport.setId(42L);
+
+        Terminal terminal = new Terminal();
+        terminal.setUniqueId(BigInteger.ONE);
+        terminal.setId(23L);
+
+        con.setSeaport(seaport);
+        con.setTerminal(terminal);
+
+        when(seaportServiceMock.getByUniqueId(BigInteger.ONE)).thenReturn(seaport);
+        when(terminalServiceMock.getByUniqueId(BigInteger.ONE)).thenReturn(terminal);
+        when(mainRunConnectionRepositoryMock.existsBySeaportAndTerminalAndRouteType(42L, 23L, RouteType.BARGE))
+            .thenReturn(true);
+
+        sut.save(con);
+    }
+
+
+    @Test(expected = DuplicateMainRunConnectionException.class)
+    public void updateConnectionThatExists() {
+
+        MainRunConnection con = new MainRunConnection();
+        con.setId(65L);
+        con.setRouteType(RouteType.BARGE);
+
+        Seaport seaport = new Seaport();
+        seaport.setUniqueId(BigInteger.ONE);
+        seaport.setId(42L);
+
+        Terminal terminal = new Terminal();
+        terminal.setUniqueId(BigInteger.ONE);
+        terminal.setId(23L);
+        ;
+
+        con.setSeaport(seaport);
+        con.setTerminal(terminal);
+
+        when(seaportServiceMock.getByUniqueId(BigInteger.ONE)).thenReturn(seaport);
+        when(terminalServiceMock.getByUniqueId(BigInteger.ONE)).thenReturn(terminal);
+        when(mainRunConnectionRepositoryMock.existsBySeaportAndTerminalAndRouteTypeAndIdNot(42L, 23L, RouteType.BARGE,
+                    65L)).thenReturn(true);
+
+        sut.save(con);
+    }
+
+
+    @Test
+    public void saveNewBargeRailConnection() {
+
+        MainRunConnection con = new MainRunConnection();
+        con.setRouteType(RouteType.BARGE_RAIL);
+
+        Seaport seaport = new Seaport();
+        seaport.setUniqueId(BigInteger.ONE);
+        seaport.setId(42L);
+
+        Terminal terminal = new Terminal();
+        terminal.setUniqueId(BigInteger.ONE);
+        terminal.setId(23L);
+
+        con.setSeaport(seaport);
+        con.setTerminal(terminal);
+
+        when(seaportServiceMock.getByUniqueId(BigInteger.ONE)).thenReturn(seaport);
+        when(terminalServiceMock.getByUniqueId(BigInteger.ONE)).thenReturn(terminal);
+        when(mainRunConnectionRepositoryMock.existsBySeaportAndTerminalAndRouteType(42L, 23L, RouteType.BARGE_RAIL))
+            .thenReturn(true);
+        when(mainRunConnectionRepositoryMock.save(con)).thenReturn(con);
+
+        assertThat(sut.save(con), is(con));
+    }
+
+
+    @Test
+    public void updateBargeRailConnection() {
+
+        MainRunConnection con = new MainRunConnection();
+        con.setId(65L);
+        con.setRouteType(RouteType.BARGE_RAIL);
+
+        Seaport seaport = new Seaport();
+        seaport.setUniqueId(BigInteger.ONE);
+        seaport.setId(42L);
+
+        Terminal terminal = new Terminal();
+        terminal.setUniqueId(BigInteger.ONE);
+        terminal.setId(23L);
+
+        con.setSeaport(seaport);
+        con.setTerminal(terminal);
+
+        when(seaportServiceMock.getByUniqueId(BigInteger.ONE)).thenReturn(seaport);
+        when(terminalServiceMock.getByUniqueId(BigInteger.ONE)).thenReturn(terminal);
+        when(mainRunConnectionRepositoryMock.existsBySeaportAndTerminalAndRouteTypeAndIdNot(42L, 23L,
+                    RouteType.BARGE_RAIL, 65L)).thenReturn(true);
+        when(mainRunConnectionRepositoryMock.save(con)).thenReturn(con);
+
+        assertThat(sut.save(con), is(con));
+    }
+
+
     @Test
     public void findRoutingConnectionBetweenTerminalAndSeaportByType() {
 
         when(mainRunConnectionRepositoryMock.findByTerminalAndSeaportAndRouteTypeAndEnabled(terminal, seaport,
-                RouteType.BARGE, true)).thenReturn(con1);
+                    RouteType.BARGE, true)).thenReturn(singletonList(con1));
 
         MainRunConnection mainrunConnection = sut.findRoutingConnectionBetweenTerminalAndSeaportByType(terminal,
-                seaport, RouteType.BARGE);
+                seaport, RouteType.BARGE, emptyList());
+
+        assertThat(mainrunConnection, is(con1));
+    }
+
+
+    @Test
+    public void findRoutingConnectionBetweenTerminalAndSeaportByTypeWithEmptyResults() {
+
+        when(mainRunConnectionRepositoryMock.findByTerminalAndSeaportAndRouteTypeAndEnabled(terminal, seaport,
+                    RouteType.BARGE, true)).thenReturn(emptyList());
+
+        MainRunConnection mainrunConnection = sut.findRoutingConnectionBetweenTerminalAndSeaportByType(terminal,
+                seaport, RouteType.BARGE, emptyList());
+
+        assertThat(mainrunConnection, nullValue());
+    }
+
+
+    @Test
+    public void findRoutingConnectionBetweenTerminalAndSeaportByTypeForBargeRailWithSeveralConnection() {
+
+        when(mainRunConnectionRepositoryMock.findByTerminalAndSeaportAndRouteTypeAndEnabled(terminal, seaport,
+                    RouteType.BARGE_RAIL, true)).thenReturn(asList(con1, con2));
+        when(bargeRailConnectionFinderServiceMock.findMatchingBargeRailConnection(asList(con1, con2), emptyList()))
+            .thenReturn(con1);
+
+        MainRunConnection mainrunConnection = sut.findRoutingConnectionBetweenTerminalAndSeaportByType(terminal,
+                seaport, RouteType.BARGE_RAIL, emptyList());
 
         assertThat(mainrunConnection, is(con1));
     }

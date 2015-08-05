@@ -682,6 +682,7 @@
                         <include>**Test.js</include>
                         <include>models/**Test.js</include>
                         <include>views/**Test.js</include>
+                        <include>connection/**/**Test.js</include>
                     </specIncludes>
                     <sourceIncludes>
                         <include>lib/jquery*.js</include>
@@ -690,13 +691,15 @@
                         <include>lib/backbone.js</include>
                         <include>lib/bootstrap.min.js</include>
                         <include>lib/bootstrap-notify.js</include>
-                        <include>lib/handlebars-1.3.0.js</include>
+                        <include>lib/handlebars-3.0.3.js</include>
 
                         <!-- These first models need to be included first for inheritance reasons -->
                         <include>routing/SelectableAwareCollection.js</include>
                         <include>routing/models/*.js</include>
                         <include>routing/views/*.js</include>
                         <include>routing/*.js</include>
+                        <include>**.js</include>
+                        <include>connections/**/**.js</include>
                     </sourceIncludes>
 
                 </configuration>

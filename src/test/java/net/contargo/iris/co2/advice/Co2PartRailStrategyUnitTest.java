@@ -46,7 +46,7 @@ public class Co2PartRailStrategyUnitTest {
     public void getEmissionForRoutePartFull() {
 
         routePart.setContainerState(FULL);
-        routePart.getData().setDieselDistance(dieselDistance);
+        routePart.getData().setRailDieselDistance(dieselDistance);
         routePart.getData().setElectricDistance(electricDistance);
 
         BigDecimal diesel = BigDecimal.valueOf(dieselDistance.doubleValue() * 0.5);
@@ -62,7 +62,7 @@ public class Co2PartRailStrategyUnitTest {
     public void getEmissionForRoutePartEmpty() {
 
         routePart.setContainerState(ContainerState.EMPTY);
-        routePart.getData().setDieselDistance(dieselDistance);
+        routePart.getData().setRailDieselDistance(dieselDistance);
         routePart.getData().setElectricDistance(electricDistance);
 
         BigDecimal diesel = BigDecimal.valueOf(dieselDistance.doubleValue() * 0.4);

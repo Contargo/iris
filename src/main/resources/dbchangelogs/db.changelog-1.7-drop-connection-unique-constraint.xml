@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet author="thieme@synyx.de" id="drop-connection-unique-constraint">
+
+        <dropAllForeignKeyConstraints baseTableName="Connection"/>
+        <dropUniqueConstraint tableName="Connection" constraintName="Unique_seaport_terminal_routeType"/>
+
+        <addForeignKeyConstraint baseTableName="Connection" baseColumnNames="seaport_id"
+                                 constraintName="FK_Connection_Seaport"
+                                 referencedTableName="Seaport"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="Connection" baseColumnNames="terminal_id"
+                                 constraintName="FK_Connection_Terminal"
+                                 referencedTableName="Terminal"
+                                 referencedColumnNames="id"/>
+
+    </changeSet>
+
+</databaseChangeLog>

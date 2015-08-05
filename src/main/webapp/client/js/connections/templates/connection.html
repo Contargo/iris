@@ -1,0 +1,38 @@
+<div class="container-fluid">
+    <div class="row-fluid">
+        <a class="back-button-link" href="/web/connections/"></a>
+        <div class="content-title">
+            <h2>{{header}}</h2>
+        </div>
+    </div>
+
+    <div class="row-fluid">
+        <div class="span12 content">
+            <div id="mainRunConnection" class="form-horizontal">
+                <fieldset>
+                    <div id="seaports" class="control-group"></div>
+                    <div id="terminals" class="control-group"></div>
+                    <div id="routeTypes" class="control-group"></div>
+                    <div id="distances"></div>
+                    <div id="subconnections" class="control-group"></div>
+                    <div id="enabledStatus" class="control-group">
+                        <label for="enabled" class="control-label">Connection enabled</label>
+                        <div class="controls">
+                            <div class="checkbox inline">
+                                {{#if enabled}}
+                                <input id="enabled" name="enabled" type="checkbox" checked="checked">
+                                {{else}}
+                                <input id="enabled" name="enabled" type="checkbox">
+                                {{/if}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button id="submit-button" class="btn btn-primary">{{submitText}}</button>
+                        <a id="back-button" class="btn" href="/web/connections/">Back</a>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+</div>

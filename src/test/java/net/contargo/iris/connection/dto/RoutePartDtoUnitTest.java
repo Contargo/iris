@@ -3,6 +3,8 @@ package net.contargo.iris.connection.dto;
 import net.contargo.iris.GeoLocation;
 import net.contargo.iris.address.dto.GeoLocationDto;
 import net.contargo.iris.route.RoutePart;
+import net.contargo.iris.route.RouteType;
+import net.contargo.iris.route.SubRoutePart;
 import net.contargo.iris.seaport.Seaport;
 import net.contargo.iris.seaport.dto.SeaportDto;
 import net.contargo.iris.terminal.Terminal;
@@ -15,6 +17,7 @@ import java.math.BigDecimal;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -46,6 +49,8 @@ public class RoutePartDtoUnitTest {
         RoutePart part = new RoutePart();
         part.setOrigin(geoLocation);
         part.setDestination(geoLocation);
+        part.setRouteType(RouteType.BARGE_RAIL);
+        part.getSubRouteParts().add(new SubRoutePart());
 
         RoutePartDto routePartDto = new RoutePartDto(part);
 
@@ -56,6 +61,7 @@ public class RoutePartDtoUnitTest {
         assertThat(routePartDto.getDestination(), is(instanceOf(GeoLocationDto.class)));
         assertThat(routePartDto.getDestination(), not(instanceOf(TerminalDto.class)));
         assertThat(routePartDto.getDestination(), not(instanceOf(SeaportDto.class)));
+        assertThat(routePartDto.getSubRouteParts(), hasSize(1));
     }
 
 

@@ -1,5 +1,6 @@
 package net.contargo.iris.connection.service;
 
+import net.contargo.iris.connection.MainRunConnection;
 import net.contargo.iris.route.RouteType;
 import net.contargo.iris.seaport.Seaport;
 import net.contargo.iris.terminal.Terminal;
@@ -35,4 +36,15 @@ public interface SeaportTerminalConnectionService {
      * @return  all matching {@link net.contargo.iris.terminal.Terminal}s
      */
     List<Terminal> getTerminalsConnectedToSeaPortByRouteType(Seaport seaPort, RouteType routeType);
+
+
+    /**
+     * Finds all {@link MainRunConnection}s with the given {@link RouteType} and the specified {@link Seaport} property.
+     *
+     * @param  seaPort  the {@link net.contargo.iris.connection.MainRunConnection}'s {@link Seaport}
+     * @param  routeType  the {@link net.contargo.iris.connection.MainRunConnection}'s {@link RouteType}
+     *
+     * @return  all matching {@link MainRunConnection}s
+     */
+    List<MainRunConnection> getConnectionsToSeaPortByRouteType(Seaport seaPort, RouteType routeType);
 }

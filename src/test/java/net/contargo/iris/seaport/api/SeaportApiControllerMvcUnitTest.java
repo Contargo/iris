@@ -30,6 +30,8 @@ import static org.hamcrest.Matchers.is;
 
 import static org.mockito.Matchers.argThat;
 
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -42,7 +44,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 
 
 /**
@@ -67,6 +69,7 @@ public class SeaportApiControllerMvcUnitTest {
     @Before
     public void setUp() {
 
+        reset(seaportDtoService);
         createSeaportDto();
     }
 
@@ -74,7 +77,7 @@ public class SeaportApiControllerMvcUnitTest {
     @Test
     public void getSeaports() throws Exception {
 
-        when(seaportDtoService.getAllActive()).thenReturn(asList(seaportDto));
+        when(seaportDtoService.getAllActive()).thenReturn(singletonList(seaportDto));
 
         MockHttpServletRequestBuilder builder = get("/seaports");
         builder.accept(APPLICATION_JSON);
@@ -88,7 +91,32 @@ public class SeaportApiControllerMvcUnitTest {
         resultActions.andExpect(jsonPath("$.seaports[0].enabled", is(seaportDto.isEnabled())));
         resultActions.andExpect(jsonPath("$.links", hasSize(1)));
         resultActions.andExpect(jsonPath("$.links[0].rel", is("self")));
-        resultActions.andExpect(jsonPath("$.links[0].href", endsWith("/seaports")));
+        resultActions.andExpect(jsonPath("$.links[0].href", endsWith("/seaports?activeOnly=true")));
+
+        verify(seaportDtoService, never()).getAll();
+    }
+
+
+    @Test
+    public void getAllSeaports() throws Exception {
+
+        when(seaportDtoService.getAll()).thenReturn(singletonList(seaportDto));
+
+        MockHttpServletRequestBuilder builder = get("/seaports?activeOnly=false");
+        builder.accept(APPLICATION_JSON);
+
+        ResultActions resultActions = perform(builder);
+        resultActions.andExpect(status().isOk());
+        resultActions.andExpect(content().contentType("application/json;charset=UTF-8"));
+        resultActions.andExpect(jsonPath("$.seaports[0].latitude", is(seaportDto.getLatitude().intValue())));
+        resultActions.andExpect(jsonPath("$.seaports[0].longitude", is(seaportDto.getLongitude().intValue())));
+        resultActions.andExpect(jsonPath("$.seaports[0].name", is(seaportDto.getName())));
+        resultActions.andExpect(jsonPath("$.seaports[0].enabled", is(seaportDto.isEnabled())));
+        resultActions.andExpect(jsonPath("$.links", hasSize(1)));
+        resultActions.andExpect(jsonPath("$.links[0].rel", is("self")));
+        resultActions.andExpect(jsonPath("$.links[0].href", endsWith("/seaports?activeOnly=false")));
+
+        verify(seaportDtoService, never()).getAllActive();
     }
 
 

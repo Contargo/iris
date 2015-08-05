@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static net.contargo.iris.route.RouteType.BARGE;
+import static net.contargo.iris.route.RouteType.BARGE_RAIL;
 import static net.contargo.iris.route.RouteType.RAIL;
 import static net.contargo.iris.route.RouteType.TRUCK;
 
@@ -65,6 +66,16 @@ public class Co2PartStrategyAdvisorUnitTest {
         sut.setTruckStrategy(expectedStrategyMock);
 
         Co2PartStrategy strategy = sut.advice(TRUCK);
+        assertThat(strategy, is(expectedStrategyMock));
+    }
+
+
+    @Test
+    public void adviceForRouteTypeBargeRail() {
+
+        sut.setBargeRailStrategy(expectedStrategyMock);
+
+        Co2PartStrategy strategy = sut.advice(BARGE_RAIL);
         assertThat(strategy, is(expectedStrategyMock));
     }
 }

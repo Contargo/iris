@@ -52,6 +52,8 @@ class TruckRoutingPartEnricher implements RoutePartEnricher {
             routePartData.setDistance(partDistance);
             routePartData.setDieselDistance(partDistance);
             routePartData.setElectricDistance(BigDecimal.ZERO);
+            routePartData.setBargeDieselDistance(BigDecimal.ZERO);
+            routePartData.setRailDieselDistance(BigDecimal.ZERO);
             routePartData.setDuration(durationService.getDuration(truckRoute));
         }
     }

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet author="thieme@synyx.de" id="add-sub-connections">
+
+        <createTable tableName="SubConnection">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="subConnectionType" type="varchar(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="railDieselDistance" type="DECIMAL(15,10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bargeDieselDistance" type="DECIMAL(15,10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="railElectricDistance" type="DECIMAL(15,10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="seaport_id" type="BIGINT"/>
+            <column name="terminal_id" type="BIGINT"/>
+            <column name="terminal2_id" type="BIGINT"/>
+            <column name="parentConnection_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="SubConnection" 
+                                 baseColumnNames="terminal_id"
+                                 constraintName="FK_subcon_termial"
+                                 referencedTableName="Terminal"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="SubConnection"
+                                 baseColumnNames="terminal2_id"
+                                 constraintName="FK_subcon_termial2"
+                                 referencedTableName="Terminal"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="SubConnection"
+                                 baseColumnNames="seaport_id"
+                                 constraintName="FK_subcon_seaport"
+                                 referencedTableName="Seaport"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="SubConnection"
+                                 baseColumnNames="parentConnection_id"
+                                 constraintName="FK_subcon_con"
+                                 referencedTableName="Connection"
+                                 referencedColumnNames="id"/>
+
+    </changeSet>
+
+</databaseChangeLog>

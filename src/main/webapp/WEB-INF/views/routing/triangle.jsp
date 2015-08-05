@@ -41,7 +41,7 @@
 <!-- libs -->
 <script src="<c:url value="/client/js/lib/underscore.js" />"></script>
 <script src="<c:url value="/client/js/lib/backbone.js" />"></script>
-<script src="<c:url value="/client/js/lib/handlebars-1.3.0.js" />"></script>
+<script src="<c:url value="/client/js/lib/handlebars-3.0.3.js" />"></script>
 <script src="<c:url value="/client/js/lib/modernizr.custom.00395.js" />"></script>
 
 <!-- model -->

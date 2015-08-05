@@ -1,0 +1,15 @@
+<label for="terminal" class="control-label">
+    Terminal
+</label>
+
+<div class="controls">
+    <select id="terminal" name="terminal">
+        {{#each terminals}}
+        {{#if this.selected}}
+        <option value="{{this.uniqueId}}" selected="selected">{{this.nicename}}</option>
+        {{else}}
+        <option value="{{this.uniqueId}}">{{this.nicename}}</option>
+        {{/if}}
+        {{/each}}
+    </select>
+</div>

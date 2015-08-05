@@ -1,12 +1,20 @@
 package net.contargo.iris.mainrun.service;
 
+import net.contargo.iris.connection.AbstractSubConnection;
 import net.contargo.iris.connection.MainRunConnection;
 import net.contargo.iris.rounding.RoundingService;
 import net.contargo.iris.route.RoutePart;
-import net.contargo.iris.route.RouteType;
+import net.contargo.iris.route.SubRoutePart;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+
+import static net.contargo.iris.route.RoutePart.Direction.DOWNSTREAM;
+import static net.contargo.iris.route.RouteType.BARGE;
+import static net.contargo.iris.route.RouteType.BARGE_RAIL;
+import static net.contargo.iris.route.RouteType.RAIL;
+
+import static java.math.BigDecimal.ZERO;
 
 
 /**
@@ -43,20 +51,55 @@ public class MainRunDurationServiceImpl implements MainRunDurationService {
         BigDecimal distance = mainrunConnection.getTotalDistance();
         BigDecimal divisor;
 
-        if (routePart.isOfType(RouteType.BARGE)) {
+        if (routePart.isOfType(BARGE)) {
             // electric distance is 0.0 if route part is of type barge, so you don't need to consider it in the
             // calculation
-            if (direction == RoutePart.Direction.DOWNSTREAM) {
+            if (direction == DOWNSTREAM) {
                 divisor = AVERAGE_SPEED_BARGE_DOWNSTREAM;
             } else {
                 divisor = AVERAGE_SPEED_BARGE_UPSTREAM;
             }
-        } else if (routePart.isOfType(RouteType.RAIL)) {
+        } else if (routePart.isOfType(RAIL)) {
             divisor = AVERAGE_SPEED_RAIL;
+        } else if (routePart.isOfType(BARGE_RAIL)) {
+            BigDecimal duration = ZERO;
+
+            for (SubRoutePart subRoutePart : routePart.getSubRouteParts()) {
+                duration = duration.add(subRoutePart.getDuration());
+            }
+
+            return duration;
         } else {
             // not a main run route part, return 0.0
-            return BigDecimal.ZERO;
+            return ZERO;
         }
+
+        return computeDuration(distance, divisor);
+    }
+
+
+    @Override
+    public BigDecimal getSubRoutePartDuration(AbstractSubConnection subConnection, SubRoutePart subRoutePart,
+        RoutePart.Direction direction) {
+
+        BigDecimal distance = subConnection.getTotalDistance();
+        BigDecimal divisor;
+
+        if (subRoutePart.getRouteType() == BARGE) {
+            if (direction == DOWNSTREAM) {
+                divisor = AVERAGE_SPEED_BARGE_DOWNSTREAM;
+            } else {
+                divisor = AVERAGE_SPEED_BARGE_UPSTREAM;
+            }
+        } else {
+            divisor = AVERAGE_SPEED_RAIL;
+        }
+
+        return computeDuration(distance, divisor);
+    }
+
+
+    private BigDecimal computeDuration(BigDecimal distance, BigDecimal divisor) {
 
         BigDecimal duration = distance.divide(divisor, SCALE, RoundingMode.HALF_UP).multiply(SECONDS_IN_AN_HOUR);
 

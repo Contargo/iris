@@ -1,10 +1,16 @@
 package net.contargo.iris.connection.service;
 
+import net.contargo.iris.connection.AbstractSubConnection;
 import net.contargo.iris.connection.MainRunConnection;
+import net.contargo.iris.connection.SeaportSubConnection;
+import net.contargo.iris.connection.TerminalSubConnection;
 import net.contargo.iris.connection.persistence.MainRunConnectionRepository;
 import net.contargo.iris.route.RouteType;
+import net.contargo.iris.route.SubRoutePart;
 import net.contargo.iris.seaport.Seaport;
+import net.contargo.iris.seaport.service.SeaportService;
 import net.contargo.iris.terminal.Terminal;
+import net.contargo.iris.terminal.service.TerminalService;
 
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,15 +32,20 @@ import java.util.List;
 public class MainRunConnectionServiceImpl implements MainRunConnectionService {
 
     private final MainRunConnectionRepository mainRunConnectionRepository;
+    private final SeaportService seaportService;
+    private final TerminalService terminalService;
+    private final BargeRailConnectionFinderService bargeRailConnectionFinderService;
 
-    public MainRunConnectionServiceImpl(MainRunConnectionRepository mainRunConnectionRepository) {
+    public MainRunConnectionServiceImpl(MainRunConnectionRepository mainRunConnectionRepository,
+        SeaportService seaportService, TerminalService terminalService,
+        BargeRailConnectionFinderService bargeRailConnectionFinderService) {
 
         this.mainRunConnectionRepository = mainRunConnectionRepository;
+        this.seaportService = seaportService;
+        this.terminalService = terminalService;
+        this.bargeRailConnectionFinderService = bargeRailConnectionFinderService;
     }
 
-    /**
-     * @see  MainRunConnectionService#getAll()
-     */
     @Override
     public List<MainRunConnection> getAll() {
 
@@ -42,9 +53,6 @@ public class MainRunConnectionServiceImpl implements MainRunConnectionService {
     }
 
 
-    /**
-     * @see  MainRunConnectionService#getAllActive()
-     */
     @Override
     public List<MainRunConnection> getAllActive() {
 
@@ -52,9 +60,6 @@ public class MainRunConnectionServiceImpl implements MainRunConnectionService {
     }
 
 
-    /**
-     * @see  MainRunConnectionService#getById(Long)
-     */
     @Override
     public MainRunConnection getById(Long id) {
 
@@ -62,57 +67,54 @@ public class MainRunConnectionServiceImpl implements MainRunConnectionService {
     }
 
 
-    /**
-     * @see  MainRunConnectionService#save(net.contargo.iris.connection.MainRunConnection)
-     */
     @Override
     public MainRunConnection save(MainRunConnection mainrunConnection) {
+
+        mainrunConnection.setSeaport(seaportService.getByUniqueId(mainrunConnection.getSeaport().getUniqueId()));
+        mainrunConnection.setTerminal(terminalService.getByUniqueId(mainrunConnection.getTerminal().getUniqueId()));
+
+        if (combinationExists(mainrunConnection) && mainrunConnection.getRouteType() != RouteType.BARGE_RAIL) {
+            throw new DuplicateMainRunConnectionException();
+        }
+
+        for (AbstractSubConnection subConnection : mainrunConnection.getSubConnections()) {
+            subConnection.setTerminal(terminalService.getByUniqueId(subConnection.getTerminal().getUniqueId()));
+
+            if (subConnection instanceof SeaportSubConnection) {
+                ((SeaportSubConnection) subConnection).setSeaport(seaportService.getByUniqueId(
+                        ((SeaportSubConnection) subConnection).getSeaport().getUniqueId()));
+            } else {
+                ((TerminalSubConnection) subConnection).setTerminal2(terminalService.getByUniqueId(
+                        ((TerminalSubConnection) subConnection).getTerminal2().getUniqueId()));
+            }
+        }
 
         return mainRunConnectionRepository.save(mainrunConnection);
     }
 
 
-    /**
-     * @see  MainRunConnectionService#findRoutingConnectionBetweenTerminalAndSeaportByType(
-     *       net.contargo.iris.terminal.Terminal, net.contargo.iris.seaport.Seaport, net.contargo.iris.route.RouteType)
-     */
     @Override
+    @Transactional(readOnly = true)
     public MainRunConnection findRoutingConnectionBetweenTerminalAndSeaportByType(Terminal terminal, Seaport seaport,
-        RouteType routeType) {
+        RouteType routeType, List<SubRoutePart> subRouteParts) {
 
         Assert.notNull(terminal);
         Assert.notNull(seaport);
         Assert.notNull(routeType);
 
-        return mainRunConnectionRepository.findByTerminalAndSeaportAndRouteTypeAndEnabled(terminal, seaport, routeType,
+        List<MainRunConnection> connections =
+            mainRunConnectionRepository.findByTerminalAndSeaportAndRouteTypeAndEnabled(terminal, seaport, routeType,
                 true);
-    }
 
+        if (connections.isEmpty()) {
+            return null;
+        }
 
-    /**
-     * @see  MainRunConnectionService#isAlreadyApplied(net.contargo.iris.connection.MainRunConnection)
-     */
-    @Override
-    public Boolean isAlreadyApplied(MainRunConnection mainrunConnection) {
-
-        MainRunConnection dbMainrunConnection = mainRunConnectionRepository.findBySeaportAndTerminalAndRouteType(
-                mainrunConnection.getSeaport(), mainrunConnection.getTerminal(), mainrunConnection.getRouteType());
-
-        return null != dbMainrunConnection;
-    }
-
-
-    /**
-     * @see  MainRunConnectionService#isAlreadyAppliedAndNotThis(net.contargo.iris.connection.MainRunConnection)
-     */
-    @Override
-    public Boolean isAlreadyAppliedAndNotThis(MainRunConnection mainrunConnection) {
-
-        MainRunConnection dbMainrunConnection =
-            mainRunConnectionRepository.findBySeaportAndTerminalAndRouteTypeAndIdNot(mainrunConnection.getSeaport(),
-                mainrunConnection.getTerminal(), mainrunConnection.getRouteType(), mainrunConnection.getId());
-
-        return null != dbMainrunConnection;
+        if (routeType == RouteType.BARGE_RAIL) {
+            return bargeRailConnectionFinderService.findMatchingBargeRailConnection(connections, subRouteParts);
+        } else {
+            return connections.get(0);
+        }
     }
 
 
@@ -121,5 +123,21 @@ public class MainRunConnectionServiceImpl implements MainRunConnectionService {
     public List<MainRunConnection> getConnectionsForTerminal(BigInteger terminalUID) {
 
         return mainRunConnectionRepository.findConnectionsByTerminalUniqueId(terminalUID);
+    }
+
+
+    private boolean combinationExists(MainRunConnection connection) {
+
+        boolean exists;
+
+        if (connection.getId() == null) {
+            exists = mainRunConnectionRepository.existsBySeaportAndTerminalAndRouteType(connection.getSeaport()
+                    .getId(), connection.getTerminal().getId(), connection.getRouteType());
+        } else {
+            exists = mainRunConnectionRepository.existsBySeaportAndTerminalAndRouteTypeAndIdNot(connection.getSeaport()
+                    .getId(), connection.getTerminal().getId(), connection.getRouteType(), connection.getId());
+        }
+
+        return exists;
     }
 }

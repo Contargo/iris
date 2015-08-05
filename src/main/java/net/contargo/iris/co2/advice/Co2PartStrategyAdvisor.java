@@ -11,6 +11,7 @@ public class Co2PartStrategyAdvisor {
     private Co2PartStrategy bargeStrategy;
     private Co2PartStrategy railStrategy;
     private Co2PartStrategy truckStrategy;
+    private Co2PartStrategy bargeRailStrategy;
 
     Co2PartStrategyAdvisor() {
 
@@ -19,11 +20,12 @@ public class Co2PartStrategyAdvisor {
 
 
     public Co2PartStrategyAdvisor(Co2PartStrategy bargeStrategy, Co2PartStrategy railStrategy,
-        Co2PartStrategy truckStrategy) {
+        Co2PartStrategy truckStrategy, Co2PartStrategy bargeRailStrategy) {
 
         this.bargeStrategy = bargeStrategy;
         this.railStrategy = railStrategy;
         this.truckStrategy = truckStrategy;
+        this.bargeRailStrategy = bargeRailStrategy;
     }
 
     void setBargeStrategy(Co2PartStrategy bargeStrategy) {
@@ -44,6 +46,12 @@ public class Co2PartStrategyAdvisor {
     }
 
 
+    void setBargeRailStrategy(Co2PartStrategy bargeRailStrategy) {
+
+        this.bargeRailStrategy = bargeRailStrategy;
+    }
+
+
     public Co2PartStrategy advice(RouteType routeType) {
 
         if (routeType == RouteType.BARGE) {
@@ -56,6 +64,10 @@ public class Co2PartStrategyAdvisor {
 
         if (routeType == RouteType.TRUCK) {
             return truckStrategy;
+        }
+
+        if (routeType == RouteType.BARGE_RAIL) {
+            return bargeRailStrategy;
         }
 
         throw new IllegalStateException("Cannot determine co2 for route part of type " + routeType);

@@ -37,6 +37,7 @@ import static org.hamcrest.Matchers.is;
 
 import static org.mockito.Matchers.argThat;
 
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -139,6 +140,37 @@ public class TerminalApiControllerMvcUnitTest {
 
         resultActions.andExpect(jsonPath("$response.links", hasSize(1)));
         resultActions.andExpect(jsonPath("$response.links[0].rel", is("self")));
+
+        verify(terminalDtoService, never()).getAll();
+    }
+
+
+    @Test
+    public void getAllTerminals() throws Exception {
+
+        when(terminalDtoService.getAll()).thenReturn(asList(terminalDto1, terminalDto2));
+
+        ResultActions resultActions = mockMvc.perform(get("/terminals?activeOnly=false").accept(
+                    MediaType.APPLICATION_JSON));
+        resultActions.andExpect(status().isOk());
+        resultActions.andExpect(content().contentType("application/json"));
+
+        resultActions.andExpect(jsonPath("$response.terminals[0].latitude", is(terminalDto1.getLatitude().intValue())));
+        resultActions.andExpect(jsonPath("$response.terminals[0].longitude",
+                is(terminalDto1.getLongitude().intValue())));
+        resultActions.andExpect(jsonPath("$response.terminals[0].name", is(terminalDto1.getName())));
+        resultActions.andExpect(jsonPath("$response.terminals[0].enabled", is(terminalDto1.isEnabled())));
+
+        resultActions.andExpect(jsonPath("$response.terminals[1].latitude", is(terminalDto2.getLatitude().intValue())));
+        resultActions.andExpect(jsonPath("$response.terminals[1].longitude",
+                is(terminalDto2.getLongitude().intValue())));
+        resultActions.andExpect(jsonPath("$response.terminals[1].name", is(terminalDto2.getName())));
+        resultActions.andExpect(jsonPath("$response.terminals[1].enabled", is(terminalDto2.isEnabled())));
+
+        resultActions.andExpect(jsonPath("$response.links", hasSize(1)));
+        resultActions.andExpect(jsonPath("$response.links[0].rel", is("self")));
+
+        verify(terminalDtoService, never()).getAllActive();
     }
 
 
@@ -147,10 +179,11 @@ public class TerminalApiControllerMvcUnitTest {
 
         when(seaportDtoService.getByUid(new BigInteger("42"))).thenReturn(seaportDto1);
         when(seaportTerminalConnectionDtoService.findTerminalsConnectedToSeaPortByRouteType(seaportDto1,
-                RouteType.RAIL)).thenReturn(asList(terminalDto2));
+                    RouteType.RAIL)).thenReturn(asList(terminalDto2));
 
-        ResultActions resultActions = mockMvc.perform(get("/terminals").param("seaportUid", "42").param("routeType",
-                    "RAIL").accept(MediaType.APPLICATION_JSON));
+        ResultActions resultActions = mockMvc.perform(get("/terminals").param("seaportUid", "42")
+                .param("routeType", "RAIL")
+                .accept(MediaType.APPLICATION_JSON));
         resultActions.andExpect(status().isOk());
         resultActions.andExpect(content().contentType("application/json"));
 
@@ -170,8 +203,9 @@ public class TerminalApiControllerMvcUnitTest {
     @Test
     public void getTerminalsForInvalidSeaport() throws Exception {
 
-        ResultActions resultActions = mockMvc.perform(get("/terminals").param("seaportId", "42").param("routeType",
-                    "RAIL").accept(MediaType.APPLICATION_JSON));
+        ResultActions resultActions = mockMvc.perform(get("/terminals").param("seaportId", "42")
+                .param("routeType", "RAIL")
+                .accept(MediaType.APPLICATION_JSON));
         resultActions.andExpect(status().isOk());
         resultActions.andExpect(jsonPath("$response.terminals", empty()));
     }
@@ -214,8 +248,8 @@ public class TerminalApiControllerMvcUnitTest {
         when(terminalDtoService.existsByUniqueId(uniqueId)).thenReturn(false);
 
         ResultActions resultActions = mockMvc.perform(put("/terminals/8491748714921").contentType(
-                    MediaType.APPLICATION_JSON).content(
-                    "{\"name\": \"foo\", \"enabled\": true, \"latitude\": 0, \"longitude\": 0}"));
+                        MediaType.APPLICATION_JSON)
+                .content("{\"name\": \"foo\", \"enabled\": true, \"latitude\": 0, \"longitude\": 0}"));
 
         resultActions.andExpect(status().isCreated());
 
@@ -234,8 +268,8 @@ public class TerminalApiControllerMvcUnitTest {
         when(terminalDtoService.existsByUniqueId(uniqueId)).thenReturn(true);
 
         ResultActions resultActions = mockMvc.perform(put("/terminals/8491748714921").contentType(
-                    MediaType.APPLICATION_JSON).content(
-                    "{\"name\": \"foo\", \"enabled\": true, \"latitude\": 0, \"longitude\": 0}"));
+                        MediaType.APPLICATION_JSON)
+                .content("{\"name\": \"foo\", \"enabled\": true, \"latitude\": 0, \"longitude\": 0}"));
 
         resultActions.andExpect(status().isNoContent());
 

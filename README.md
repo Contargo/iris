@@ -25,6 +25,7 @@ There, the recipient unloads the content and the truck transports the empty cont
 * Possibility to implement any authentication mechanism via Spring Security
 
 Further documentation about the IRIS-terminology can be found here: [terminology](docs/terminology.md).
+If you are interested to use IRIS in Swiss read this: [ASTAG](docs/astag.md)
 
 
 #Prerequisites

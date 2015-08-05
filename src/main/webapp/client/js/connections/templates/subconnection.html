@@ -1,0 +1,52 @@
+<div class="controls form-inline">
+    {{#if first}}
+    <div class="subconnection-headers">
+        <div class="float-left subconnection-header-normal">Endpoint 1</div>
+        <div class="float-left subconnection-header-normal">Endpoint 2</div>
+        <div class="subconnection-header-small float-left">Routetype</div>
+        <div class="subconnection-header-small float-left">Barge km</div>
+        <div class="subconnection-header-small float-left">Rail km (Diesel)</div>
+        <div class="subconnection-header-small float-left clearfix">Rail km (Electr.)</div>
+    </div>
+    <br>
+    {{/if}}
+    <input class="start" title="start" type="text" readonly value="{{model.endpoint1.name}}">
+    {{#if latest}}
+    <select class="end" title="end">
+    {{else}}
+    <select class="end" title="end" disabled="disabled">
+    {{/if}}
+        {{#each terminals}}
+        {{#if this.selected}}
+        <option value="{{this.uniqueId}}" selected="selected">{{this.name}}</option>
+        {{else}}
+        <option value="{{this.uniqueId}}">{{this.name}}</option>
+        {{/if}}
+        {{/each}}
+    </select>
+    <input class="type input-small" title="type" type="text" readonly value="{{model.routeType.name}}">
+    {{#if isBarge}}
+    <input class="barge comma-replacement-aware number input-small" title="barge" type="text" value="{{model.distances.barge}}"/>
+    {{else}}
+    <input class="barge comma-replacement-aware number input-small" title="barge" type="text" value="{{model.distances.barge}}" readonly="readonly"/>
+    {{/if}}
+    <span class="help-inline error"></span>
+    {{#if isRail}}
+    <input class="raildiesel comma-replacement-aware number input-small" title="raildiesel" type="text" value="{{model.distances.raildiesel}}"/>
+    {{else}}
+    <input class="raildiesel comma-replacement-aware number input-small" title="raildiesel" type="text" value="{{model.distances.raildiesel}}" readonly="readonly"/>
+    {{/if}}
+    <span class="help-inline error"></span>
+    {{#if isRail}}
+    <input class="railelectric comma-replacement-aware number input-small" title="railelectric" type="text" value="{{model.distances.railelectric}}"/>
+    {{else}}
+    <input class="railelectric comma-replacement-aware number input-small" title="railelectric" type="text" value="{{model.distances.railelectric}}" readonly="readonly"/>
+    {{/if}}
+    <span class="help-inline error"></span>
+    {{#if latest}}
+    <button class="new-subconnection btn btn-primary"><i class="icon-plus-sign icon-white"></i></button>
+    {{/if}}
+    {{#if latestAndNotFirst}}
+    <button class="remove-subconnection btn btn-primary btn-danger"><i class="icon-trash icon-white"></i></button>
+    {{/if}}
+</div>

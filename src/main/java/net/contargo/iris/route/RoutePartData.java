@@ -17,6 +17,8 @@ public class RoutePartData {
     private BigDecimal distance;
     private BigDecimal dieselDistance;
     private BigDecimal electricDistance;
+    private BigDecimal bargeDieselDistance;
+    private BigDecimal railDieselDistance;
     private BigDecimal tollDistance;
     private BigDecimal duration;
 
@@ -103,5 +105,29 @@ public class RoutePartData {
     public void setCo2(BigDecimal co2) {
 
         this.co2 = co2;
+    }
+
+
+    public BigDecimal getBargeDieselDistance() {
+
+        return bargeDieselDistance;
+    }
+
+
+    public void setBargeDieselDistance(BigDecimal bargeDieselDistance) {
+
+        this.bargeDieselDistance = bargeDieselDistance;
+    }
+
+
+    public BigDecimal getRailDieselDistance() {
+
+        return railDieselDistance;
+    }
+
+
+    public void setRailDieselDistance(BigDecimal railDieselDistance) {
+
+        this.railDieselDistance = railDieselDistance;
     }
 }

@@ -12,8 +12,12 @@ var DetailledAddressView = Backbone.View.extend({
         this.render();
     },
 
-    render: function () {
+    create: function (options) {
+        'use strict';
+        return new DetailledAddressView(options);
+    },
 
+    render: function () {
         var model = this.model.toJSON();
 
         var details = "";
@@ -64,7 +68,7 @@ var AddressView = Backbone.View.extend({
         this.$el.html(this.template(this.model.toJSON()));
 
         if (this.showdetails) {
-            new DetailledAddressView({
+            DetailledAddressView.prototype.create({
                 el: this.$(".address"),
                 model: this.model
             });

@@ -28,6 +28,11 @@ var TriangularTrafficDropDownView = Backbone.View.extend({
         this.render();
     },
 
+    create: function (options) {
+        'use strict';
+        return new TriangularTrafficDropDownView(options);
+    },
+
     render: function () {
         this.$el.empty();
         this.addAll();
@@ -83,7 +88,7 @@ var TriangleDropDownWithAddButtonView = Backbone.View.extend({
 
         this.$el.html(this.template({}));
 
-        new TriangularTrafficDropDownView({
+        TriangularTrafficDropDownView.prototype.create({
             el: this.$(".autoComplete"),
             model: this.model
         });

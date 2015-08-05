@@ -35,7 +35,7 @@ var AddressList = Backbone.Collection.extend({
 
     hasSelected: function () {
         return this.find(function (e) {
-                return e.get("selected") === true;
+                return e.get("selected") == true;
             }) !== undefined;
     },
 
@@ -93,7 +93,6 @@ var AddressListList = Backbone.Collection.extend({
 
             // set selected address variable
             this.selectedAddressOfAddressList = e;
-
 
         } else {
             delete this.selectedAddressOfAddressList;

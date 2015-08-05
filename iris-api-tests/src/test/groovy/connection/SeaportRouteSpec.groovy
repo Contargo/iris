@@ -37,9 +37,9 @@ class SeaportRouteSpec extends Specification {
 
             and: "the route parts have certain fields"
             def partAttributes = data.parts.first().keySet()
-            assert partAttributes.size() == 8
+            assert partAttributes.size() == 9
             assert partAttributes.containsAll("name", "data", "origin", "containerState", "containerType", "direction",
-                    "routeType", "destination")
+                    "routeType", "destination", "subRouteParts")
         }
     }
 }

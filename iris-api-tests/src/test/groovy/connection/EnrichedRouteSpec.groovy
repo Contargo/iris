@@ -53,9 +53,9 @@ class EnrichedRouteSpec extends Specification {
 
         and: "each route part has certain attributes"
         route.data.parts.each {
-            assert it.keySet().size() == 8
+            assert it.keySet().size() == 9
             assert it.keySet().containsAll("containerType", "routeType", "direction", "name", "containerState", "origin",
-                    "data", "destination")
+                    "data", "destination", "subRouteParts")
             assert it.data.keySet().size() == 7
             assert it.data.keySet().containsAll("electricDistance", "duration", "distance", "dieselDistance",
                     "tollDistance", "airlineDistance", "co2")

@@ -1,6 +1,6 @@
 var MessageView = Backbone.View.extend({
     tagName:"div",
-    id:"pageMessage",
+    id:"page-message",
     className: "message message-success message-width",
 
     initialize: function(options){

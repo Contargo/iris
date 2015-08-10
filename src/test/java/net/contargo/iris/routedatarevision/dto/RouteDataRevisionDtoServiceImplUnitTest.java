@@ -108,7 +108,7 @@ public class RouteDataRevisionDtoServiceImplUnitTest {
     public void save() {
 
         when(routeDataRevisionServiceMock.save(
-                Matchers.argThat(org.hamcrest.Matchers.<RouteDataRevision>hasProperty("id", is(5L))))).thenReturn(
+                    Matchers.argThat(org.hamcrest.Matchers.<RouteDataRevision>hasProperty("id", is(5L))))).thenReturn(
             routeDataRevision);
         when(terminalServiceMock.getByUniqueId(BigInteger.ONE)).thenReturn(terminal);
 
@@ -124,5 +124,26 @@ public class RouteDataRevisionDtoServiceImplUnitTest {
 
         assertThat(sut.existsEntry("1", BigDecimal.TEN, BigDecimal.ONE), is(true));
         verify(routeDataRevisionServiceMock).existsEntry(BigInteger.ONE, BigDecimal.TEN, BigDecimal.ONE);
+    }
+
+
+    @Test
+    public void get() {
+
+        GeoLocation geoLocation = new GeoLocation(BigDecimal.TEN, BigDecimal.ONE);
+
+        Terminal terminal = new Terminal();
+        terminal.setName("Foo");
+
+        RouteDataRevision revision = new RouteDataRevision();
+        revision.setAirlineDistanceInMeter(BigDecimal.ONE);
+        revision.setTerminal(terminal);
+
+        when(routeDataRevisionServiceMock.getRouteDataRevision(BigInteger.ONE, geoLocation)).thenReturn(revision);
+
+        RouteDataRevisionDto result = sut.findNearest("1", geoLocation);
+
+        assertThat(result.getAirlineDistanceInMeter(), is(BigDecimal.ONE));
+        assertThat(result.getTerminal().getName(), is("Foo"));
     }
 }

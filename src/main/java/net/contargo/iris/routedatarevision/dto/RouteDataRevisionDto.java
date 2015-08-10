@@ -1,5 +1,7 @@
 package net.contargo.iris.routedatarevision.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import net.contargo.iris.routedatarevision.RouteDataRevision;
 import net.contargo.iris.terminal.Terminal;
 import net.contargo.iris.terminal.dto.TerminalDto;
@@ -27,6 +29,7 @@ public class RouteDataRevisionDto {
     private Long id;
 
     @NotNull
+    @JsonIgnore
     private TerminalDto terminal;
 
     @BigDecimalValidate(maxFractionalPlaces = MAX_FRAC_2, maxDecimalPlaces = MAX_DEC)
@@ -198,5 +201,11 @@ public class RouteDataRevisionDto {
     public void setComment(String comment) {
 
         this.comment = comment;
+    }
+
+
+    public String getTerminalUid() {
+
+        return terminal.getUniqueId();
     }
 }

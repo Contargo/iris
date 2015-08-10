@@ -1,5 +1,6 @@
 package net.contargo.iris.routedatarevision.service;
 
+import net.contargo.iris.GeoLocation;
 import net.contargo.iris.address.Address;
 import net.contargo.iris.routedatarevision.RouteDataRevision;
 import net.contargo.iris.terminal.Terminal;
@@ -24,12 +25,28 @@ public interface RouteDataRevisionService {
      *
      * @param  terminal  on which the {@link net.contargo.iris.routedatarevision.RouteDataRevision RouteDataRevision}
      *                   information are based on
-     * @param  destination  describes the destination {@link Address} on which the {@link RouteDataRevision} information
-     *                      are provided for
+     * @param  destination  describes the destination {@link GeoLocation} on which the {@link RouteDataRevision}
+     *                      information are provided for
      *
      * @return  the {@link RouteDataRevision} with the best fit for the given {@link Terminal} and {@link Address}
      */
-    RouteDataRevision getRouteDataRevision(Terminal terminal, Address destination);
+    RouteDataRevision getRouteDataRevision(Terminal terminal, GeoLocation destination);
+
+
+    /**
+     * Method to receive the correct {@link net.contargo.iris.routedatarevision.RouteDataRevision RouteDataRevision}
+     * with the shortest distance between the requested {@link Address} and the
+     * {@link net.contargo.iris.routedatarevision.RouteDataRevision RouteDataRevision} saved in the database.
+     *
+     * @param  terminalUid  the {@link Terminal}'s uid on which the
+     *                      {@link net.contargo.iris.routedatarevision.RouteDataRevision RouteDataRevision} information
+     *                      are based on
+     * @param  destination  describes the destination {@link GeoLocation} on which the {@link RouteDataRevision}
+     *                      information are provided for
+     *
+     * @return  the {@link RouteDataRevision} with the best fit for the given {@link Terminal} and {@link Address}
+     */
+    RouteDataRevision getRouteDataRevision(BigInteger terminalUid, GeoLocation destination);
 
 
     /**
@@ -78,8 +95,8 @@ public interface RouteDataRevisionService {
      * Checks if there is already an entry of type {@link net.contargo.iris.routedatarevision.RouteDataRevision} with
      * the given values.
      *
-     * @param  terminal  the corresponding {@link net.contargo.iris.terminal.Terminal} for a
-     *                   {@link net.contargo.iris.routedatarevision.RouteDataRevision}
+     * @param  terminalUniqueId  the corresponding {@link net.contargo.iris.terminal.Terminal}'s unique id for a
+     *                           {@link net.contargo.iris.routedatarevision.RouteDataRevision}
      * @param  latitude  the corresponding Latitude for a {@link net.contargo.iris.routedatarevision.RouteDataRevision}
      * @param  longitude  the corresponding Longitude for a
      *                    {@link net.contargo.iris.routedatarevision.RouteDataRevision}

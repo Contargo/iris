@@ -1,9 +1,11 @@
 package net.contargo.iris.routedatarevision.service;
 
+import net.contargo.iris.GeoLocation;
 import net.contargo.iris.address.Address;
 import net.contargo.iris.routedatarevision.RouteDataRevision;
 import net.contargo.iris.routedatarevision.persistence.RouteDataRevisionRepository;
 import net.contargo.iris.terminal.Terminal;
+import net.contargo.iris.terminal.service.TerminalService;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -27,7 +29,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 
 
 /**
@@ -42,18 +44,21 @@ public class RouteDataRevisionServiceImplUnitTest {
 
     @Mock
     private RouteDataRevisionRepository routeDataRevisionRepositoryMock;
+    @Mock
+    private TerminalService terminalServiceMock;
+
     private Terminal terminal;
 
     @Before
     public void before() {
 
-        sut = new RouteDataRevisionServiceImpl(routeDataRevisionRepositoryMock);
+        sut = new RouteDataRevisionServiceImpl(routeDataRevisionRepositoryMock, terminalServiceMock);
         terminal = new Terminal();
     }
 
 
     @Test
-    public void getRouteDataRevisionByTerminalAndAddress() {
+    public void getRouteDataRevisionByTerminalAndGeolocation() {
 
         Address address = new Address(BigDecimal.ONE, BigDecimal.TEN);
         RouteDataRevision routeDataRevisionDB = new RouteDataRevision();
@@ -68,9 +73,38 @@ public class RouteDataRevisionServiceImplUnitTest {
 
 
     @Test
+    public void getRouteDataRevisionByTerminalUidAndGeolocataion() {
+
+        Address address = new Address(BigDecimal.ONE, BigDecimal.TEN);
+        RouteDataRevision routeDataRevisionDB = new RouteDataRevision();
+
+        when(terminalServiceMock.getByUniqueId(BigInteger.ONE)).thenReturn(terminal);
+        when(routeDataRevisionRepositoryMock.findNearest(terminal, address.getLatitude(), address.getLongitude()))
+            .thenReturn(routeDataRevisionDB);
+
+        RouteDataRevision routeDataRevision = sut.getRouteDataRevision(BigInteger.ONE, address);
+
+        assertThat(routeDataRevision, is(routeDataRevisionDB));
+    }
+
+
+    @Test(expected = RevisionDoesNotExistException.class)
+    public void getNoRouteDataRevisionByTerminalUidAndGeolocataion() {
+
+        GeoLocation address = new GeoLocation(BigDecimal.ONE, BigDecimal.TEN);
+
+        when(terminalServiceMock.getByUniqueId(BigInteger.ONE)).thenReturn(terminal);
+        when(routeDataRevisionRepositoryMock.findNearest(terminal, address.getLatitude(), address.getLongitude()))
+            .thenReturn(null);
+
+        sut.getRouteDataRevision(BigInteger.ONE, new Address(BigDecimal.ONE, BigDecimal.TEN));
+    }
+
+
+    @Test
     public void getRouteDataRevision() {
 
-        List<RouteDataRevision> routeDataRevisions = asList(new RouteDataRevision());
+        List<RouteDataRevision> routeDataRevisions = singletonList(new RouteDataRevision());
         when(routeDataRevisionRepositoryMock.findAll()).thenReturn(routeDataRevisions);
 
         List<RouteDataRevision> resultList = sut.getRouteDataRevisions();
@@ -81,7 +115,7 @@ public class RouteDataRevisionServiceImplUnitTest {
     @Test
     public void getRouteDataRevisionByTerminal() {
 
-        List<RouteDataRevision> routeDataRevisions = asList(new RouteDataRevision());
+        List<RouteDataRevision> routeDataRevisions = singletonList(new RouteDataRevision());
         when(routeDataRevisionRepositoryMock.findByTerminalId(1L)).thenReturn(routeDataRevisions);
 
         List<RouteDataRevision> resultList = sut.getRouteDataRevisions(1L);
@@ -118,7 +152,7 @@ public class RouteDataRevisionServiceImplUnitTest {
     public void existsEntry() {
 
         when(routeDataRevisionRepositoryMock.findByTerminalAndLatitudeAndLongitude(BigInteger.ONE, BigDecimal.TEN,
-                BigDecimal.ONE)).thenReturn(Optional.of(new RouteDataRevision()));
+                    BigDecimal.ONE)).thenReturn(Optional.of(new RouteDataRevision()));
 
         boolean existsEntry = sut.existsEntry(BigInteger.ONE, BigDecimal.TEN, BigDecimal.ONE);
         assertThat(existsEntry, is(true));
@@ -129,7 +163,7 @@ public class RouteDataRevisionServiceImplUnitTest {
     public void existsEntryNotFound() {
 
         when(routeDataRevisionRepositoryMock.findByTerminalAndLatitudeAndLongitude(BigInteger.ONE, BigDecimal.TEN,
-                BigDecimal.ONE)).thenReturn(Optional.<RouteDataRevision>empty());
+                    BigDecimal.ONE)).thenReturn(Optional.<RouteDataRevision>empty());
 
         boolean existsEntry = sut.existsEntry(BigInteger.ONE, BigDecimal.TEN, BigDecimal.ONE);
         assertThat(existsEntry, is(false));

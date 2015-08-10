@@ -1,5 +1,6 @@
 package net.contargo.iris.routedatarevision.dto;
 
+import net.contargo.iris.GeoLocation;
 import net.contargo.iris.routedatarevision.RouteDataRevision;
 import net.contargo.iris.routedatarevision.service.RouteDataRevisionService;
 import net.contargo.iris.terminal.Terminal;
@@ -65,8 +66,16 @@ public class RouteDataRevisionDtoServiceImpl implements RouteDataRevisionDtoServ
     }
 
 
+    @Override
+    public RouteDataRevisionDto findNearest(String terminalUniqueId, GeoLocation geoLocation) {
+
+        return new RouteDataRevisionDto(routeDataRevisionService.getRouteDataRevision(new BigInteger(terminalUniqueId),
+                    geoLocation));
+    }
+
+
     private List<RouteDataRevisionDto> convertToDtoList(List<RouteDataRevision> entities) {
 
-        return entities.stream().map((entity) -> new RouteDataRevisionDto(entity)).collect(Collectors.toList());
+        return entities.stream().map(RouteDataRevisionDto::new).collect(Collectors.toList());
     }
 }

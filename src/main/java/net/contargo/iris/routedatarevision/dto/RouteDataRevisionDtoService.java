@@ -1,5 +1,10 @@
 package net.contargo.iris.routedatarevision.dto;
 
+import net.contargo.iris.GeoLocation;
+import net.contargo.iris.address.Address;
+import net.contargo.iris.routedatarevision.RouteDataRevision;
+import net.contargo.iris.terminal.Terminal;
+
 import java.math.BigDecimal;
 
 import java.util.List;
@@ -70,4 +75,20 @@ public interface RouteDataRevisionDtoService {
      * @return  true if there already exists an entry with the passed values, otherwise false.
      */
     boolean existsEntry(String terminalUniqueId, BigDecimal latitude, BigDecimal longitude);
+
+
+    /**
+     * Method to receive the correct {@link net.contargo.iris.routedatarevision.RouteDataRevision RouteDataRevision}
+     * with the shortest distance between the requested {@link Address} and the
+     * {@link net.contargo.iris.routedatarevision.RouteDataRevision RouteDataRevision} saved in the database.
+     *
+     * @param  terminalUniqueId  the {@link Terminal}'s uid on which the
+     *                           {@link net.contargo.iris.routedatarevision.RouteDataRevision RouteDataRevision}
+     *                           information are based on
+     * @param  geoLocation  describes the destination {@link GeoLocation} on which the {@link RouteDataRevision}
+     *                      information are provided for
+     *
+     * @return  the {@link RouteDataRevision} with the best fit for the given {@link Terminal} and {@link Address}
+     */
+    RouteDataRevisionDto findNearest(String terminalUniqueId, GeoLocation geoLocation);
 }

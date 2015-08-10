@@ -53,9 +53,9 @@ public class RouteDataRevisionApiController {
     )
     @ApiImplicitParams(
         {
-            @ApiImplicitParam(name = "latitude", dataType = "String", required = true),
+            @ApiImplicitParam(name = "latitude", dataType = "String", required = true, paramType = "query"),
             @ApiImplicitParam(
-                name = "longitude", dataType = "String", required = true
+                name = "longitude", dataType = "String", required = true, paramType = "query"
             )
         }
     )

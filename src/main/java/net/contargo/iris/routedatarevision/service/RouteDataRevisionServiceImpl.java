@@ -41,6 +41,11 @@ public class RouteDataRevisionServiceImpl implements RouteDataRevisionService {
 
         Terminal terminal = terminalService.getByUniqueId(terminalUid);
 
+        if (terminal == null) {
+            throw new RevisionDoesNotExistException("Terminal with uid " + terminalUid + "  does not exist",
+                "terminal.notfound");
+        }
+
         RouteDataRevision nearest = routeDataRevisionRepository.findNearest(terminal, destination.getLatitude(),
                 destination.getLongitude());
 

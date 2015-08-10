@@ -88,7 +88,7 @@ public class RouteDataRevisionServiceImplUnitTest {
     }
 
 
-    @Test(expected = RevisionDoesNotExistException.class)
+    @Test
     public void getNoRouteDataRevisionByTerminalUidAndGeolocataion() {
 
         GeoLocation address = new GeoLocation(BigDecimal.ONE, BigDecimal.TEN);
@@ -97,7 +97,24 @@ public class RouteDataRevisionServiceImplUnitTest {
         when(routeDataRevisionRepositoryMock.findNearest(terminal, address.getLatitude(), address.getLongitude()))
             .thenReturn(null);
 
-        sut.getRouteDataRevision(BigInteger.ONE, new Address(BigDecimal.ONE, BigDecimal.TEN));
+        try {
+            sut.getRouteDataRevision(BigInteger.ONE, new Address(BigDecimal.ONE, BigDecimal.TEN));
+        } catch (RevisionDoesNotExistException e) {
+            assertThat(e.getCode(), is("routerevision.notfound"));
+        }
+    }
+
+
+    @Test
+    public void getNoTerminal() {
+
+        when(terminalServiceMock.getByUniqueId(BigInteger.ONE)).thenReturn(null);
+
+        try {
+            sut.getRouteDataRevision(BigInteger.ONE, new Address(BigDecimal.ONE, BigDecimal.TEN));
+        } catch (RevisionDoesNotExistException e) {
+            assertThat(e.getCode(), is("terminal.notfound"));
+        }
     }
 
 

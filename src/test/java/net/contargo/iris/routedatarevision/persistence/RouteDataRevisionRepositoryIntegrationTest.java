@@ -83,7 +83,7 @@ public class RouteDataRevisionRepositoryIntegrationTest {
 
         em.flush();
 
-        RouteDataRevision nearestRouteDataRevision = sut.findNearest(terminal, valueOf(49.10), valueOf(8.91));
+        RouteDataRevision nearestRouteDataRevision = sut.findNearest(terminal, valueOf(49.1001), valueOf(8.9102));
 
         assertThat(nearestRouteDataRevision.getAirlineDistanceInMeter(), is(ZERO));
         assertThat(nearestRouteDataRevision.getTollDistanceOneWayInMeter(), is(ZERO));

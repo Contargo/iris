@@ -32,7 +32,7 @@ public interface RouteDataRevisionRepository extends JpaRepository<RouteDataRevi
             + "        FROM RouteDataRevision "
             + "        WHERE terminal_id = :terminal "
             + "    ) as dis "
-            + "WHERE dis.distance <= dis.radius "
+            + "WHERE dis.distance * 1000 <= dis.radius "
             + "ORDER BY dis.distance ASC "
             + "LIMIT 0, 1", nativeQuery = true
     )

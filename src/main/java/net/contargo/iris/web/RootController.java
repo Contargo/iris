@@ -7,7 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 
 /**
@@ -16,16 +17,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class RootController extends AbstractController {
 
-    public static final String ROOT = SLASH;
-
-    @RequestMapping(value = SLASH + STAR, method = RequestMethod.GET)
+    @RequestMapping(value = SLASH + STAR, method = GET)
     public String index(Model model) {
 
         return INDEX;
     }
 
 
-    @RequestMapping(value = SLASH + TRIANGLE + SLASH, method = RequestMethod.GET)
+    @RequestMapping(value = SLASH + TRIANGLE + SLASH, method = GET)
     public String triangle() {
 
         return TRIANGLE_VIEW;

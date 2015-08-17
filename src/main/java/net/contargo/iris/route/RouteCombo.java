@@ -14,7 +14,7 @@ public enum RouteCombo {
 
     private RouteType[] routeTypes;
 
-    private RouteCombo(RouteType[] routeTypes) {
+    RouteCombo(RouteType[] routeTypes) {
 
         this.routeTypes = routeTypes.clone();
     }

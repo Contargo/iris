@@ -1,5 +1,8 @@
-package net.contargo.iris.route;
+package net.contargo.iris.route.builder;
 
+import net.contargo.iris.route.Route;
+import net.contargo.iris.route.RoutePart;
+import net.contargo.iris.route.RouteType;
 import net.contargo.iris.terminal.Terminal;
 import net.contargo.iris.truck.TruckRoute;
 import net.contargo.iris.truck.service.TruckRouteService;

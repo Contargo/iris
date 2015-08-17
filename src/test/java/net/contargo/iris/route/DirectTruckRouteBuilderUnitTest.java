@@ -2,6 +2,7 @@ package net.contargo.iris.route;
 
 import net.contargo.iris.GeoLocation;
 import net.contargo.iris.container.ContainerType;
+import net.contargo.iris.route.builder.DirectTruckRouteBuilder;
 import net.contargo.iris.seaport.Seaport;
 import net.contargo.iris.terminal.Terminal;
 import net.contargo.iris.truck.TruckRoute;

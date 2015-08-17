@@ -1,6 +1,7 @@
 package net.contargo.iris.route;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import net.contargo.iris.route.builder.RouteBuilder;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

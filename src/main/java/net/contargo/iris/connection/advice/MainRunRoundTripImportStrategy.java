@@ -2,11 +2,12 @@ package net.contargo.iris.connection.advice;
 
 import net.contargo.iris.GeoLocation;
 import net.contargo.iris.connection.MainRunConnection;
-import net.contargo.iris.container.ContainerState;
 import net.contargo.iris.container.ContainerType;
 import net.contargo.iris.route.Route;
-import net.contargo.iris.route.RouteBuilder;
-import net.contargo.iris.route.RouteType;
+import net.contargo.iris.route.builder.RouteBuilder;
+
+import static net.contargo.iris.container.ContainerState.FULL;
+import static net.contargo.iris.route.RouteType.TRUCK;
 
 
 /**
@@ -19,7 +20,7 @@ class MainRunRoundTripImportStrategy implements MainRunStrategy {
     @Override
     public Route getRoute(MainRunConnection connection, GeoLocation destination, ContainerType containerType) {
 
-        RouteBuilder routeBuilder = new RouteBuilder(connection.getSeaport(), containerType, ContainerState.FULL);
+        RouteBuilder routeBuilder = new RouteBuilder(connection.getSeaport(), containerType, FULL);
 
         if (connection.getSubConnections().isEmpty()) {
             routeBuilder.goTo(connection.getTerminal(), connection.getRouteType());
@@ -27,9 +28,9 @@ class MainRunRoundTripImportStrategy implements MainRunStrategy {
             routeBuilder.goToTerminalViaSubConnections(connection.getTerminal(), connection.getSubConnections());
         }
 
-        routeBuilder.goTo(destination, RouteType.TRUCK);
+        routeBuilder.goTo(destination, TRUCK);
         routeBuilder.unloadContainer();
-        routeBuilder.goTo(connection.getTerminal(), RouteType.TRUCK);
+        routeBuilder.goTo(connection.getTerminal(), TRUCK);
 
         if (connection.getSubConnections().isEmpty()) {
             routeBuilder.goTo(connection.getSeaport(), connection.getRouteType());

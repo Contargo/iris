@@ -5,8 +5,8 @@ import net.contargo.iris.connection.MainRunConnection;
 import net.contargo.iris.container.ContainerState;
 import net.contargo.iris.container.ContainerType;
 import net.contargo.iris.route.Route;
-import net.contargo.iris.route.RouteBuilder;
 import net.contargo.iris.route.RouteType;
+import net.contargo.iris.route.builder.RouteBuilder;
 
 
 /**

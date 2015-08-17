@@ -328,7 +328,7 @@
         <constructor-arg ref="enricherService"/>
     </bean>
 
-    <bean id="directTruckRouteBuilder" class="net.contargo.iris.route.DirectTruckRouteBuilder">
+    <bean id="directTruckRouteBuilder" class="net.contargo.iris.route.builder.DirectTruckRouteBuilder">
         <constructor-arg name="truckRouteService" ref="truckRouteService"/>
     </bean>
 

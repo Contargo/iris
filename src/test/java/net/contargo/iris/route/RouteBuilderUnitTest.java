@@ -5,6 +5,7 @@ import net.contargo.iris.connection.AbstractSubConnection;
 import net.contargo.iris.connection.SeaportSubConnection;
 import net.contargo.iris.connection.TerminalSubConnection;
 import net.contargo.iris.container.ContainerType;
+import net.contargo.iris.route.builder.RouteBuilder;
 import net.contargo.iris.seaport.Seaport;
 import net.contargo.iris.terminal.Terminal;
 
@@ -35,7 +36,7 @@ import static java.util.Arrays.asList;
 
 
 /**
- * Unit test for {@link net.contargo.iris.route.RouteBuilder}.
+ * Unit test for {@link RouteBuilder}.
  *
  * @author  Aljona Murygina - murygina@synyx.de
  */

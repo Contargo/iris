@@ -3,9 +3,9 @@ package net.contargo.iris.co2.service;
 import net.contargo.iris.GeoLocation;
 import net.contargo.iris.co2.advice.Co2PartStrategy;
 import net.contargo.iris.co2.advice.Co2PartStrategyAdvisor;
-import net.contargo.iris.route.DirectTruckRouteBuilder;
 import net.contargo.iris.route.Route;
 import net.contargo.iris.route.RoutePart;
+import net.contargo.iris.route.builder.DirectTruckRouteBuilder;
 
 import org.junit.Before;
 import org.junit.Test;

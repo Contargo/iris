@@ -1,4 +1,4 @@
-package net.contargo.iris.route;
+package net.contargo.iris.route.builder;
 
 import com.google.common.collect.Lists;
 
@@ -8,12 +8,18 @@ import net.contargo.iris.connection.SeaportSubConnection;
 import net.contargo.iris.connection.TerminalSubConnection;
 import net.contargo.iris.container.ContainerState;
 import net.contargo.iris.container.ContainerType;
+import net.contargo.iris.route.Route;
+import net.contargo.iris.route.RoutePart;
+import net.contargo.iris.route.RouteType;
+import net.contargo.iris.route.SubRoutePart;
 import net.contargo.iris.seaport.Seaport;
 import net.contargo.iris.terminal.Terminal;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static net.contargo.iris.container.ContainerState.EMPTY;
+import static net.contargo.iris.container.ContainerState.FULL;
 import static net.contargo.iris.route.RouteType.BARGE_RAIL;
 
 
@@ -41,13 +47,13 @@ public class RouteBuilder {
 
     public void unloadContainer() {
 
-        containerState = ContainerState.EMPTY;
+        containerState = EMPTY;
     }
 
 
     public void loadContainer() {
 
-        containerState = ContainerState.FULL;
+        containerState = FULL;
     }
 
 

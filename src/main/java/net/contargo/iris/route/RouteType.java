@@ -1,7 +1,7 @@
 package net.contargo.iris.route;
 
 /**
- * Enum to mark a {@Route}.
+ * Enum to mark a {@link Route}.
  *
  * @author  Michael Herbold - herbold@synyx.de
  * @author  Aljona Murygina - murygina@synyx.de
@@ -15,7 +15,7 @@ public enum RouteType {
 
     private String messageKey;
 
-    private RouteType(String messageKey) {
+    RouteType(String messageKey) {
 
         this.messageKey = messageKey;
     }

@@ -26,13 +26,13 @@ public interface RouteDataRevisionRepository extends JpaRepository<RouteDataRevi
             + "FROM "
             + "    ("
             + "        SELECT *, "
-            + "               (6371 * acos(cos(radians(:latitude)) * cos(radians(latitude)) "
+            + "               (6371000 * acos(cos(radians(:latitude)) * cos(radians(latitude)) "
             + "               * cos(radians(longitude) - radians(:longitude)) + sin(radians(:latitude)) "
             + "               * sin(radians(latitude)))) AS distance "
             + "        FROM RouteDataRevision "
             + "        WHERE terminal_id = :terminal "
             + "    ) as dis "
-            + "WHERE dis.distance * 1000 <= dis.radius "
+            + "WHERE dis.distance <= dis.radius "
             + "ORDER BY dis.distance ASC "
             + "LIMIT 0, 1", nativeQuery = true
     )

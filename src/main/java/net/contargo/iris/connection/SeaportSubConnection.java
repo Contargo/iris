@@ -3,7 +3,6 @@ package net.contargo.iris.connection;
 import net.contargo.iris.GeoLocation;
 import net.contargo.iris.route.RouteType;
 import net.contargo.iris.seaport.Seaport;
-import net.contargo.iris.terminal.Terminal;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -13,7 +12,8 @@ import javax.validation.constraints.NotNull;
 
 
 /**
- * Represents a barge part of a {@link MainRunConnection} that's between a {@link Seaport} and a {@link Terminal}.
+ * Represents a barge part of a {@link MainRunConnection} that's between a {@link net.contargo.iris.seaport.Seaport} and
+ * a {@link net.contargo.iris.terminal.Terminal}.
  *
  * @author  Sandra Thieme - thieme@synyx.de
  */

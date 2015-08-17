@@ -1,7 +1,5 @@
 package net.contargo.iris.connection.dto;
 
-import net.contargo.iris.terminal.Terminal;
-
 import java.math.BigInteger;
 
 import java.util.List;
@@ -15,9 +13,10 @@ import java.util.List;
 public interface MainRunConnectionDtoService {
 
     /**
-     * Finds all {@link SimpleMainRunConnectionDto}s that are connected to a {@link Terminal} with the given uid.
+     * Finds all {@link SimpleMainRunConnectionDto}s that are connected to a {@link net.contargo.iris.terminal.Terminal}
+     * with the given uid.
      *
-     * @param  terminalUID  a {@link Terminal}'s uid
+     * @param  terminalUID  a {@link net.contargo.iris.terminal.Terminal}'s uid
      *
      * @return  a list of matching {@link SimpleMainRunConnectionDto}s
      */

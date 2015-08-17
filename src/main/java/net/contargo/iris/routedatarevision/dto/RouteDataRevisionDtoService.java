@@ -1,7 +1,6 @@
 package net.contargo.iris.routedatarevision.dto;
 
 import net.contargo.iris.GeoLocation;
-import net.contargo.iris.address.Address;
 import net.contargo.iris.routedatarevision.RouteDataRevision;
 import net.contargo.iris.terminal.Terminal;
 
@@ -79,7 +78,7 @@ public interface RouteDataRevisionDtoService {
 
     /**
      * Method to receive the correct {@link net.contargo.iris.routedatarevision.RouteDataRevision RouteDataRevision}
-     * with the shortest distance between the requested {@link Address} and the
+     * with the shortest distance between the requested {@link net.contargo.iris.address.Address} and the
      * {@link net.contargo.iris.routedatarevision.RouteDataRevision RouteDataRevision} saved in the database.
      *
      * @param  terminalUniqueId  the {@link Terminal}'s uid on which the
@@ -88,7 +87,8 @@ public interface RouteDataRevisionDtoService {
      * @param  geoLocation  describes the destination {@link GeoLocation} on which the {@link RouteDataRevision}
      *                      information are provided for
      *
-     * @return  the {@link RouteDataRevision} with the best fit for the given {@link Terminal} and {@link Address}
+     * @return  the {@link RouteDataRevision} with the best fit for the given {@link Terminal} and
+     *          {@link net.contargo.iris.address.Address}
      */
     RouteDataRevisionDto findNearest(String terminalUniqueId, GeoLocation geoLocation);
 }

@@ -1,7 +1,6 @@
 package net.contargo.iris.routedatarevision.service;
 
 import net.contargo.iris.GeoLocation;
-import net.contargo.iris.address.Address;
 import net.contargo.iris.routedatarevision.RouteDataRevision;
 import net.contargo.iris.terminal.Terminal;
 
@@ -20,7 +19,7 @@ public interface RouteDataRevisionService {
 
     /**
      * Method to receive the correct {@link net.contargo.iris.routedatarevision.RouteDataRevision RouteDataRevision}
-     * with the shortest distance between the requested {@link Address} and the
+     * with the shortest distance between the requested {@link net.contargo.iris.address.Address} and the
      * {@link net.contargo.iris.routedatarevision.RouteDataRevision RouteDataRevision} saved in the database.
      *
      * @param  terminal  on which the {@link net.contargo.iris.routedatarevision.RouteDataRevision RouteDataRevision}
@@ -28,14 +27,15 @@ public interface RouteDataRevisionService {
      * @param  destination  describes the destination {@link GeoLocation} on which the {@link RouteDataRevision}
      *                      information are provided for
      *
-     * @return  the {@link RouteDataRevision} with the best fit for the given {@link Terminal} and {@link Address}
+     * @return  the {@link RouteDataRevision} with the best fit for the given {@link Terminal} and
+     *          {@link net.contargo.iris.address.Address}
      */
     RouteDataRevision getRouteDataRevision(Terminal terminal, GeoLocation destination);
 
 
     /**
      * Method to receive the correct {@link net.contargo.iris.routedatarevision.RouteDataRevision RouteDataRevision}
-     * with the shortest distance between the requested {@link Address} and the
+     * with the shortest distance between the requested {@link net.contargo.iris.address.Address} and the
      * {@link net.contargo.iris.routedatarevision.RouteDataRevision RouteDataRevision} saved in the database.
      *
      * @param  terminalUid  the {@link Terminal}'s uid on which the
@@ -44,7 +44,8 @@ public interface RouteDataRevisionService {
      * @param  destination  describes the destination {@link GeoLocation} on which the {@link RouteDataRevision}
      *                      information are provided for
      *
-     * @return  the {@link RouteDataRevision} with the best fit for the given {@link Terminal} and {@link Address}
+     * @return  the {@link RouteDataRevision} with the best fit for the given {@link Terminal} and
+     *          {@link net.contargo.iris.address.Address}
      */
     RouteDataRevision getRouteDataRevision(BigInteger terminalUid, GeoLocation destination);
 

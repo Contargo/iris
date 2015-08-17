@@ -114,7 +114,8 @@ public class DiscoverPublicApiController extends AbstractController {
 
         discoverResponse.add(linkTo(RouteEnricherApiController.class).slash(
                     "?data.parts[0].origin.longitude=4.3&data.parts[0].origin.latitude=51.36833"
-                    + "&data.parts[0].destination.longitude=8.2852700000&data.parts[0].destination.latitude=49.0690300000"
+                    + "&data.parts[0].destination.longitude=8.2852700000"
+                    + "&data.parts[0].destination.latitude=49.0690300000"
                     + "&data.parts[0].routeType=BARGE&data.parts[0].containerType=TWENTY_LIGHT"
                     + "&data.parts[0].containerState=FULL"
                     + "&data.parts[1].origin.longitude=8.2852700000&data.parts[1].origin.latitude=49.0690300000"
@@ -122,7 +123,8 @@ public class DiscoverPublicApiController extends AbstractController {
                     + "&data.parts[1].routeType=TRUCK&data.parts[1].containerType=TWENTY_LIGHT"
                     + "&data.parts[1].containerState=FULL"
                     + "&data.parts[2].origin.longitude=8.41&data.parts[2].origin.latitude=49.0"
-                    + "&data.parts[2].destination.longitude=8.2852700000&data.parts[2].destination.latitude=49.0690300000"
+                    + "&data.parts[2].destination.longitude=8.2852700000"
+                    + "&data.parts[2].destination.latitude=49.0690300000"
                     + "&data.parts[2].routeType=TRUCK&data.parts[2].containerType=TWENTY_LIGHT"
                     + "&data.parts[2].containerState=EMPTY"
                     + "&data.parts[3].origin.longitude=8.2852700000&data.parts[3].origin.latitude=49.0690300000"

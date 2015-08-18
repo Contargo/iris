@@ -3,13 +3,7 @@ package net.contargo.iris.connection;
 import net.contargo.iris.route.RouteType;
 import net.contargo.iris.seaport.Seaport;
 import net.contargo.iris.terminal.Terminal;
-
 import net.contargo.validation.bigdecimal.BigDecimalValidate;
-
-import java.math.BigDecimal;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -22,8 +16,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import static net.contargo.iris.route.RouteType.BARGE_RAIL;
 
@@ -243,7 +239,8 @@ public class MainRunConnection {
 
 
     /**
-     * Checks whether this {@link MainRunConnection} along with both its {@link Seaport} and {@link Terminal}.
+     * Checks whether this {@link MainRunConnection} is enabled along with its {@link Seaport} and {@link Terminal} and
+     * all its {@link AbstractSubConnection}s.
      *
      * @return  true if each of them is enabled, false otherwise
      */
@@ -253,15 +250,7 @@ public class MainRunConnection {
             return false;
         }
 
-        if (seaport == null) {
-            return false;
-        }
-
         if (!seaport.isEnabled()) {
-            return false;
-        }
-
-        if (null == terminal) {
             return false;
         }
 

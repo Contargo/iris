@@ -147,32 +147,11 @@ public class MainRunConnectionUnitTest {
 
 
     @Test
-    public void getEveryThingEnabledNullSeaport() {
-
-        sut.setEnabled(true);
-
-        assertThat(sut.getEverythingEnabled(), is(false));
-    }
-
-
-    @Test
     public void getEveryThingEnabledDisabledSeaport() {
 
         sut.setEnabled(true);
 
         seaport.setEnabled(false);
-        sut.setSeaport(seaport);
-
-        assertThat(sut.getEverythingEnabled(), is(false));
-    }
-
-
-    @Test
-    public void getEveryThingEnabledNullTerminal() {
-
-        sut.setEnabled(true);
-
-        seaport.setEnabled(true);
         sut.setSeaport(seaport);
 
         assertThat(sut.getEverythingEnabled(), is(false));

@@ -3,7 +3,7 @@ package net.contargo.iris.terminal.api;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 
-import net.contargo.iris.api.AbstractController;
+import net.contargo.iris.api.ControllerConstants;
 import net.contargo.iris.api.NotFoundException;
 import net.contargo.iris.connection.dto.SeaportTerminalConnectionDtoService;
 import net.contargo.iris.route.RouteType;
@@ -50,7 +50,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 @Api(value = "/terminals", description = "API endpoint to manage terminal.")
 @Controller
 @RequestMapping(value = "/terminals")
-public class TerminalApiController extends AbstractController {
+public class TerminalApiController {
 
     private static final Logger LOG = LoggerFactory.getLogger(TerminalApiController.class);
 
@@ -69,7 +69,7 @@ public class TerminalApiController extends AbstractController {
 
     @ApiOperation(value = "Returns all active terminals.", notes = "Returns all active terminals.")
     @RequestMapping(method = GET)
-    @ModelAttribute(RESPONSE)
+    @ModelAttribute(ControllerConstants.RESPONSE)
     public TerminalsResponse getTerminals(
         @RequestParam(value = "activeOnly", defaultValue = "true") boolean activeOnly) {
 
@@ -100,7 +100,7 @@ public class TerminalApiController extends AbstractController {
             "Returns all terminals that are part of a connection with the given routetype and the specified seaport."
     )
     @RequestMapping(params = { "seaportUid", }, method = GET)
-    @ModelAttribute(RESPONSE)
+    @ModelAttribute(ControllerConstants.RESPONSE)
     public TerminalsResponse getTerminalsForSeaportAndRouteType(
         @RequestParam(value = "seaportUid") BigInteger seaportUID,
         @RequestParam(value = "routeType") RouteType routeType) {
@@ -134,8 +134,8 @@ public class TerminalApiController extends AbstractController {
         value = "Return the terminal with the given terminalUID.",
         notes = "Return the terminal with the given terminalUID."
     )
-    @RequestMapping(value = SLASH + "{terminalUid}", method = GET)
-    @ModelAttribute(RESPONSE)
+    @RequestMapping(value = "/{terminalUid}", method = GET)
+    @ModelAttribute(ControllerConstants.RESPONSE)
     public TerminalResponse getTerminalByUid(@PathVariable("terminalUid") BigInteger uid) {
 
         TerminalResponse response = new TerminalResponse();
@@ -161,7 +161,7 @@ public class TerminalApiController extends AbstractController {
         value = "Saves the terminal with the given terminalUID.",
         notes = "Saves the terminal with the given terminalUID.", response = Void.class
     )
-    @RequestMapping(value = SLASH + "{terminalUid}", method = PUT)
+    @RequestMapping(value = "/{terminalUid}", method = PUT)
     public ResponseEntity syncTerminal(@PathVariable("terminalUid") BigInteger terminalUid,
         @Valid @RequestBody TerminalDto terminalDto) {
 

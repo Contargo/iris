@@ -3,7 +3,7 @@ package net.contargo.iris.api.discover;
 import com.mangofactory.swagger.annotations.ApiIgnore;
 
 import net.contargo.iris.address.api.AddressApiController;
-import net.contargo.iris.api.AbstractController;
+import net.contargo.iris.api.ControllerConstants;
 import net.contargo.iris.connection.api.SeaportConnectionApiController;
 import net.contargo.iris.countries.api.CountriesApiController;
 import net.contargo.iris.route.RouteCombo;
@@ -19,8 +19,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
-import java.lang.reflect.Method;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -40,12 +38,12 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 @Controller
 @RequestMapping
 @ApiIgnore
-public class DiscoverPublicApiController extends AbstractController {
+public class DiscoverPublicApiController {
 
-    static final String REL_COUNTRIES = COUNTRIES;
-    static final String REL_REVERSE_GEOCODE = REVERSE_GEOCODE;
+    static final String REL_COUNTRIES = "countries";
+    static final String REL_REVERSE_GEOCODE = "reversegeocode";
     static final String REL_GEOCODE = "geocode";
-    static final String REL_TERMINALS = TERMINALS;
+    static final String REL_TERMINALS = "terminals";
     static final String REL_TERMINAL_EXAMPLE = "terminal (by uid)";
     static final String REL_SEAPORTS_OF_CONNECTIONS = "seaports (as part of connections)";
     static final String REL_SEAPORTS_OF_CONNECTIONS_FILTERED = "seaports (as part of connections, filtered)";
@@ -54,9 +52,8 @@ public class DiscoverPublicApiController extends AbstractController {
     static final String REL_ROUTES = "routes";
     static final String REL_SIMPLE_GEOCODES_EXAMPLE = "simplegeocodes_example";
     static final String REL_ROUTE_DETAILS_EXAMPLE = "route_details_example";
-    static final String REL_OSM_ADDRESSES = OSM_ADDRESSES;
+    static final String REL_OSM_ADDRESSES = "osmaddresses";
 
-    private static final String ROOT_URL = SLASH;
     private static final Double SEAPORTS_LAT = 49.0;
     private static final Double SEAPORTS_LON = 8.41;
 
@@ -66,8 +63,8 @@ public class DiscoverPublicApiController extends AbstractController {
     @Value(value = "${application.version}")
     private String applicationVersion;
 
-    @RequestMapping(value = ROOT_URL, method = RequestMethod.GET)
-    @ModelAttribute(RESPONSE)
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @ModelAttribute(ControllerConstants.RESPONSE)
     public DiscoverResponse discover() throws NoSuchMethodException {
 
         DiscoverResponse discoverResponse = new DiscoverResponse(applicationVersion);
@@ -84,17 +81,16 @@ public class DiscoverPublicApiController extends AbstractController {
         discoverResponse.add(linkTo(CountriesApiController.class).withRel(REL_COUNTRIES));
 
         // osmaddresses
-        discoverResponse.add(linkTo(AddressApiController.class).slash(OSM_ADDRESSES).slash(
+        discoverResponse.add(linkTo(AddressApiController.class).slash("osmaddresses").slash(
                 "134631686?_=1381911583029").withRel(REL_OSM_ADDRESSES));
 
         // reverse_geocode
-        Method method = AddressApiController.class.getMethod(AddressApiController.METHOD_ADDRESS_BY_GEOLOCATION,
-                BigDecimal.class, BigDecimal.class);
-        discoverResponse.add(linkTo(method, new BigDecimal("49.123"), new BigDecimal("8.12")).slash(".")
-            .withRel(REL_REVERSE_GEOCODE));
+        discoverResponse.add(linkTo(
+                    methodOn(AddressApiController.class).addressByGeolocation(new BigDecimal("49.123"),
+                        new BigDecimal("8.12"))).withRel(REL_REVERSE_GEOCODE));
 
         // geocode
-        discoverResponse.add(linkTo(AddressApiController.class).slash(GEOCODES + "?city=Karlsruhe&postalcode=76137")
+        discoverResponse.add(linkTo(AddressApiController.class).slash("geocodes?city=Karlsruhe&postalcode=76137")
             .withRel(REL_GEOCODE));
 
         // seaport
@@ -113,7 +109,6 @@ public class DiscoverPublicApiController extends AbstractController {
 
         // terminals
         discoverResponse.add(linkTo(methodOn(TerminalApiController.class).getTerminals(true)).withRel(REL_TERMINALS));
-
         discoverResponse.add(linkTo(AddressApiController.class).slash(
                 "simplegeocodes?city=Karlsruhe&postalcode=76137").withRel(REL_SIMPLE_GEOCODES_EXAMPLE));
 

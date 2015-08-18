@@ -1,6 +1,5 @@
 package net.contargo.iris.connection.web;
 
-import net.contargo.iris.api.AbstractController;
 import net.contargo.iris.connection.service.MainRunConnectionService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +11,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import static net.contargo.iris.api.AbstractController.CONNECTIONS;
-import static net.contargo.iris.api.AbstractController.SLASH;
-
 
 /**
  * Controller to handle {@link net.contargo.iris.connection.MainRunConnection}'s.
@@ -23,13 +19,11 @@ import static net.contargo.iris.api.AbstractController.SLASH;
  * @author  Tobias Schneider - schneider@synyx.de
  */
 @Controller
-@RequestMapping(SLASH + CONNECTIONS)
-public class MainRunConnectionController extends AbstractController {
+@RequestMapping("/connections")
+public class MainRunConnectionController {
 
-    private static final String CONTROLLER_CONTEXT = "connectionManagement" + SLASH;
-
+    private static final String CONTROLLER_CONTEXT = "connectionManagement/";
     private static final String MAINRUN_CONNECTIONS_ATTRIBUTE = "mainRunConnections";
-
     private static final String MAINRUN_CONNECTIONS_VIEW = "mainrunconnections";
     private static final String MAINRUN_CONNECTION_VIEW = "mainrunconnection";
 
@@ -50,7 +44,7 @@ public class MainRunConnectionController extends AbstractController {
     }
 
 
-    @RequestMapping(value = SLASH + ID_PARAM, method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public String prepareForUpdate() {
 
         return CONTROLLER_CONTEXT + MAINRUN_CONNECTION_VIEW;

@@ -2,7 +2,6 @@ package net.contargo.iris.connection.api;
 
 import com.wordnik.swagger.annotations.ApiOperation;
 
-import net.contargo.iris.api.AbstractController;
 import net.contargo.iris.api.RestApiErrorDto;
 import net.contargo.iris.connection.dto.MainRunConnectionDto;
 import net.contargo.iris.connection.dto.MainRunConnectionDtoService;
@@ -58,7 +57,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.PUT;
  */
 @Controller
 @RequestMapping(value = "/connections")
-public class MainRunConnectionApiController extends AbstractController {
+public class MainRunConnectionApiController {
 
     private static final Logger LOG = getLogger(MethodHandles.lookup().lookupClass());
 

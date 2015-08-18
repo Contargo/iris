@@ -3,7 +3,6 @@ package net.contargo.iris.countries.api;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 
-import net.contargo.iris.api.AbstractController;
 import net.contargo.iris.countries.dto.CountryDtoService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +24,9 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
  * @author  Oliver Messner - messner@synyx.de
  */
 @Controller
-@RequestMapping(value = CountriesApiController.COUNTRIES)
-@Api(value = CountriesApiController.COUNTRIES, description = "API for Information about countries.")
-public class CountriesApiController extends AbstractController {
+@RequestMapping(value = "countries")
+@Api(value = "countries", description = "API for Information about countries.")
+public class CountriesApiController {
 
     private final CountryDtoService countryDtoService;
 

@@ -1,7 +1,7 @@
 package net.contargo.iris.routedatarevision.web;
 
 import net.contargo.iris.Message;
-import net.contargo.iris.api.AbstractController;
+import net.contargo.iris.api.ControllerConstants;
 import net.contargo.iris.routedatarevision.dto.RouteDataRevisionDto;
 import net.contargo.iris.routedatarevision.dto.RouteDataRevisionDtoService;
 import net.contargo.iris.terminal.service.TerminalService;
@@ -36,7 +36,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.PUT;
  */
 @Controller
 @RequestMapping("/routerevisions")
-public class RouteDataRevisionController extends AbstractController {
+public class RouteDataRevisionController {
 
     private static final Message SAVE_SUCCESS_MESSAGE = Message.success("routerevision.success.save.message");
     private static final Message UPDATE_SUCCESS_MESSAGE = Message.success("routerevision.success.update.message");
@@ -135,7 +135,7 @@ public class RouteDataRevisionController extends AbstractController {
 
         RouteDataRevisionDto savedDto = routeDataRevisionDtoService.save(routeDataRevisionDto);
 
-        redirectAttributes.addFlashAttribute(MESSAGE, successMessage);
+        redirectAttributes.addFlashAttribute(ControllerConstants.MESSAGE, successMessage);
 
         return "redirect:/web/routerevisions/" + savedDto.getId();
     }

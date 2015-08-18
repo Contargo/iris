@@ -3,7 +3,6 @@ package net.contargo.iris.gis.api;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 
-import net.contargo.iris.api.AbstractController;
 import net.contargo.iris.gis.dto.AirlineDistanceDto;
 import net.contargo.iris.gis.dto.AirlineDistanceDtoService;
 
@@ -34,7 +33,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @Api(value = AirlineDistanceApiController.AIRLINE_DISTANCE, description = "API for calculating airline distances.")
 @Controller
 @RequestMapping(AirlineDistanceApiController.AIRLINE_DISTANCE)
-public class AirlineDistanceApiController extends AbstractController {
+public class AirlineDistanceApiController {
 
     static final String AIRLINE_DISTANCE = "airlineDistance";
 

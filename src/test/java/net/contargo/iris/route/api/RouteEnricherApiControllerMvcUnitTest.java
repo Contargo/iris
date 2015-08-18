@@ -1,6 +1,5 @@
 package net.contargo.iris.route.api;
 
-import net.contargo.iris.api.AbstractController;
 import net.contargo.iris.connection.dto.RouteDataDto;
 import net.contargo.iris.connection.dto.RouteDto;
 import net.contargo.iris.connection.dto.RoutePartDto;
@@ -75,8 +74,8 @@ public class RouteEnricherApiControllerMvcUnitTest {
 
         when(enricherDtoServiceMock.enrich(any(RouteDto.class))).thenReturn(routeDto);
 
-        ResultActions resultActions = mockMvc.perform(get("/" + AbstractController.ROUTE_DETAILS).param("name",
-                    "Ruth").accept(APPLICATION_JSON));
+        ResultActions resultActions = mockMvc.perform(get("/routedetails").param("name", "Ruth")
+                .accept(APPLICATION_JSON));
         resultActions.andExpect(status().isOk());
         resultActions.andExpect(content().contentType(APPLICATION_JSON_VALUE));
         resultActions.andExpect((jsonPath("$.response.route.name", is("RuthResponse"))));

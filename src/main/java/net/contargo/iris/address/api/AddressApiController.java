@@ -7,7 +7,6 @@ import com.wordnik.swagger.annotations.ApiParam;
 import net.contargo.iris.GeoLocation;
 import net.contargo.iris.address.dto.AddressDto;
 import net.contargo.iris.address.dto.AddressDtoService;
-import net.contargo.iris.api.AbstractController;
 
 import org.slf4j.Logger;
 
@@ -53,7 +52,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
  */
 @Controller
 @Api(description = "API for querying addresses.", value = "")
-public class AddressApiController extends AbstractController {
+public class AddressApiController {
 
     public static final String METHOD_ADDRESS_BY_GEOLOCATION = "addressByGeolocation";
     private static final Logger LOG = getLogger(MethodHandles.lookup().lookupClass());
@@ -70,10 +69,10 @@ public class AddressApiController extends AbstractController {
         value = "Get addresses for a given OpenStreetMap-ID.", notes = "Get addresses for a given OpenStreetMap-ID."
     )
     @ModelAttribute("geoCodeResponse")
-    @RequestMapping(value = OSM_ADDRESSES + SLASH + ID_PARAM, method = RequestMethod.GET)
+    @RequestMapping(value = "osmaddresses/{id}", method = RequestMethod.GET)
     public ListOfAddressListsResponse addressByOsmId(
         @ApiParam(value = "ID identifying a single osm-address.", required = true)
-        @PathVariable(ID)
+        @PathVariable("id")
         long osmId) {
 
         AddressDto address = addressDtoService.getAddressByOsmId(osmId);
@@ -91,9 +90,7 @@ public class AddressApiController extends AbstractController {
     // do not remove the last slash of the url, or the longitude decimals will be cut off
     @ApiOperation(value = "Get address for the given geolocation.", notes = "Get address for the given geolocation.")
     @ModelAttribute("reverseGeocodeResponse")
-    @RequestMapping(
-        value = REVERSE_GEOCODE + SLASH + PARAM_LATITUDE + COLON + PARAM_LONGITUDE + SLASH, method = RequestMethod.GET
-    )
+    @RequestMapping(value = "reversegeocode/{lat}:{lon}/", method = RequestMethod.GET)
     public AddressResponse addressByGeolocation(@PathVariable("lat") BigDecimal latitude,
         @PathVariable("lon") BigDecimal longitude) throws NoSuchMethodException {
 
@@ -116,7 +113,7 @@ public class AddressApiController extends AbstractController {
         value = "Search list of addresses by address details.", notes = "Search list of addresses by address details."
     )
     @ModelAttribute("geoCodeResponse")
-    @RequestMapping(value = GEOCODES, method = RequestMethod.GET)
+    @RequestMapping(value = "geocodes", method = RequestMethod.GET)
     public ListOfAddressListsResponse addressesByAddressDetails(@RequestParam(required = false) String street,
         @RequestParam(required = false, value = "postalcode") String postalCode,
         @RequestParam(required = false, value = "city") String city,
@@ -128,7 +125,7 @@ public class AddressApiController extends AbstractController {
         ListOfAddressListsResponse response = new ListOfAddressListsResponse(addressDtoService.getAddressesByDetails(
                     addressDetails));
 
-        response.add(linkTo(getClass()).slash(GEOCODES + "?" + request.getQueryString()).withSelfRel());
+        response.add(linkTo(getClass()).slash("geocodes?" + request.getQueryString()).withSelfRel());
 
         LOG.info("API: Responding to request for address by address details: {}", addressDetails.toString());
 
@@ -138,7 +135,7 @@ public class AddressApiController extends AbstractController {
 
     @ApiOperation(value = "Search addresses by address details.", notes = "Search addresses by address details.")
     @ModelAttribute("simpleGeoCodeResponse")
-    @RequestMapping(value = SIMPLE_GEOCODES, method = RequestMethod.GET)
+    @RequestMapping(value = "simplegeocodes", method = RequestMethod.GET)
     public AddressListResponse addressesByAddressDetailsPlain(@RequestParam(required = false) String street,
         @RequestParam(required = false, value = "postalcode") String postalCode,
         @RequestParam(required = false, value = "city") String city,
@@ -151,7 +148,7 @@ public class AddressApiController extends AbstractController {
 
         AddressListResponse response = new AddressListResponse(addressList);
 
-        response.add(linkTo(getClass()).slash(SIMPLE_GEOCODES + "?" + request.getQueryString()).withSelfRel());
+        response.add(linkTo(getClass()).slash("simplegeocodes?" + request.getQueryString()).withSelfRel());
 
         LOG.info("API: Responding with " + addressList.size() + " addresses to request " + addressDetails.toString());
 
@@ -164,10 +161,10 @@ public class AddressApiController extends AbstractController {
         notes = "Get all addresses belonging to the given OpenStreetMap-Place-ID."
     )
     @ModelAttribute("addresses")
-    @RequestMapping(value = PLACES + SLASH + ID_PARAM + SLASH + ADDRESSES, method = RequestMethod.GET)
+    @RequestMapping(value = "places/{id}/addresses", method = RequestMethod.GET)
     public List<AddressDto> addressesWherePlaceIsIn(
         @ApiParam(value = "ID identifying a osm-place-id.", required = true)
-        @PathVariable(ID)
+        @PathVariable("id")
         long placeId) {
 
         LOG.info("API: Responding to request for addresses by place id {}", placeId);

@@ -1,7 +1,7 @@
 package net.contargo.iris.seaport.web;
 
 import net.contargo.iris.Message;
-import net.contargo.iris.api.AbstractController;
+import net.contargo.iris.api.ControllerConstants;
 import net.contargo.iris.seaport.Seaport;
 import net.contargo.iris.seaport.service.NonUniqueSeaportException;
 import net.contargo.iris.seaport.service.SeaportService;
@@ -27,9 +27,6 @@ import java.lang.invoke.MethodHandles;
 
 import javax.validation.Valid;
 
-import static net.contargo.iris.api.AbstractController.SEAPORTS;
-import static net.contargo.iris.api.AbstractController.SLASH;
-
 import static org.slf4j.LoggerFactory.getLogger;
 
 
@@ -40,17 +37,17 @@ import static org.slf4j.LoggerFactory.getLogger;
  * @author  Tobias Schneider - schneider@synyx.de
  */
 @Controller
-@RequestMapping(SLASH + SEAPORTS)
-public class SeaportController extends AbstractController {
+@RequestMapping("/seaports")
+public class SeaportController {
 
     private static final Logger LOG = getLogger(MethodHandles.lookup().lookupClass());
 
-    private static final String CONTROLLER_CONTEXT = "seaportManagement" + SLASH;
+    private static final String CONTROLLER_CONTEXT = "seaportManagement/";
 
-    private static final String SEAPORTS_ATTRIBUTE = SEAPORTS;
+    private static final String SEAPORTS_ATTRIBUTE = "seaports";
     private static final String SEAPORT_ATTRIBUTE = "seaport";
 
-    private static final String SEAPORTS_VIEW = SEAPORTS;
+    private static final String SEAPORTS_VIEW = "seaports";
     private static final String SEAPORT_VIEW = "seaport";
 
     private static final Message SAVE_SUCCESS_MESSAGE = Message.success("seaport.success.save.message");
@@ -73,7 +70,7 @@ public class SeaportController extends AbstractController {
     }
 
 
-    @RequestMapping(value = SLASH + "new", method = RequestMethod.GET)
+    @RequestMapping(value = "/new", method = RequestMethod.GET)
     public String prepareForCreate(Model model) {
 
         model.addAttribute(SEAPORT_ATTRIBUTE, new Seaport());
@@ -82,7 +79,7 @@ public class SeaportController extends AbstractController {
     }
 
 
-    @RequestMapping(value = SLASH, method = RequestMethod.POST)
+    @RequestMapping(value = "/", method = RequestMethod.POST)
     public String saveSeaport(@Valid @ModelAttribute Seaport seaport, BindingResult result, Model model,
         RedirectAttributes redirectAttributes) {
 
@@ -90,7 +87,7 @@ public class SeaportController extends AbstractController {
     }
 
 
-    @RequestMapping(value = SLASH + ID_PARAM, method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public String getSeaport(@PathVariable Long id, Model model) {
 
         model.addAttribute(SEAPORT_ATTRIBUTE, seaportService.getById(id));
@@ -99,7 +96,7 @@ public class SeaportController extends AbstractController {
     }
 
 
-    @RequestMapping(value = SLASH + ID_PARAM, method = RequestMethod.PUT)
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public String updateSeaport(@Valid @ModelAttribute Seaport seaport, BindingResult result, @PathVariable Long id,
         Model model, RedirectAttributes redirectAttributes) {
 
@@ -121,9 +118,9 @@ public class SeaportController extends AbstractController {
         try {
             Long id = seaportService.save(seaport).getId();
 
-            redirectAttributes.addFlashAttribute(MESSAGE, successMessage);
+            redirectAttributes.addFlashAttribute("message", successMessage);
 
-            return REDIRECT + WEBAPI_ROOT_URL + SEAPORTS + SLASH + id;
+            return ControllerConstants.REDIRECT + ControllerConstants.WEBAPI_ROOT_URL + "seaports/" + id;
         } catch (NonUniqueSeaportException e) {
             for (String fieldName : e.getBadFields()) {
                 result.rejectValue(fieldName, "seaport.nonunique." + fieldName);
@@ -134,7 +131,7 @@ public class SeaportController extends AbstractController {
             return CONTROLLER_CONTEXT + SEAPORT_VIEW;
         } catch (UniqueIdSequenceServiceException e) {
             model.addAttribute(SEAPORT_ATTRIBUTE, seaport);
-            model.addAttribute(AbstractController.MESSAGE, UNIQUEID_ERROR_MESSAGE);
+            model.addAttribute(ControllerConstants.MESSAGE, ControllerConstants.UNIQUEID_ERROR_MESSAGE);
             LOG.error(e.getMessage());
 
             return CONTROLLER_CONTEXT + SEAPORT_VIEW;

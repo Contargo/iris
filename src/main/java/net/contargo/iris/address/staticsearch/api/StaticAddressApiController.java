@@ -9,7 +9,6 @@ import net.contargo.iris.address.dto.AddressDto;
 import net.contargo.iris.address.staticsearch.dto.StaticAddressDtoService;
 import net.contargo.iris.address.staticsearch.dto.StaticAddressesResponse;
 import net.contargo.iris.address.staticsearch.dto.StaticAddressesUidResponse;
-import net.contargo.iris.api.AbstractController;
 
 import org.slf4j.Logger;
 
@@ -29,9 +28,6 @@ import java.math.BigDecimal;
 
 import java.util.Collection;
 
-import static net.contargo.iris.api.AbstractController.SLASH;
-import static net.contargo.iris.api.AbstractController.STATIC_ADDRESSES;
-
 import static org.slf4j.LoggerFactory.getLogger;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -44,10 +40,10 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
  * @author  Arnold Franke - franke@synyx.de
  * @author  David Schilling - schilling@synyx.de
  */
-@Api(value = SLASH + STATIC_ADDRESSES, description = "API for interaction with static addresses.")
+@Api(value = "/staticaddresses", description = "API for interaction with static addresses.")
 @Controller
-@RequestMapping(SLASH + STATIC_ADDRESSES)
-public class StaticAddressApiController extends AbstractController {
+@RequestMapping("/staticaddresses")
+public class StaticAddressApiController {
 
     private static final Logger LOG = getLogger(MethodHandles.lookup().lookupClass());
     private static final String LAT = "lat";

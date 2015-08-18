@@ -5,7 +5,7 @@ import com.mangofactory.swagger.annotations.ApiIgnore;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 
-import net.contargo.iris.api.AbstractController;
+import net.contargo.iris.api.ControllerConstants;
 import net.contargo.iris.connection.dto.RouteDto;
 import net.contargo.iris.route.dto.EnricherDtoService;
 import net.contargo.iris.terminal.dto.TerminalDto;
@@ -37,15 +37,10 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
  * @author  Arnold Franke - franke@synyx.de
  * @author  Tobias Schneider - schneider@synyx.de
  */
-@Api(
-    value = AbstractController.SLASH + RouteEnricherApiController.ROUTE_DETAILS_URL,
-    description = "Api to get eiriched routes"
-)
+@Api(value = "/routedetails", description = "Api to get enriched routes")
 @Controller
-@RequestMapping(AbstractController.SLASH + RouteEnricherApiController.ROUTE_DETAILS_URL)
-public class RouteEnricherApiController extends AbstractController {
-
-    public static final String ROUTE_DETAILS_URL = ROUTE_DETAILS;
+@RequestMapping("/routedetails")
+public class RouteEnricherApiController {
 
     private static final Logger LOG = getLogger(MethodHandles.lookup().lookupClass());
 
@@ -73,7 +68,7 @@ public class RouteEnricherApiController extends AbstractController {
             + "data.parts[1].containerState=FULL&data.parts[1].routeType=TRUCK"
     )
     @RequestMapping(method = RequestMethod.GET)
-    @ModelAttribute(RESPONSE)
+    @ModelAttribute(ControllerConstants.RESPONSE)
     public RouteResponse getEnrichedRoute(@ApiIgnore RouteDto route,
         @RequestParam(value = "terminal", required = false)
         @ApiIgnore String terminalUid, Model model) {

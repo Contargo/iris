@@ -1,7 +1,5 @@
 package net.contargo.iris.web;
 
-import net.contargo.iris.api.AbstractController;
-
 import org.springframework.stereotype.Controller;
 
 import org.springframework.ui.Model;
@@ -15,18 +13,18 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
  * @author  Sandra Thieme - thieme@synyx.de
  */
 @Controller
-public class RootController extends AbstractController {
+public class RootController {
 
-    @RequestMapping(value = SLASH + STAR, method = GET)
+    @RequestMapping(value = "/*", method = GET)
     public String index(Model model) {
 
-        return INDEX;
+        return "index";
     }
 
 
-    @RequestMapping(value = SLASH + TRIANGLE + SLASH, method = GET)
+    @RequestMapping(value = "/triangle/", method = GET)
     public String triangle() {
 
-        return TRIANGLE_VIEW;
+        return "routing/triangle";
     }
 }

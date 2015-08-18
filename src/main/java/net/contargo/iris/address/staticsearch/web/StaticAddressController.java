@@ -5,7 +5,7 @@ import net.contargo.iris.address.staticsearch.StaticAddress;
 import net.contargo.iris.address.staticsearch.service.StaticAddressCoordinatesDuplicationException;
 import net.contargo.iris.address.staticsearch.service.StaticAddressDuplicationException;
 import net.contargo.iris.address.staticsearch.service.StaticAddressService;
-import net.contargo.iris.api.AbstractController;
+import net.contargo.iris.api.ControllerConstants;
 import net.contargo.iris.sequence.service.UniqueIdSequenceServiceException;
 
 import org.slf4j.Logger;
@@ -31,8 +31,6 @@ import javax.validation.Valid;
 
 import static net.contargo.iris.Message.error;
 import static net.contargo.iris.Message.success;
-import static net.contargo.iris.api.AbstractController.SLASH;
-import static net.contargo.iris.api.AbstractController.STATIC_ADDRESSES;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -45,12 +43,12 @@ import static org.slf4j.LoggerFactory.getLogger;
  * @author  Jörg Alberto Hoffmann - hoffmann@synyx.de
  */
 @Controller
-@RequestMapping(SLASH + STATIC_ADDRESSES)
-public class StaticAddressController extends AbstractController {
+@RequestMapping("/staticaddresses")
+public class StaticAddressController {
 
     private static final Logger LOG = getLogger(MethodHandles.lookup().lookupClass());
 
-    private static final String CONTROLLER_CONTEXT = "staticAddressManagement" + SLASH;
+    private static final String CONTROLLER_CONTEXT = "staticAddressManagement/";
 
     private static final String STATIC_ADDRESS_REQUEST_BEAN = "request";
     private static final String ENTITY_ATTRIBUTE = "staticAddress";
@@ -89,7 +87,7 @@ public class StaticAddressController extends AbstractController {
     }
 
 
-    @RequestMapping(value = SLASH + ID_PARAM, method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public String getStaticAddress(Model model, @PathVariable Long id) {
 
         model.addAttribute(ENTITY_ATTRIBUTE, staticAddressService.findbyId(id));
@@ -98,7 +96,7 @@ public class StaticAddressController extends AbstractController {
     }
 
 
-    @RequestMapping(value = SLASH + "new", method = RequestMethod.GET)
+    @RequestMapping(value = "/new", method = RequestMethod.GET)
     public String prepareForCreate(Model model) {
 
         model.addAttribute(ENTITY_ATTRIBUTE, new StaticAddress());
@@ -114,7 +112,7 @@ public class StaticAddressController extends AbstractController {
     }
 
 
-    @RequestMapping(value = SLASH, method = RequestMethod.POST)
+    @RequestMapping(value = "/", method = RequestMethod.POST)
     public String saveStaticAddress(@Valid @ModelAttribute StaticAddress staticAddress, BindingResult result,
         Model model) {
 
@@ -122,7 +120,7 @@ public class StaticAddressController extends AbstractController {
     }
 
 
-    @RequestMapping(value = SLASH + ID_PARAM, method = RequestMethod.PUT)
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public String updateStaticAddress(@Valid @ModelAttribute StaticAddress staticAddress, BindingResult result,
         Model model) {
 
@@ -143,16 +141,16 @@ public class StaticAddressController extends AbstractController {
             StaticAddress savedStaticAddress = staticAddressService.saveStaticAddress(staticAddress);
 
             model.addAttribute(ENTITY_ATTRIBUTE, savedStaticAddress);
-            model.addAttribute(AbstractController.MESSAGE, message);
+            model.addAttribute(ControllerConstants.MESSAGE, message);
         } catch (StaticAddressDuplicationException e) {
             model.addAttribute(ENTITY_ATTRIBUTE, staticAddress);
-            model.addAttribute(AbstractController.MESSAGE, DUPLICATION_ERROR_MESSAGE);
+            model.addAttribute(ControllerConstants.MESSAGE, DUPLICATION_ERROR_MESSAGE);
         } catch (StaticAddressCoordinatesDuplicationException e) {
             model.addAttribute(ENTITY_ATTRIBUTE, staticAddress);
-            model.addAttribute(AbstractController.MESSAGE, DUPLICATION_GEOCOORDINATES_ERROR_MESSAGE);
+            model.addAttribute(ControllerConstants.MESSAGE, DUPLICATION_GEOCOORDINATES_ERROR_MESSAGE);
         } catch (UniqueIdSequenceServiceException e) {
             model.addAttribute(ENTITY_ATTRIBUTE, staticAddress);
-            model.addAttribute(AbstractController.MESSAGE, UNIQUEID_ERROR_MESSAGE);
+            model.addAttribute(ControllerConstants.MESSAGE, ControllerConstants.UNIQUEID_ERROR_MESSAGE);
             LOG.error(e.getMessage());
         }
 

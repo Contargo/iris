@@ -1,7 +1,7 @@
 package net.contargo.iris.terminal.web;
 
 import net.contargo.iris.Message;
-import net.contargo.iris.api.AbstractController;
+import net.contargo.iris.api.ControllerConstants;
 import net.contargo.iris.sequence.service.UniqueIdSequenceServiceException;
 import net.contargo.iris.terminal.Region;
 import net.contargo.iris.terminal.Terminal;
@@ -28,9 +28,6 @@ import java.lang.invoke.MethodHandles;
 
 import javax.validation.Valid;
 
-import static net.contargo.iris.api.AbstractController.SLASH;
-import static net.contargo.iris.api.AbstractController.TERMINALS;
-
 import static org.slf4j.LoggerFactory.getLogger;
 
 
@@ -41,17 +38,17 @@ import static org.slf4j.LoggerFactory.getLogger;
  * @author  Tobias Schneider - schneider@synyx.de
  */
 @Controller
-@RequestMapping(SLASH + TERMINALS)
-public class TerminalController extends AbstractController {
+@RequestMapping("/terminals")
+public class TerminalController {
 
     private static final Logger LOG = getLogger(MethodHandles.lookup().lookupClass());
 
-    private static final String CONTROLLER_CONTEXT = "terminalManagement" + SLASH;
+    private static final String CONTROLLER_CONTEXT = "terminalManagement/";
 
-    private static final String TERMINALS_ATTRIBUTE = TERMINALS;
+    private static final String TERMINALS_ATTRIBUTE = "terminals";
     private static final String TERMINAL_ATTRIBUTE = "terminal";
 
-    private static final String TERMINALS_VIEW = TERMINALS;
+    private static final String TERMINALS_VIEW = "terminals";
     private static final String TERMINAL_FORM_VIEW = "terminal";
 
     private static final Message SAVE_SUCCESS_MESSAGE = Message.success("terminal.success.save.message");
@@ -75,7 +72,7 @@ public class TerminalController extends AbstractController {
     }
 
 
-    @RequestMapping(value = SLASH + "new", method = RequestMethod.GET)
+    @RequestMapping(value = "/new", method = RequestMethod.GET)
     public String prepareForCreate(Model model) {
 
         model.addAttribute(TERMINAL_ATTRIBUTE, new Terminal());
@@ -85,7 +82,7 @@ public class TerminalController extends AbstractController {
     }
 
 
-    @RequestMapping(value = SLASH, method = RequestMethod.POST)
+    @RequestMapping(value = "/", method = RequestMethod.POST)
     public String saveTerminal(@Valid @ModelAttribute Terminal terminal, BindingResult result, Model model,
         RedirectAttributes redirectAttributes) {
 
@@ -93,7 +90,7 @@ public class TerminalController extends AbstractController {
     }
 
 
-    @RequestMapping(value = SLASH + ID_PARAM, method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public String getTerminal(@PathVariable Long id, Model model) {
 
         model.addAttribute(TERMINAL_ATTRIBUTE, terminalService.getById(id));
@@ -103,7 +100,7 @@ public class TerminalController extends AbstractController {
     }
 
 
-    @RequestMapping(value = SLASH + ID_PARAM, method = RequestMethod.PUT)
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public String updateTerminal(@Valid @ModelAttribute Terminal terminal, BindingResult result, @PathVariable Long id,
         Model model, RedirectAttributes redirectAttributes) {
 
@@ -125,11 +122,11 @@ public class TerminalController extends AbstractController {
         }
 
         try {
-            redirectAttributes.addFlashAttribute(MESSAGE, successMessage);
+            redirectAttributes.addFlashAttribute(ControllerConstants.MESSAGE, successMessage);
 
             Long id = terminalService.save(terminal).getId();
 
-            return REDIRECT + WEBAPI_ROOT_URL + TERMINALS + SLASH + id;
+            return ControllerConstants.REDIRECT + ControllerConstants.WEBAPI_ROOT_URL + "terminals/" + id;
         } catch (NonUniqueTerminalException e) {
             for (String fieldName : e.getBadFields()) {
                 result.rejectValue(fieldName, "terminal.nonunique." + fieldName);
@@ -140,7 +137,7 @@ public class TerminalController extends AbstractController {
             return CONTROLLER_CONTEXT + TERMINAL_FORM_VIEW;
         } catch (UniqueIdSequenceServiceException e) {
             model.addAttribute(TERMINAL_ATTRIBUTE, terminal);
-            model.addAttribute(AbstractController.MESSAGE, UNIQUEID_ERROR_MESSAGE);
+            model.addAttribute(ControllerConstants.MESSAGE, ControllerConstants.UNIQUEID_ERROR_MESSAGE);
             LOG.error(e.getMessage());
 
             return CONTROLLER_CONTEXT + TERMINAL_FORM_VIEW;

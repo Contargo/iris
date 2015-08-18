@@ -3,7 +3,7 @@ package net.contargo.iris.seaport.api;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 
-import net.contargo.iris.api.AbstractController;
+import net.contargo.iris.api.ControllerConstants;
 import net.contargo.iris.api.NotFoundException;
 import net.contargo.iris.seaport.dto.SeaportDto;
 import net.contargo.iris.seaport.dto.SeaportDtoService;
@@ -47,7 +47,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 @Api(value = "/seaports", description = "API endpoint to manage seaports.")
 @Controller
 @RequestMapping(value = "/seaports")
-public class SeaportApiController extends AbstractController {
+public class SeaportApiController {
 
     private static final Logger LOG = LoggerFactory.getLogger(SeaportApiController.class);
 
@@ -85,8 +85,8 @@ public class SeaportApiController extends AbstractController {
 
 
     @ApiOperation(value = "Returns the seaport for the given UID.", notes = "Returns the seaport for the given UID.")
-    @RequestMapping(value = SLASH + "{seaportuid}", method = RequestMethod.GET)
-    @ModelAttribute(RESPONSE)
+    @RequestMapping(value = "/{seaportuid}", method = RequestMethod.GET)
+    @ModelAttribute(ControllerConstants.RESPONSE)
     public SeaportResponse getSeaportById(@PathVariable("seaportuid") BigInteger seaportUID) {
 
         SeaportResponse response = new SeaportResponse();
@@ -112,7 +112,7 @@ public class SeaportApiController extends AbstractController {
         value = "Saves the given seaport with the specified UID.",
         notes = "Saves the given seaport with the specified UID.", response = Void.class
     )
-    @RequestMapping(value = SLASH + "{seaportUid}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{seaportUid}", method = RequestMethod.PUT)
     public ResponseEntity syncSeaport(@PathVariable("seaportUid") BigInteger seaportUID,
         @Valid @RequestBody SeaportDto seaport) {
 

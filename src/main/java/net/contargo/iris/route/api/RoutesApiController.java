@@ -2,7 +2,7 @@ package net.contargo.iris.route.api;
 
 import com.wordnik.swagger.annotations.ApiOperation;
 
-import net.contargo.iris.api.AbstractController;
+import net.contargo.iris.api.ControllerConstants;
 import net.contargo.iris.connection.dto.RouteDto;
 import net.contargo.iris.connection.dto.SeaportConnectionRoutesDtoService;
 import net.contargo.iris.container.ContainerType;
@@ -41,7 +41,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
  * @author  Sandra Thieme - thieme@synyx.de
  */
 @Controller
-public class RoutesApiController extends AbstractController {
+public class RoutesApiController {
 
     private static final Logger LOG = getLogger(MethodHandles.lookup().lookupClass());
     private static final String ROUTE_DETAILS_URL = "/routedetails";
@@ -61,13 +61,17 @@ public class RoutesApiController extends AbstractController {
         this.routeUrlSerializationService = routeUrlSerializationService;
     }
 
+    /**
+     * @deprecated  use {@link #getRoutes(BigInteger, double, double, boolean, ContainerType, boolean, RouteCombo)}
+     *              instead
+     */
     @Deprecated
     @ApiOperation(
         value = "Deprecated. Use /routes/{seaportuid}/{lat}:{lon}/{isroundtrip} instead.",
         notes = "Deprecated. Use /routes/{seaportuid}/{lat}:{lon}/{isroundtrip} instead."
     )
     @RequestMapping(value = "/connections/{seaportuid}/{lat}:{lon}/{isroundtrip}", method = GET)
-    @ModelAttribute(RESPONSE)
+    @ModelAttribute(ControllerConstants.RESPONSE)
     public RoutesResponse getSeaportRoutes(@PathVariable("seaportuid") BigInteger seaportUid,
         @PathVariable("lat") double latitude,
         @PathVariable("lon") double longitude,
@@ -85,7 +89,7 @@ public class RoutesApiController extends AbstractController {
         notes = "Returns a list of all possible connection routes between a seaport and a destination address."
     )
     @RequestMapping(value = "/routes/{seaportuid}/{lat}:{lon}/{isroundtrip}", method = GET)
-    @ModelAttribute(RESPONSE)
+    @ModelAttribute(ControllerConstants.RESPONSE)
     public RoutesResponse getRoutes(@PathVariable("seaportuid") BigInteger seaportUid,
         @PathVariable("lat") double latitude,
         @PathVariable("lon") double longitude,

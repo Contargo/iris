@@ -3,7 +3,6 @@ package net.contargo.iris.distancecloud.api;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 
-import net.contargo.iris.api.AbstractController;
 import net.contargo.iris.distancecloud.dto.DistanceCloudAddressDto;
 import net.contargo.iris.distancecloud.dto.DistanceCloudAddressDtoService;
 
@@ -28,7 +27,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
  */
 @Api(value = "", description = "API for calculating cloud-distances.")
 @Controller
-public class DistanceCloudApiController extends AbstractController {
+public class DistanceCloudApiController {
 
     private final DistanceCloudAddressDtoService distanceCloudAddressDtoService;
 

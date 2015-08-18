@@ -58,7 +58,7 @@ public final class MainRunConnectionDto {
     private final List<AbstractSubConnectionDto> subConnections;
 
     @JsonCreator
-    public MainRunConnectionDto(@JsonProperty("id") Long id,
+    public MainRunConnectionDto(@JsonProperty("id") Long id, // NOSONAR dtos should be final
         @JsonProperty("seaportId") String seaportUid,
         @JsonProperty("terminalId") String terminalUid,
         @JsonProperty("bargeDieselDistance") BigDecimal bargeDieselDistance,

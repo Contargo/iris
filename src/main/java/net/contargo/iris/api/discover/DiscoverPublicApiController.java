@@ -4,11 +4,11 @@ import com.mangofactory.swagger.annotations.ApiIgnore;
 
 import net.contargo.iris.address.api.AddressApiController;
 import net.contargo.iris.api.AbstractController;
-import net.contargo.iris.connection.api.MainRunConnectionApiController;
-import net.contargo.iris.container.ContainerType;
+import net.contargo.iris.connection.api.SeaportConnectionApiController;
 import net.contargo.iris.countries.api.CountriesApiController;
-import net.contargo.iris.enricher.api.RouteEnricherApiController;
 import net.contargo.iris.route.RouteCombo;
+import net.contargo.iris.route.api.RouteEnricherApiController;
+import net.contargo.iris.route.api.RoutesApiController;
 import net.contargo.iris.seaport.api.SeaportApiController;
 import net.contargo.iris.terminal.api.TerminalApiController;
 
@@ -24,6 +24,8 @@ import java.lang.reflect.Method;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+
+import static net.contargo.iris.container.ContainerType.TWENTY_LIGHT;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
@@ -49,6 +51,7 @@ public class DiscoverPublicApiController extends AbstractController {
     static final String REL_SEAPORTS_OF_CONNECTIONS_FILTERED = "seaports (as part of connections, filtered)";
     static final String REL_SEAPORT_EXAMPLE = "seaport (by uid)";
     static final String REL_CONNECTIONS = "connections_url";
+    static final String REL_ROUTES = "routes";
     static final String REL_SIMPLE_GEOCODES_EXAMPLE = "simplegeocodes_example";
     static final String REL_ROUTE_DETAILS_EXAMPLE = "route_details_example";
     static final String REL_OSM_ADDRESSES = OSM_ADDRESSES;
@@ -69,11 +72,13 @@ public class DiscoverPublicApiController extends AbstractController {
 
         DiscoverResponse discoverResponse = new DiscoverResponse(applicationVersion);
 
-        // connections_url
+        // routes
         discoverResponse.add(linkTo(
-                    methodOn(MainRunConnectionApiController.class).getSeaportRoutes(SEAPORT_UID, SEAPORTS_LAT,
-                        SEAPORTS_LON, true, ContainerType.TWENTY_LIGHT, false, RouteCombo.WATERWAY)).withRel(
-                REL_CONNECTIONS));
+                    methodOn(RoutesApiController.class).getSeaportRoutes(SEAPORT_UID, SEAPORTS_LAT, SEAPORTS_LON, true,
+                        TWENTY_LIGHT, false, RouteCombo.WATERWAY)).withRel(REL_CONNECTIONS));
+        discoverResponse.add(linkTo(
+                    methodOn(RoutesApiController.class).getRoutes(SEAPORT_UID, SEAPORTS_LAT, SEAPORTS_LON, true,
+                        TWENTY_LIGHT, false, RouteCombo.WATERWAY)).withRel(REL_ROUTES));
 
         // countries
         discoverResponse.add(linkTo(CountriesApiController.class).withRel(REL_COUNTRIES));
@@ -96,10 +101,10 @@ public class DiscoverPublicApiController extends AbstractController {
         discoverResponse.add(linkTo(methodOn(SeaportApiController.class).getSeaportById(SEAPORT_UID)).withRel(
                 REL_SEAPORT_EXAMPLE));
         discoverResponse.add(linkTo(
-                    methodOn(MainRunConnectionApiController.class).getSeaportsInConnections(RouteCombo.ALL)).withRel(
+                    methodOn(SeaportConnectionApiController.class).getSeaportsInConnections(RouteCombo.ALL)).withRel(
                 REL_SEAPORTS_OF_CONNECTIONS));
         discoverResponse.add(linkTo(
-                    methodOn(MainRunConnectionApiController.class).getSeaportsInConnections(RouteCombo.RAILWAY))
+                    methodOn(SeaportConnectionApiController.class).getSeaportsInConnections(RouteCombo.RAILWAY))
             .withRel(REL_SEAPORTS_OF_CONNECTIONS_FILTERED));
 
         // terminal (by uid)

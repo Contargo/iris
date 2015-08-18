@@ -16,7 +16,6 @@ public abstract class AbstractController {
     // Domain specific constants
     public static final String TERMINALS = "terminals";
     public static final String SEAPORTS = "seaports";
-    public static final String ROUTE_TYPES = "routetypes";
     public static final String STATIC_ADDRESSES = "staticaddresses";
     public static final String CONNECTIONS = "connections";
     public static final String LOGIN = "login";
@@ -43,12 +42,10 @@ public abstract class AbstractController {
     public static final String STAR = "*";
 
     // navigation constants
-    public static final String FORM = "form";
     public static final String MESSAGE = "message";
     public static final String REDIRECT = "redirect:";
     public static final String RESPONSE = "response";
     public static final String WEB = "web";
-    public static final String LINK_REF_ROOT = "root";
     public static final String INDEX = "index";
     public static final String WEBAPI_ROOT_URL = SLASH + WEB + SLASH;
 }

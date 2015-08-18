@@ -53,7 +53,7 @@
 
     <bean id="roundingService" class="net.contargo.iris.rounding.RoundingServiceImpl"/>
 
-    <bean id="urlSerializationService" class="net.contargo.iris.connection.api.RouteUrlSerializationServiceImpl"/>
+    <bean id="urlSerializationService" class="net.contargo.iris.route.service.RouteUrlSerializationServiceImpl"/>
 
     <bean id="irisStartupWatcher" class="net.contargo.iris.startup.IrisStartupWatcher">
         <constructor-arg ref="staticAddressService"/>
@@ -275,29 +275,29 @@
 
     <bean id="bargeRailConnectionFinderService" class="net.contargo.iris.connection.service.BargeRailConnectionFinderService"/>
 
-    <bean id="enricherService" class="net.contargo.iris.enricher.service.EnricherServiceImpl">
+    <bean id="enricherService" class="net.contargo.iris.route.service.EnricherServiceImpl">
         <constructor-arg name="routePartEnricherList">
             <!-- Please keep in mind that the order of the enrichers is very important - before you add or remove something -->
             <list>
-                <bean class="net.contargo.iris.enricher.service.GeoLocationPartEnricher">
+                <bean class="net.contargo.iris.route.service.GeoLocationPartEnricher">
                     <constructor-arg name="geoLocationService" ref="geoLocationService"/>
                 </bean>
-                <bean class="net.contargo.iris.enricher.service.AirLineDistancePartEnricher">
+                <bean class="net.contargo.iris.route.service.AirLineDistancePartEnricher">
                     <constructor-arg name="gisService" ref="gisService"/>
                     <constructor-arg name="roundingService" ref="roundingService"/>
                 </bean>
-                <bean class="net.contargo.iris.enricher.service.MainRunPartEnricher">
+                <bean class="net.contargo.iris.route.service.MainRunPartEnricher">
                     <constructor-arg name="mainRunConnectionService" ref="connectionService"/>
                     <constructor-arg name="mainRunDurationService" ref="mainRunDurationService"/>
                     <constructor-arg name="connectionDistanceService" ref="connectionDistanceService"/>
                 </bean>
-                <bean class="net.contargo.iris.enricher.service.TruckRoutingPartEnricher">
+                <bean class="net.contargo.iris.route.service.TruckRoutingPartEnricher">
                     <constructor-arg name="truckRouteService" ref="truckRouteService"/>
                     <constructor-arg name="durationService" ref="durationService"/>
                     <constructor-arg name="distanceService" ref="distanceService"/>
                 </bean>
-                <bean class="net.contargo.iris.enricher.service.Co2PartEnricher"/>
-                <bean class="net.contargo.iris.enricher.service.RouteDataRevisionPartEnricher">
+                <bean class="net.contargo.iris.route.service.Co2PartEnricher"/>
+                <bean class="net.contargo.iris.route.service.RouteDataRevisionPartEnricher">
                     <constructor-arg name="routeDataRevisionService" ref="routeDataRevisionService"/>
                 </bean>
             </list>
@@ -305,9 +305,9 @@
         <constructor-arg name="routeTotalEnricherList">
             <!-- Please keep in mind that the order of the enrichers is very important - before you add or remove something -->
             <list>
-                <bean class="net.contargo.iris.enricher.service.Co2TotalEnricher"/>
-                <bean class="net.contargo.iris.enricher.service.TruckingTotalEnricher"/>
-                <bean class="net.contargo.iris.enricher.service.TotalEnricher"/>
+                <bean class="net.contargo.iris.route.service.Co2TotalEnricher"/>
+                <bean class="net.contargo.iris.route.service.TruckingTotalEnricher"/>
+                <bean class="net.contargo.iris.route.service.TotalEnricher"/>
             </list>
         </constructor-arg>
     </bean>
@@ -324,7 +324,7 @@
         <constructor-arg name="terminalService" ref="terminalService"/>
     </bean>
 
-    <bean id="enricherDtoService" class="net.contargo.iris.enricher.dto.EnricherDtoServiceImpl">
+    <bean id="enricherDtoService" class="net.contargo.iris.route.dto.EnricherDtoServiceImpl">
         <constructor-arg ref="enricherService"/>
     </bean>
 

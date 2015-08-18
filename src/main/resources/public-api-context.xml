@@ -33,7 +33,7 @@
     <context:component-scan base-package="net.contargo.iris.connection.api"/>
     <context:component-scan base-package="net.contargo.iris.terminal.api"/>
     <context:component-scan base-package="net.contargo.iris.seaport.api"/>
-    <context:component-scan base-package="net.contargo.iris.enricher.api"/>
+    <context:component-scan base-package="net.contargo.iris.route.api"/>
     <context:component-scan base-package="net.contargo.iris.distancecloud.api"/>
     <context:component-scan base-package="net.contargo.iris.routedatarevision.api"/>
     <context:component-scan base-package="com.mangofactory"/>

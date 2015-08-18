@@ -22,6 +22,7 @@ import static net.contargo.iris.api.discover.DiscoverPublicApiController.REL_COU
 import static net.contargo.iris.api.discover.DiscoverPublicApiController.REL_GEOCODE;
 import static net.contargo.iris.api.discover.DiscoverPublicApiController.REL_OSM_ADDRESSES;
 import static net.contargo.iris.api.discover.DiscoverPublicApiController.REL_REVERSE_GEOCODE;
+import static net.contargo.iris.api.discover.DiscoverPublicApiController.REL_ROUTES;
 import static net.contargo.iris.api.discover.DiscoverPublicApiController.REL_ROUTE_DETAILS_EXAMPLE;
 import static net.contargo.iris.api.discover.DiscoverPublicApiController.REL_SEAPORTS_OF_CONNECTIONS;
 import static net.contargo.iris.api.discover.DiscoverPublicApiController.REL_SEAPORTS_OF_CONNECTIONS_FILTERED;
@@ -61,7 +62,7 @@ public class DiscoverPublicApiControllerMvcUnitTest {
 
         ResultActions resultActions = perform(get("/").accept(APPLICATION_JSON));
 
-        resultActions.andExpect(jsonPath("$.response.links", hasSize(12)));
+        resultActions.andExpect(jsonPath("$.response.links", hasSize(13)));
 
         String responseContent = new ObjectMapper().readTree(resultActions.andReturn()
                     .getResponse()
@@ -88,6 +89,8 @@ public class DiscoverPublicApiControllerMvcUnitTest {
         assertThat(response.getLink(REL_TERMINAL_EXAMPLE).getHref(), is("http://localhost/terminals/1301000000000001"));
         assertThat(response.getLink(REL_CONNECTIONS).getHref(),
             is("http://localhost/connections/1301000000000001/49.0:8.41/true?containerType=TWENTY_LIGHT&isImport=false&combo=WATERWAY"));
+        assertThat(response.getLink(REL_ROUTES).getHref(),
+            is("http://localhost/routes/1301000000000001/49.0:8.41/true?containerType=TWENTY_LIGHT&isImport=false&combo=WATERWAY"));
         assertThat(response.getLink(REL_SIMPLE_GEOCODES_EXAMPLE).getHref(),
             is("http://localhost/simplegeocodes?city=Karlsruhe&postalcode=76137"));
         assertThat(response.getLink(REL_ROUTE_DETAILS_EXAMPLE).getHref(),

@@ -1,13 +1,7 @@
 <div class="accordion-group">
     <div class="accordion-heading">
-
-        {{#if moreThanOne}}
-            <a class="collapsable-indicator clickable accordion-heading-open" href="#collapse{{cid}}" 
-               data-toggle="collapse" title="Expand for {{more}} suburbs"></a>
-        {{else}}
-            <a class="collapsable-indicator notclickable" href="#"
-               onclick="return false;"></a>
-        {{/if}}
+            <a class="collapsable-indicator clickable" href="#collapse{{cid}}" 
+               data-toggle="collapse" {{#if moreThanOne}}title="Expand for {{more}} suburbs"{{/if}}></a>
 
         <div class="content-title accordion-content-title content-title-grey selectParentAddress">
             <h4 style="font-weight: normal;">
@@ -16,30 +10,17 @@
                 {{#if moreThanOne}} 
                     <strong>
                         [click for {{more}} suburbs]
-                    </strong> 
+                    </strong>
                 {{/if}}
             </h4>
         </div>
 
     </div>
-
-    {{#if isExpanded}}
-    <div id="collapse{{cid}}" class="row-fluid accordion-body collapse in collapsableindicator">
-        {{else}}
-        <div id="collapse{{cid}}" class="row-fluid accordion-body collapse collapsableindicator">
-            {{/if}}
-            <div class="accordion-inner">
-
-                <table class="table iris-table">
-                    <tbody class="address_table">
-                    </tbody>
-                </table>
-
-            </div>
-            {{#if isExpanded}}
+    <div id="collapse{{cid}}" class="row-fluid accordion-body collapse collapsableindicator">
+        <div class="accordion-inner">
+            <table class="table iris-table">
+                <tbody class="address_table"></tbody>
+            </table>
         </div>
-        {{else}}
     </div>
-    {{/if}}
-
 </div>

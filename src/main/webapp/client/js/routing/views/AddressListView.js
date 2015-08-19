@@ -108,13 +108,7 @@ var AddressListView = Backbone.View.extend({
     },
 
     selectParentAddress: function () {
-        var first = this.model.get("addresses").at(0);
-
-        var newvalue = !first.get("expanded");
-        this.expand(newvalue);
-        first.set("expanded", newvalue);
-
-        return false;
+        this.$('.collapsable-indicator').click();
     },
 
     render: function () {
@@ -167,11 +161,11 @@ var AddressListView = Backbone.View.extend({
     expand: function (value) {
         if (value) {
             $(this.$(".accordion-body")).addClass('in');
-            $(this.$(".accordion-toggle")).addClass('accordion-heading-open');
+            $(this.$(".collapsable-indicator")).addClass('accordion-heading-open');
             $(this.$(".accordion-body")).css('height', 'auto');
         } else {
             $(this.$(".accordion-body")).removeClass('in');
-            $(this.$(".accordion-toggle")).removeClass('accordion-heading-open');
+            $(this.$(".collapsable-indicator")).removeClass('accordion-heading-open');
             $(this.$(".accordion-body")).css('height', '0px');
         }
     }
@@ -187,13 +181,11 @@ var AddressCategoryView = Backbone.View.extend({
 
         this.template = getTemplate(this.templateName);
 
-        _.bindAll(this, "render", "selectedChanged");
+        _.bindAll(this, "render");
         this.model.bind("add", this.render);
         this.model.bind("remove", this.render);
 
         this.model.bind("reset", this.render);
-        this.model.bind("change:selectedAddressOfAddressListList",
-            this.selectedChanged);
 
         this.render();
     },
@@ -222,7 +214,7 @@ var AddressCategoryView = Backbone.View.extend({
                     addressListHasNonEmptyAddresses = true;
                 }
             });
-            var expand = (this.model.size() === 1);
+            var expand = (this.model.size() <= 4);
             var that = this;
             this.model.each(function (addressList) {
                 if (!(typeof addressList.get("addresses").first() === "undefined" && addressListHasNonEmptyAddresses)) {
@@ -230,7 +222,7 @@ var AddressCategoryView = Backbone.View.extend({
                         model: addressList
                     });
 
-                    if (expand) {
+                    if (expand && addressList.get('addresses').size() === 1 || that.model.size() == 1) {
                         view.expand(true);
                     }
 
@@ -238,30 +230,5 @@ var AddressCategoryView = Backbone.View.extend({
                 }
             });
         }
-    },
-
-    selectedChanged: function (address) {
-        var oneElement = (this.model.size() === 1);
-
-        this.model.each(function (addressList) {
-
-            var expand = false;
-
-            addressList.get("addresses").each(function (addr) {
-                if (addr === address) {
-                    expand = true;
-                }
-            });
-
-            if (expand || oneElement) {
-                this.$("#collapse" + addressList.cid).addClass('in');
-                this.$("#collapse" + addressList.cid).addClass('accordion-heading-open');
-                this.$("#collapse" + addressList.cid).css('height', 'auto');
-            } else {
-                this.$("#collapse" + addressList.cid).removeClass('in');
-                this.$("#collapse" + addressList.cid).removeClass('accordion-heading-open');
-                this.$("#collapse" + addressList.cid).css('height', '0px');
-            }
-        });
     }
 });

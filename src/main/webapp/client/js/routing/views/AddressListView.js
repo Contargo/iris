@@ -85,7 +85,7 @@ var AddressListView = Backbone.View.extend({
     templateName: "AddressList",
 
     events: {
-        "click .selectParentAddress": "selectParentAddress"
+        "click .accordion-content-title": "toggleCollapse"
     },
 
     initialize: function (options) {
@@ -98,7 +98,7 @@ var AddressListView = Backbone.View.extend({
             throw "model is undefined";
         }
 
-        _.bindAll(this, "render", "addOne", "addAll", "selectParentAddress",
+        _.bindAll(this, "render", "addOne", "addAll", "toggleCollapse",
             "expand");
         this.model.get("addresses").bind("add", this.render);
         this.model.get("addresses").bind("remove", this.render);
@@ -107,7 +107,7 @@ var AddressListView = Backbone.View.extend({
         this.render();
     },
 
-    selectParentAddress: function () {
+    toggleCollapse: function () {
         this.$('.collapsable-indicator').click();
     },
 

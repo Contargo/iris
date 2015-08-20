@@ -54,14 +54,6 @@ div.content h2 {
     padding-right: 10px;
 }
 
-.content-title-grey {
-    background-color: #DDDDDD;
-}
-
-.content-title-grey:hover {
-    background-color: #B1B2B3;
-}
-
 .content-title h2 {
     display: inline;
     font-size: 18px;
@@ -109,6 +101,16 @@ div.content h2 {
 
 .accordion-content-title {
     margin-bottom: 0 !important;
+    background-color: #DDDDDD;
+    cursor: pointer;
+}
+
+.accordion-content-title:hover {
+    background-color: #B1B2B3;
+}
+
+.accordion-content-title > h4 {
+    font-weight: normal;
 }
 
 .accordion-group {

@@ -17,7 +17,7 @@ ConnectionApp.prototype.start = function () {
         'createView', 'addNewSubconnection', 'handleSaveError', 'removeLastSubconnection');
 
     if (this.newlyCreated) {
-        MessageView.prototype.create({message: "Created connection."});
+        MessageView.prototype.create({message: 'Created connection.'});
         this.newlyCreated = false;
     }
 
@@ -110,7 +110,7 @@ ConnectionApp.prototype.update = function () {
     var that = this;
     if (this.connection.get('id')) {
         this.server.updateConnection(that.mapper.connectionToJson(this.connection), function () {
-            MessageView.prototype.create({message: "Updated connection."});
+            MessageView.prototype.create({message: 'Updated connection.'});
             that.loadModels(that.createView);
         }, this.handleSaveError);
     } else {
@@ -147,15 +147,15 @@ ConnectionApp.prototype.handleSaveError = function (data) {
         message = this.validationMessageService.defaultMessage;
     }
     MessageView.prototype.create({
-        message: "Failed to update connection: " + message,
-        className: "message message-error message-width"
+        message: 'Failed to update connection: ' + message,
+        className: 'message message-error message-width'
     });
 };
 
 ConnectionApp.prototype.handleCriticalError = function (msg) {
     'use strict';
     $('.notifications').notify({
-        type: "error",
+        type: 'error',
         message: {
             text: msg
         },

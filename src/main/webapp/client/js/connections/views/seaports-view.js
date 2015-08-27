@@ -23,7 +23,7 @@ var SeaportsView = Backbone.View.extend({
         'use strict';
         var model = this.model.toJSON();
         model.forEach(function(element) {
-            element.nicename = element.name +  (element.enabled ? " (enabled)": " (not enabled)");
+            element.nicename = element.name +  (element.enabled ? ' (enabled)': ' (not enabled)');
         });
         this.$el.html(this.template({seaports: model}));
     },

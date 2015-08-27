@@ -1,7 +1,8 @@
 var MessageView = Backbone.View.extend({
-    tagName:"div",
-    id:"page-message",
-    className: "message message-success message-width",
+
+    tagName:'div',
+    id:'page-message',
+    className: 'message message-success message-width',
 
     initialize: function(options){
         'use strict';

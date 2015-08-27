@@ -2,16 +2,16 @@ var TriangularTrafficDropDownView = Backbone.View.extend({
 
     initialize: function (options) {
 
-        _.bindAll(this, "render", "addOne", "selectedchanged");
-        this.model.bind("add", this.render);
-        this.model.bind("remove", this.render);
-        this.model.bind("reset", this.render);
-        this.model.bind("change", this.render);
+        _.bindAll(this, 'render', 'addOne', 'selectedchanged');
+        this.model.bind('add', this.render);
+        this.model.bind('remove', this.render);
+        this.model.bind('reset', this.render);
+        this.model.bind('change', this.render);
 
         var elementToSelect;
         if (options !== undefined && options.selectedText !== undefined) {
             this.model.each(function (element) {
-                if (element.get("name") === options.selectedText) {
+                if (element.get('name') === options.selectedText) {
                     elementToSelect = element;
 
                 }
@@ -20,9 +20,9 @@ var TriangularTrafficDropDownView = Backbone.View.extend({
 
         if (this.model.size() > 0) {
             elementToSelect = this.model.first();
-            elementToSelect.set("defaultValue", true);
+            elementToSelect.set('defaultValue', true);
 
-            this.model.trigger("selectedchanged", elementToSelect);
+            this.model.trigger('selectedchanged', elementToSelect);
         }
 
         this.render();
@@ -45,12 +45,12 @@ var TriangularTrafficDropDownView = Backbone.View.extend({
     },
 
     addOne: function (model) {
-        if (model.get("invisible")) {
+        if (model.get('invisible')) {
             return;
         }
-        var option = $("<option/>").html(model.get("name"));
-        if (model.get("defaultValue")) {
-            option.attr("selected", "selected");
+        var option = $('<option/>').html(model.get('name'));
+        if (model.get('defaultValue')) {
+            option.attr('selected', 'selected');
         }
         this.$el.append(option);
     },
@@ -60,26 +60,26 @@ var TriangularTrafficDropDownView = Backbone.View.extend({
     },
 
     selectedchanged: function (element) {
-        this.model.trigger("selectedchanged", this.model.getByName(element.val));
+        this.model.trigger('selectedchanged', this.model.getByName(element.val));
     }
 });
 
 var TriangleDropDownWithAddButtonView = Backbone.View.extend({
 
-    templateName: "TriangleDropDownWithAddButtonView",
+    templateName: 'TriangleDropDownWithAddButtonView',
     events: {
-        "click .add": "addclicked"
+        'click .add': 'addclicked'
     },
 
     initialize: function (options) {
-        _.bindAll(this, "render", "saveselected", "addclicked");
+        _.bindAll(this, 'render', 'saveselected', 'addclicked');
 
-        Helper.isDefined(options, "options");
-        Helper.isDefined(this.model, "model");
+        Helper.isDefined(options, 'options');
+        Helper.isDefined(this.model, 'model');
 
         this.template = getTemplate(this.templateName);
 
-        this.model.bind("selectedchanged", this.saveselected);
+        this.model.bind('selectedchanged', this.saveselected);
 
         this.render();
     },
@@ -89,7 +89,7 @@ var TriangleDropDownWithAddButtonView = Backbone.View.extend({
         this.$el.html(this.template({}));
 
         TriangularTrafficDropDownView.prototype.create({
-            el: this.$(".autoComplete"),
+            el: this.$('.autoComplete'),
             model: this.model
         });
     },
@@ -100,7 +100,7 @@ var TriangleDropDownWithAddButtonView = Backbone.View.extend({
 
     addclicked: function () {
         if (this.current) {
-            this.model.trigger("selectedadded", this.current);
+            this.model.trigger('selectedadded', this.current);
         }
         return false;
     }

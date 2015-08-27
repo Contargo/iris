@@ -1,16 +1,16 @@
 <div class="accordion-group">
     <div class="accordion-heading">
-            <a class="collapsable-indicator clickable" href="#collapse{{cid}}" 
-               data-toggle="collapse" {{#if moreThanOne}}title="Expand for {{more}} suburbs"{{/if}}></a>
+        <a class="collapsable-indicator clickable" href="#collapse{{cid}}"
+           data-toggle="collapse" {{#if moreThanOne}}title="Expand for {{more}} suburbs" {{/if}}></a>
 
         <div class="content-title accordion-content-title">
             <h4>
-                {{parentAddress.address.postcode}} 
-                {{parentAddress.displayName}} 
-                {{#if moreThanOne}} 
-                    <strong>
-                        [click for {{more}} suburbs]
-                    </strong>
+                {{parentAddress.address.postcode}}
+                {{parentAddress.displayName}}
+                {{#if moreThanOne}}
+                <strong>
+                    [click for {{more}} suburbs]
+                </strong>
                 {{/if}}
             </h4>
         </div>

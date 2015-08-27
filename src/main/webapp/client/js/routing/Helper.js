@@ -2,18 +2,18 @@ var Helper = {
 
     renderCorrectGeolocationView: function (model, el) {
         if (!model) {
-            el.html("<span title='?'></span>");
+            el.html('<span title="?"></span>');
         }
-        else if (model.get("type") === "SEAPORT") {
+        else if (model.get('type') === 'SEAPORT') {
             return new SeaportView({el: el, model: model});
-        } else if (model.get("type") === "TERMINAL") {
+        } else if (model.get('type') === 'TERMINAL') {
             return new TerminalView({el: el, model: model});
         }
         // GEOLOCATION AND ADDRESS
         else {
             // if we have no nicename but coordinates...
-            if (model.get("niceName") === undefined && model.get("latitude")) {
-                model.set("niceName", model.get("latitude").toFixed(2) + ":" + model.get("longitude").toFixed(2));
+            if (model.get('niceName') === undefined && model.get('latitude')) {
+                model.set('niceName', model.get('latitude').toFixed(2) + ':' + model.get('longitude').toFixed(2));
             }
             return new DetailledAddressView({el: el, model: model});
         }
@@ -22,14 +22,14 @@ var Helper = {
     isDefined: function (name, what) {
 
         if (name === undefined) {
-            throw "need " + what + " defined .";
+            throw 'need ' + what + ' defined .';
         }
 
         return name;
     },
     formatKM: function (value) {
         if (value !== undefined && value !== null) {
-            value = value.toFixed(0) + " km";
+            value = value.toFixed(0) + ' km';
         }
         return value;
 
@@ -43,16 +43,16 @@ var Helper = {
             var hours = Math.floor((duration % (60 * 24)) / 60);
             var minutes = Math.floor((duration % (60 * 24)) % 60);
 
-            var formattedDuration = "";
+            var formattedDuration = '';
 
             if (days > 0) {
-                formattedDuration += this.setFirstCharToZeroIfSingleCharDuration(days) + "ds ";
+                formattedDuration += this.setFirstCharToZeroIfSingleCharDuration(days) + 'ds ';
             }
-            formattedDuration += this.setFirstCharToZeroIfSingleCharDuration(hours) + "." + this.setFirstCharToZeroIfSingleCharDuration(minutes) + "hrs";
+            formattedDuration += this.setFirstCharToZeroIfSingleCharDuration(hours) + '.' + this.setFirstCharToZeroIfSingleCharDuration(minutes) + 'hrs';
 
             return formattedDuration;
         } else {
-            return "-";
+            return '-';
         }
     },
 
@@ -60,17 +60,17 @@ var Helper = {
         if (time !== undefined) {
 
             if (time < 10) {
-                time = "0" + time;
+                time = '0' + time;
             }
             return time;
         } else {
-            return "-";
+            return '-';
         }
     },
 
     setPopoverOnClickCloseEvent: function (that) {
         var self = this;
-        that.$(".info").click(function () {
+        that.$('.info').click(function () {
             self.closeAllPopover();
         });
     },
@@ -78,5 +78,4 @@ var Helper = {
     closeAllPopover: function () {
         $('.popover').remove();
     }
-
 };

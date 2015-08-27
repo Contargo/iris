@@ -1,14 +1,14 @@
 
 var SeaportView = Backbone.View.extend({
-    tagName: "span",
+    tagName: 'span',
 
-    templateName : "Seaport",
+    templateName : 'Seaport',
 
     initialize : function(options) {
-        _.bindAll(this, "render");
+        _.bindAll(this, 'render');
 
-        Helper.isDefined(options, "options");
-        Helper.isDefined(this.model, "model");
+        Helper.isDefined(options, 'options');
+        Helper.isDefined(this.model, 'model');
 
         this.template = getTemplate(this.templateName);
 
@@ -16,10 +16,9 @@ var SeaportView = Backbone.View.extend({
     },
 
     render: function() {
-
         var model = this.model.toJSON();
         this.$el.html(this.template(model));
 
-        this.$(".info").popover();
+        this.$('.info').popover();
     }
 });

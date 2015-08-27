@@ -1,26 +1,26 @@
 var Seaport = Backbone.Model.extend({
 
     defaults: {
-        name: "unknown",
+        name: 'unknown',
         possibleTypes: undefined,
         invisible: false
     },
 
     initialize: function () {
-        if (this.get("possibleTypes") === undefined) {
-            this.set("possibleTypes", []);
+        if (this.get('possibleTypes') === undefined) {
+            this.set('possibleTypes', []);
         }
     },
 
     canAcceptTransport: function (transport) {
         // does any of the types support the transport in question?
-        return _.any(this.get("possibleTypes"), function (type) {
+        return _.any(this.get('possibleTypes'), function (type) {
             return type === transport;
         });
     },
 
     isInvisible: function () {
-        return this.get("invisible");
+        return this.get('invisible');
     }
 });
 
@@ -37,10 +37,10 @@ var SeaportList = SelectableAwareCollection.extend({
     setVisibility: function (type) {
         this.each(function (e) {
             var visible = e.canAcceptTransport(type);
-            e.set("invisible", !visible);
+            e.set('invisible', !visible);
         });
 
-        this.getDefault().set("defaultValue", true);
+        this.getDefault().set('defaultValue', true);
     },
 
     modelSelected: function () {
@@ -49,12 +49,12 @@ var SeaportList = SelectableAwareCollection.extend({
 
     setDefaultValue: function () {
         if (this.size() > 0) {
-            this.first().set("defaultValue", "true");
+            this.first().set('defaultValue', 'true');
         }
     },
 
     comparator: function (model) {
-        return model.get("name");
+        return model.get('name');
     },
 
     getByName: function (name) {

@@ -5,10 +5,10 @@ var SearchStatus = Backbone.Model.extend({
     },
 
     setHaveSearched: function (value) {
-        this.set("haveSearched", value);
+        this.set('haveSearched', value);
     },
 
     haveSearched: function () {
-        return this.get("haveSearched");
+        return this.get('haveSearched');
     }
 });

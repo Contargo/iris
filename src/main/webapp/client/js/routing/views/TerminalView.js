@@ -1,15 +1,15 @@
 
 var TerminalView = Backbone.View.extend({
-    tagName: "span",
+    tagName: 'span',
 
-    templateName : "Terminal",
+    templateName : 'Terminal',
 
 
     initialize : function(options) {
-        _.bindAll(this, "render");
+        _.bindAll(this, 'render');
 
-        Helper.isDefined(options, "options");
-        Helper.isDefined(this.model, "model");
+        Helper.isDefined(options, 'options');
+        Helper.isDefined(this.model, 'model');
 
         this.template = getTemplate(this.templateName);
 
@@ -21,6 +21,6 @@ var TerminalView = Backbone.View.extend({
         var model = this.model.toJSON();
         this.$el.html(this.template(model));
 
-        this.$(".info").popover();
+        this.$('.info').popover();
     }
 });

@@ -1,33 +1,33 @@
 var TemplateManager = Backbone.Model.extend({
 
     defaults: {
-        prefix: "templates/",
-        postfix: ".html"
+        prefix: 'templates/',
+        postfix: '.html'
     },
 
     initialize: function () {
-        this.set("cache", {});
+        this.set('cache', {});
     },
 
     getUrl: function (name) {
-        return this.get("prefix") + name + this.get("postfix");
+        return this.get('prefix') + name + this.get('postfix');
     },
 
     loadTemplate: function (url) {
-        var result = "Problem loading the Template from url " + url;
+        var result = 'Problem loading the Template from url ' + url;
 
         $.ajax({
             url: url,
             context: this,
             async: false,
-            dataType: "html",
+            dataType: 'html',
             cache: false,
 
             success: function (data) {
                 result = data;
             },
             error: function (jqXHR, textStatus) {
-                throw "Could not load template " + url + ": " + textStatus;
+                throw 'Could not load template ' + url + ': ' + textStatus;
             }
 
         });
@@ -40,10 +40,10 @@ var TemplateManager = Backbone.Model.extend({
 
     getTemplate: function (name) {
         var url = this.getUrl(name);
-        var template = this.get("cache")[url];
+        var template = this.get('cache')[url];
         if (template === undefined) {
             template = this.loadTemplate(url);
-            this.get("cache")[url] = template;
+            this.get('cache')[url] = template;
         }
         return template;
     }

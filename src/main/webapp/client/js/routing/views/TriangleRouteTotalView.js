@@ -1,20 +1,20 @@
 var TriangleRouteTotalView = Backbone.View.extend({
 
-    templateName : "TriangleRouteTotal",
-    tagName: "tr",
+    templateName : 'TriangleRouteTotal',
+    tagName: 'tr',
 
     initialize : function(options) {
-        Helper.isDefined(options, "options");
-        Helper.isDefined(options.model, "options.model");
+        Helper.isDefined(options, 'options');
+        Helper.isDefined(options.model, 'options.model');
 
         this.template = getTemplate(this.templateName);
 
         if (this.model === undefined) {
-            throw "model is undefined";
+            throw 'model is undefined';
         }
 
-        _.bindAll(this, "render");
-        this.model.bind("change", this.render);
+        _.bindAll(this, 'render');
+        this.model.bind('change', this.render);
         this.render();
     },
 

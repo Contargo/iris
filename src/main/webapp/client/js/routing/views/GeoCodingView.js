@@ -1,27 +1,27 @@
 var GeoCodingView = Backbone.View.extend({
 
-    tagName: "div",
-    className: "span8",
+    tagName: 'div',
+    className: 'span8',
 
     initialize: function (options) {
 
-        Helper.isDefined(options, "options");
-        Helper.isDefined(options.model, "options.model");
+        Helper.isDefined(options, 'options');
+        Helper.isDefined(options.model, 'options.model');
 
         this.searchStatus = options.model.get('searchStatus');
 
-        _.bindAll(this, "render", "handleSearchChanged");
+        _.bindAll(this, 'render', 'handleSearchChanged');
 
-        this.model.bind("change:searching", this.handleSearchChanged);
+        this.model.bind('change:searching', this.handleSearchChanged);
 
         this.render();
     },
 
     render: function () {
 
-        this.requestNode = $("<div class='geocoderequest'></div>");
-        this.listNode = $("<div class='addresslist'></div>");
-        this.infoNode = $("<div class='searching'>Searching...</div>");
+        this.requestNode = $('<div class="geocoderequest"></div>');
+        this.listNode = $('<div class="addresslist"></div>');
+        this.infoNode = $('<div class="searching">Searching...</div>');
 
         this.geocodingrequestview = new GeoCodeRequestView({
             el: this.requestNode,
@@ -45,7 +45,7 @@ var GeoCodingView = Backbone.View.extend({
 
     handleSearchChanged: function () {
 
-        if (this.model.get("searching")) {
+        if (this.model.get('searching')) {
             this.infoNode.show();
             this.listNode.hide();
         } else {

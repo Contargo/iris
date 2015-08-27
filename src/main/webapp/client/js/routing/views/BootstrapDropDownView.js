@@ -1,12 +1,12 @@
 var BootstrapDropDownView = Backbone.View.extend({
 
     initialize: function (options) {
-        _.bindAll(this, "render", "addOne", "selectedchanged");
+        _.bindAll(this, 'render', 'addOne', 'selectedchanged');
 
-        this.model.bind("add", this.render);
-        this.model.bind("remove", this.render);
-        this.model.bind("reset", this.render);
-        this.model.bind("change", this.render);
+        this.model.bind('add', this.render);
+        this.model.bind('remove', this.render);
+        this.model.bind('reset', this.render);
+        this.model.bind('change', this.render);
 
         this.outputField = this.getOutputField(options.outputField);
 
@@ -19,14 +19,14 @@ var BootstrapDropDownView = Backbone.View.extend({
     },
 
     events: {
-        "click .selectLink": "selectedchanged"
+        'click .selectLink': 'selectedchanged'
     },
 
     getOutputField: function (outputField) {
         if (outputField !== undefined && outputField !== null) {
             return outputField;
         } else {
-            return "name";
+            return 'name';
         }
     },
 
@@ -36,24 +36,24 @@ var BootstrapDropDownView = Backbone.View.extend({
             this.model.setDefaultToSelected();
         }
 
-        this.$el.html("<div class='btn-group'><ul class='dropdown-menu'></ul></div>");
+        this.$el.html('<div class="btn-group"><ul class="dropdown-menu"></ul></div>');
         this.addAll();
     },
 
     addOne: function (model) {
 
-        if (model.get("invisible")) {
+        if (model.get('invisible')) {
             return;
         }
 
         if (model === this.model.getSelected()) {
-            var element = $("<a class='btn dropdown-toggle' data-toggle='dropdown'></a>").attr("id", model.cid).html(model.get(this.outputField) + "&nbsp;<span class='caret'></span>");
-            this.$("div.btn-group").append(element);
+            var element = $('<a class="btn dropdown-toggle" data-toggle="dropdown"></a>').attr('id', model.cid).html(model.get(this.outputField) + '&nbsp;<span class="caret"></span>');
+            this.$('div.btn-group').append(element);
         }
 
-        var option = $("<a class='selectLink'></a>").attr("id", model.cid).html(model.get(this.outputField));
-        var listElement = $("<li></li>").html(option);
-        this.$("ul.dropdown-menu").append(listElement);
+        var option = $('<a class="selectLink"></a>').attr('id', model.cid).html(model.get(this.outputField));
+        var listElement = $('<li></li>').html(option);
+        this.$('ul.dropdown-menu').append(listElement);
     },
 
     addAll: function () {
@@ -66,13 +66,13 @@ var BootstrapDropDownView = Backbone.View.extend({
         var selectedElement = this.model.get(cid);
         var dropdownToggle;
 
-        this.$("a.dropdown-toggle").remove();
+        this.$('a.dropdown-toggle').remove();
         if (this.title !== undefined && this.title !== null) {
-            dropdownToggle = $("<a class='btn dropdown-toggle' data-toggle='dropdown'></a>").html(this.title + "&nbsp;<span class='caret'></span>");
+            dropdownToggle = $('<a class="btn dropdown-toggle" data-toggle="dropdown"></a>').html(this.title + '&nbsp;<span class="caret"></span>');
         } else {
-            dropdownToggle = $("<a class='btn dropdown-toggle' data-toggle='dropdown'></a>").attr("id", cid).html(selectedElement.get(this.outputField) + "&nbsp;<span class='caret'></span>");
+            dropdownToggle = $('<a class="btn dropdown-toggle" data-toggle="dropdown"></a>').attr('id', cid).html(selectedElement.get(this.outputField) + '&nbsp;<span class="caret"></span>');
         }
-        this.$("div.btn-group").append(dropdownToggle);
+        this.$('div.btn-group').append(dropdownToggle);
 
         this.changeSelectStrategy(selectedElement);
     },

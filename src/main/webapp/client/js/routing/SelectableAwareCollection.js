@@ -2,15 +2,15 @@ var SelectableAwareCollection = Backbone.Collection.extend({
 
     initialize : function() {
 
-        _.bindAll(this, "modelSelected", "getSelected", "setDefaultToSelected", "defaultChanged");
+        _.bindAll(this, 'modelSelected', 'getSelected', 'setDefaultToSelected', 'defaultChanged');
 
-        this.bind("change:selected", this.modelSelected);
-        this.bind("change:defaultValue", this.defaultChanged);
+        this.bind('change:selected', this.modelSelected);
+        this.bind('change:defaultValue', this.defaultChanged);
     },
 
     getDefault : function() {
         var element = this.find(function(e) {
-            return e.get("defaultValue");
+            return e.get('defaultValue');
         });
 
         if (element === undefined && this.size() > 0) {
@@ -23,12 +23,12 @@ var SelectableAwareCollection = Backbone.Collection.extend({
     valuePredicate : function(v, what) {
         var field = what;
         if (! field) {
-            field = "value";
+            field = 'value';
         }
-        var value = "" + v;
+        var value = '' + v;
         return function(e) {
             // otherwise it does not work for booleans
-            var stringval = "" +  e.get(field);
+            var stringval = '' +  e.get(field);
             return  value === stringval;
         };
     },
@@ -40,7 +40,7 @@ var SelectableAwareCollection = Backbone.Collection.extend({
     setDefaultByValue : function(value, what) {
         var e = this.findByValue(value, what);
         if (e !== undefined) {
-            e.set("defaultValue", true);
+            e.set('defaultValue', true);
         }
     },
 
@@ -48,42 +48,40 @@ var SelectableAwareCollection = Backbone.Collection.extend({
         var element = this.getDefault();
 
         if (element !== undefined) {
-            element.set("selected", true);
+            element.set('selected', true);
         }
     },
 
     getSelected : function() {
         return this.find(function(e) {
-            return e.get("selected");
+            return e.get('selected');
         });
     },
 
     modelSelected : function(e) {
-        if (e.get("selected")) {
+        if (e.get('selected')) {
 
             this.each(function(m) {
                 if (m !== e) {
-                    m.set("selected", false);
+                    m.set('selected', false);
                 }
             });
 
-            this.trigger("selectedchanged", e);
+            this.trigger('selectedchanged', e);
         }
     },
 
     defaultChanged : function(e) {
 
-        if (e.get("defaultValue")) {
+        if (e.get('defaultValue')) {
 
             this.each(function(m) {
                 if (m !== e) {
-                    m.set("defaultValue", false);
+                    m.set('defaultValue', false);
                 }
             });
 
-            this.trigger("defaultchanged", e);
+            this.trigger('defaultchanged', e);
         }
     }
 });
-
-

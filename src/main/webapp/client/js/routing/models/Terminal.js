@@ -11,12 +11,12 @@ var TerminalList = Backbone.Collection.extend({
 
     setDefaultValue : function(){
         if(this.size() > 0){
-            this.first().set("defaultValue", "true");
+            this.first().set('defaultValue', 'true');
         }
     },
 
     comparator : function (model) {
-        return model.get("name");
+        return model.get('name');
     },
     getByName : function (name) {
         var selected;
@@ -28,5 +28,4 @@ var TerminalList = Backbone.Collection.extend({
         });
         return selected;
     }
-
 });

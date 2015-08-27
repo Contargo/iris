@@ -46,7 +46,7 @@ var ConnectionView = Backbone.View.extend({
         numberEnforcer();
     },
 
-    createChildren: function() {
+    createChildren: function () {
         'use strict';
         SeaportsView.prototype.create({
             model: this.seaports,
@@ -75,29 +75,29 @@ var ConnectionView = Backbone.View.extend({
         }
     },
 
-    createSubconnections: function() {
+    createSubconnections: function () {
         'use strict';
         var that = this;
-        this.model.get('subconnections').each(function(subconnection, index) {
+        this.model.get('subconnections').each(function (subconnection, index) {
             var subView = SubconnectionView.prototype.create({
                 model: subconnection,
-                terminals: new ConnectionTerminals(that.terminals.map(function(terminal) {
+                terminals: new ConnectionTerminals(that.terminals.map(function (terminal) {
                     return terminal.clone();
                 })),
-                latest: that.model.get('subconnections').size() -1 === index,
+                latest: that.model.get('subconnections').size() - 1 === index,
                 first: index === 0
             });
             that.$('#subconnections').append(subView.el);
         });
     },
 
-    createHeader: function() {
+    createHeader: function () {
         'use strict';
         var header;
-        if (this.model.get("id")) {
+        if (this.model.get('id')) {
             header = 'Edit main run connection - Seaport ';
             header += this.seaports.getSelectedName();
-            header += " to Terminal ";
+            header += ' to Terminal ';
             header += this.terminals.getSelectedName();
         } else {
             header = 'Create new main run connection';
@@ -105,26 +105,32 @@ var ConnectionView = Backbone.View.extend({
         return header;
     },
 
-    createSubmitText: function() {
+    createSubmitText: function () {
         'use strict';
-        if (this.model.get("id")) {
+        if (this.model.get('id')) {
             return 'Update';
         } else {
             return 'Create';
         }
     },
 
-    updateEnabled: function(event) {
+    updateEnabled: function (event) {
         'use strict';
         this.model.set('enabled', $(event.target).is(':checked'));
     },
 
-    submitConnection: function() {
+    submitConnection: function () {
         'use strict';
         if (this.hasFormError()) {
-            MessageView.prototype.create({message: "Cannot create or update connection: validation errors.", className: "message message-error message-width"});
+            MessageView.prototype.create({
+                message: 'Cannot create or update connection: validation errors.',
+                className: 'message message-error message-width'
+            });
         } else if (this.hasSubConnectionMatchingError()) {
-            MessageView.prototype.create({message: "Cannot create or update connection: last subconnection terminal does not match connection terminal.", className: "message message-error message-width"});
+            MessageView.prototype.create({
+                message: 'Cannot create or update connection: last subconnection terminal does not match connection terminal.',
+                className: 'message message-error message-width'
+            });
         } else {
             this.model.trigger('updateConnection');
         }

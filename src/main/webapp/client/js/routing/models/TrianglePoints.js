@@ -2,17 +2,17 @@ var TrianglePoints = Backbone.Collection.extend({
 
     initialize : function(models, options) {
 
-        _.bindAll(this, "removeitem", "moveItemUp", "moveItemDown", "routeArrived");
+        _.bindAll(this, 'removeitem', 'moveItemUp', 'moveItemDown', 'routeArrived');
 
-        Helper.isDefined(options, "options");
-        Helper.isDefined(options.server, "server");
+        Helper.isDefined(options, 'options');
+        Helper.isDefined(options.server, 'server');
 
         this.server = options.server;
 
         this.pairs = new TriangleRoutePartList();
-        this.pairs.bind("remove", this.removeitem);
-        this.pairs.bind("up", this.moveItemUp);
-        this.pairs.bind("down", this.moveItemDown);
+        this.pairs.bind('remove', this.removeitem);
+        this.pairs.bind('up', this.moveItemUp);
+        this.pairs.bind('down', this.moveItemDown);
 
         this.totals = new Backbone.Model({totalDistance: 0, totalToll: 0});
 
@@ -20,19 +20,19 @@ var TrianglePoints = Backbone.Collection.extend({
 
     removeitem: function(route) {
 
-        var to = route.get("to");
+        var to = route.get('to');
         this.remove(to);
     },
 
     moveItemUp : function(item) {
-        var to = item.get("to");
+        var to = item.get('to');
         var oldpos = this.getPosition(to);
 
         this.switchPos(to, oldpos, oldpos-1);
     },
 
     moveItemDown : function(item) {
-        var to = item.get("to");
+        var to = item.get('to');
         var oldpos = this.getPosition(to);
         this.switchPos(to, oldpos, oldpos+1);
     },
@@ -53,7 +53,7 @@ var TrianglePoints = Backbone.Collection.extend({
                 return i;
             }
         }
-        throw "item not found";
+        throw 'item not found';
     },
 
     getRoutePairs : function() {
@@ -68,7 +68,7 @@ var TrianglePoints = Backbone.Collection.extend({
                 from = that.at(i-1);
             }
 
-            // all others are "the one before me to me"
+            // all others are 'the one before me to me'
             that.pairs.add(new TriangleRoutePart({from : from, to: e}));
         });
 
@@ -101,7 +101,6 @@ var TrianglePoints = Backbone.Collection.extend({
                 var distance = Helper.formatKM(part.data.distance);
                 var toll = Helper.formatKM(part.data.tollDistance);
                 var duration  = Helper.formatDurationInDetail(part.data.duration);
-
 
                 pair.set({distance: distance, toll: toll, duration: duration});
             }

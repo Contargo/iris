@@ -1,16 +1,14 @@
 var TrianglePointsView = Backbone.View.extend({
 
-    templateName : "TrianglePoints",
+    templateName : 'TrianglePoints',
     events : {
-        "click .clear" : "clear"
+        'click .clear' : 'clear'
     },
-
-
 
     initialize : function(options) {
 
-        Helper.isDefined(options, "options");
-        Helper.isDefined(options.model, "options.model");
+        Helper.isDefined(options, 'options');
+        Helper.isDefined(options.model, 'options.model');
 
         if (options.childView) {
             this.childView = options.childView;
@@ -20,23 +18,23 @@ var TrianglePointsView = Backbone.View.extend({
         this.template = getTemplate(this.templateName);
 
         if (this.model === undefined) {
-            throw "model is undefined";
+            throw 'model is undefined';
         }
 
-        _.bindAll(this, "render", "renderRoutingPoint", "clear", "renderTotals");
-        this.model.bind("add", this.render);
-        this.model.bind("remove", this.render);
-        this.model.bind("reset", this.render);
+        _.bindAll(this, 'render', 'renderRoutingPoint', 'clear', 'renderTotals');
+        this.model.bind('add', this.render);
+        this.model.bind('remove', this.render);
+        this.model.bind('reset', this.render);
 
-        this.model.totals.on("change", this.renderTotals);
+        this.model.totals.on('change', this.renderTotals);
         this.render();
     },
 
     renderTotals: function() {
 
         var childView = new TriangleRouteTotalView({model : this.model.totals});
-        this.$(".totals").empty();
-        this.$(".totals").append(childView.$el);
+        this.$('.totals').empty();
+        this.$('.totals').append(childView.$el);
     },
 
     render: function() {
@@ -52,7 +50,7 @@ var TrianglePointsView = Backbone.View.extend({
 
     renderRoutingPoint : function(child) {
         var childView = new this.childView({model : child});
-        this.$(".children").append(childView.$el);
+        this.$('.children').append(childView.$el);
     },
 
     clear : function() {

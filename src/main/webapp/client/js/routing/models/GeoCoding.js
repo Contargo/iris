@@ -10,11 +10,11 @@ var GeoCoding = Backbone.Model.extend({
 
     initialize: function (options) {
 
-        _.bindAll(this, "doSearch", "updateSelected", "resetRequest");
+        _.bindAll(this, 'doSearch', 'updateSelected', 'resetRequest');
 
-        Helper.isDefined(options, "options");
-        Helper.isDefined(options.server, "server");
-        Helper.isDefined(options.countries, "countries");
+        Helper.isDefined(options, 'options');
+        Helper.isDefined(options.server, 'server');
+        Helper.isDefined(options.countries, 'countries');
 
         this.server = options.server;
         this.countries = options.countries;
@@ -22,12 +22,12 @@ var GeoCoding = Backbone.Model.extend({
         var geoCodeRequest = new GeoCodeRequest({countries: options.countries});
         var addressListResult = new AddressListList();
 
-        geoCodeRequest.bind("change", this.doSearch);
+        geoCodeRequest.bind('change', this.doSearch);
 
-        addressListResult.bind("change:selectedAddressOfAddressListList", this.updateSelected);
+        addressListResult.bind('change:selectedAddressOfAddressListList', this.updateSelected);
         this.set('request', geoCodeRequest);
         this.set('results', addressListResult);
-        geoCodeRequest.bind("reset", this.resetRequest);
+        geoCodeRequest.bind('reset', this.resetRequest);
     },
 
     getRequest: function () {
@@ -35,16 +35,15 @@ var GeoCoding = Backbone.Model.extend({
     },
 
     resetRequest: function () {
-        this.get("searchStatus").setHaveSearched(false);
+        this.get('searchStatus').setHaveSearched(false);
         this.get('request').set({
-            street: "",
-            postalcode: "",
-            city: "",
-            country: ""
+            street: '',
+            postalcode: '',
+            city: '',
+            country: ''
         });
-        this.get("results").reset();
+        this.get('results').reset();
     },
-
 
     getResults: function () {
         return this.get('results');
@@ -62,11 +61,11 @@ var GeoCoding = Backbone.Model.extend({
         }
 
         var self = this;
-        self.set("searching", true);
+        self.set('searching', true);
         this.server.geoCode(request, function (addressLists) {
-            self.get("searchStatus").setHaveSearched(true);
+            self.get('searchStatus').setHaveSearched(true);
             self.get('results').reset(addressLists);
-            self.set("searching", false);
+            self.set('searching', false);
         });
     },
 

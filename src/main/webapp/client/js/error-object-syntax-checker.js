@@ -16,7 +16,7 @@ ErrorObjectSyntaxChecker.prototype.isValid = function (errorObject) {
 };
 
 ErrorObjectSyntaxChecker.prototype.hasAllProperties = function (errorObject) {
-    return (errorObject.hasOwnProperty("code") && errorObject.hasOwnProperty("message"));
+    return (errorObject.hasOwnProperty('code') && errorObject.hasOwnProperty("message"));
 };
 
 ErrorObjectSyntaxChecker.prototype.allPropertiesDefined = function (errorObject) {

@@ -5,17 +5,15 @@ var TriangleRoutingRouter = Backbone.Router.extend({
     },
 
     routes: {
-        "*default": "request"
+        '*default': 'request'
     },
 
     request: function () {
-        console.log("ROUTER: request");
+        console.log('ROUTER: request');
         this.app.showRequest();
 
         if (window.adjustHelpLink) {
-            adjustHelpLink("trianglerouting");
+            adjustHelpLink('trianglerouting');
         }
     }
-
 });
-

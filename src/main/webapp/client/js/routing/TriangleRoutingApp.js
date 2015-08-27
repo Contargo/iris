@@ -1,13 +1,13 @@
 var TriangleRoutingApp = Backbone.Model.extend({
 
     defaults: {
-        contextpath: "/"
+        contextpath: '/'
     },
     initialize: function () {
         // initializing
-        this.server = new Server(this.get("contextpath"), this.error);
+        this.server = new Server(this.get('contextpath'), this.error);
         this.countries = new SelectableAwareCollection([
-            {name: "Not loaded yet", value: "Not loaded yet"}
+            {name: 'Not loaded yet', value: 'Not loaded yet'}
         ]);
         this.router = new TriangleRoutingRouter({
             app: this
@@ -23,7 +23,7 @@ var TriangleRoutingApp = Backbone.Model.extend({
 
         Backbone.history.start({
             pushState: false,
-            root: "/"
+            root: '/'
         });
     },
 
@@ -60,12 +60,12 @@ var TriangleRoutingApp = Backbone.Model.extend({
             });
 
             this.triangleView = new TriangleView({
-                el: "#appcontent",
+                el: '#appcontent',
                 model: this.triangleModel
             });
         }
 
-        console.log("Currently " + this.triangleModel.get("points").length + " points in triangle.");
+        console.log('Currently ' + this.triangleModel.get('points').length + ' points in triangle.');
     },
 
     queryCountries: function () {
@@ -75,7 +75,7 @@ var TriangleRoutingApp = Backbone.Model.extend({
             countries.reset(countryList);
         });
 
-        countries.setDefaultByValue("DE");
+        countries.setDefaultByValue('DE');
     },
 
     /**
@@ -91,7 +91,7 @@ var TriangleRoutingApp = Backbone.Model.extend({
 
         // for the ones that aren't closable and don't fade out there is a .close() function.
         $('.notifications').notify({
-            type: "error",
+            type: 'error',
             message: {
                 text: msg
             },
@@ -101,5 +101,4 @@ var TriangleRoutingApp = Backbone.Model.extend({
             closable: closable
         }).show();
     }
-
 });

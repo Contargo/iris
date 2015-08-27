@@ -1,9 +1,7 @@
-
 var TerminalView = Backbone.View.extend({
     tagName: 'span',
 
     templateName : 'Terminal',
-
 
     initialize : function(options) {
         _.bindAll(this, 'render');

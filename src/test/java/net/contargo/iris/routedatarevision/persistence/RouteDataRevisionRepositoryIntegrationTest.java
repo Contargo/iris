@@ -4,6 +4,7 @@ import net.contargo.iris.GeoLocation;
 import net.contargo.iris.routedatarevision.RouteDataRevision;
 import net.contargo.iris.terminal.Terminal;
 
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import java.util.Date;
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
@@ -66,7 +68,7 @@ public class RouteDataRevisionRepositoryIntegrationTest {
         terminal = createTerminal("terminal", BigInteger.ONE, TEN, TEN);
         terminal.setUniqueId(BigInteger.TEN);
         routeDataRevision = createRouteDataRevision(terminal, ONE, ONE, ONE, valueOf(49.1011), valueOf(8.9101), TEN,
-                "comment0");
+                "comment0", DateTime.now().toDate(), DateTime.now().plusDays(1).toDate());
     }
 
 
@@ -77,9 +79,9 @@ public class RouteDataRevisionRepositoryIntegrationTest {
 
         em.persist(routeDataRevision);
         em.persist(createRouteDataRevision(terminal, ZERO, ZERO, ZERO, valueOf(49.1001), valueOf(8.9102), TEN,
-                "comment1"));
+                "comment1", DateTime.now().toDate(), DateTime.now().plusDays(1).toDate()));
         em.persist(createRouteDataRevision(terminal, TEN, TEN, TEN, valueOf(49.1021), valueOf(8.9103), TEN,
-                "comment2"));
+                "comment2",DateTime.now().toDate(), DateTime.now().plusDays(1).toDate()));
 
         em.flush();
 
@@ -133,7 +135,7 @@ public class RouteDataRevisionRepositoryIntegrationTest {
 
 
     private RouteDataRevision createRouteDataRevision(Terminal t, BigDecimal tdow, BigDecimal truckdow, BigDecimal ad,
-        BigDecimal lat, BigDecimal lng, BigDecimal r, String comment) {
+        BigDecimal lat, BigDecimal lng, BigDecimal r, String comment, Date validFrom, Date validTo) {
 
         RouteDataRevision routeDataRevision = new RouteDataRevision();
         routeDataRevision.setTollDistanceOneWayInMeter(tdow);
@@ -144,6 +146,8 @@ public class RouteDataRevisionRepositoryIntegrationTest {
         routeDataRevision.setRadiusInMeter(r);
         routeDataRevision.setTerminal(t);
         routeDataRevision.setComment(comment);
+        routeDataRevision.setValidFrom(validFrom);
+        routeDataRevision.setValidTo(validTo);
 
         return routeDataRevision;
     }

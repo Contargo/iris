@@ -5,11 +5,13 @@ import net.contargo.iris.terminal.Region;
 import net.contargo.iris.terminal.Terminal;
 import net.contargo.iris.terminal.dto.TerminalDto;
 
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Date;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -31,6 +33,8 @@ public class RouteDataRevisionDtoUnitTest {
     private BigDecimal longitude;
     private BigDecimal radiusInMeter;
     private String comment;
+    private Date validFrom;
+    private Date validTo;
 
     @Before
     public void setUp() throws Exception {
@@ -45,6 +49,9 @@ public class RouteDataRevisionDtoUnitTest {
         longitude = new BigDecimal("1005");
         radiusInMeter = new BigDecimal("1006");
         comment = "this is awesome";
+        validFrom = DateTime.now().toDate();
+        validTo = DateTime.now().plusDays(1).toDate();
+        
     }
 
 
@@ -65,6 +72,8 @@ public class RouteDataRevisionDtoUnitTest {
         routeDataRevision.setLongitude(longitude);
         routeDataRevision.setRadiusInMeter(radiusInMeter);
         routeDataRevision.setComment(comment);
+        routeDataRevision.setValidFrom(validFrom);
+        routeDataRevision.setValidTo(validTo);
 
         RouteDataRevisionDto result = new RouteDataRevisionDto(routeDataRevision);
 
@@ -77,6 +86,9 @@ public class RouteDataRevisionDtoUnitTest {
         assertThat(result.getLongitude(), is(longitude));
         assertThat(result.getRadiusInMeter(), is(radiusInMeter));
         assertThat(result.getComment(), is(comment));
+        assertThat(result.getValidFrom(), is(validFrom));
+        assertThat(result.getValidTo(), is(validTo));
+        
     }
 
 
@@ -95,6 +107,8 @@ public class RouteDataRevisionDtoUnitTest {
         routeDataRevisionDto.setLongitude(longitude);
         routeDataRevisionDto.setRadiusInMeter(radiusInMeter);
         routeDataRevisionDto.setComment(comment);
+        routeDataRevisionDto.setValidFrom(validFrom);
+        routeDataRevisionDto.setValidTo(validTo);
 
         RouteDataRevision result = routeDataRevisionDto.toEntity(terminalId);
 
@@ -107,6 +121,8 @@ public class RouteDataRevisionDtoUnitTest {
         assertThat(result.getLongitude(), is(longitude));
         assertThat(result.getRadiusInMeter(), is(radiusInMeter));
         assertThat(result.getComment(), is(comment));
+        assertThat(result.getValidFrom(), is(validFrom));
+        assertThat(result.getValidTo(), is(validTo));
     }
 
 

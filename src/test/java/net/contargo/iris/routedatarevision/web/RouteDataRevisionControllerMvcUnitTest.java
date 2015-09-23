@@ -137,7 +137,7 @@ public class RouteDataRevisionControllerMvcUnitTest {
 
         ResultActions resultActions = perform(post(
                     "/routerevisions?terminal.uniqueId=10&latitude=10&longitude=1&truckDistanceOneWayInMeter=1&"
-                    + "tollDistanceOneWayInMeter=2&airlineDistanceInMeter=3&radiusInMeter=4").contentType(
+                    + "tollDistanceOneWayInMeter=2&airlineDistanceInMeter=3&radiusInMeter=4&validFrom=08.09.2015&validTo=23.09.2015").contentType(
                     APPLICATION_JSON));
 
         resultActions.andExpect(status().is3xxRedirection());
@@ -154,7 +154,7 @@ public class RouteDataRevisionControllerMvcUnitTest {
                     APPLICATION_JSON));
 
         resultActions.andExpect(status().isOk());
-        resultActions.andExpect(model().errorCount(6));
+        resultActions.andExpect(model().errorCount(8));
         resultActions.andExpect(model().attributeHasFieldErrorCode("routeRevision", "latitude", "NotNull"));
         resultActions.andExpect(model().attributeHasFieldErrorCode("routeRevision", "longitude", "NotNull"));
         resultActions.andExpect(model().attributeHasFieldErrorCode("routeRevision", "truckDistanceOneWayInMeter",
@@ -164,6 +164,8 @@ public class RouteDataRevisionControllerMvcUnitTest {
         resultActions.andExpect(model().attributeHasFieldErrorCode("routeRevision", "airlineDistanceInMeter",
                 "NotNull"));
         resultActions.andExpect(model().attributeHasFieldErrorCode("routeRevision", "radiusInMeter", "NotNull"));
+        resultActions.andExpect(model().attributeHasFieldErrorCode("routeRevision", "validFrom", "NotNull"));
+        resultActions.andExpect(model().attributeHasFieldErrorCode("routeRevision", "validTo", "NotNull"));
     }
 
 
@@ -175,7 +177,7 @@ public class RouteDataRevisionControllerMvcUnitTest {
 
         ResultActions resultActions = perform(put(
                     "/routerevisions/7?id=7&terminal.uniqueId=10&latitude=10&longitude=1&truckDistanceOneWayInMeter=1&"
-                    + "tollDistanceOneWayInMeter=2&airlineDistanceInMeter=3&radiusInMeter=4").contentType(
+                    + "tollDistanceOneWayInMeter=2&airlineDistanceInMeter=3&radiusInMeter=4&validFrom=08.09.2015&validTo=23.09.2015").contentType(
                     APPLICATION_JSON));
 
         resultActions.andExpect(status().is3xxRedirection());

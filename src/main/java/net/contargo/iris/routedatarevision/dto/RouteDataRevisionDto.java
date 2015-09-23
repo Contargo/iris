@@ -6,17 +6,17 @@ import net.contargo.iris.routedatarevision.RouteDataRevision;
 import net.contargo.iris.terminal.Terminal;
 import net.contargo.iris.terminal.dto.TerminalDto;
 
-import net.contargo.iris.validation.RouteDataRevisionDateValid;
 import net.contargo.validation.bigdecimal.BigDecimalValidate;
+
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
+
 import java.util.Date;
-import java.util.Locale;
 
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -230,6 +230,7 @@ public class RouteDataRevisionDto {
 
         return terminal.getUniqueId();
     }
+
 
     public Date getValidFrom() {
 

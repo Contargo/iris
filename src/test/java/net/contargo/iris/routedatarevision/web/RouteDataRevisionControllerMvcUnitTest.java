@@ -136,9 +136,9 @@ public class RouteDataRevisionControllerMvcUnitTest {
         when(routeDataRevisionDtoServiceMock.existsEntry("10", BigDecimal.TEN, BigDecimal.ONE)).thenReturn(false);
 
         ResultActions resultActions = perform(post(
-                    "/routerevisions?terminal.uniqueId=10&latitude=10&longitude=1&truckDistanceOneWayInMeter=1&"
-                    + "tollDistanceOneWayInMeter=2&airlineDistanceInMeter=3&radiusInMeter=4&validFrom=08.09.2015&validTo=23.09.2015").contentType(
-                    APPLICATION_JSON));
+                        "/routerevisions?terminal.uniqueId=10&latitude=10&longitude=1&truckDistanceOneWayInMeter=1&"
+                        + "tollDistanceOneWayInMeter=2&airlineDistanceInMeter=3&radiusInMeter=4&validFrom=08.09.2015&validTo=23.09.2015")
+                .contentType(APPLICATION_JSON));
 
         resultActions.andExpect(status().is3xxRedirection());
     }
@@ -150,8 +150,8 @@ public class RouteDataRevisionControllerMvcUnitTest {
         when(routeDataRevisionDtoServiceMock.save(Mockito.any(RouteDataRevisionDto.class))).thenReturn(
             routeDataRevision);
 
-        ResultActions resultActions = perform(post("/routerevisions").param("terminal.uniqueId", "foo").contentType(
-                    APPLICATION_JSON));
+        ResultActions resultActions = perform(post("/routerevisions").param("terminal.uniqueId", "foo")
+                .contentType(APPLICATION_JSON));
 
         resultActions.andExpect(status().isOk());
         resultActions.andExpect(model().errorCount(8));
@@ -176,9 +176,9 @@ public class RouteDataRevisionControllerMvcUnitTest {
             routeDataRevision);
 
         ResultActions resultActions = perform(put(
-                    "/routerevisions/7?id=7&terminal.uniqueId=10&latitude=10&longitude=1&truckDistanceOneWayInMeter=1&"
-                    + "tollDistanceOneWayInMeter=2&airlineDistanceInMeter=3&radiusInMeter=4&validFrom=08.09.2015&validTo=23.09.2015").contentType(
-                    APPLICATION_JSON));
+                        "/routerevisions/7?id=7&terminal.uniqueId=10&latitude=10&longitude=1&truckDistanceOneWayInMeter=1&"
+                        + "tollDistanceOneWayInMeter=2&airlineDistanceInMeter=3&radiusInMeter=4&validFrom=08.09.2015&validTo=23.09.2015")
+                .contentType(APPLICATION_JSON));
 
         resultActions.andExpect(status().is3xxRedirection());
     }

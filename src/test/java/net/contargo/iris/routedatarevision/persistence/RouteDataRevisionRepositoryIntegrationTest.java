@@ -5,6 +5,7 @@ import net.contargo.iris.routedatarevision.RouteDataRevision;
 import net.contargo.iris.terminal.Terminal;
 
 import org.joda.time.DateTime;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -80,8 +81,8 @@ public class RouteDataRevisionRepositoryIntegrationTest {
         em.persist(routeDataRevision);
         em.persist(createRouteDataRevision(terminal, ZERO, ZERO, ZERO, valueOf(49.1001), valueOf(8.9102), TEN,
                 "comment1", DateTime.now().toDate(), DateTime.now().plusDays(1).toDate()));
-        em.persist(createRouteDataRevision(terminal, TEN, TEN, TEN, valueOf(49.1021), valueOf(8.9103), TEN,
-                "comment2",DateTime.now().toDate(), DateTime.now().plusDays(1).toDate()));
+        em.persist(createRouteDataRevision(terminal, TEN, TEN, TEN, valueOf(49.1021), valueOf(8.9103), TEN, "comment2",
+                DateTime.now().toDate(), DateTime.now().plusDays(1).toDate()));
 
         em.flush();
 

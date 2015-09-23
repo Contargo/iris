@@ -3,12 +3,16 @@ package net.contargo.iris.routedatarevision;
 import net.contargo.iris.terminal.Terminal;
 
 import org.hibernate.validator.constraints.Range;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
+
 import java.util.Date;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 import javax.validation.constraints.Size;
 
@@ -164,19 +168,27 @@ public class RouteDataRevision {
         this.comment = comment;
     }
 
+
     public Date getValidFrom() {
+
         return validFrom;
     }
 
+
     public void setValidFrom(Date validFrom) {
+
         this.validFrom = validFrom;
     }
 
+
     public Date getValidTo() {
+
         return validTo;
     }
 
+
     public void setValidTo(Date validTo) {
+
         this.validTo = validTo;
     }
 }

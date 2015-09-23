@@ -6,11 +6,13 @@ import net.contargo.iris.terminal.Terminal;
 import net.contargo.iris.terminal.dto.TerminalDto;
 
 import org.joda.time.DateTime;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+
 import java.util.Date;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -51,7 +53,6 @@ public class RouteDataRevisionDtoUnitTest {
         comment = "this is awesome";
         validFrom = DateTime.now().toDate();
         validTo = DateTime.now().plusDays(1).toDate();
-        
     }
 
 
@@ -88,7 +89,6 @@ public class RouteDataRevisionDtoUnitTest {
         assertThat(result.getComment(), is(comment));
         assertThat(result.getValidFrom(), is(validFrom));
         assertThat(result.getValidTo(), is(validTo));
-        
     }
 
 

@@ -35,5 +35,7 @@
     <include file="dbchangelogs/db.changelog-1.6-add-route-data-revisions.xml"/>
     
     <include file="dbchangelogs/db.changelog-1.7-add-comment-to-route-data-revisions.xml"/>
+    
+    <include file="dbchangelogs/db.changelog-1.7-add-validFrom-and-validTo-to-route-data-revisions.xml"/>
 
 </databaseChangeLog>

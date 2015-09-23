@@ -4,10 +4,17 @@ import net.contargo.iris.routedatarevision.RouteDataRevision;
 import net.contargo.iris.terminal.Terminal;
 import net.contargo.iris.terminal.dto.TerminalDto;
 
+import net.contargo.iris.validation.RouteDataRevisionDateValid;
 import net.contargo.validation.bigdecimal.BigDecimalValidate;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -23,6 +30,7 @@ public class RouteDataRevisionDto {
     private static final int MAX_FRAC_2 = 2;
     private static final int MIN_0 = 0;
     private static final int COMMENT_SIZE = 5000;
+    private static final String DATE_FORMAT = "dd.MM.yyyy";
 
     private Long id;
 
@@ -54,6 +62,16 @@ public class RouteDataRevisionDto {
     @Size(max = COMMENT_SIZE)
     private String comment;
 
+    @NotNull
+    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = DATE_FORMAT)
+    private Date validFrom;
+
+    @NotNull
+    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = DATE_FORMAT)
+    private Date validTo;
+
     public RouteDataRevisionDto(RouteDataRevision routeDataRevision) {
 
         id = routeDataRevision.getId();
@@ -65,6 +83,8 @@ public class RouteDataRevisionDto {
         longitude = routeDataRevision.getLongitude();
         radiusInMeter = routeDataRevision.getRadiusInMeter();
         comment = routeDataRevision.getComment();
+        validFrom = routeDataRevision.getValidFrom();
+        validTo = routeDataRevision.getValidTo();
     }
 
 
@@ -172,6 +192,8 @@ public class RouteDataRevisionDto {
         routeDataRevision.setLongitude(longitude);
         routeDataRevision.setRadiusInMeter(radiusInMeter);
         routeDataRevision.setComment(comment);
+        routeDataRevision.setValidFrom(validFrom);
+        routeDataRevision.setValidTo(validTo);
 
         return routeDataRevision;
     }
@@ -198,5 +220,28 @@ public class RouteDataRevisionDto {
     public void setComment(String comment) {
 
         this.comment = comment;
+    }
+
+    public Date getValidFrom() {
+
+        return null == validFrom ? null : new Date(validFrom.getTime());
+    }
+
+
+    public void setValidFrom(Date validFrom) {
+
+        this.validFrom = new Date(validFrom.getTime());
+    }
+
+
+    public Date getValidTo() {
+
+        return null == validTo ? null : new Date(validTo.getTime());
+    }
+
+
+    public void setValidTo(Date validTo) {
+
+        this.validTo = new Date(validTo.getTime());
     }
 }

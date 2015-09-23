@@ -72,6 +72,12 @@
                         </div>
                     </div>
 
+                    <iris:datePicker property="validFrom" dateValue="${routeRevision.validFrom}"
+                                     messageKey="routerevision.validFrom" inputId="validFrom"/>
+
+                    <iris:datePicker property="validTo" dateValue="${routeRevision.validTo}"
+                                     messageKey="routerevision.validTo" inputId="validTo"/>
+
                     <div class="control-group">
 
                         <spring:message code="routerevision.latitude" var="TRANSLATED_MESSAGE"/>
@@ -84,7 +90,7 @@
                         <div class="controls">
                             <form:input path="latitude" size="20" cssErrorClass="error" title="${latMsg}"/>
                             <form:errors path="latitude" cssClass="help-inline error"/>
-                                    <span class="help-inline">
+                                    <span>
                                         <iris:mappicker latitudeId="latitude" longitudeId="longitude"/>
                                     </span>
                         </div>

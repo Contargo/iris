@@ -23,12 +23,14 @@
     <link href="<c:url value="/client/css/bootstrap.min.css"/>" rel="stylesheet">
     <link href="<c:url value="/client/css/custom.css"/>" rel="stylesheet">
     <link href="<c:url value="/client/css/bootstrap-notify.css"/>" rel="stylesheet">
+    <link href="<c:url value="/client/css/datepicker.css" />" rel="stylesheet"/>
     <link href="<c:url value="/client/js/lib/select2.css" />" rel="stylesheet"/>
 
     <script src="<c:url value="/client/js/lib/jquery-1.10.2.min.js" />"></script>
     <script src="<c:url value="/client/js/lib/jquery-migrate-1.2.1.min.js" />"></script>
     <script src="<c:url value="/client/js/lib/bootstrap.min.js" />"></script>
     <script src="<c:url value="/client/js/lib/bootstrap-notify.js" />"></script>
+    <script src="<c:url value="/client/js/lib/bootstrap-datepicker.js" />"></script>
     <script src="<c:url value="/client/js/lib/select2.js" />"></script>
 
     <decorator:head/>

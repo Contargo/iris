@@ -48,6 +48,12 @@ public class RouteDataRevisionPartEnricher implements RoutePartEnricher {
                     routePart.getData().setDistance(routeDataRevision.getTruckDistanceOneWayInMeter());
                     routePart.getData().setTollDistance(routeDataRevision.getTollDistanceOneWayInMeter());
                     routePart.getData().setAirLineDistance(routeDataRevision.getAirlineDistanceInMeter());
+                } else {
+                    if ("CH".equals(address.getCountryCode().toUpperCase())) {
+                        LOG.error("Routing from {} to CH without route revision", terminal.getName());
+                        throw new CriticalEnricherException(
+                            "Routing to Swiss locations without route revsions is impossible");
+                    }
                 }
             } catch (NotFoundException e) {
                 LOG.debug(e.getMessage());

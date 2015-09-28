@@ -5,6 +5,12 @@ package net.contargo.iris.route.service;
  */
 public class CriticalEnricherException extends Exception {
 
+    public CriticalEnricherException(String message) {
+
+        super(message);
+    }
+
+
     public CriticalEnricherException(String message, Throwable t) {
 
         super(message, t);

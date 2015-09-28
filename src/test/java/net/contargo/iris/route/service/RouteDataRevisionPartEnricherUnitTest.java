@@ -124,6 +124,20 @@ public class RouteDataRevisionPartEnricherUnitTest {
     }
 
 
+    @Test(expected = CriticalEnricherException.class)
+    public void routeToSwissAddressWithoutRouteRevision() throws CriticalEnricherException {
+
+        Address chAddress = new Address();
+        chAddress.getAddress().put("country_code", "CH");
+
+        RoutePart routePart = new RoutePart(terminal, chAddress, TRUCK);
+
+        when(routeDataRevisionServiceMock.getRouteDataRevision(terminal, chAddress)).thenReturn(null);
+
+        sut.enrich(routePart, enricherContext);
+    }
+
+
     private void assertRoutePartEnriched(RoutePart routePart) {
 
         assertThat(routePart.getData().getAirLineDistance(), is(AIRLINE_DISTANCE));

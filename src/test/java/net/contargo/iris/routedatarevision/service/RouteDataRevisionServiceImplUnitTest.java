@@ -316,6 +316,38 @@ public class RouteDataRevisionServiceImplUnitTest {
 
 
     @Test
+    public void existsEntryExistingSurroundsGiven() {
+
+        RouteDataRevision revision = new RouteDataRevision();
+        revision.setValidFrom(new DateTime().minusDays(2).toDate());
+        revision.setValidTo(new DateTime().plusDays(2).toDate());
+        when(routeDataRevisionRepositoryMock.findByTerminalAndLatitudeAndLongitude(BigInteger.ONE, BigDecimal.TEN,
+                    BigDecimal.ONE)).thenReturn(singletonList(revision));
+
+        boolean existsEntry = sut.existsEntry(BigInteger.ONE, BigDecimal.TEN, BigDecimal.ONE, new DateTime().minusDays(
+                    1)
+                .toDate(), new DateTime().plusDays(1).toDate());
+        assertThat(existsEntry, is(true));
+    }
+
+
+    @Test
+    public void existsEntryNewSurroundsExisting() {
+
+        RouteDataRevision revision = new RouteDataRevision();
+        revision.setValidFrom(new DateTime().minusDays(1).toDate());
+        revision.setValidTo(new DateTime().plusDays(1).toDate());
+        when(routeDataRevisionRepositoryMock.findByTerminalAndLatitudeAndLongitude(BigInteger.ONE, BigDecimal.TEN,
+                    BigDecimal.ONE)).thenReturn(singletonList(revision));
+
+        boolean existsEntry = sut.existsEntry(BigInteger.ONE, BigDecimal.TEN, BigDecimal.ONE, new DateTime().minusDays(
+                    2)
+                .toDate(), new DateTime().plusDays(2).toDate());
+        assertThat(existsEntry, is(true));
+    }
+
+
+    @Test
     public void existsEntryNotFound() {
 
         when(routeDataRevisionRepositoryMock.findByTerminalAndLatitudeAndLongitude(BigInteger.ONE, BigDecimal.TEN,

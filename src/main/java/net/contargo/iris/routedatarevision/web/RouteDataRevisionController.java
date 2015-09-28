@@ -139,6 +139,8 @@ public class RouteDataRevisionController {
             result.rejectValue("terminal.uniqueId", "routerevision.exists");
             result.rejectValue("longitude", "routerevision.exists");
             result.rejectValue("latitude", "routerevision.exists");
+            result.rejectValue("validFrom", "routerevision.exists");
+            result.rejectValue("validTo", "routerevision.exists");
         }
 
         if (result.hasErrors()) {

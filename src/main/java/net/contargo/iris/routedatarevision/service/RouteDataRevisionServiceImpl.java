@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -31,7 +32,8 @@ public class RouteDataRevisionServiceImpl implements RouteDataRevisionService {
     @Transactional(readOnly = true)
     public RouteDataRevision getRouteDataRevision(Terminal terminal, GeoLocation destination) {
 
-        return routeDataRevisionRepository.findNearest(terminal, destination.getLatitude(), destination.getLongitude());
+        return routeDataRevisionRepository.findNearest(terminal, destination.getLatitude(), destination.getLongitude(),
+                new Date());
     }
 
 
@@ -47,7 +49,7 @@ public class RouteDataRevisionServiceImpl implements RouteDataRevisionService {
         }
 
         RouteDataRevision nearest = routeDataRevisionRepository.findNearest(terminal, destination.getLatitude(),
-                destination.getLongitude());
+                destination.getLongitude(), new Date());
 
         if (nearest == null) {
             throw new RevisionDoesNotExistException("Route revision for terminal with uid " + terminalUid

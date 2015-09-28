@@ -29,6 +29,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.nullValue;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -86,7 +87,8 @@ public class RouteDataRevisionRepositoryIntegrationTest {
 
         em.flush();
 
-        RouteDataRevision nearestRouteDataRevision = sut.findNearest(terminal, valueOf(49.1001), valueOf(8.9102));
+        RouteDataRevision nearestRouteDataRevision = sut.findNearest(terminal, valueOf(49.1001), valueOf(8.9102),
+                new Date());
 
         assertThat(nearestRouteDataRevision.getAirlineDistanceInMeter(), is(ZERO));
         assertThat(nearestRouteDataRevision.getTollDistanceOneWayInMeter(), is(ZERO));
@@ -94,6 +96,42 @@ public class RouteDataRevisionRepositoryIntegrationTest {
         assertThat(nearestRouteDataRevision.getLatitude(), is(valueOf(49.1001)));
         assertThat(nearestRouteDataRevision.getLongitude(), is(valueOf(8.9102)));
         assertThat(nearestRouteDataRevision.getComment(), equalTo("comment1"));
+    }
+
+
+    @Test
+    public void findNearestBeforeValidFrom() {
+
+        em.persist(terminal);
+
+        em.persist(routeDataRevision);
+        em.persist(createRouteDataRevision(terminal, ZERO, ZERO, ZERO, valueOf(49.1001), valueOf(8.9102), TEN,
+                "comment1", DateTime.now().plusDays(1).toDate(), DateTime.now().plusDays(3).toDate()));
+
+        em.flush();
+
+        RouteDataRevision nearestRouteDataRevision = sut.findNearest(terminal, valueOf(49.1001), valueOf(8.9102),
+                new Date());
+
+        assertThat(nearestRouteDataRevision, nullValue());
+    }
+
+
+    @Test
+    public void findNearestAfterValidTo() {
+
+        em.persist(terminal);
+
+        em.persist(routeDataRevision);
+        em.persist(createRouteDataRevision(terminal, ZERO, ZERO, ZERO, valueOf(49.1001), valueOf(8.9102), TEN,
+                "comment1", DateTime.now().minusDays(2).toDate(), DateTime.now().minusDays(1).toDate()));
+
+        em.flush();
+
+        RouteDataRevision nearestRouteDataRevision = sut.findNearest(terminal, valueOf(49.1001), valueOf(8.9102),
+                new Date());
+
+        assertThat(nearestRouteDataRevision, nullValue());
     }
 
 

@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,7 +31,9 @@ public interface RouteDataRevisionRepository extends JpaRepository<RouteDataRevi
             + "               * cos(radians(longitude) - radians(:longitude)) + sin(radians(:latitude)) "
             + "               * sin(radians(latitude)))) AS distance "
             + "        FROM RouteDataRevision "
-            + "        WHERE terminal_id = :terminal "
+            + "        WHERE terminal_id = :terminal AND "
+            + "              validFrom <= :today AND "
+            + "                 (validTo >= :today OR validTo IS NULL) "
             + "    ) as dis "
             + "WHERE dis.distance <= dis.radius "
             + "ORDER BY dis.distance ASC "
@@ -38,7 +41,8 @@ public interface RouteDataRevisionRepository extends JpaRepository<RouteDataRevi
     )
     RouteDataRevision findNearest(@Param("terminal") Terminal terminal,
         @Param("latitude") BigDecimal latitude,
-        @Param("longitude") BigDecimal longitude);
+        @Param("longitude") BigDecimal longitude,
+        @Param("today") Date date);
 
 
     @Query("SELECT r FROM RouteDataRevision r WHERE r.terminal.id = ?1")

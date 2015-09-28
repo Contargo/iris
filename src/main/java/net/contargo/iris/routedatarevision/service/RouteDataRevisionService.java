@@ -20,7 +20,8 @@ public interface RouteDataRevisionService {
     /**
      * Method to receive the correct {@link net.contargo.iris.routedatarevision.RouteDataRevision RouteDataRevision}
      * with the shortest distance between the requested {@link net.contargo.iris.address.Address} and the
-     * {@link net.contargo.iris.routedatarevision.RouteDataRevision RouteDataRevision} saved in the database.
+     * {@link net.contargo.iris.routedatarevision.RouteDataRevision RouteDataRevision} saved in the database which is
+     * valid according to its attributes validFrom and validTo.
      *
      * @param  terminal  on which the {@link net.contargo.iris.routedatarevision.RouteDataRevision RouteDataRevision}
      *                   information are based on
@@ -36,7 +37,8 @@ public interface RouteDataRevisionService {
     /**
      * Method to receive the correct {@link net.contargo.iris.routedatarevision.RouteDataRevision RouteDataRevision}
      * with the shortest distance between the requested {@link net.contargo.iris.address.Address} and the
-     * {@link net.contargo.iris.routedatarevision.RouteDataRevision RouteDataRevision} saved in the database.
+     * {@link net.contargo.iris.routedatarevision.RouteDataRevision RouteDataRevision} saved in the database which is
+     * valid according to its attributes validFrom and validTo.
      *
      * @param  terminalUid  the {@link Terminal}'s uid on which the
      *                      {@link net.contargo.iris.routedatarevision.RouteDataRevision RouteDataRevision} information

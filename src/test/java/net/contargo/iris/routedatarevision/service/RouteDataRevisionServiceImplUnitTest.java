@@ -13,18 +13,22 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import org.mockito.Mock;
+import org.mockito.Mockito;
 
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+
+import static org.mockito.Matchers.eq;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -63,8 +67,8 @@ public class RouteDataRevisionServiceImplUnitTest {
         Address address = new Address(BigDecimal.ONE, BigDecimal.TEN);
         RouteDataRevision routeDataRevisionDB = new RouteDataRevision();
 
-        when(routeDataRevisionRepositoryMock.findNearest(terminal, address.getLatitude(), address.getLongitude()))
-            .thenReturn(routeDataRevisionDB);
+        when(routeDataRevisionRepositoryMock.findNearest(eq(terminal), eq(address.getLatitude()),
+                    eq(address.getLongitude()), Mockito.any(Date.class))).thenReturn(routeDataRevisionDB);
 
         RouteDataRevision routeDataRevision = sut.getRouteDataRevision(terminal, address);
 
@@ -79,8 +83,8 @@ public class RouteDataRevisionServiceImplUnitTest {
         RouteDataRevision routeDataRevisionDB = new RouteDataRevision();
 
         when(terminalServiceMock.getByUniqueId(BigInteger.ONE)).thenReturn(terminal);
-        when(routeDataRevisionRepositoryMock.findNearest(terminal, address.getLatitude(), address.getLongitude()))
-            .thenReturn(routeDataRevisionDB);
+        when(routeDataRevisionRepositoryMock.findNearest(eq(terminal), eq(address.getLatitude()),
+                    eq(address.getLongitude()), Mockito.any(Date.class))).thenReturn(routeDataRevisionDB);
 
         RouteDataRevision routeDataRevision = sut.getRouteDataRevision(BigInteger.ONE, address);
 
@@ -94,8 +98,8 @@ public class RouteDataRevisionServiceImplUnitTest {
         GeoLocation address = new GeoLocation(BigDecimal.ONE, BigDecimal.TEN);
 
         when(terminalServiceMock.getByUniqueId(BigInteger.ONE)).thenReturn(terminal);
-        when(routeDataRevisionRepositoryMock.findNearest(terminal, address.getLatitude(), address.getLongitude()))
-            .thenReturn(null);
+        when(routeDataRevisionRepositoryMock.findNearest(eq(terminal), eq(address.getLatitude()),
+                    eq(address.getLongitude()), Mockito.any(Date.class))).thenReturn(null);
 
         try {
             sut.getRouteDataRevision(BigInteger.ONE, new Address(BigDecimal.ONE, BigDecimal.TEN));

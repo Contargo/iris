@@ -1,6 +1,7 @@
 package net.contargo.iris.route.service;
 
 import net.contargo.iris.address.Address;
+import net.contargo.iris.address.service.AddressListFilter;
 import net.contargo.iris.api.NotFoundException;
 import net.contargo.iris.route.RoutePart;
 import net.contargo.iris.route.RouteType;
@@ -28,10 +29,13 @@ public class RouteDataRevisionPartEnricher implements RoutePartEnricher {
         + "So not applicable for route data revision.";
 
     private final RouteDataRevisionService routeDataRevisionService;
+    private final AddressListFilter addressListFilter;
 
-    public RouteDataRevisionPartEnricher(RouteDataRevisionService routeDataRevisionService) {
+    public RouteDataRevisionPartEnricher(RouteDataRevisionService routeDataRevisionService,
+        AddressListFilter addressListFilter) {
 
         this.routeDataRevisionService = routeDataRevisionService;
+        this.addressListFilter = addressListFilter;
     }
 
     @Override
@@ -49,16 +53,22 @@ public class RouteDataRevisionPartEnricher implements RoutePartEnricher {
                     routePart.getData().setTollDistance(routeDataRevision.getTollDistanceOneWayInMeter());
                     routePart.getData().setAirLineDistance(routeDataRevision.getAirlineDistanceInMeter());
                 } else {
-                    if ("CH".equals(address.getCountryCode().toUpperCase())) {
-                        LOG.error("Routing from {} to CH without route revision", terminal.getName());
+                    if (isSwissAddress(address)) {
+                        LOG.info("Routing from {} to CH without route revision", terminal.getName());
                         throw new CriticalEnricherException(
-                            "Routing to Swiss locations without route revsions is impossible");
+                            "Routing to Swiss locations without route revsions is not allowed");
                     }
                 }
             } catch (NotFoundException e) {
                 LOG.debug(e.getMessage());
             }
         }
+    }
+
+
+    private boolean isSwissAddress(Address address) {
+
+        return addressListFilter.isAddressOfCountry(address, "CH");
     }
 
 

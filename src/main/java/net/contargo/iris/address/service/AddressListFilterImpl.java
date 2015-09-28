@@ -20,20 +20,23 @@ public class AddressListFilterImpl implements AddressListFilter {
     }
 
 
-    private Predicate<? super AddressList> byFirstCountryCode(String countryCode) {
+    @Override
+    public boolean isAddressOfCountry(Address address, String countryCode) {
 
-        String countryCodeUpper = countryCode.toUpperCase();
+        String addressCountryCode = address.getCountryCode();
+
+        return addressCountryCode != null && countryCode.toUpperCase().equals(addressCountryCode.toUpperCase());
+    }
+
+
+    private Predicate<? super AddressList> byFirstCountryCode(String countryCode) {
 
         return
             addressList -> {
             if (addressList.getAddresses().size() > 0) {
                 Address address = addressList.getAddresses().get(0);
 
-                String addressCountryCode = address.getAddress().get(Address.COUNTRY_CODE);
-
-                if (addressCountryCode != null) {
-                    return !countryCodeUpper.equals(addressCountryCode.toUpperCase());
-                }
+                return !isAddressOfCountry(address, countryCode);
             }
 
             return true;

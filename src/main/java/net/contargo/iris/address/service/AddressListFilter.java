@@ -1,5 +1,6 @@
 package net.contargo.iris.address.service;
 
+import net.contargo.iris.address.Address;
 import net.contargo.iris.address.AddressList;
 
 import java.util.List;
@@ -21,4 +22,15 @@ public interface AddressListFilter {
      * @return  the filtered list.
      */
     List<AddressList> filterOutByCountryCode(List<AddressList> addressLists, String countryCode);
+
+
+    /**
+     * Chceks if the given {@link Address} is of the given country.
+     *
+     * @param  address  an {@link Address}
+     * @param  countryCode  the countryCode to test the Address against.
+     *
+     * @return  true if the address matches the given countryCode. Otherwise false.
+     */
+    boolean isAddressOfCountry(Address address, String countryCode);
 }

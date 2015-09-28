@@ -299,6 +299,7 @@
                 <bean class="net.contargo.iris.route.service.Co2PartEnricher"/>
                 <bean class="net.contargo.iris.route.service.RouteDataRevisionPartEnricher">
                     <constructor-arg name="routeDataRevisionService" ref="routeDataRevisionService"/>
+                    <constructor-arg name="addressListFilter" ref="addressListFilter"/>
                 </bean>
             </list>
         </constructor-arg>

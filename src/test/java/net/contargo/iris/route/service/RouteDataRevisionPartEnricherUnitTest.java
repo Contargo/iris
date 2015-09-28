@@ -1,6 +1,7 @@
 package net.contargo.iris.route.service;
 
 import net.contargo.iris.address.Address;
+import net.contargo.iris.address.service.AddressListFilter;
 import net.contargo.iris.route.RoutePart;
 import net.contargo.iris.routedatarevision.RouteDataRevision;
 import net.contargo.iris.routedatarevision.service.RouteDataRevisionService;
@@ -46,6 +47,9 @@ public class RouteDataRevisionPartEnricherUnitTest {
     @Mock
     private RouteDataRevisionService routeDataRevisionServiceMock;
 
+    @Mock
+    private AddressListFilter addressListFilter;
+
     private EnricherContext enricherContext;
     private Terminal terminal;
     private Address address;
@@ -65,7 +69,7 @@ public class RouteDataRevisionPartEnricherUnitTest {
 
         enricherContext = new EnricherContext.Builder().build();
 
-        sut = new RouteDataRevisionPartEnricher(routeDataRevisionServiceMock);
+        sut = new RouteDataRevisionPartEnricher(routeDataRevisionServiceMock, addressListFilter);
     }
 
 
@@ -133,6 +137,7 @@ public class RouteDataRevisionPartEnricherUnitTest {
         RoutePart routePart = new RoutePart(terminal, chAddress, TRUCK);
 
         when(routeDataRevisionServiceMock.getRouteDataRevision(terminal, chAddress)).thenReturn(null);
+        when(addressListFilter.isAddressOfCountry(address, "CH")).thenReturn(true);
 
         sut.enrich(routePart, enricherContext);
     }

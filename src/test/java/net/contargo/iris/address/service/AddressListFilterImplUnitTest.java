@@ -126,4 +126,42 @@ public class AddressListFilterImplUnitTest {
 
         assertThat(result, hasSize(1));
     }
+
+
+    @Test
+    public void isAddressOfCountryLowerCase() {
+
+        boolean result = sut.isAddressOfCountry(swissAddress, "ch");
+
+        assertThat(result, is(true));
+    }
+
+
+    @Test
+    public void isAddressOfCountryUpperCase() {
+
+        boolean result = sut.isAddressOfCountry(swissAddress, "CH");
+
+        assertThat(result, is(true));
+    }
+
+
+    @Test
+    public void isAddressOfCountryWithoutCountryCode() {
+
+        Address address = new Address();
+
+        boolean result = sut.isAddressOfCountry(address, "CH");
+
+        assertThat(result, is(false));
+    }
+
+
+    @Test
+    public void isAddressOfCountryWrongCountry() {
+
+        boolean result = sut.isAddressOfCountry(swissAddress, "DE");
+
+        assertThat(result, is(false));
+    }
 }

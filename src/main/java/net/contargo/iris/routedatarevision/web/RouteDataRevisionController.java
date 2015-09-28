@@ -7,6 +7,7 @@ import net.contargo.iris.routedatarevision.dto.RouteDataRevisionDtoService;
 import net.contargo.iris.terminal.service.TerminalService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 
 import org.springframework.stereotype.Controller;
 
@@ -14,12 +15,17 @@ import org.springframework.ui.Model;
 
 import org.springframework.validation.BindingResult;
 
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.text.SimpleDateFormat;
+
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -54,6 +60,14 @@ public class RouteDataRevisionController {
         this.routeDataRevisionDtoService = routeDataRevisionDtoService;
         this.terminalService = terminalService;
     }
+
+    @InitBinder
+    protected void initBinder(WebDataBinder binder) {
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat(RouteDataRevisionDto.DATE_FORMAT);
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
+    }
+
 
     @RequestMapping(value = "", method = GET)
     public String getAll(Model model,

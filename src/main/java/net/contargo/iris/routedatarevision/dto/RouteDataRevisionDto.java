@@ -14,9 +14,6 @@ import java.math.BigDecimal;
 
 import java.util.Date;
 
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -28,11 +25,11 @@ import javax.validation.constraints.Size;
  */
 public class RouteDataRevisionDto {
 
+    public static final String DATE_FORMAT = "dd.MM.yyyy";
     private static final int MAX_DEC = 13;
     private static final int MAX_FRAC_2 = 2;
     private static final int MIN_0 = 0;
     private static final int COMMENT_SIZE = 5000;
-    private static final String DATE_FORMAT = "dd.MM.yyyy";
 
     private Long id;
 
@@ -66,12 +63,9 @@ public class RouteDataRevisionDto {
     private String comment;
 
     @NotNull
-    @Temporal(TemporalType.DATE)
     @DateTimeFormat(pattern = DATE_FORMAT)
     private Date validFrom;
 
-    @NotNull
-    @Temporal(TemporalType.DATE)
     @DateTimeFormat(pattern = DATE_FORMAT)
     private Date validTo;
 
@@ -240,7 +234,7 @@ public class RouteDataRevisionDto {
 
     public void setValidFrom(Date validFrom) {
 
-        this.validFrom = new Date(validFrom.getTime());
+        this.validFrom = validFrom == null ? null : new Date(validFrom.getTime());
     }
 
 
@@ -252,6 +246,6 @@ public class RouteDataRevisionDto {
 
     public void setValidTo(Date validTo) {
 
-        this.validTo = new Date(validTo.getTime());
+        this.validTo = validTo == null ? null : new Date(validTo.getTime());
     }
 }

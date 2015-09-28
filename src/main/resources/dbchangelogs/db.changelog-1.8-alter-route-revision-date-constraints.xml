@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet author="thieme@synyx.de" id="alter-route-revision-date-constraints">
+
+        <dropForeignKeyConstraint baseTableName="RouteDataRevision" constraintName="FK_RouteDataRevision_Terminal" />
+
+        <dropUniqueConstraint tableName="RouteDataRevision"
+                              constraintName="Unique_terminal_latitude_longitude_radius_validFrom_validTo"/>
+
+        <dropNotNullConstraint tableName="RouteDataRevision" columnName="validTo" columnDataType="date"/>
+
+        <update tableName="RouteDataRevision">
+            <column name="validFrom" type="date" value="1970-01-01"/>
+            <column name="validTo" type="date" value="null"/>
+        </update>
+
+        <addForeignKeyConstraint
+                baseTableName="RouteDataRevision" baseColumnNames="terminal_id"
+                constraintName="FK_RouteDataRevision_Terminal"
+                referencedTableName="Terminal"
+                referencedColumnNames="id"/>
+
+    </changeSet>
+
+</databaseChangeLog>

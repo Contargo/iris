@@ -46,4 +46,6 @@
 
     <include file="dbchangelogs/db.changelog-1.8-routerevision-non-zero-radius.xml"/>
 
+    <include file="dbchangelogs/db.changelog-1.8-alter-route-revision-date-constraints.xml"/>
+
 </databaseChangeLog>

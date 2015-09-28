@@ -154,7 +154,7 @@ public class RouteDataRevisionControllerMvcUnitTest {
                 .contentType(APPLICATION_JSON));
 
         resultActions.andExpect(status().isOk());
-        resultActions.andExpect(model().errorCount(8));
+        resultActions.andExpect(model().errorCount(7));
         resultActions.andExpect(model().attributeHasFieldErrorCode("routeRevision", "latitude", "NotNull"));
         resultActions.andExpect(model().attributeHasFieldErrorCode("routeRevision", "longitude", "NotNull"));
         resultActions.andExpect(model().attributeHasFieldErrorCode("routeRevision", "truckDistanceOneWayInMeter",
@@ -165,7 +165,6 @@ public class RouteDataRevisionControllerMvcUnitTest {
                 "NotNull"));
         resultActions.andExpect(model().attributeHasFieldErrorCode("routeRevision", "radiusInMeter", "NotNull"));
         resultActions.andExpect(model().attributeHasFieldErrorCode("routeRevision", "validFrom", "NotNull"));
-        resultActions.andExpect(model().attributeHasFieldErrorCode("routeRevision", "validTo", "NotNull"));
     }
 
 

@@ -13,7 +13,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 
@@ -28,6 +31,7 @@ public class RouteDataRevision {
     private static final int MAX_VALUE_COORD = 180;
     private static final int MIN_VALUE_COORD = -180;
     private static final int COMMENT_SIZE = 5000;
+    private static final String DATE_FORMAT = "dd.MM.yyyy";
 
     @Id
     @GeneratedValue
@@ -57,8 +61,11 @@ public class RouteDataRevision {
     @Size(max = COMMENT_SIZE)
     private String comment;
 
+    @NotNull
+    @Temporal(TemporalType.DATE)
     private Date validFrom;
 
+    @Temporal(TemporalType.DATE)
     private Date validTo;
 
     public Long getId() {

@@ -9,6 +9,7 @@ import net.contargo.iris.terminal.service.TerminalService;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -60,9 +61,11 @@ public class RouteDataRevisionDtoServiceImpl implements RouteDataRevisionDtoServ
 
 
     @Override
-    public boolean existsEntry(String terminalUniqueId, BigDecimal latitude, BigDecimal longitude) {
+    public boolean existsEntry(String terminalUniqueId, BigDecimal latitude, BigDecimal longitude, Date validFrom,
+        Date validTo) {
 
-        return routeDataRevisionService.existsEntry(new BigInteger(terminalUniqueId), latitude, longitude);
+        return routeDataRevisionService.existsEntry(new BigInteger(terminalUniqueId), latitude, longitude, validFrom,
+                validTo);
     }
 
 

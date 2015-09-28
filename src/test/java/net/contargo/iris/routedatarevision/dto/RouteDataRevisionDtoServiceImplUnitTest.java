@@ -19,6 +19,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
@@ -28,7 +29,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 
 
 /**
@@ -66,7 +67,7 @@ public class RouteDataRevisionDtoServiceImplUnitTest {
         routeDataRevision.setLatitude(BigDecimal.ONE);
         routeDataRevision.setRadiusInMeter(BigDecimal.ONE);
 
-        routeDataRevisions = asList(routeDataRevision);
+        routeDataRevisions = singletonList(routeDataRevision);
 
         routeDataRevisionDto = new RouteDataRevisionDto(routeDataRevision);
     }
@@ -120,10 +121,13 @@ public class RouteDataRevisionDtoServiceImplUnitTest {
     @Test
     public void existsEntry() {
 
-        when(routeDataRevisionServiceMock.existsEntry(BigInteger.ONE, BigDecimal.TEN, BigDecimal.ONE)).thenReturn(true);
+        Date validFrom = new Date();
+        when(routeDataRevisionServiceMock.existsEntry(BigInteger.ONE, BigDecimal.TEN, BigDecimal.ONE, validFrom,
+                    validFrom)).thenReturn(true);
 
-        assertThat(sut.existsEntry("1", BigDecimal.TEN, BigDecimal.ONE), is(true));
-        verify(routeDataRevisionServiceMock).existsEntry(BigInteger.ONE, BigDecimal.TEN, BigDecimal.ONE);
+        assertThat(sut.existsEntry("1", BigDecimal.TEN, BigDecimal.ONE, validFrom, validFrom), is(true));
+        verify(routeDataRevisionServiceMock).existsEntry(BigInteger.ONE, BigDecimal.TEN, BigDecimal.ONE, validFrom,
+            validFrom);
     }
 
 

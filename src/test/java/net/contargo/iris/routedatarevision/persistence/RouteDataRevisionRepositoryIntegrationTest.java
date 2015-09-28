@@ -23,7 +23,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import java.util.Date;
-import java.util.Optional;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -32,6 +32,8 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.nullValue;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 
 import static org.hamcrest.core.Is.is;
 
@@ -143,9 +145,9 @@ public class RouteDataRevisionRepositoryIntegrationTest {
 
         em.flush();
 
-        Optional<RouteDataRevision> routeDataRevisionOptional = sut.findByTerminalAndLatitudeAndLongitude(
-                BigInteger.TEN, valueOf(49.1011), valueOf(8.9101));
-        assertThat(routeDataRevisionOptional.isPresent(), is(true));
+        List<RouteDataRevision> routeDataRevisionOptional = sut.findByTerminalAndLatitudeAndLongitude(BigInteger.TEN,
+                valueOf(49.1011), valueOf(8.9101));
+        assertThat(routeDataRevisionOptional, hasSize(1));
     }
 
 
@@ -157,9 +159,9 @@ public class RouteDataRevisionRepositoryIntegrationTest {
 
         em.flush();
 
-        Optional<RouteDataRevision> routeDataRevisionOptional = sut.findByTerminalAndLatitudeAndLongitude(
-                BigInteger.TEN, valueOf(49.1001), valueOf(8.9102));
-        assertThat(routeDataRevisionOptional.isPresent(), is(false));
+        List<RouteDataRevision> routeDataRevisionOptional = sut.findByTerminalAndLatitudeAndLongitude(BigInteger.TEN,
+                valueOf(49.1001), valueOf(8.9102));
+        assertThat(routeDataRevisionOptional, hasSize(0));
     }
 
 

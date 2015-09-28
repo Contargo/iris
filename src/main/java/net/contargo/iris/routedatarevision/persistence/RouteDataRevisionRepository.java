@@ -12,7 +12,6 @@ import java.math.BigInteger;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 
 /**
@@ -50,6 +49,6 @@ public interface RouteDataRevisionRepository extends JpaRepository<RouteDataRevi
 
 
     @Query("SELECT r FROM RouteDataRevision r WHERE r.terminal.uniqueId = ?1 and r.latitude = ?2 and longitude = ?3")
-    Optional<RouteDataRevision> findByTerminalAndLatitudeAndLongitude(BigInteger terminalUniqueId, BigDecimal latitude,
+    List<RouteDataRevision> findByTerminalAndLatitudeAndLongitude(BigInteger terminalUniqueId, BigDecimal latitude,
         BigDecimal longitude);
 }

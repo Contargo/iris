@@ -7,6 +7,10 @@ import net.contargo.iris.routedatarevision.persistence.RouteDataRevisionReposito
 import net.contargo.iris.terminal.Terminal;
 import net.contargo.iris.terminal.service.TerminalService;
 
+import org.apache.commons.lang.time.DateUtils;
+
+import org.joda.time.DateTime;
+
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -96,9 +100,53 @@ public class RouteDataRevisionServiceImpl implements RouteDataRevisionService {
 
 
     @Override
-    public boolean existsEntry(BigInteger terminalUniqueId, BigDecimal latitude, BigDecimal longitude) {
+    public boolean existsEntry(BigInteger terminalUniqueId, BigDecimal latitude, BigDecimal longitude, Date validFrom,
+        Date validTo) {
 
-        return routeDataRevisionRepository.findByTerminalAndLatitudeAndLongitude(terminalUniqueId, latitude, longitude)
-            .isPresent();
+        List<RouteDataRevision> revisions = routeDataRevisionRepository.findByTerminalAndLatitudeAndLongitude(
+                terminalUniqueId, latitude, longitude);
+
+        for (RouteDataRevision revision : revisions) {
+            if (existingRevisionDoesNotEnd(revision) && givenValidToDoesNotEnd(validTo)) {
+                return true;
+            } else if (existingRevisionDoesNotEnd(revision) && !givenValidToDoesNotEnd(validTo)) {
+                Date revisionFrom = getStartOfDay(revision.getValidFrom());
+
+                return DateUtils.isSameDay(revisionFrom, validTo) || validTo.after(revisionFrom);
+            } else if (!existingRevisionDoesNotEnd(revision) && givenValidToDoesNotEnd(validTo)) {
+                Date revisionTo = getStartOfDay(revision.getValidTo());
+
+                return DateUtils.isSameDay(revisionTo, validFrom) || revisionTo.after(validFrom);
+            } else {
+                Date revisionFrom = getStartOfDay(revision.getValidFrom());
+                Date revisionTo = getStartOfDay(revision.getValidTo());
+                boolean validityPeriodsOverlappOnEdges = DateUtils.isSameDay(validFrom, revisionTo)
+                    || DateUtils.isSameDay(revisionFrom, validTo);
+
+                if (validFrom.before(revisionTo) && validTo.after(revisionFrom) || validityPeriodsOverlappOnEdges) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+
+    private boolean givenValidToDoesNotEnd(Date validTo) {
+
+        return validTo == null;
+    }
+
+
+    private boolean existingRevisionDoesNotEnd(RouteDataRevision revision) {
+
+        return revision.getValidTo() == null;
+    }
+
+
+    private Date getStartOfDay(Date date) {
+
+        return new DateTime(date.getTime()).withTimeAtStartOfDay().toDate();
     }
 }

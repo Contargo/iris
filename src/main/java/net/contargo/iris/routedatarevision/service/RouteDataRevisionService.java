@@ -7,6 +7,7 @@ import net.contargo.iris.terminal.Terminal;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -103,8 +104,12 @@ public interface RouteDataRevisionService {
      * @param  latitude  the corresponding Latitude for a {@link net.contargo.iris.routedatarevision.RouteDataRevision}
      * @param  longitude  the corresponding Longitude for a
      *                    {@link net.contargo.iris.routedatarevision.RouteDataRevision}
+     * @param  validFrom  specifies when the {@link net.contargo.iris.routedatarevision.RouteDataRevision} starts.
+     * @param  validTo  specifies when the {@link net.contargo.iris.routedatarevision.RouteDataRevision} ends.
+     *                  {@code null} means the revision is endless
      *
      * @return  true if there already exists an entry with the passed values, otherwise false.
      */
-    boolean existsEntry(BigInteger terminalUniqueId, BigDecimal latitude, BigDecimal longitude);
+    boolean existsEntry(BigInteger terminalUniqueId, BigDecimal latitude, BigDecimal longitude, Date validFrom,
+        Date validTo);
 }

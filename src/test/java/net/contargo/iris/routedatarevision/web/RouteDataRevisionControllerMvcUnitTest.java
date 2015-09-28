@@ -25,11 +25,14 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.math.BigDecimal;
 
+import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.isA;
 import static org.hamcrest.Matchers.nullValue;
+
+import static org.mockito.Matchers.eq;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -133,7 +136,8 @@ public class RouteDataRevisionControllerMvcUnitTest {
 
         when(routeDataRevisionDtoServiceMock.save(Mockito.any(RouteDataRevisionDto.class))).thenReturn(
             routeDataRevision);
-        when(routeDataRevisionDtoServiceMock.existsEntry("10", BigDecimal.TEN, BigDecimal.ONE)).thenReturn(false);
+        when(routeDataRevisionDtoServiceMock.existsEntry(eq("10"), eq(BigDecimal.TEN), eq(BigDecimal.ONE),
+                    Mockito.any(Date.class), Mockito.any(Date.class))).thenReturn(false);
 
         ResultActions resultActions = perform(post(
                         "/routerevisions?terminal.uniqueId=10&latitude=10&longitude=1&truckDistanceOneWayInMeter=1&"

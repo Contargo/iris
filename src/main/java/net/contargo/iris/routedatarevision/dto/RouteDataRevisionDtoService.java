@@ -4,6 +4,7 @@ import net.contargo.iris.GeoLocation;
 
 import java.math.BigDecimal;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -61,17 +62,21 @@ public interface RouteDataRevisionDtoService {
 
     /**
      * Checks if there is already an entry of type {@link net.contargo.iris.routedatarevision.RouteDataRevision} with
-     * the given values.
+     * the given values and an overlapping time period.
      *
      * @param  terminalUniqueId  the corresponding {@link net.contargo.iris.terminal.Terminal} for a
      *                           {@link net.contargo.iris.routedatarevision.RouteDataRevision}
      * @param  latitude  the corresponding Latitude for a {@link net.contargo.iris.routedatarevision.RouteDataRevision}
      * @param  longitude  the corresponding Longitude for a
      *                    {@link net.contargo.iris.routedatarevision.RouteDataRevision}
+     * @param  validFrom  specifies when the {@link net.contargo.iris.routedatarevision.RouteDataRevision} starts.
+     * @param  validTo  specifies when the {@link net.contargo.iris.routedatarevision.RouteDataRevision} ends.
+     *                  {@code null} means the revision is endless
      *
      * @return  true if there already exists an entry with the passed values, otherwise false.
      */
-    boolean existsEntry(String terminalUniqueId, BigDecimal latitude, BigDecimal longitude);
+    boolean existsEntry(String terminalUniqueId, BigDecimal latitude, BigDecimal longitude, Date validFrom,
+        Date validTo);
 
 
     /**

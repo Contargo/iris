@@ -7,6 +7,8 @@ import net.contargo.iris.routedatarevision.persistence.RouteDataRevisionReposito
 import net.contargo.iris.terminal.Terminal;
 import net.contargo.iris.terminal.service.TerminalService;
 
+import org.joda.time.DateTime;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,7 +24,6 @@ import java.math.BigInteger;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
 
@@ -33,6 +34,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
 
@@ -172,10 +174,143 @@ public class RouteDataRevisionServiceImplUnitTest {
     @Test
     public void existsEntry() {
 
+        RouteDataRevision revision = new RouteDataRevision();
+        revision.setValidFrom(new Date());
+        revision.setValidTo(new Date());
         when(routeDataRevisionRepositoryMock.findByTerminalAndLatitudeAndLongitude(BigInteger.ONE, BigDecimal.TEN,
-                    BigDecimal.ONE)).thenReturn(Optional.of(new RouteDataRevision()));
+                    BigDecimal.ONE)).thenReturn(singletonList(revision));
 
-        boolean existsEntry = sut.existsEntry(BigInteger.ONE, BigDecimal.TEN, BigDecimal.ONE);
+        boolean existsEntry = sut.existsEntry(BigInteger.ONE, BigDecimal.TEN, BigDecimal.ONE, new DateTime().minusDays(
+                    1)
+                .toDate(), new DateTime().plusDays(1).toDate());
+        assertThat(existsEntry, is(true));
+    }
+
+
+    @Test
+    public void existsEntryBefore() {
+
+        RouteDataRevision revision = new RouteDataRevision();
+        revision.setValidFrom(new DateTime().minusDays(4).toDate());
+        revision.setValidTo(new DateTime().minusDays(3).toDate());
+        when(routeDataRevisionRepositoryMock.findByTerminalAndLatitudeAndLongitude(BigInteger.ONE, BigDecimal.TEN,
+                    BigDecimal.ONE)).thenReturn(singletonList(revision));
+
+        boolean existsEntry = sut.existsEntry(BigInteger.ONE, BigDecimal.TEN, BigDecimal.ONE, new DateTime().minusDays(
+                    1)
+                .toDate(), new DateTime().plusDays(1).toDate());
+        assertThat(existsEntry, is(false));
+    }
+
+
+    @Test
+    public void existsEntryOnFrom() {
+
+        RouteDataRevision revision = new RouteDataRevision();
+        revision.setValidFrom(new DateTime().minusDays(3).toDate());
+        revision.setValidTo(new DateTime().minusDays(2).toDate());
+        when(routeDataRevisionRepositoryMock.findByTerminalAndLatitudeAndLongitude(BigInteger.ONE, BigDecimal.TEN,
+                    BigDecimal.ONE)).thenReturn(singletonList(revision));
+
+        boolean existsEntry = sut.existsEntry(BigInteger.ONE, BigDecimal.TEN, BigDecimal.ONE, new DateTime().minusDays(
+                    2)
+                .toDate(), new DateTime().plusDays(1).toDate());
+        assertThat(existsEntry, is(true));
+    }
+
+
+    @Test
+    public void existsEntryAfter() {
+
+        RouteDataRevision revision = new RouteDataRevision();
+        revision.setValidFrom(new DateTime().plusDays(2).toDate());
+        revision.setValidTo(new DateTime().plusDays(3).toDate());
+        when(routeDataRevisionRepositoryMock.findByTerminalAndLatitudeAndLongitude(BigInteger.ONE, BigDecimal.TEN,
+                    BigDecimal.ONE)).thenReturn(singletonList(revision));
+
+        boolean existsEntry = sut.existsEntry(BigInteger.ONE, BigDecimal.TEN, BigDecimal.ONE, new DateTime().minusDays(
+                    1)
+                .toDate(), new DateTime().plusDays(1).toDate());
+        assertThat(existsEntry, is(false));
+    }
+
+
+    @Test
+    public void existsEntryOnTo() {
+
+        RouteDataRevision revision = new RouteDataRevision();
+        revision.setValidFrom(new DateTime().plusDays(1).toDate());
+        revision.setValidTo(new DateTime().plusDays(2).toDate());
+        when(routeDataRevisionRepositoryMock.findByTerminalAndLatitudeAndLongitude(BigInteger.ONE, BigDecimal.TEN,
+                    BigDecimal.ONE)).thenReturn(singletonList(revision));
+
+        boolean existsEntry = sut.existsEntry(BigInteger.ONE, BigDecimal.TEN, BigDecimal.ONE, new DateTime().minusDays(
+                    2)
+                .toDate(), new DateTime().plusDays(1).toDate());
+        assertThat(existsEntry, is(true));
+    }
+
+
+    @Test
+    public void existsEntryGivenEndlessRevision() {
+
+        RouteDataRevision revision = new RouteDataRevision();
+        revision.setValidFrom(new DateTime().plusDays(1).toDate());
+        revision.setValidTo(new DateTime().plusDays(2).toDate());
+        when(routeDataRevisionRepositoryMock.findByTerminalAndLatitudeAndLongitude(BigInteger.ONE, BigDecimal.TEN,
+                    BigDecimal.ONE)).thenReturn(singletonList(revision));
+
+        boolean existsEntry = sut.existsEntry(BigInteger.ONE, BigDecimal.TEN, BigDecimal.ONE, new DateTime().minusDays(
+                    2)
+                .toDate(), null);
+        assertThat(existsEntry, is(true));
+    }
+
+
+    @Test
+    public void existsEntryExistingEndlessTrue() {
+
+        RouteDataRevision revision = new RouteDataRevision();
+        revision.setValidFrom(new DateTime().plusDays(2).toDate());
+        revision.setValidTo(null);
+        when(routeDataRevisionRepositoryMock.findByTerminalAndLatitudeAndLongitude(BigInteger.ONE, BigDecimal.TEN,
+                    BigDecimal.ONE)).thenReturn(singletonList(revision));
+
+        boolean existsEntry = sut.existsEntry(BigInteger.ONE, BigDecimal.TEN, BigDecimal.ONE, new DateTime().minusDays(
+                    2)
+                .toDate(), new DateTime().plusDays(1).toDate());
+        assertThat(existsEntry, is(false));
+    }
+
+
+    @Test
+    public void existsEntryExistingEndlessFalse() {
+
+        RouteDataRevision revision = new RouteDataRevision();
+        revision.setValidFrom(new DateTime().plusDays(2).toDate());
+        revision.setValidTo(null);
+        when(routeDataRevisionRepositoryMock.findByTerminalAndLatitudeAndLongitude(BigInteger.ONE, BigDecimal.TEN,
+                    BigDecimal.ONE)).thenReturn(singletonList(revision));
+
+        boolean existsEntry = sut.existsEntry(BigInteger.ONE, BigDecimal.TEN, BigDecimal.ONE, new DateTime().minusDays(
+                    2)
+                .toDate(), new DateTime().plusDays(3).toDate());
+        assertThat(existsEntry, is(true));
+    }
+
+
+    @Test
+    public void existsEntryGivenEndlessRevisionAndExistingEndless() {
+
+        RouteDataRevision revision = new RouteDataRevision();
+        revision.setValidFrom(new DateTime().plusDays(1).toDate());
+        revision.setValidTo(null);
+        when(routeDataRevisionRepositoryMock.findByTerminalAndLatitudeAndLongitude(BigInteger.ONE, BigDecimal.TEN,
+                    BigDecimal.ONE)).thenReturn(singletonList(revision));
+
+        boolean existsEntry = sut.existsEntry(BigInteger.ONE, BigDecimal.TEN, BigDecimal.ONE, new DateTime().minusDays(
+                    2)
+                .toDate(), null);
         assertThat(existsEntry, is(true));
     }
 
@@ -184,9 +319,9 @@ public class RouteDataRevisionServiceImplUnitTest {
     public void existsEntryNotFound() {
 
         when(routeDataRevisionRepositoryMock.findByTerminalAndLatitudeAndLongitude(BigInteger.ONE, BigDecimal.TEN,
-                    BigDecimal.ONE)).thenReturn(Optional.<RouteDataRevision>empty());
+                    BigDecimal.ONE)).thenReturn(emptyList());
 
-        boolean existsEntry = sut.existsEntry(BigInteger.ONE, BigDecimal.TEN, BigDecimal.ONE);
+        boolean existsEntry = sut.existsEntry(BigInteger.ONE, BigDecimal.TEN, BigDecimal.ONE, new Date(), new Date());
         assertThat(existsEntry, is(false));
     }
 }

@@ -134,7 +134,8 @@ public class RouteDataRevisionController {
 
         if (routeDataRevisionDto.getId() == null
                 && routeDataRevisionDtoService.existsEntry(routeDataRevisionDto.getTerminal().getUniqueId(),
-                    routeDataRevisionDto.getLatitude(), routeDataRevisionDto.getLongitude())) {
+                    routeDataRevisionDto.getLatitude(), routeDataRevisionDto.getLongitude(),
+                    routeDataRevisionDto.getValidFrom(), routeDataRevisionDto.getValidTo())) {
             result.rejectValue("terminal.uniqueId", "routerevision.exists");
             result.rejectValue("longitude", "routerevision.exists");
             result.rejectValue("latitude", "routerevision.exists");

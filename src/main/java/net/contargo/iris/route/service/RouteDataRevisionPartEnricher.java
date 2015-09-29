@@ -54,9 +54,8 @@ public class RouteDataRevisionPartEnricher implements RoutePartEnricher {
                     routePart.getData().setAirLineDistance(routeDataRevision.getAirlineDistanceInMeter());
                 } else {
                     if (isSwissAddress(address)) {
+                        context.addError("swiss-route", "no route revision available");
                         LOG.info("Routing from {} to CH without route revision", terminal.getName());
-                        throw new CriticalEnricherException(
-                            "Routing to Swiss locations without route revsions is not allowed");
                     }
                 }
             } catch (NotFoundException e) {

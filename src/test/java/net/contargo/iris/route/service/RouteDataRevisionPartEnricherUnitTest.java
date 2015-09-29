@@ -27,6 +27,8 @@ import static org.hamcrest.CoreMatchers.nullValue;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import static org.hamcrest.Matchers.hasEntry;
+
 import static org.mockito.Mockito.when;
 
 
@@ -128,7 +130,7 @@ public class RouteDataRevisionPartEnricherUnitTest {
     }
 
 
-    @Test(expected = CriticalEnricherException.class)
+    @Test
     public void routeToSwissAddressWithoutRouteRevision() throws CriticalEnricherException {
 
         Address chAddress = new Address();
@@ -140,6 +142,8 @@ public class RouteDataRevisionPartEnricherUnitTest {
         when(addressListFilter.isAddressOfCountry(address, "CH")).thenReturn(true);
 
         sut.enrich(routePart, enricherContext);
+
+        assertThat(enricherContext.getErrors(), hasEntry("swiss-route", "no route revision available"));
     }
 
 

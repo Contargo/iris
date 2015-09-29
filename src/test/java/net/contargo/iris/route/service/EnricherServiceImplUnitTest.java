@@ -33,7 +33,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 
 
 /**
@@ -66,10 +66,10 @@ public class EnricherServiceImplUnitTest {
         routePart = new RoutePart(new GeoLocation(BigDecimal.TEN, BigDecimal.TEN),
                 new GeoLocation(BigDecimal.ZERO, BigDecimal.ZERO), RouteType.RAIL);
 
-        when(routeDataMock.getParts()).thenReturn(asList(routePart));
+        when(routeDataMock.getParts()).thenReturn(singletonList(routePart));
         when(routeMock.getData()).thenReturn(routeDataMock);
 
-        sut = new EnricherServiceImpl(asList(routePartEnricherMock), asList(routeTotalEnricherMock));
+        sut = new EnricherServiceImpl(singletonList(routePartEnricherMock), singletonList(routeTotalEnricherMock));
     }
 
 
@@ -105,8 +105,25 @@ public class EnricherServiceImplUnitTest {
         sut.enrich(routeMock);
 
         verify(routeMock).setData(Matchers.argThat(
-                org.hamcrest.Matchers.<RouteData>hasProperty("parts", is(asList(routePart)))));
+                org.hamcrest.Matchers.<RouteData>hasProperty("parts", is(singletonList(routePart)))));
         verify(routeMock).setErrors(mapCaptor.capture());
         assertThat(mapCaptor.getValue().get("route"), is("Routing failed"));
+    }
+
+
+    @Test
+    public void enrichWithSwissRoutingErrors() throws CriticalEnricherException {
+
+        RoutePartEnricher dummy = (routePart1, context) ->
+                context.addError("swiss-route", "no route revision available");
+
+        sut = new EnricherServiceImpl(singletonList(dummy), singletonList(routeTotalEnricherMock));
+
+        sut.enrich(routeMock);
+
+        verify(routeMock).setData(Matchers.argThat(
+                org.hamcrest.Matchers.<RouteData>hasProperty("parts", is(singletonList(routePart)))));
+        verify(routeMock).setErrors(mapCaptor.capture());
+        assertThat(mapCaptor.getValue().get("swiss-route"), is("no route revision available"));
     }
 }

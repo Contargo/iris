@@ -1,6 +1,8 @@
 package net.contargo.iris.routedatarevision;
 
+import net.contargo.iris.routedatarevision.service.ValidityRange;
 import net.contargo.iris.terminal.Terminal;
+import net.contargo.iris.util.DateUtil;
 
 import org.hibernate.validator.constraints.Range;
 
@@ -197,5 +199,11 @@ public class RouteDataRevision {
     public void setValidTo(Date validTo) {
 
         this.validTo = validTo;
+    }
+
+
+    public ValidityRange getValidityRange() {
+
+        return new ValidityRange(DateUtil.asLocalDate(validFrom), DateUtil.asLocalDate(validTo));
     }
 }

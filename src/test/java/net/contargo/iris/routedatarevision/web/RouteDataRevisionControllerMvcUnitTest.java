@@ -2,6 +2,7 @@ package net.contargo.iris.routedatarevision.web;
 
 import net.contargo.iris.routedatarevision.dto.RouteDataRevisionDto;
 import net.contargo.iris.routedatarevision.dto.RouteDataRevisionDtoService;
+import net.contargo.iris.routedatarevision.service.ValidityRange;
 import net.contargo.iris.terminal.Terminal;
 import net.contargo.iris.terminal.dto.TerminalDto;
 import net.contargo.iris.terminal.service.TerminalService;
@@ -25,7 +26,6 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.math.BigDecimal;
 
-import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
@@ -137,7 +137,7 @@ public class RouteDataRevisionControllerMvcUnitTest {
         when(routeDataRevisionDtoServiceMock.save(Mockito.any(RouteDataRevisionDto.class))).thenReturn(
             routeDataRevision);
         when(routeDataRevisionDtoServiceMock.existsEntry(eq("10"), eq(BigDecimal.TEN), eq(BigDecimal.ONE),
-                    Mockito.any(Date.class), Mockito.any(Date.class))).thenReturn(false);
+                    Mockito.any(ValidityRange.class), eq(null))).thenReturn(false);
 
         ResultActions resultActions = perform(post(
                         "/routerevisions?terminal.uniqueId=10&latitude=10&longitude=1&truckDistanceOneWayInMeter=1&"

@@ -3,8 +3,10 @@ package net.contargo.iris.routedatarevision.dto;
 import net.contargo.iris.GeoLocation;
 import net.contargo.iris.routedatarevision.RouteDataRevision;
 import net.contargo.iris.routedatarevision.service.RouteDataRevisionService;
+import net.contargo.iris.routedatarevision.service.ValidityRange;
 import net.contargo.iris.terminal.Terminal;
 import net.contargo.iris.terminal.service.TerminalService;
+import net.contargo.iris.util.DateUtil;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -122,12 +124,14 @@ public class RouteDataRevisionDtoServiceImplUnitTest {
     public void existsEntry() {
 
         Date validFrom = new Date();
-        when(routeDataRevisionServiceMock.existsEntry(BigInteger.ONE, BigDecimal.TEN, BigDecimal.ONE, validFrom,
-                    validFrom)).thenReturn(true);
+        ValidityRange validityRange = new ValidityRange(DateUtil.asLocalDate(validFrom),
+                DateUtil.asLocalDate(validFrom));
+        when(routeDataRevisionServiceMock.overlapsWithExisting(BigInteger.ONE, BigDecimal.TEN, BigDecimal.ONE,
+                    validityRange, null)).thenReturn(true);
 
-        assertThat(sut.existsEntry("1", BigDecimal.TEN, BigDecimal.ONE, validFrom, validFrom), is(true));
-        verify(routeDataRevisionServiceMock).existsEntry(BigInteger.ONE, BigDecimal.TEN, BigDecimal.ONE, validFrom,
-            validFrom);
+        assertThat(sut.existsEntry("1", BigDecimal.TEN, BigDecimal.ONE, validityRange, null), is(true));
+        verify(routeDataRevisionServiceMock).overlapsWithExisting(BigInteger.ONE, BigDecimal.TEN, BigDecimal.ONE,
+            validityRange, null);
     }
 
 

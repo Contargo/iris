@@ -4,6 +4,7 @@ import net.contargo.iris.Message;
 import net.contargo.iris.api.ControllerConstants;
 import net.contargo.iris.routedatarevision.dto.RouteDataRevisionDto;
 import net.contargo.iris.routedatarevision.dto.RouteDataRevisionDtoService;
+import net.contargo.iris.routedatarevision.service.ValidityRange;
 import net.contargo.iris.terminal.service.TerminalService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,8 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import static net.contargo.iris.util.DateUtil.asLocalDate;
+
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
@@ -39,6 +42,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.PUT;
  * Controller for the Route Data Revision overview management page.
  *
  * @author  David Schilling - schilling@synyx.de
+ * @author  Oliver Messner - messner@synyx.de
  */
 @Controller
 @RequestMapping("/routerevisions")
@@ -132,15 +136,19 @@ public class RouteDataRevisionController {
     private String save(RouteDataRevisionDto routeDataRevisionDto, RedirectAttributes redirectAttributes,
         BindingResult result, Model model, Message successMessage) {
 
-        if (routeDataRevisionDto.getId() == null
-                && routeDataRevisionDtoService.existsEntry(routeDataRevisionDto.getTerminal().getUniqueId(),
-                    routeDataRevisionDto.getLatitude(), routeDataRevisionDto.getLongitude(),
-                    routeDataRevisionDto.getValidFrom(), routeDataRevisionDto.getValidTo())) {
-            result.rejectValue("terminal.uniqueId", "routerevision.exists");
-            result.rejectValue("longitude", "routerevision.exists");
-            result.rejectValue("latitude", "routerevision.exists");
-            result.rejectValue("validFrom", "routerevision.exists");
-            result.rejectValue("validTo", "routerevision.exists");
+        if (routeDataRevisionDto.getValidFrom() != null) {
+            ValidityRange validityRange = new ValidityRange(asLocalDate(routeDataRevisionDto.getValidFrom()),
+                    asLocalDate(routeDataRevisionDto.getValidTo()));
+
+            if (routeDataRevisionDtoService.existsEntry(routeDataRevisionDto.getTerminal().getUniqueId(),
+                        routeDataRevisionDto.getLatitude(), routeDataRevisionDto.getLongitude(), validityRange,
+                        routeDataRevisionDto.getId())) {
+                result.rejectValue("terminal.uniqueId", "routerevision.exists");
+                result.rejectValue("longitude", "routerevision.exists");
+                result.rejectValue("latitude", "routerevision.exists");
+                result.rejectValue("validFrom", "routerevision.exists");
+                result.rejectValue("validTo", "routerevision.exists");
+            }
         }
 
         if (result.hasErrors()) {

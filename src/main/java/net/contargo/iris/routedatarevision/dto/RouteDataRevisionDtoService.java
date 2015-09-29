@@ -1,10 +1,12 @@
 package net.contargo.iris.routedatarevision.dto;
 
 import net.contargo.iris.GeoLocation;
+import net.contargo.iris.routedatarevision.RouteDataRevision;
+import net.contargo.iris.routedatarevision.service.ValidityRange;
+import net.contargo.iris.terminal.Terminal;
 
 import java.math.BigDecimal;
 
-import java.util.Date;
 import java.util.List;
 
 
@@ -14,6 +16,7 @@ import java.util.List;
  * {@link net.contargo.iris.routedatarevision.dto.RouteDataRevisionDto}.
  *
  * @author  David Schilling - schilling@synyx.de
+ * @author  Oliver Messner - messner@synyx.de
  */
 public interface RouteDataRevisionDtoService {
 
@@ -61,22 +64,20 @@ public interface RouteDataRevisionDtoService {
 
 
     /**
-     * Checks if there is already an entry of type {@link net.contargo.iris.routedatarevision.RouteDataRevision} with
-     * the given values and an overlapping time period.
+     * Checks if there are any {@link RouteDataRevision} having the specified terminalUniqueId and geolocation, whose
+     * {@link ValidityRange} overlaps with the given {@link ValidityRange} argument.
      *
-     * @param  terminalUniqueId  the corresponding {@link net.contargo.iris.terminal.Terminal} for a
-     *                           {@link net.contargo.iris.routedatarevision.RouteDataRevision}
-     * @param  latitude  the corresponding Latitude for a {@link net.contargo.iris.routedatarevision.RouteDataRevision}
-     * @param  longitude  the corresponding Longitude for a
-     *                    {@link net.contargo.iris.routedatarevision.RouteDataRevision}
-     * @param  validFrom  specifies when the {@link net.contargo.iris.routedatarevision.RouteDataRevision} starts.
-     * @param  validTo  specifies when the {@link net.contargo.iris.routedatarevision.RouteDataRevision} ends.
-     *                  {@code null} means the revision is endless
+     * @param  terminalUniqueId  The {@link Terminal}s unique Id.
+     * @param  latitude  The geolocations latitude
+     * @param  longitude  The geolocations longitude
+     * @param  validityRange  The {@code ValidityRange} to check for overlaps.
+     * @param  routeRevisionId  The revision id, may be null if not yet persisted
      *
-     * @return  true if there already exists an entry with the passed values, otherwise false.
+     * @return  {@code true} if there is an overlap. Otherwise {@code false}
      */
-    boolean existsEntry(String terminalUniqueId, BigDecimal latitude, BigDecimal longitude, Date validFrom,
-        Date validTo);
+
+    boolean existsEntry(String terminalUniqueId, BigDecimal latitude, BigDecimal longitude, ValidityRange validityRange,
+        Long routeRevisionId);
 
 
     /**

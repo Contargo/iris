@@ -109,6 +109,4 @@ public class RouteDataRevisionServiceImpl implements RouteDataRevisionService {
                 .anyMatch(revision -> validityRange.overlapWith(revision.getValidityRange()));
 
     }
-
-
 }

@@ -34,7 +34,9 @@ import static org.hamcrest.Matchers.nullValue;
 
 import static org.mockito.Matchers.eq;
 
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -46,7 +48,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 
 
 /**
@@ -72,14 +74,15 @@ public class RouteDataRevisionControllerMvcUnitTest {
     public void setUp() {
 
         routeDataRevision = new RouteDataRevisionDto();
-        routeDataRevisions = asList(routeDataRevision);
+        routeDataRevisions = singletonList(routeDataRevision);
 
         TerminalDto terminalDto = new TerminalDto();
         terminalDto.setUniqueId("foo");
         routeDataRevision.setTerminal(terminalDto);
 
         Terminal terminal = new Terminal();
-        terminals = asList(terminal);
+        terminals = singletonList(terminal);
+        reset(routeDataRevisionDtoServiceMock);
     }
 
 
@@ -169,6 +172,23 @@ public class RouteDataRevisionControllerMvcUnitTest {
                 "NotNull"));
         resultActions.andExpect(model().attributeHasFieldErrorCode("routeRevision", "radiusInMeter", "NotNull"));
         resultActions.andExpect(model().attributeHasFieldErrorCode("routeRevision", "validFrom", "NotNull"));
+    }
+
+
+    @Test
+    public void createValidityRangeError() throws Exception {
+
+        ResultActions resultActions = perform(post("/routerevisions").param("terminal.uniqueId", "foo")
+                .param("validFrom", "01.05.2015")
+                .param("validTo", "30.04.2015"));
+
+        resultActions.andExpect(status().isOk());
+        resultActions.andExpect(model().attributeHasFieldErrorCode("routeRevision", "validFrom",
+                "routerevision.validityrange"));
+        resultActions.andExpect(model().attributeHasFieldErrorCode("routeRevision", "validTo",
+                "routerevision.validityrange"));
+
+        verifyZeroInteractions(routeDataRevisionDtoServiceMock);
     }
 
 

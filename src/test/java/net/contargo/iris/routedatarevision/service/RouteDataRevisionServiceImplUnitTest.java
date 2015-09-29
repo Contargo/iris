@@ -16,7 +16,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import org.mockito.Mock;
-import org.mockito.Mockito;
 
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -73,7 +72,7 @@ public class RouteDataRevisionServiceImplUnitTest {
         RouteDataRevision routeDataRevisionDB = new RouteDataRevision();
 
         when(routeDataRevisionRepositoryMock.findNearest(eq(terminal), eq(address.getLatitude()),
-                    eq(address.getLongitude()), Mockito.any(Date.class))).thenReturn(routeDataRevisionDB);
+                    eq(address.getLongitude()))).thenReturn(routeDataRevisionDB);
 
         RouteDataRevision routeDataRevision = sut.getRouteDataRevision(terminal, address);
 
@@ -89,7 +88,7 @@ public class RouteDataRevisionServiceImplUnitTest {
 
         when(terminalServiceMock.getByUniqueId(BigInteger.ONE)).thenReturn(terminal);
         when(routeDataRevisionRepositoryMock.findNearest(eq(terminal), eq(address.getLatitude()),
-                    eq(address.getLongitude()), Mockito.any(Date.class))).thenReturn(routeDataRevisionDB);
+                    eq(address.getLongitude()))).thenReturn(routeDataRevisionDB);
 
         RouteDataRevision routeDataRevision = sut.getRouteDataRevision(BigInteger.ONE, address);
 
@@ -104,7 +103,7 @@ public class RouteDataRevisionServiceImplUnitTest {
 
         when(terminalServiceMock.getByUniqueId(BigInteger.ONE)).thenReturn(terminal);
         when(routeDataRevisionRepositoryMock.findNearest(eq(terminal), eq(address.getLatitude()),
-                    eq(address.getLongitude()), Mockito.any(Date.class))).thenReturn(null);
+                    eq(address.getLongitude()))).thenReturn(null);
 
         try {
             sut.getRouteDataRevision(BigInteger.ONE, new Address(BigDecimal.ONE, BigDecimal.TEN));

@@ -33,8 +33,7 @@ public class RouteDataRevisionServiceImpl implements RouteDataRevisionService {
     @Transactional(readOnly = true)
     public RouteDataRevision getRouteDataRevision(Terminal terminal, GeoLocation destination) {
 
-        return routeDataRevisionRepository.findNearest(terminal, destination.getLatitude(), destination.getLongitude(),
-                new Date());
+        return routeDataRevisionRepository.findNearest(terminal, destination.getLatitude(), destination.getLongitude());
     }
 
 
@@ -50,7 +49,7 @@ public class RouteDataRevisionServiceImpl implements RouteDataRevisionService {
         }
 
         RouteDataRevision nearest = routeDataRevisionRepository.findNearest(terminal, destination.getLatitude(),
-                destination.getLongitude(), new Date());
+                destination.getLongitude());
 
         if (nearest == null) {
             throw new RevisionDoesNotExistException("Route revision for terminal with uid " + terminalUid

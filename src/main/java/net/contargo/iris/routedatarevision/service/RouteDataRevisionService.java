@@ -2,6 +2,7 @@ package net.contargo.iris.routedatarevision.service;
 
 import net.contargo.iris.GeoLocation;
 import net.contargo.iris.routedatarevision.RouteDataRevision;
+import net.contargo.iris.routedatarevision.ValidityRange;
 import net.contargo.iris.terminal.Terminal;
 
 import java.math.BigDecimal;

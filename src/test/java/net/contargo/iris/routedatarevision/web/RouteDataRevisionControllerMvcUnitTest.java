@@ -1,8 +1,8 @@
 package net.contargo.iris.routedatarevision.web;
 
+import net.contargo.iris.routedatarevision.ValidityRange;
 import net.contargo.iris.routedatarevision.dto.RouteDataRevisionDto;
 import net.contargo.iris.routedatarevision.dto.RouteDataRevisionDtoService;
-import net.contargo.iris.routedatarevision.service.ValidityRange;
 import net.contargo.iris.terminal.Terminal;
 import net.contargo.iris.terminal.dto.TerminalDto;
 import net.contargo.iris.terminal.service.TerminalService;

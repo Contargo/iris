@@ -1,9 +1,7 @@
 package net.contargo.iris.routedatarevision.dto;
 
 import net.contargo.iris.GeoLocation;
-import net.contargo.iris.routedatarevision.RouteDataRevision;
-import net.contargo.iris.routedatarevision.service.ValidityRange;
-import net.contargo.iris.terminal.Terminal;
+import net.contargo.iris.routedatarevision.ValidityRange;
 
 import java.math.BigDecimal;
 
@@ -64,10 +62,11 @@ public interface RouteDataRevisionDtoService {
 
 
     /**
-     * Checks if there are any {@link RouteDataRevision} having the specified terminalUniqueId and geolocation, whose
-     * {@link ValidityRange} overlaps with the given {@link ValidityRange} argument.
+     * Checks if there are any {@link net.contargo.iris.routedatarevision.RouteDataRevision} having the specified
+     * terminalUniqueId and geolocation, whose {@link ValidityRange} overlaps with the given {@link ValidityRange}
+     * argument.
      *
-     * @param  terminalUniqueId  The {@link Terminal}s unique Id.
+     * @param  terminalUniqueId  The {@link net.contargo.iris.terminal.Terminal}s unique Id.
      * @param  latitude  The geolocations latitude
      * @param  longitude  The geolocations longitude
      * @param  validityRange  The {@code ValidityRange} to check for overlaps.

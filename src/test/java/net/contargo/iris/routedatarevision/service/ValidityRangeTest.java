@@ -1,5 +1,7 @@
 package net.contargo.iris.routedatarevision.service;
 
+import net.contargo.iris.routedatarevision.ValidityRange;
+
 import org.junit.Test;
 
 import java.time.LocalDate;

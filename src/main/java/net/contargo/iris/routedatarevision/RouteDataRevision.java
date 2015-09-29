@@ -1,6 +1,5 @@
 package net.contargo.iris.routedatarevision;
 
-import net.contargo.iris.routedatarevision.service.ValidityRange;
 import net.contargo.iris.terminal.Terminal;
 import net.contargo.iris.util.DateUtil;
 

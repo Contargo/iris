@@ -3,6 +3,7 @@ package net.contargo.iris.routedatarevision.service;
 import net.contargo.iris.GeoLocation;
 import net.contargo.iris.address.Address;
 import net.contargo.iris.routedatarevision.RouteDataRevision;
+import net.contargo.iris.routedatarevision.ValidityRange;
 import net.contargo.iris.routedatarevision.persistence.RouteDataRevisionRepository;
 import net.contargo.iris.terminal.Terminal;
 import net.contargo.iris.terminal.service.TerminalService;

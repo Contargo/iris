@@ -1,4 +1,4 @@
-package net.contargo.iris.routedatarevision.service;
+package net.contargo.iris.routedatarevision;
 
 import java.time.LocalDate;
 

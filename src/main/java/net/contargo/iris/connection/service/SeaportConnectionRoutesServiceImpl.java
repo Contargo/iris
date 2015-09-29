@@ -52,7 +52,7 @@ public class SeaportConnectionRoutesServiceImpl implements SeaportConnectionRout
             List<MainRunConnection> connections = seaportTerminalConnectionService.getConnectionsToSeaPortByRouteType(
                     origin, routeType);
 
-            routes.addAll(connections.stream().map(connection ->
+            routes.addAll(connections.stream().filter(MainRunConnection::getEverythingEnabled).map(connection ->
                         getMainRunRoute(connection, routeInformation, routeType)).collect(Collectors.toList()));
         }
 

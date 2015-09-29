@@ -50,6 +50,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 
 
@@ -70,7 +71,9 @@ public class SeaportConnectionRoutesServiceImplUnitTest {
     private GeoLocation destination;
     private ContainerType containerType;
     private Terminal terminal;
-    private MainRunConnection connection;
+
+    @Mock
+    private MainRunConnection connectionMock;
 
     @Before
     public void setup() throws Exception {
@@ -89,11 +92,11 @@ public class SeaportConnectionRoutesServiceImplUnitTest {
         containerType = TWENTY_LIGHT;
         terminal = new Terminal();
 
-        connection = new MainRunConnection(seaPort);
-        connection.setTerminal(terminal);
+        when(connectionMock.getTerminal()).thenReturn(terminal);
+        when(connectionMock.getEverythingEnabled()).thenReturn(true);
 
         when(seaportTerminalConnectionService.getConnectionsToSeaPortByRouteType(any(Seaport.class),
-                    any(RouteType.class))).thenReturn(singletonList(connection));
+                    any(RouteType.class))).thenReturn(singletonList(connectionMock));
 
         sut = new SeaportConnectionRoutesServiceImpl(seaportTerminalConnectionService, mainRunAdvisorMock);
     }
@@ -129,11 +132,11 @@ public class SeaportConnectionRoutesServiceImplUnitTest {
 
         Route expectedRoute = getExpectedRoute(expectedRouteTypes);
 
-        connection.setRouteType(BARGE);
+        when(connectionMock.getRouteType()).thenReturn(BARGE);
 
         MainRunStrategy mainRunStrategy = mock(MainRunStrategy.class);
         when(mainRunAdvisorMock.advice(ONEWAY, IMPORT)).thenReturn(mainRunStrategy);
-        when(mainRunStrategy.getRoute(connection, destination, TWENTY_LIGHT)).thenReturn(expectedRoute);
+        when(mainRunStrategy.getRoute(connectionMock, destination, TWENTY_LIGHT)).thenReturn(expectedRoute);
 
         RouteInformation information = new RouteInformation(destination, ONEWAY, containerType, IMPORT,
                 RouteCombo.WATERWAY);
@@ -159,11 +162,11 @@ public class SeaportConnectionRoutesServiceImplUnitTest {
 
         Route expectedRoute = getExpectedRoute(expectedRouteTypes);
 
-        connection.setRouteType(RAIL);
+        when(connectionMock.getRouteType()).thenReturn(RAIL);
 
         MainRunStrategy mainRunStrategy = mock(MainRunStrategy.class);
         when(mainRunAdvisorMock.advice(ONEWAY, EXPORT)).thenReturn(mainRunStrategy);
-        when(mainRunStrategy.getRoute(connection, destination, TWENTY_LIGHT)).thenReturn(expectedRoute);
+        when(mainRunStrategy.getRoute(connectionMock, destination, TWENTY_LIGHT)).thenReturn(expectedRoute);
 
         RouteInformation information = new RouteInformation(destination, ONEWAY, containerType, EXPORT,
                 RouteCombo.RAILWAY);
@@ -190,11 +193,11 @@ public class SeaportConnectionRoutesServiceImplUnitTest {
         expectedRouteTypes.add(BARGE);
 
         Route expectedRoute = getExpectedRoute(expectedRouteTypes);
-        connection.setRouteType(BARGE);
+        when(connectionMock.getRouteType()).thenReturn(BARGE);
 
         MainRunStrategy mainRunStrategy = mock(MainRunStrategy.class);
         when(mainRunAdvisorMock.advice(ROUNDTRIP, IMPORT)).thenReturn(mainRunStrategy);
-        when(mainRunStrategy.getRoute(connection, destination, TWENTY_LIGHT)).thenReturn(expectedRoute);
+        when(mainRunStrategy.getRoute(connectionMock, destination, TWENTY_LIGHT)).thenReturn(expectedRoute);
 
         RouteInformation information = new RouteInformation(destination, ROUNDTRIP, containerType, IMPORT,
                 RouteCombo.WATERWAY);
@@ -221,8 +224,16 @@ public class SeaportConnectionRoutesServiceImplUnitTest {
         expectedFirstRouteTypes.add(TRUCK);
 
         Route expectedFirstRoute = getExpectedRoute(expectedFirstRouteTypes);
-        MainRunConnection firstConnection = new MainRunConnection(seaPort);
-        firstConnection.setRouteType(BARGE);
+
+        MainRunConnection firstConnection = mock(MainRunConnection.class);
+        when(firstConnection.getSeaport()).thenReturn(seaPort);
+        when(firstConnection.getEverythingEnabled()).thenReturn(true);
+        when(firstConnection.getRouteType()).thenReturn(BARGE);
+
+        MainRunConnection disabledConnection = mock(MainRunConnection.class);
+        when(disabledConnection.getSeaport()).thenReturn(seaPort);
+        when(disabledConnection.getEverythingEnabled()).thenReturn(false);
+        when(disabledConnection.getRouteType()).thenReturn(BARGE);
 
         List<RouteType> expectedSecondRouteTypes = new ArrayList<>();
         expectedSecondRouteTypes.add(RAIL);
@@ -230,8 +241,11 @@ public class SeaportConnectionRoutesServiceImplUnitTest {
         expectedSecondRouteTypes.add(TRUCK);
 
         Route expectedSecondRoute = getExpectedRoute(expectedSecondRouteTypes);
-        MainRunConnection secondConnection = new MainRunConnection(seaPort);
-        secondConnection.setRouteType(RAIL);
+
+        MainRunConnection secondConnection = mock(MainRunConnection.class);
+        when(secondConnection.getSeaport()).thenReturn(seaPort);
+        when(secondConnection.getEverythingEnabled()).thenReturn(true);
+        when(secondConnection.getRouteType()).thenReturn(RAIL);
 
         List<RouteType> expectedThirdRouteTypes = new ArrayList<>();
         expectedThirdRouteTypes.add(BARGE_RAIL);
@@ -239,13 +253,16 @@ public class SeaportConnectionRoutesServiceImplUnitTest {
         expectedThirdRouteTypes.add(TRUCK);
 
         Route expectedThirdRoute = getExpectedRoute(expectedThirdRouteTypes);
-        MainRunConnection thirdConnection = new MainRunConnection(seaPort);
-        thirdConnection.setRouteType(BARGE_RAIL);
+
+        MainRunConnection thirdConnection = mock(MainRunConnection.class);
+        when(thirdConnection.getSeaport()).thenReturn(seaPort);
+        when(thirdConnection.getEverythingEnabled()).thenReturn(true);
+        when(thirdConnection.getRouteType()).thenReturn(RAIL);
 
         MainRunStrategy mainRunStrategy = mock(MainRunStrategy.class);
         when(mainRunAdvisorMock.advice(eq(ONEWAY), eq(IMPORT))).thenReturn(mainRunStrategy);
-        when(seaportTerminalConnectionService.getConnectionsToSeaPortByRouteType(seaPort, BARGE)).thenReturn(
-            singletonList(firstConnection));
+        when(seaportTerminalConnectionService.getConnectionsToSeaPortByRouteType(seaPort, BARGE)).thenReturn(asList(
+                firstConnection, disabledConnection));
         when(seaportTerminalConnectionService.getConnectionsToSeaPortByRouteType(seaPort, RAIL)).thenReturn(
             singletonList(secondConnection));
         when(seaportTerminalConnectionService.getConnectionsToSeaPortByRouteType(seaPort, BARGE_RAIL)).thenReturn(
@@ -285,15 +302,15 @@ public class SeaportConnectionRoutesServiceImplUnitTest {
         GeoLocation destination = new GeoLocation(BigDecimal.ONE, BigDecimal.ONE);
         Terminal terminal = new Terminal();
 
-        connection.setTerminal(terminal);
+        when(connectionMock.getTerminal()).thenReturn(terminal);
 
         Route expectedRoute = mock(Route.class);
         MainRunStrategy mainRunStrategy = mock(MainRunStrategy.class);
         when(mainRunAdvisorMock.advice(ONEWAY, IMPORT)).thenReturn(mainRunStrategy);
-        when(mainRunStrategy.getRoute(connection, destination, TWENTY_LIGHT)).thenReturn(expectedRoute);
+        when(mainRunStrategy.getRoute(connectionMock, destination, TWENTY_LIGHT)).thenReturn(expectedRoute);
 
         RouteInformation information = new RouteInformation(destination, ONEWAY, TWENTY_LIGHT, IMPORT, null);
-        Route route = sut.getMainRunRoute(connection, information, BARGE);
+        Route route = sut.getMainRunRoute(connectionMock, information, BARGE);
 
         assertThat(route, is(expectedRoute));
     }
@@ -303,6 +320,6 @@ public class SeaportConnectionRoutesServiceImplUnitTest {
     public void testGetMainRunConnectionWithException() {
 
         RouteInformation information = new RouteInformation(destination, ONEWAY, TWENTY_LIGHT, IMPORT, null);
-        sut.getMainRunRoute(connection, information, TRUCK);
+        sut.getMainRunRoute(connectionMock, information, TRUCK);
     }
 }

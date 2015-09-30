@@ -88,13 +88,20 @@ public class RouteDataRevisionApiController {
     }
 
 
+    @ApiOperation(value = "Creates a new route revision.", notes = "Creates a new route revision.")
     @RequestMapping(value = "", method = POST)
     public ResponseEntity<RouteDataRevisionDto> create(@Valid @RequestBody RouteDataRevisionDto revision) {
+
+        revision.setId(null);
 
         return save(revision, CREATED);
     }
 
 
+    @ApiOperation(
+        value = "Replaces the route revision with the given id.",
+        notes = "Replaces the route revision with the given id."
+    )
     @RequestMapping(value = "/{id}", method = PUT)
     public ResponseEntity<RouteDataRevisionDto> update(@Valid @RequestBody RouteDataRevisionDto revision) {
 

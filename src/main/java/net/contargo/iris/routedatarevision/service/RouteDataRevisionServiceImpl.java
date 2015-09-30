@@ -91,7 +91,8 @@ public class RouteDataRevisionServiceImpl implements RouteDataRevisionService {
     @Override
     public RouteDataRevision save(RouteDataRevision routeDataRevision) {
 
-        return routeDataRevisionRepository.save(routeDataRevision);
+        RouteDataRevision save = routeDataRevisionRepository.save(routeDataRevision);
+        return getRouteDataRevision(save.getId());
     }
 
 

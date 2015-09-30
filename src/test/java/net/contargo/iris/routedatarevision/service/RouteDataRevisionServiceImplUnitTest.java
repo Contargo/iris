@@ -24,7 +24,6 @@ import java.math.BigInteger;
 
 import java.time.LocalDate;
 
-import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -163,8 +162,10 @@ public class RouteDataRevisionServiceImplUnitTest {
     public void save() {
 
         RouteDataRevision routeDataRevision = new RouteDataRevision();
+        routeDataRevision.setId(5L);
 
         when(routeDataRevisionRepositoryMock.save(routeDataRevision)).thenReturn(routeDataRevision);
+        when(routeDataRevisionRepositoryMock.findOne(5L)).thenReturn(routeDataRevision);
 
         RouteDataRevision result = sut.save(routeDataRevision);
 

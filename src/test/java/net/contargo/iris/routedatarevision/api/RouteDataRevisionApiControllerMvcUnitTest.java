@@ -105,7 +105,7 @@ public class RouteDataRevisionApiControllerMvcUnitTest {
         resultActions.andExpect(jsonPath("$.comment", is("abc")));
         resultActions.andExpect(jsonPath("$.latitude", comparesEqualTo(10)));
         resultActions.andExpect(jsonPath("$.longitude", comparesEqualTo(0)));
-        resultActions.andExpect(jsonPath("$.terminal.uniqueId", is("1")));
+        resultActions.andExpect(jsonPath("$.terminalUid", is("1")));
     }
 
 
@@ -130,10 +130,7 @@ public class RouteDataRevisionApiControllerMvcUnitTest {
     public void createRouteRevision() throws Exception {
 
         String requestBody = "{"
-            + ""
-            + "  \"terminal\": {"
-            + "\"uniqueId\": \"1300000000000001\""
-            + "},"
+            + "  \"terminalUid\": \"345\", "
             + "  \"truckDistanceOneWayInMeter\": 34,"
             + "  \"tollDistanceOneWayInMeter\": 0,"
             + "  \"airlineDistanceInMeter\": 0,"
@@ -168,9 +165,7 @@ public class RouteDataRevisionApiControllerMvcUnitTest {
 
         String requestBody = "{\n"
             + "  \"id\": 5,\n"
-            + "  \"terminal\": {\n"
-            + "    \"uniqueId\": \"1300000000000001\"\n"
-            + "  },\n"
+            + "  \"terminalUid\": \"345\", "
             + "  \"truckDistanceOneWayInMeter\": 34,\n"
             + "  \"tollDistanceOneWayInMeter\": 0,\n"
             + "  \"airlineDistanceInMeter\": 0,\n"
@@ -217,10 +212,7 @@ public class RouteDataRevisionApiControllerMvcUnitTest {
     public void createRouteRevisionInvalidRange() throws Exception {
 
         String requestBody = "{"
-            + ""
-            + "  \"terminal\": {"
-            + "\"uniqueId\": \"1300000000000001\""
-            + "},"
+            + "  \"terminalUid\": \"345\", "
             + "  \"truckDistanceOneWayInMeter\": 34,"
             + "  \"tollDistanceOneWayInMeter\": 0,"
             + "  \"airlineDistanceInMeter\": 0,"
@@ -243,10 +235,7 @@ public class RouteDataRevisionApiControllerMvcUnitTest {
     public void createRouteRevisionAlreadyExists() throws Exception {
 
         String requestBody = "{"
-            + ""
-            + "  \"terminal\": {"
-            + "\"uniqueId\": \"1300000000000001\""
-            + "},"
+            + "  \"terminalUid\": \"345\", "
             + "  \"truckDistanceOneWayInMeter\": 34,"
             + "  \"tollDistanceOneWayInMeter\": 0,"
             + "  \"airlineDistanceInMeter\": 0,"
@@ -258,8 +247,8 @@ public class RouteDataRevisionApiControllerMvcUnitTest {
             + "  \"validTo\": \"30.01.2015\""
             + "}";
 
-        when(revisionDtoServiceMock.existsEntry(eq("1300000000000001"), eq(new BigDecimal("4")),
-                    eq(new BigDecimal("3")), Mockito.any(ValidityRange.class), eq(null))).thenReturn(true);
+        when(revisionDtoServiceMock.existsEntry(eq("345"), eq(new BigDecimal("4")), eq(new BigDecimal("3")),
+                    Mockito.any(ValidityRange.class), eq(null))).thenReturn(true);
 
         ResultActions resultActions = perform(post("/routerevisions").contentType(APPLICATION_JSON)
                 .content(requestBody));

@@ -32,7 +32,6 @@ public class RouteDataRevision {
     private static final int MAX_VALUE_COORD = 180;
     private static final int MIN_VALUE_COORD = -180;
     private static final int COMMENT_SIZE = 5000;
-    private static final String DATE_FORMAT = "dd.MM.yyyy";
 
     @Id
     @GeneratedValue
@@ -179,25 +178,25 @@ public class RouteDataRevision {
 
     public Date getValidFrom() {
 
-        return validFrom;
+        return null == validFrom ? null : new Date(validFrom.getTime());
     }
 
 
     public void setValidFrom(Date validFrom) {
 
-        this.validFrom = validFrom;
+        this.validFrom = new Date(validFrom.getTime());
     }
 
 
     public Date getValidTo() {
 
-        return validTo;
+        return null == validTo ? null : new Date(validTo.getTime());
     }
 
 
     public void setValidTo(Date validTo) {
 
-        this.validTo = validTo;
+        this.validTo = new Date(validTo.getTime());
     }
 
 

@@ -8,6 +8,8 @@ import net.contargo.iris.terminal.Terminal;
 import net.contargo.iris.terminal.service.TerminalService;
 import net.contargo.iris.util.DateUtil;
 
+import org.joda.time.DateTime;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -68,6 +70,8 @@ public class RouteDataRevisionDtoServiceImplUnitTest {
         routeDataRevision.setLatitude(BigDecimal.ONE);
         routeDataRevision.setLatitude(BigDecimal.ONE);
         routeDataRevision.setRadiusInMeter(BigDecimal.ONE);
+        routeDataRevision.setValidFrom(new DateTime().toDate());
+        routeDataRevision.setValidTo(new DateTime().plusDays(1).toDate());
 
         routeDataRevisions = singletonList(routeDataRevision);
 

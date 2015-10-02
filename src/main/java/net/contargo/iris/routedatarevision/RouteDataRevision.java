@@ -184,7 +184,7 @@ public class RouteDataRevision {
 
     public void setValidFrom(Date validFrom) {
 
-        this.validFrom = new Date(validFrom.getTime());
+        this.validFrom = null == validFrom ? null : new Date(validFrom.getTime());
     }
 
 
@@ -196,7 +196,7 @@ public class RouteDataRevision {
 
     public void setValidTo(Date validTo) {
 
-        this.validTo = new Date(validTo.getTime());
+        this.validTo = null == validTo ? null : new Date(validTo.getTime());
     }
 
 

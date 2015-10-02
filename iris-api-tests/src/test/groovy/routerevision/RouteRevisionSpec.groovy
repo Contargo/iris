@@ -54,8 +54,8 @@ class RouteRevisionSpec extends Specification {
         response.status == 404
 
         and: "error object consists of code and message"
-        errorResponse.keySet().size() == 2
-        errorResponse.keySet().containsAll("code", "message")
+        errorResponse.keySet().size() == 3
+        errorResponse.keySet().containsAll("code", "message", "validationError")
 
     }
 }

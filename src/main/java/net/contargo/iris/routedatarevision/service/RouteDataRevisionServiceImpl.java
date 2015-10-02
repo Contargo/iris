@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import java.util.Date;
 import java.util.List;
 
 
@@ -92,21 +91,19 @@ public class RouteDataRevisionServiceImpl implements RouteDataRevisionService {
     public RouteDataRevision save(RouteDataRevision routeDataRevision) {
 
         RouteDataRevision save = routeDataRevisionRepository.save(routeDataRevision);
+
         return getRouteDataRevision(save.getId());
     }
 
 
     @Override
     public boolean overlapsWithExisting(BigInteger terminalUniqueId, BigDecimal latitude, BigDecimal longitude,
-                                        ValidityRange validityRange, Long routeRevisionId) {
-
+        ValidityRange validityRange, Long routeRevisionId) {
 
         List<RouteDataRevision> revisions = routeDataRevisionRepository.findByTerminalAndLatitudeAndLongitude(
                 terminalUniqueId, latitude, longitude);
 
-        return revisions.stream()
-                .filter(revision -> !revision.getId().equals(routeRevisionId))
-                .anyMatch(revision -> validityRange.overlapWith(revision.getValidityRange()));
-
+        return revisions.stream().filter(revision -> !revision.getId().equals(routeRevisionId)).anyMatch(revision ->
+                    validityRange.overlapWith(revision.getValidityRange()));
     }
 }

@@ -53,6 +53,8 @@ public class RouteDataRevisionController {
 
     private static final String CONTROLLER_CONTEXT = "routeRevisionManagement/";
     private static final String ROUTE_REVISION = "routeRevision";
+    private static final String ROUTEREVISION_EXISTS = "routerevision.exists";
+    private static final String ROUTEREVISION_VALIDITYRANGE = "routerevision.validityrange";
 
     private final RouteDataRevisionDtoService routeDataRevisionDtoService;
     private final TerminalService terminalService;
@@ -138,21 +140,22 @@ public class RouteDataRevisionController {
 
         if (routeDataRevisionDto.getValidFrom() != null) {
             try {
+                // may throw an IllegalArgumentException
                 ValidityRange validityRange = new ValidityRange(asLocalDate(routeDataRevisionDto.getValidFrom()),
-                        asLocalDate(routeDataRevisionDto.getValidTo())); // may throw an IllegalArgumentException
+                        asLocalDate(routeDataRevisionDto.getValidTo()));
 
                 if (routeDataRevisionDtoService.existsEntry(routeDataRevisionDto.getTerminal().getUniqueId(),
                             routeDataRevisionDto.getLatitude(), routeDataRevisionDto.getLongitude(), validityRange,
                             routeDataRevisionDto.getId())) {
-                    result.rejectValue("terminal.uniqueId", "routerevision.exists");
-                    result.rejectValue("longitude", "routerevision.exists");
-                    result.rejectValue("latitude", "routerevision.exists");
-                    result.rejectValue("validFrom", "routerevision.exists");
-                    result.rejectValue("validTo", "routerevision.exists");
+                    result.rejectValue("terminal.uniqueId", ROUTEREVISION_EXISTS);
+                    result.rejectValue("longitude", ROUTEREVISION_EXISTS);
+                    result.rejectValue("latitude", ROUTEREVISION_EXISTS);
+                    result.rejectValue("validFrom", ROUTEREVISION_EXISTS);
+                    result.rejectValue("validTo", ROUTEREVISION_EXISTS);
                 }
             } catch (IllegalArgumentException e) {
-                result.rejectValue("validTo", "routerevision.validityrange");
-                result.rejectValue("validFrom", "routerevision.validityrange");
+                result.rejectValue("validTo", ROUTEREVISION_VALIDITYRANGE);
+                result.rejectValue("validFrom", ROUTEREVISION_VALIDITYRANGE);
             }
         }
 

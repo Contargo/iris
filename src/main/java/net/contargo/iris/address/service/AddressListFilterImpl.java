@@ -25,7 +25,7 @@ public class AddressListFilterImpl implements AddressListFilter {
 
         String addressCountryCode = address.getCountryCode();
 
-        return addressCountryCode != null && countryCode.toUpperCase().equals(addressCountryCode.toUpperCase());
+        return addressCountryCode != null && countryCode.equalsIgnoreCase(addressCountryCode);
     }
 
 

@@ -114,7 +114,8 @@ public class RouteDataRevisionApiController {
         ValidityRange validityRange;
 
         try {
-            validityRange = new ValidityRange(asLocalDate(revision.getValidFrom()), asLocalDate(revision.getValidTo())); // may throw an IllegalArgumentException
+            // may throw an IllegalArgumentException
+            validityRange = new ValidityRange(asLocalDate(revision.getValidFrom()), asLocalDate(revision.getValidTo()));
         } catch (IllegalArgumentException e) {
             throw new RestApiException(messageSource.getMessage("routerevision.validityrange", null, getLocale()),
                 "routerevision.validityrange", BAD_REQUEST);

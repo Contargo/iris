@@ -7,9 +7,11 @@ import net.contargo.iris.address.nominatim.service.AddressService;
 import net.contargo.iris.address.service.AddressServiceWrapper;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
+import static java.util.Collections.singletonList;
 
 
 /**
@@ -40,9 +42,9 @@ public class AddressDtoServiceImpl implements AddressDtoService {
 
         List<AddressListDto> listOfLists;
 
-        AddressListDto osmList = new AddressListDto("Result", Arrays.asList(addressDto));
+        AddressListDto osmList = new AddressListDto("Result", singletonList(addressDto));
 
-        listOfLists = Arrays.asList(osmList);
+        listOfLists = singletonList(osmList);
 
         return listOfLists;
     }
@@ -62,13 +64,7 @@ public class AddressDtoServiceImpl implements AddressDtoService {
 
         List<AddressList> addressListList = addressServiceWrapper.getAddressesByDetails(addressDetails);
 
-        List<AddressListDto> addressListDtoList = new ArrayList<>();
-
-        for (AddressList addressList : addressListList) {
-            addressListDtoList.add(new AddressListDto(addressList));
-        }
-
-        return addressListDtoList;
+        return addressListList.stream().map(AddressListDto::new).collect(Collectors.toList());
     }
 
 

@@ -6,6 +6,7 @@ import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiImplicitParam;
 import com.wordnik.swagger.annotations.ApiImplicitParams;
 import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
 
 import net.contargo.iris.GeoLocation;
 import net.contargo.iris.api.RestApiErrorDto;
@@ -25,6 +26,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -103,7 +105,10 @@ public class RouteDataRevisionApiController {
         notes = "Replaces the route revision with the given id."
     )
     @RequestMapping(value = "/{id}", method = PUT)
-    public ResponseEntity<RouteDataRevisionDto> update(@Valid @RequestBody RouteDataRevisionDto revision) {
+    public ResponseEntity<RouteDataRevisionDto> update(@Valid @RequestBody RouteDataRevisionDto revision,
+        @ApiParam(value = "ID identifying a route revision.", required = true)
+        @PathVariable("id")
+        long id) {
 
         return save(revision, OK);
     }

@@ -16,6 +16,8 @@ import net.contargo.iris.routedatarevision.dto.RouteDataRevisionDto;
 import net.contargo.iris.routedatarevision.dto.RouteDataRevisionDtoService;
 import net.contargo.iris.routedatarevision.service.RevisionDoesNotExistException;
 
+import org.slf4j.Logger;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.context.MessageSource;
@@ -31,9 +33,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.lang.invoke.MethodHandles;
+
 import javax.validation.Valid;
 
 import static net.contargo.iris.util.DateUtil.asLocalDate;
+
+import static org.slf4j.LoggerFactory.getLogger;
 
 import static org.springframework.context.i18n.LocaleContextHolder.getLocale;
 
@@ -49,11 +55,14 @@ import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 /**
  * @author  Sandra Thieme - thieme@synyx.de
+ * @author  Oliver Messner - messner@synyx.de
  */
 @Api(value = "/routerevisions", description = "API endpoint to retrieve routerevisions.")
 @Controller
 @RequestMapping(value = "/routerevisions")
 public class RouteDataRevisionApiController {
+
+    private static final Logger LOG = getLogger(MethodHandles.lookup().lookupClass());
 
     private final RouteDataRevisionDtoService routeDataRevisionDtoService;
     private final MessageSource messageSource;
@@ -94,6 +103,8 @@ public class RouteDataRevisionApiController {
     @RequestMapping(value = "", method = POST)
     public ResponseEntity<RouteDataRevisionDto> create(@Valid @RequestBody RouteDataRevisionDto revision) {
 
+        LOG.info("Processing POST request on route revision with id {}", revision.getId());
+
         revision.setId(null);
 
         return save(revision, CREATED);
@@ -109,6 +120,10 @@ public class RouteDataRevisionApiController {
         @ApiParam(value = "ID identifying a route revision.", required = true)
         @PathVariable("id")
         long id) {
+
+        LOG.info("Processing PUT request on route revision with id {}", revision.getId());
+
+        revision.setId(id);
 
         return save(revision, OK);
     }
@@ -127,7 +142,7 @@ public class RouteDataRevisionApiController {
         }
 
         if (routeDataRevisionDtoService.existsEntry(revision.getTerminal().getUniqueId(), revision.getLatitude(),
-                    revision.getLongitude(), validityRange, null)) {
+                    revision.getLongitude(), validityRange, revision.getId())) {
             throw new RestApiException(messageSource.getMessage("routerevision.exists", null, getLocale()),
                 "routerevision.exists", BAD_REQUEST);
         }

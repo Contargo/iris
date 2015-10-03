@@ -25,6 +25,7 @@ import javax.validation.constraints.Size;
  * Data Transfer Object for the {@link net.contargo.iris.routedatarevision.RouteDataRevision}.
  *
  * @author  David Schilling - schilling@synyx.de
+ * @author  Oliver Messner - messner@synyx.de
  */
 public class RouteDataRevisionDto {
 
@@ -66,11 +67,11 @@ public class RouteDataRevisionDto {
 
     @NotNull
     @DateTimeFormat(pattern = DATE_FORMAT)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_FORMAT)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_FORMAT, timezone = "CET")
     private Date validFrom;
 
     @DateTimeFormat(pattern = DATE_FORMAT)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_FORMAT)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_FORMAT, timezone = "CET")
     private Date validTo;
 
     public RouteDataRevisionDto(RouteDataRevision routeDataRevision) {

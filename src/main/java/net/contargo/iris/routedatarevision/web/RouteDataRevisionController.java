@@ -33,6 +33,8 @@ import javax.validation.Valid;
 
 import static net.contargo.iris.util.DateUtil.asLocalDate;
 
+import static org.springframework.context.i18n.LocaleContextHolder.getLocale;
+
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
@@ -70,7 +72,7 @@ public class RouteDataRevisionController {
     @InitBinder
     protected void initBinder(WebDataBinder binder) {
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat(RouteDataRevisionDto.DATE_FORMAT);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(RouteDataRevisionDto.DATE_FORMAT, getLocale());
         binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
     }
 

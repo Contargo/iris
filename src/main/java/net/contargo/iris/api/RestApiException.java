@@ -22,6 +22,14 @@ public class RestApiException extends RuntimeException {
         this.httpStatus = httpStatus;
     }
 
+
+    public RestApiException(String message, Throwable cause, String code, HttpStatus httpStatus) {
+
+        super(message, cause);
+        this.code = code;
+        this.httpStatus = httpStatus;
+    }
+
     public String getCode() {
 
         return code;

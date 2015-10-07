@@ -103,7 +103,7 @@ public class RouteDataRevisionApiController {
     @RequestMapping(value = "", method = POST)
     public ResponseEntity<RouteDataRevisionDto> create(@Valid @RequestBody RouteDataRevisionDto revision) {
 
-        LOG.info("Processing POST request on route revision with id {}", revision.getId());
+        LOG.debug("Processing POST request on route revision with id {}", revision.getId());
 
         revision.setId(null);
 
@@ -121,7 +121,7 @@ public class RouteDataRevisionApiController {
         @PathVariable("id")
         long id) {
 
-        LOG.info("Processing PUT request on route revision with id {}", revision.getId());
+        LOG.debug("Processing PUT request on route revision with id {}", revision.getId());
 
         revision.setId(id);
 
@@ -137,7 +137,7 @@ public class RouteDataRevisionApiController {
             // may throw an IllegalArgumentException
             validityRange = new ValidityRange(asLocalDate(revision.getValidFrom()), asLocalDate(revision.getValidTo()));
         } catch (IllegalArgumentException e) {
-            throw new RestApiException(messageSource.getMessage("routerevision.validityrange", null, getLocale()), // NOSONAR: New exception is thrown in catch block...
+            throw new RestApiException(messageSource.getMessage("routerevision.validityrange", null, getLocale()), e,
                 "routerevision.validityrange", BAD_REQUEST);
         }
 

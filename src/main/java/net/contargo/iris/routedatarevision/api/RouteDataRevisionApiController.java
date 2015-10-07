@@ -137,8 +137,8 @@ public class RouteDataRevisionApiController {
             // may throw an IllegalArgumentException
             validityRange = new ValidityRange(asLocalDate(revision.getValidFrom()), asLocalDate(revision.getValidTo()));
         } catch (IllegalArgumentException e) {
-            throw new RestApiException(messageSource.getMessage("routerevision.validityrange", null, getLocale()),
-                "routerevision.validityrange", BAD_REQUEST); // NOSONAR: New exception is thrown in catch block...
+            throw new RestApiException(messageSource.getMessage("routerevision.validityrange", null, getLocale()), // NOSONAR: New exception is thrown in catch block...
+                "routerevision.validityrange", BAD_REQUEST);
         }
 
         if (routeDataRevisionDtoService.existsEntry(revision.getTerminal().getUniqueId(), revision.getLatitude(),

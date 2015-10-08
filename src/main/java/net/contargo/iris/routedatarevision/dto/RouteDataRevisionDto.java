@@ -42,15 +42,15 @@ public class RouteDataRevisionDto {
 
     @BigDecimalValidate(maxFractionalPlaces = MAX_FRAC_2, maxDecimalPlaces = MAX_DEC)
     @NotNull
-    private BigDecimal truckDistanceOneWayInMeter;
+    private BigDecimal truckDistanceOneWayInKilometer;
 
     @NotNull
     @BigDecimalValidate(maxFractionalPlaces = MAX_FRAC_2, maxDecimalPlaces = MAX_DEC)
-    private BigDecimal tollDistanceOneWayInMeter;
+    private BigDecimal tollDistanceOneWayInKilometer;
 
     @NotNull
     @BigDecimalValidate(maxFractionalPlaces = MAX_FRAC_2, maxDecimalPlaces = MAX_DEC)
-    private BigDecimal airlineDistanceInMeter;
+    private BigDecimal airlineDistanceInKilometer;
 
     @NotNull
     private BigDecimal latitude;
@@ -78,9 +78,9 @@ public class RouteDataRevisionDto {
 
         id = routeDataRevision.getId();
         terminal = new TerminalDto(routeDataRevision.getTerminal());
-        truckDistanceOneWayInMeter = routeDataRevision.getTruckDistanceOneWayInMeter();
-        tollDistanceOneWayInMeter = routeDataRevision.getTollDistanceOneWayInMeter();
-        airlineDistanceInMeter = routeDataRevision.getAirlineDistanceInMeter();
+        truckDistanceOneWayInKilometer = routeDataRevision.getTruckDistanceOneWayInKilometer();
+        tollDistanceOneWayInKilometer = routeDataRevision.getTollDistanceOneWayInKilometer();
+        airlineDistanceInKilometer = routeDataRevision.getAirlineDistanceInKilometer();
         latitude = routeDataRevision.getLatitude();
         longitude = routeDataRevision.getLongitude();
         radiusInMeter = routeDataRevision.getRadiusInMeter();
@@ -115,39 +115,39 @@ public class RouteDataRevisionDto {
     }
 
 
-    public BigDecimal getTruckDistanceOneWayInMeter() {
+    public BigDecimal getTruckDistanceOneWayInKilometer() {
 
-        return truckDistanceOneWayInMeter;
+        return truckDistanceOneWayInKilometer;
     }
 
 
-    public void setTruckDistanceOneWayInMeter(BigDecimal truckDistanceOneWayInMeter) {
+    public void setTruckDistanceOneWayInKilometer(BigDecimal truckDistanceOneWayInKilometer) {
 
-        this.truckDistanceOneWayInMeter = truckDistanceOneWayInMeter;
+        this.truckDistanceOneWayInKilometer = truckDistanceOneWayInKilometer;
     }
 
 
-    public BigDecimal getTollDistanceOneWayInMeter() {
+    public BigDecimal getTollDistanceOneWayInKilometer() {
 
-        return tollDistanceOneWayInMeter;
+        return tollDistanceOneWayInKilometer;
     }
 
 
-    public void setTollDistanceOneWayInMeter(BigDecimal tollDistanceOneWayInMeter) {
+    public void setTollDistanceOneWayInKilometer(BigDecimal tollDistanceOneWayInKilometer) {
 
-        this.tollDistanceOneWayInMeter = tollDistanceOneWayInMeter;
+        this.tollDistanceOneWayInKilometer = tollDistanceOneWayInKilometer;
     }
 
 
-    public BigDecimal getAirlineDistanceInMeter() {
+    public BigDecimal getAirlineDistanceInKilometer() {
 
-        return airlineDistanceInMeter;
+        return airlineDistanceInKilometer;
     }
 
 
-    public void setAirlineDistanceInMeter(BigDecimal airlineDistanceInMeter) {
+    public void setAirlineDistanceInKilometer(BigDecimal airlineDistanceInKilometer) {
 
-        this.airlineDistanceInMeter = airlineDistanceInMeter;
+        this.airlineDistanceInKilometer = airlineDistanceInKilometer;
     }
 
 
@@ -195,9 +195,9 @@ public class RouteDataRevisionDto {
         RouteDataRevision routeDataRevision = new RouteDataRevision();
         routeDataRevision.setId(id);
         routeDataRevision.setTerminal(terminalEntity);
-        routeDataRevision.setTruckDistanceOneWayInMeter(truckDistanceOneWayInMeter);
-        routeDataRevision.setTollDistanceOneWayInMeter(tollDistanceOneWayInMeter);
-        routeDataRevision.setAirlineDistanceInMeter(airlineDistanceInMeter);
+        routeDataRevision.setTruckDistanceOneWayInKilometer(truckDistanceOneWayInKilometer);
+        routeDataRevision.setTollDistanceOneWayInKilometer(tollDistanceOneWayInKilometer);
+        routeDataRevision.setAirlineDistanceInKilometer(airlineDistanceInKilometer);
         routeDataRevision.setLatitude(latitude);
         routeDataRevision.setLongitude(longitude);
         routeDataRevision.setRadiusInMeter(radiusInMeter);

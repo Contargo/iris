@@ -102,14 +102,14 @@
                     <iris:inputField property="radiusInMeter"
                                      messageKey="routerevision.radius" unitMessageKey="unit.meter"/>
 
-                    <iris:inputField property="truckDistanceOneWayInMeter"
-                                     messageKey="routerevision.truckdistanceoneway" unitMessageKey="unit.meter"/>
+                    <iris:inputField property="truckDistanceOneWayInKilometer"
+                                     messageKey="routerevision.truckdistanceoneway" unitMessageKey="unit.kilometer"/>
 
-                    <iris:inputField property="tollDistanceOneWayInMeter"
-                                     messageKey="routerevision.tolldistanceoneway" unitMessageKey="unit.meter"/>
+                    <iris:inputField property="tollDistanceOneWayInKilometer"
+                                     messageKey="routerevision.tolldistanceoneway" unitMessageKey="unit.kilometer"/>
 
-                    <iris:inputField property="airlineDistanceInMeter"
-                                     messageKey="routerevision.airlinedistance" unitMessageKey="unit.meter"/>
+                    <iris:inputField property="airlineDistanceInKilometer"
+                                     messageKey="routerevision.airlinedistance" unitMessageKey="unit.kilometer"/>
 
                     <iris:textArea property="comment" messageKey="routerevision.comment" maxlength="5000"/>
 

@@ -54,9 +54,9 @@ public class RouteDataRevisionPartEnricher implements RoutePartEnricher {
                         LOG.info("Routing from {} to CH without route revision", terminal.getName());
                     }
                 } else {
-                    routePart.getData().setDistance(routeDataRevision.getTruckDistanceOneWayInMeter());
-                    routePart.getData().setTollDistance(routeDataRevision.getTollDistanceOneWayInMeter());
-                    routePart.getData().setAirLineDistance(routeDataRevision.getAirlineDistanceInMeter());
+                    routePart.getData().setDistance(routeDataRevision.getTruckDistanceOneWayInKilometer());
+                    routePart.getData().setTollDistance(routeDataRevision.getTollDistanceOneWayInKilometer());
+                    routePart.getData().setAirLineDistance(routeDataRevision.getAirlineDistanceInKilometer());
                 }
             } catch (NotFoundException e) {
                 LOG.debug(e.getMessage());

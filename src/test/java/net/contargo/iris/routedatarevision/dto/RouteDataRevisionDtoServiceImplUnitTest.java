@@ -64,9 +64,9 @@ public class RouteDataRevisionDtoServiceImplUnitTest {
         routeDataRevision = new RouteDataRevision();
         routeDataRevision.setId(5L);
         routeDataRevision.setTerminal(terminal);
-        routeDataRevision.setTruckDistanceOneWayInMeter(BigDecimal.ONE);
-        routeDataRevision.setTollDistanceOneWayInMeter(BigDecimal.ONE);
-        routeDataRevision.setAirlineDistanceInMeter(BigDecimal.ONE);
+        routeDataRevision.setTruckDistanceOneWayInKilometer(BigDecimal.ONE);
+        routeDataRevision.setTollDistanceOneWayInKilometer(BigDecimal.ONE);
+        routeDataRevision.setAirlineDistanceInKilometer(BigDecimal.ONE);
         routeDataRevision.setLatitude(BigDecimal.ONE);
         routeDataRevision.setLatitude(BigDecimal.ONE);
         routeDataRevision.setRadiusInMeter(BigDecimal.ONE);
@@ -148,14 +148,14 @@ public class RouteDataRevisionDtoServiceImplUnitTest {
         terminal.setName("Foo");
 
         RouteDataRevision revision = new RouteDataRevision();
-        revision.setAirlineDistanceInMeter(BigDecimal.ONE);
+        revision.setAirlineDistanceInKilometer(BigDecimal.ONE);
         revision.setTerminal(terminal);
 
         when(routeDataRevisionServiceMock.getRouteDataRevision(BigInteger.ONE, geoLocation)).thenReturn(revision);
 
         RouteDataRevisionDto result = sut.findNearest("1", geoLocation);
 
-        assertThat(result.getAirlineDistanceInMeter(), is(BigDecimal.ONE));
+        assertThat(result.getAirlineDistanceInKilometer(), is(BigDecimal.ONE));
         assertThat(result.getTerminal().getName(), is("Foo"));
     }
 }

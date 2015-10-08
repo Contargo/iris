@@ -63,9 +63,9 @@ public class RouteDataRevisionPartEnricherUnitTest {
         address = new Address();
 
         RouteDataRevision routeDataRevision = new RouteDataRevision();
-        routeDataRevision.setAirlineDistanceInMeter(AIRLINE_DISTANCE);
-        routeDataRevision.setTollDistanceOneWayInMeter(TOLL_DISTANCE_ONE_WAY);
-        routeDataRevision.setTruckDistanceOneWayInMeter(TRUCK_DISTANCE_ONE_WAY);
+        routeDataRevision.setAirlineDistanceInKilometer(AIRLINE_DISTANCE);
+        routeDataRevision.setTollDistanceOneWayInKilometer(TOLL_DISTANCE_ONE_WAY);
+        routeDataRevision.setTruckDistanceOneWayInKilometer(TRUCK_DISTANCE_ONE_WAY);
 
         when(routeDataRevisionServiceMock.getRouteDataRevision(terminal, address)).thenReturn(routeDataRevision);
 

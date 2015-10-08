@@ -83,9 +83,9 @@ public class RouteDataRevisionApiControllerMvcUnitTest {
         terminal.setUniqueId("1");
 
         RouteDataRevisionDto dto = new RouteDataRevisionDto();
-        dto.setAirlineDistanceInMeter(BigDecimal.ONE);
-        dto.setTollDistanceOneWayInMeter(BigDecimal.TEN);
-        dto.setTruckDistanceOneWayInMeter(BigDecimal.ZERO);
+        dto.setAirlineDistanceInKilometer(BigDecimal.ONE);
+        dto.setTollDistanceOneWayInKilometer(BigDecimal.TEN);
+        dto.setTruckDistanceOneWayInKilometer(BigDecimal.ZERO);
         dto.setComment("abc");
         dto.setLatitude(BigDecimal.TEN);
         dto.setLongitude(BigDecimal.ZERO);
@@ -99,9 +99,9 @@ public class RouteDataRevisionApiControllerMvcUnitTest {
                 .accept(APPLICATION_JSON));
 
         resultActions.andExpect(status().isOk());
-        resultActions.andExpect(jsonPath("$.airlineDistanceInMeter", comparesEqualTo(1)));
-        resultActions.andExpect(jsonPath("$.tollDistanceOneWayInMeter", comparesEqualTo(10)));
-        resultActions.andExpect(jsonPath("$.truckDistanceOneWayInMeter", comparesEqualTo(0)));
+        resultActions.andExpect(jsonPath("$.airlineDistanceInKilometer", comparesEqualTo(1)));
+        resultActions.andExpect(jsonPath("$.tollDistanceOneWayInKilometer", comparesEqualTo(10)));
+        resultActions.andExpect(jsonPath("$.truckDistanceOneWayInKilometer", comparesEqualTo(0)));
         resultActions.andExpect(jsonPath("$.comment", is("abc")));
         resultActions.andExpect(jsonPath("$.latitude", comparesEqualTo(10)));
         resultActions.andExpect(jsonPath("$.longitude", comparesEqualTo(0)));
@@ -131,9 +131,9 @@ public class RouteDataRevisionApiControllerMvcUnitTest {
 
         String requestBody = "{"
             + "  \"terminalUid\": \"345\", "
-            + "  \"truckDistanceOneWayInMeter\": 34,"
-            + "  \"tollDistanceOneWayInMeter\": 0,"
-            + "  \"airlineDistanceInMeter\": 0,"
+            + "  \"truckDistanceOneWayInKilometer\": 34,"
+            + "  \"tollDistanceOneWayInKilometer\": 0,"
+            + "  \"airlineDistanceInKilometer\": 0,"
             + "  \"latitude\": 4,"
             + "  \"longitude\": 3,"
             + "  \"radiusInMeter\": 0,"
@@ -166,9 +166,9 @@ public class RouteDataRevisionApiControllerMvcUnitTest {
         String requestBody = "{\n"
             + "  \"id\": 5,\n"
             + "  \"terminalUid\": \"345\", "
-            + "  \"truckDistanceOneWayInMeter\": 34,\n"
-            + "  \"tollDistanceOneWayInMeter\": 0,\n"
-            + "  \"airlineDistanceInMeter\": 0,\n"
+            + "  \"truckDistanceOneWayInKilometer\": 34,\n"
+            + "  \"tollDistanceOneWayInKilometer\": 0,\n"
+            + "  \"airlineDistanceInKilometer\": 0,\n"
             + "  \"latitude\": 4,\n"
             + "  \"longitude\": 3,\n"
             + "  \"radiusInMeter\": 0,\n"
@@ -213,9 +213,9 @@ public class RouteDataRevisionApiControllerMvcUnitTest {
 
         String requestBody = "{"
             + "  \"terminalUid\": \"345\", "
-            + "  \"truckDistanceOneWayInMeter\": 34,"
-            + "  \"tollDistanceOneWayInMeter\": 0,"
-            + "  \"airlineDistanceInMeter\": 0,"
+            + "  \"truckDistanceOneWayInKilometer\": 34,"
+            + "  \"tollDistanceOneWayInKilometer\": 0,"
+            + "  \"airlineDistanceInKilometer\": 0,"
             + "  \"latitude\": 4,"
             + "  \"longitude\": 3,"
             + "  \"radiusInMeter\": 0,"
@@ -236,9 +236,9 @@ public class RouteDataRevisionApiControllerMvcUnitTest {
 
         String requestBody = "{"
             + "  \"terminalUid\": \"345\", "
-            + "  \"truckDistanceOneWayInMeter\": 34,"
-            + "  \"tollDistanceOneWayInMeter\": 0,"
-            + "  \"airlineDistanceInMeter\": 0,"
+            + "  \"truckDistanceOneWayInKilometer\": 34,"
+            + "  \"tollDistanceOneWayInKilometer\": 0,"
+            + "  \"airlineDistanceInKilometer\": 0,"
             + "  \"latitude\": 4,"
             + "  \"longitude\": 3,"
             + "  \"radiusInMeter\": 0,"

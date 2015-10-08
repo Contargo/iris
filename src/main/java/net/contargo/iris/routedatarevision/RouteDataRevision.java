@@ -41,13 +41,13 @@ public class RouteDataRevision {
     private Terminal terminal;
 
     @Column(name = "truckDistanceOneWay")
-    private BigDecimal truckDistanceOneWayInMeter;
+    private BigDecimal truckDistanceOneWayInKilometer;
 
     @Column(name = "tollDistanceOneWay")
-    private BigDecimal tollDistanceOneWayInMeter;
+    private BigDecimal tollDistanceOneWayInKilometer;
 
     @Column(name = "airlineDistance")
-    private BigDecimal airlineDistanceInMeter;
+    private BigDecimal airlineDistanceInKilometer;
 
     @Range(min = MIN_VALUE_COORD, max = MAX_VALUE_COORD)
     private BigDecimal latitude;
@@ -92,39 +92,39 @@ public class RouteDataRevision {
     }
 
 
-    public BigDecimal getTruckDistanceOneWayInMeter() {
+    public BigDecimal getTruckDistanceOneWayInKilometer() {
 
-        return truckDistanceOneWayInMeter;
+        return truckDistanceOneWayInKilometer;
     }
 
 
-    public void setTruckDistanceOneWayInMeter(BigDecimal truckDistanceOneWayInMeter) {
+    public void setTruckDistanceOneWayInKilometer(BigDecimal truckDistanceOneWayInKilometer) {
 
-        this.truckDistanceOneWayInMeter = truckDistanceOneWayInMeter;
+        this.truckDistanceOneWayInKilometer = truckDistanceOneWayInKilometer;
     }
 
 
-    public BigDecimal getTollDistanceOneWayInMeter() {
+    public BigDecimal getTollDistanceOneWayInKilometer() {
 
-        return tollDistanceOneWayInMeter;
+        return tollDistanceOneWayInKilometer;
     }
 
 
-    public void setTollDistanceOneWayInMeter(BigDecimal tollDistanceOneWayInMeter) {
+    public void setTollDistanceOneWayInKilometer(BigDecimal tollDistanceOneWayInKilometer) {
 
-        this.tollDistanceOneWayInMeter = tollDistanceOneWayInMeter;
+        this.tollDistanceOneWayInKilometer = tollDistanceOneWayInKilometer;
     }
 
 
-    public BigDecimal getAirlineDistanceInMeter() {
+    public BigDecimal getAirlineDistanceInKilometer() {
 
-        return airlineDistanceInMeter;
+        return airlineDistanceInKilometer;
     }
 
 
-    public void setAirlineDistanceInMeter(BigDecimal airlineDistanceInMeter) {
+    public void setAirlineDistanceInKilometer(BigDecimal airlineDistanceInKilometer) {
 
-        this.airlineDistanceInMeter = airlineDistanceInMeter;
+        this.airlineDistanceInKilometer = airlineDistanceInKilometer;
     }
 
 

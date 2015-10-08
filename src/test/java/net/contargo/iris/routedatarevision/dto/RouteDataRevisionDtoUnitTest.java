@@ -66,9 +66,9 @@ public class RouteDataRevisionDtoUnitTest {
         RouteDataRevision routeDataRevision = new RouteDataRevision();
         routeDataRevision.setId(id);
         routeDataRevision.setTerminal(terminal);
-        routeDataRevision.setTruckDistanceOneWayInMeter(truckDistanceOneWayInMeter);
-        routeDataRevision.setTollDistanceOneWayInMeter(tollDistanceOneWayInMeter);
-        routeDataRevision.setAirlineDistanceInMeter(airlineDistanceInMeter);
+        routeDataRevision.setTruckDistanceOneWayInKilometer(truckDistanceOneWayInMeter);
+        routeDataRevision.setTollDistanceOneWayInKilometer(tollDistanceOneWayInMeter);
+        routeDataRevision.setAirlineDistanceInKilometer(airlineDistanceInMeter);
         routeDataRevision.setLatitude(latitude);
         routeDataRevision.setLongitude(longitude);
         routeDataRevision.setRadiusInMeter(radiusInMeter);
@@ -80,9 +80,9 @@ public class RouteDataRevisionDtoUnitTest {
 
         assertThat(result.getId(), is(id));
         assertThat(result.getTerminal().getUniqueId(), equalTo(uniqueId));
-        assertThat(result.getTruckDistanceOneWayInMeter(), is(truckDistanceOneWayInMeter));
-        assertThat(result.getTollDistanceOneWayInMeter(), is(tollDistanceOneWayInMeter));
-        assertThat(result.getAirlineDistanceInMeter(), is(airlineDistanceInMeter));
+        assertThat(result.getTruckDistanceOneWayInKilometer(), is(truckDistanceOneWayInMeter));
+        assertThat(result.getTollDistanceOneWayInKilometer(), is(tollDistanceOneWayInMeter));
+        assertThat(result.getAirlineDistanceInKilometer(), is(airlineDistanceInMeter));
         assertThat(result.getLatitude(), is(latitude));
         assertThat(result.getLongitude(), is(longitude));
         assertThat(result.getRadiusInMeter(), is(radiusInMeter));
@@ -100,9 +100,9 @@ public class RouteDataRevisionDtoUnitTest {
         RouteDataRevisionDto routeDataRevisionDto = new RouteDataRevisionDto();
         routeDataRevisionDto.setId(id);
         routeDataRevisionDto.setTerminal(terminalDto);
-        routeDataRevisionDto.setTruckDistanceOneWayInMeter(truckDistanceOneWayInMeter);
-        routeDataRevisionDto.setTollDistanceOneWayInMeter(tollDistanceOneWayInMeter);
-        routeDataRevisionDto.setAirlineDistanceInMeter(airlineDistanceInMeter);
+        routeDataRevisionDto.setTruckDistanceOneWayInKilometer(truckDistanceOneWayInMeter);
+        routeDataRevisionDto.setTollDistanceOneWayInKilometer(tollDistanceOneWayInMeter);
+        routeDataRevisionDto.setAirlineDistanceInKilometer(airlineDistanceInMeter);
         routeDataRevisionDto.setLatitude(latitude);
         routeDataRevisionDto.setLongitude(longitude);
         routeDataRevisionDto.setRadiusInMeter(radiusInMeter);
@@ -114,9 +114,9 @@ public class RouteDataRevisionDtoUnitTest {
 
         assertThat(result.getTerminal().getId(), is(terminalId));
         assertThat(result.getId(), is(id));
-        assertThat(result.getTruckDistanceOneWayInMeter(), is(truckDistanceOneWayInMeter));
-        assertThat(result.getTollDistanceOneWayInMeter(), is(tollDistanceOneWayInMeter));
-        assertThat(result.getAirlineDistanceInMeter(), is(airlineDistanceInMeter));
+        assertThat(result.getTruckDistanceOneWayInKilometer(), is(truckDistanceOneWayInMeter));
+        assertThat(result.getTollDistanceOneWayInKilometer(), is(tollDistanceOneWayInMeter));
+        assertThat(result.getAirlineDistanceInKilometer(), is(airlineDistanceInMeter));
         assertThat(result.getLatitude(), is(latitude));
         assertThat(result.getLongitude(), is(longitude));
         assertThat(result.getRadiusInMeter(), is(radiusInMeter));

@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import org.mockito.Mock;
+import org.mockito.Mockito;
 
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -24,6 +25,7 @@ import java.math.BigInteger;
 
 import java.time.LocalDate;
 
+import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -71,7 +73,7 @@ public class RouteDataRevisionServiceImplUnitTest {
         RouteDataRevision routeDataRevisionDB = new RouteDataRevision();
 
         when(routeDataRevisionRepositoryMock.findNearest(eq(terminal), eq(address.getLatitude()),
-                    eq(address.getLongitude()))).thenReturn(routeDataRevisionDB);
+                    eq(address.getLongitude()), Mockito.any(Date.class))).thenReturn(routeDataRevisionDB);
 
         RouteDataRevision routeDataRevision = sut.getRouteDataRevision(terminal, address);
 
@@ -86,10 +88,30 @@ public class RouteDataRevisionServiceImplUnitTest {
         RouteDataRevision routeDataRevisionDB = new RouteDataRevision();
 
         when(terminalServiceMock.getByUniqueId(BigInteger.ONE)).thenReturn(terminal);
-        when(routeDataRevisionRepositoryMock.findNearest(eq(terminal), eq(address.getLatitude()),
-                    eq(address.getLongitude()))).thenReturn(routeDataRevisionDB);
 
-        RouteDataRevision routeDataRevision = sut.getRouteDataRevision(BigInteger.ONE, address);
+        Date date = new Date();
+        when(routeDataRevisionRepositoryMock.findNearest(eq(terminal), eq(address.getLatitude()),
+                    eq(address.getLongitude()), eq(date))).thenReturn(routeDataRevisionDB);
+
+        RouteDataRevision routeDataRevision = sut.getRouteDataRevision(BigInteger.ONE, address, date);
+
+        assertThat(routeDataRevision, is(routeDataRevisionDB));
+    }
+
+
+    @Test
+    public void getRouteDataRevisionByTerminalUidAndGeolocataionWithoutDate() {
+
+        Address address = new Address(BigDecimal.ONE, BigDecimal.TEN);
+        RouteDataRevision routeDataRevisionDB = new RouteDataRevision();
+
+        when(terminalServiceMock.getByUniqueId(BigInteger.ONE)).thenReturn(terminal);
+
+        Date date = new Date();
+        when(routeDataRevisionRepositoryMock.findNearest(eq(terminal), eq(address.getLatitude()),
+                    eq(address.getLongitude()), Mockito.any(Date.class))).thenReturn(routeDataRevisionDB);
+
+        RouteDataRevision routeDataRevision = sut.getRouteDataRevision(BigInteger.ONE, address, null);
 
         assertThat(routeDataRevision, is(routeDataRevisionDB));
     }
@@ -101,11 +123,13 @@ public class RouteDataRevisionServiceImplUnitTest {
         GeoLocation address = new GeoLocation(BigDecimal.ONE, BigDecimal.TEN);
 
         when(terminalServiceMock.getByUniqueId(BigInteger.ONE)).thenReturn(terminal);
+
+        Date date = new Date();
         when(routeDataRevisionRepositoryMock.findNearest(eq(terminal), eq(address.getLatitude()),
-                    eq(address.getLongitude()))).thenReturn(null);
+                    eq(address.getLongitude()), eq(date))).thenReturn(null);
 
         try {
-            sut.getRouteDataRevision(BigInteger.ONE, new Address(BigDecimal.ONE, BigDecimal.TEN));
+            sut.getRouteDataRevision(BigInteger.ONE, new Address(BigDecimal.ONE, BigDecimal.TEN), date);
         } catch (RevisionDoesNotExistException e) {
             assertThat(e.getCode(), is("routerevision.notfound"));
         }
@@ -118,7 +142,7 @@ public class RouteDataRevisionServiceImplUnitTest {
         when(terminalServiceMock.getByUniqueId(BigInteger.ONE)).thenReturn(null);
 
         try {
-            sut.getRouteDataRevision(BigInteger.ONE, new Address(BigDecimal.ONE, BigDecimal.TEN));
+            sut.getRouteDataRevision(BigInteger.ONE, new Address(BigDecimal.ONE, BigDecimal.TEN), new Date());
         } catch (RevisionDoesNotExistException e) {
             assertThat(e.getCode(), is("terminal.notfound"));
         }

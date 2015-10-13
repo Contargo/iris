@@ -91,7 +91,7 @@ public class RouteDataRevisionApiControllerMvcUnitTest {
         dto.setLongitude(BigDecimal.ZERO);
         dto.setTerminal(terminal);
 
-        when(revisionDtoServiceMock.findNearest(eq("1"), any(GeoLocation.class))).thenReturn(dto);
+        when(revisionDtoServiceMock.findNearest(eq("1"), any(GeoLocation.class), eq(null))).thenReturn(dto);
 
         ResultActions resultActions = perform(get("/routerevisions").param("terminalUid", "1")
                 .param("latitude", "10")
@@ -112,7 +112,7 @@ public class RouteDataRevisionApiControllerMvcUnitTest {
     @Test
     public void getNoRevision() throws Exception {
 
-        when(revisionDtoServiceMock.findNearest(eq("1"), any(GeoLocation.class))).thenThrow(
+        when(revisionDtoServiceMock.findNearest(eq("1"), any(GeoLocation.class), eq(null))).thenThrow(
             new RevisionDoesNotExistException("foo", "bar"));
 
         ResultActions resultActions = perform(get("/routerevisions").param("terminalUid", "1")

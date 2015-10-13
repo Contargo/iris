@@ -4,6 +4,7 @@ import net.contargo.iris.GeoLocation;
 import net.contargo.iris.api.NotFoundException;
 import net.contargo.iris.routedatarevision.RouteDataRevision;
 import net.contargo.iris.routedatarevision.ValidityRange;
+import net.contargo.iris.routedatarevision.dto.RouteDataRevisionDto;
 import net.contargo.iris.routedatarevision.persistence.RouteDataRevisionRepository;
 import net.contargo.iris.terminal.Terminal;
 import net.contargo.iris.terminal.service.TerminalService;
@@ -13,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 
@@ -31,14 +34,13 @@ public class RouteDataRevisionServiceImpl implements RouteDataRevisionService {
     @Override
     @Transactional(readOnly = true)
     public RouteDataRevision getRouteDataRevision(Terminal terminal, GeoLocation destination) {
-
-        return routeDataRevisionRepository.findNearest(terminal, destination.getLatitude(), destination.getLongitude());
+        return routeDataRevisionRepository.findNearest(terminal, destination.getLatitude(), destination.getLongitude(), new Date());
     }
 
 
     @Override
     @Transactional(readOnly = true)
-    public RouteDataRevision getRouteDataRevision(BigInteger terminalUid, GeoLocation destination) {
+    public RouteDataRevision getRouteDataRevision(BigInteger terminalUid, GeoLocation destination, Date date) {
 
         Terminal terminal = terminalService.getByUniqueId(terminalUid);
 
@@ -48,12 +50,13 @@ public class RouteDataRevisionServiceImpl implements RouteDataRevisionService {
         }
 
         RouteDataRevision nearest = routeDataRevisionRepository.findNearest(terminal, destination.getLatitude(),
-                destination.getLongitude());
+                destination.getLongitude(), date == null? new Date(): date);
 
         if (nearest == null) {
             throw new RevisionDoesNotExistException("Route revision for terminal with uid " + terminalUid
-                + " and coordinates " + destination.getLatitude()
-                + "," + destination.getLongitude() + " does not exist", "routerevision.notfound");
+                    + ", coordinates " + destination.getLatitude() + "," + destination.getLongitude() + " and date: " 
+                    + new SimpleDateFormat(RouteDataRevisionDto.DATE_FORMAT).format(date)
+                    + " does not exist", "routerevision.notfound");
         }
 
         return nearest;

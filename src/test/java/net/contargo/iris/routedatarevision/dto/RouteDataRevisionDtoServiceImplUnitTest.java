@@ -151,9 +151,11 @@ public class RouteDataRevisionDtoServiceImplUnitTest {
         revision.setAirlineDistanceInKilometer(BigDecimal.ONE);
         revision.setTerminal(terminal);
 
-        when(routeDataRevisionServiceMock.getRouteDataRevision(BigInteger.ONE, geoLocation)).thenReturn(revision);
+        Date date = new Date();
 
-        RouteDataRevisionDto result = sut.findNearest("1", geoLocation);
+        when(routeDataRevisionServiceMock.getRouteDataRevision(BigInteger.ONE, geoLocation, date)).thenReturn(revision);
+
+        RouteDataRevisionDto result = sut.findNearest("1", geoLocation, date);
 
         assertThat(result.getAirlineDistanceInKilometer(), is(BigDecimal.ONE));
         assertThat(result.getTerminal().getName(), is("Foo"));

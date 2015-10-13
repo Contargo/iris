@@ -1,10 +1,12 @@
 package net.contargo.iris.routedatarevision.dto;
 
 import net.contargo.iris.GeoLocation;
+import net.contargo.iris.routedatarevision.RouteDataRevision;
 import net.contargo.iris.routedatarevision.ValidityRange;
 
 import java.math.BigDecimal;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -82,16 +84,19 @@ public interface RouteDataRevisionDtoService {
     /**
      * Method to receive the correct {@link net.contargo.iris.routedatarevision.RouteDataRevision RouteDataRevision}
      * with the shortest distance between the requested {@link net.contargo.iris.address.Address} and the
-     * {@link net.contargo.iris.routedatarevision.RouteDataRevision RouteDataRevision} saved in the database.
+     * {@link net.contargo.iris.routedatarevision.RouteDataRevision RouteDataRevision} saved in the database which is
+     * valid according to its attributes validFrom and validTo.
      *
      * @param  terminalUniqueId  the {@link net.contargo.iris.terminal.Terminal}'s uid on which the
      *                           {@link net.contargo.iris.routedatarevision.RouteDataRevision RouteDataRevision}
      *                           information are based on
      * @param  geoLocation  describes the destination {@link GeoLocation} on which the
      *                      {@link net.contargo.iris.routedatarevision.RouteDataRevision} information are provided for
+     * @param  date  The date which has to be in the {@link RouteDataRevision}s validity range. If null now will be
+     *               used.
      *
      * @return  the {@link net.contargo.iris.routedatarevision.RouteDataRevision} with the best fit for the given
      *          {@link net.contargo.iris.terminal.Terminal} and {@link net.contargo.iris.address.Address}
      */
-    RouteDataRevisionDto findNearest(String terminalUniqueId, GeoLocation geoLocation);
+    RouteDataRevisionDto findNearest(String terminalUniqueId, GeoLocation geoLocation, Date date);
 }

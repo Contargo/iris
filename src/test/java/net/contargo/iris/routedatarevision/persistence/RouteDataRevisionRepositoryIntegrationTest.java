@@ -89,7 +89,8 @@ public class RouteDataRevisionRepositoryIntegrationTest {
 
         em.flush();
 
-        RouteDataRevision nearestRouteDataRevision = sut.findNearest(terminal, valueOf(49.1001), valueOf(8.9102));
+        RouteDataRevision nearestRouteDataRevision = sut.findNearest(terminal, valueOf(49.1001), valueOf(8.9102),
+                new Date());
 
         assertThat(nearestRouteDataRevision.getAirlineDistanceInKilometer(), is(ZERO));
         assertThat(nearestRouteDataRevision.getTollDistanceOneWayInKilometer(), is(ZERO));
@@ -111,7 +112,8 @@ public class RouteDataRevisionRepositoryIntegrationTest {
 
         em.flush();
 
-        RouteDataRevision nearestRouteDataRevision = sut.findNearest(terminal, valueOf(49.1001), valueOf(8.9102));
+        RouteDataRevision nearestRouteDataRevision = sut.findNearest(terminal, valueOf(49.1001), valueOf(8.9102),
+                new Date());
 
         assertThat(nearestRouteDataRevision, nullValue());
     }
@@ -128,7 +130,8 @@ public class RouteDataRevisionRepositoryIntegrationTest {
 
         em.flush();
 
-        RouteDataRevision nearestRouteDataRevision = sut.findNearest(terminal, valueOf(49.1001), valueOf(8.9102));
+        RouteDataRevision nearestRouteDataRevision = sut.findNearest(terminal, valueOf(49.1001), valueOf(8.9102),
+                new Date());
 
         assertThat(nearestRouteDataRevision, nullValue());
     }

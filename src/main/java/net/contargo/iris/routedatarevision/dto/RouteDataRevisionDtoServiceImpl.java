@@ -10,6 +10,7 @@ import net.contargo.iris.terminal.service.TerminalService;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -70,10 +71,10 @@ public class RouteDataRevisionDtoServiceImpl implements RouteDataRevisionDtoServ
 
 
     @Override
-    public RouteDataRevisionDto findNearest(String terminalUniqueId, GeoLocation geoLocation) {
+    public RouteDataRevisionDto findNearest(String terminalUniqueId, GeoLocation geoLocation, Date date) {
 
         return new RouteDataRevisionDto(routeDataRevisionService.getRouteDataRevision(new BigInteger(terminalUniqueId),
-                    geoLocation));
+                    geoLocation, date));
     }
 
 

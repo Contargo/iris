@@ -8,6 +8,7 @@ import net.contargo.iris.terminal.Terminal;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -48,11 +49,13 @@ public interface RouteDataRevisionService {
      *                      are based on
      * @param  destination  describes the destination {@link GeoLocation} on which the {@link RouteDataRevision}
      *                      information are provided for
+     * @param  date  The date which has to be in the {@link RouteDataRevision}s validity range. If null now will be
+     *               used.
      *
      * @return  the {@link RouteDataRevision} with the best fit for the given {@link Terminal} and
      *          {@link net.contargo.iris.address.Address}
      */
-    RouteDataRevision getRouteDataRevision(BigInteger terminalUid, GeoLocation destination);
+    RouteDataRevision getRouteDataRevision(BigInteger terminalUid, GeoLocation destination, Date date);
 
 
     /**

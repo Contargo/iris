@@ -22,6 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.context.MessageSource;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -34,6 +36,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.lang.invoke.MethodHandles;
+
+import java.util.Date;
 
 import javax.validation.Valid;
 
@@ -77,9 +81,9 @@ public class RouteDataRevisionApiController {
 
     @ApiOperation(
         value = "Receives the correct route revision with the shortest distance between the requested Geolocation and "
-            + "the route revision for the terminal belonging to the given terminalUid.",
+            + "the route revision for the terminal belonging to the given terminalUid and valid for the given date.",
         notes = "Receives the correct route revision with the shortest distance between the requested Geolocation and "
-            + "the route revision for the terminal belonging to the given terminalUid."
+            + "the route revision for the terminal belonging to the given terminalUid and valid for the given date.."
     )
     @ApiImplicitParams(
         {
@@ -91,9 +95,12 @@ public class RouteDataRevisionApiController {
     )
     @RequestMapping(value = "", method = GET, params = { "terminalUid", "latitude", "longitude" })
     public ResponseEntity<RouteDataRevisionDto> get(@RequestParam("terminalUid") String terminalUid,
-        @ApiIgnore GeoLocation geoLocation) {
+        @ApiIgnore GeoLocation geoLocation,
+        @RequestParam(value = "date", required = false)
+        @DateTimeFormat(pattern = RouteDataRevisionDto.DATE_FORMAT)
+        Date date) {
 
-        RouteDataRevisionDto dto = routeDataRevisionDtoService.findNearest(terminalUid, geoLocation);
+        RouteDataRevisionDto dto = routeDataRevisionDtoService.findNearest(terminalUid, geoLocation, date);
 
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }

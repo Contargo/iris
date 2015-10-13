@@ -1,7 +1,6 @@
 package net.contargo.iris.routedatarevision.dto;
 
 import net.contargo.iris.GeoLocation;
-import net.contargo.iris.routedatarevision.RouteDataRevision;
 import net.contargo.iris.routedatarevision.ValidityRange;
 
 import java.math.BigDecimal;
@@ -92,7 +91,7 @@ public interface RouteDataRevisionDtoService {
      *                           information are based on
      * @param  geoLocation  describes the destination {@link GeoLocation} on which the
      *                      {@link net.contargo.iris.routedatarevision.RouteDataRevision} information are provided for
-     * @param  date  The date which has to be in the {@link RouteDataRevision}s validity range. If null now will be
+     * @param  date  The date which has to be in the {@link RouteDataRevisionDto}s validity range. If null now will be
      *               used.
      *
      * @return  the {@link net.contargo.iris.routedatarevision.RouteDataRevision} with the best fit for the given

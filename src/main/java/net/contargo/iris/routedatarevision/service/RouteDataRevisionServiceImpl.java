@@ -17,6 +17,7 @@ import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 
 public class RouteDataRevisionServiceImpl implements RouteDataRevisionService {
@@ -34,7 +35,8 @@ public class RouteDataRevisionServiceImpl implements RouteDataRevisionService {
     @Override
     @Transactional(readOnly = true)
     public RouteDataRevision getRouteDataRevision(Terminal terminal, GeoLocation destination) {
-        return routeDataRevisionRepository.findNearest(terminal, destination.getLatitude(), destination.getLongitude(), new Date());
+        return routeDataRevisionRepository.findNearest(terminal, destination.getLatitude(), destination.getLongitude(), 
+                new Date());
     }
 
 
@@ -55,7 +57,7 @@ public class RouteDataRevisionServiceImpl implements RouteDataRevisionService {
         if (nearest == null) {
             throw new RevisionDoesNotExistException("Route revision for terminal with uid " + terminalUid
                     + ", coordinates " + destination.getLatitude() + "," + destination.getLongitude() + " and date: " 
-                    + new SimpleDateFormat(RouteDataRevisionDto.DATE_FORMAT).format(date)
+                    + new SimpleDateFormat(RouteDataRevisionDto.DATE_FORMAT, Locale.getDefault()).format(date)
                     + " does not exist", "routerevision.notfound");
         }
 

@@ -144,7 +144,7 @@ public class RouteDataRevisionServiceImplUnitTest {
         try {
             sut.getRouteDataRevision(BigInteger.ONE, new Address(BigDecimal.ONE, BigDecimal.TEN), new Date());
         } catch (RevisionDoesNotExistException e) {
-            assertThat(e.getCode(), is("terminal.notfound"));
+            assertThat(e.getCode(), is("terminal.error.notfound"));
         }
     }
 

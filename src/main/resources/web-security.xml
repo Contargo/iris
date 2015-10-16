@@ -10,8 +10,9 @@
         <security:intercept-url pattern="/web/login" access="permitAll()"/>
         <security:intercept-url pattern="/web/login/process" access="permitAll()"/>
         <security:intercept-url pattern="/web/**" access="hasRole('ROLE_ADMIN')"/>
-        <security:intercept-url pattern="/api/terminals/*" method="PUT" access="hasRole('ROLE_ADMIN')"/>
-        <security:intercept-url pattern="/api/seaports/*" method="PUT" access="hasRole('ROLE_ADMIN')"/>
+        <security:intercept-url pattern="/api/**" method="PUT" access="hasRole('ROLE_ADMIN')"/>
+        <security:intercept-url pattern="/api/**" method="POST" access="hasRole('ROLE_ADMIN')"/>
+        <security:intercept-url pattern="/api/**" method="DELETE" access="hasRole('ROLE_ADMIN')"/>
         <security:intercept-url pattern="/api/**" access="isAuthenticated()"/>
         <security:intercept-url pattern="/api-docs/**" access="isAuthenticated()"/>
         <security:form-login login-page="/web/login" login-processing-url="/web/login/process"

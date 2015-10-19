@@ -26,8 +26,8 @@ class RouteRevisionSpec extends Specification {
 
         and: "revision should consist of certain attributes"
         revision.keySet().size() == 11
-        revision.keySet().containsAll("tollDistanceOneWayInMeter", "airlineDistanceInMeter", "terminalUid", "latitude",
-                "radiusInMeter", "comment", "id", "truckDistanceOneWayInMeter", "longitude", "validTo", "validFrom")
+        revision.keySet().containsAll("tollDistanceOneWayInKilometer", "airlineDistanceInKilometer", "terminalUid", "latitude",
+                "radiusInMeter", "comment", "id", "truckDistanceOneWayInKilometer", "longitude", "validTo", "validFrom")
 
     }
 

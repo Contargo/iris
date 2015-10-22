@@ -68,4 +68,34 @@ class AuthorizationSpec extends Specification {
         then: "response status code should be 403 (Forbidden)"
         e.getResponse().status == 403
     }
+
+    def "request for routerevision creation"() {
+
+        given: "a REST client with user login credentials"
+        def client = ClientFactory.newUserClient()
+
+        when: "routerevision creation is requested"
+        client.post(path: "/api/routerevisions", contentType: ContentType.JSON)
+
+        then: "the request fails"
+        def e = thrown(HttpResponseException)
+
+        then: "response status code should be 403 (Forbidden)"
+        e.getResponse().status == 403
+    }
+
+    def "request for connection creation"() {
+
+        given: "a REST client with user login credentials"
+        def client = ClientFactory.newUserClient()
+
+        when: "connection creation is requested"
+        client.post(path: "/api/connections", contentType: ContentType.JSON)
+
+        then: "the request fails"
+        def e = thrown(HttpResponseException)
+
+        then: "response status code should be 403 (Forbidden)"
+        e.getResponse().status == 403
+    }
 }

@@ -106,7 +106,10 @@ public class RouteDataRevisionApiController {
     }
 
 
-    @ApiOperation(value = "Creates a new route revision.", notes = "Creates a new route revision.")
+    @ApiOperation(
+        value = "Creates a new route revision. Needs user role admin.",
+        notes = "Creates a new route revision. Needs user role admin."
+    )
     @RequestMapping(value = "", method = POST)
     public ResponseEntity<RouteDataRevisionDto> create(@Valid @RequestBody RouteDataRevisionDto revision) {
 
@@ -119,8 +122,8 @@ public class RouteDataRevisionApiController {
 
 
     @ApiOperation(
-        value = "Replaces the route revision with the given id.",
-        notes = "Replaces the route revision with the given id."
+        value = "Replaces the route revision with the given id. Needs user role admin.",
+        notes = "Replaces the route revision with the given id. Needs user role admin."
     )
     @RequestMapping(value = "/{id}", method = PUT)
     public ResponseEntity<RouteDataRevisionDto> update(@Valid @RequestBody RouteDataRevisionDto revision,

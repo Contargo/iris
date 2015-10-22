@@ -49,38 +49,38 @@
                         <a id="nav-trianglerouting" href="<c:url value="/web/triangle/"/>"><spring:message
                                 code="page.navbar.trianglerouting"/></a>
                     </li>
-                    <li class="dropdown">
-                        <a id="nav-management" data-toggle="dropdown" class="dropdown-toggle" href="#">
-                            Management <b class="caret"></b>
-                        </a>
-
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a id="nav-terminal-management" href="<c:url value="/web/terminals/"/>"><spring:message
-                                        code="page.navbar.terminalmanagement"/></a>
-                            </li>
-                            <li>
-                                <a id="nav-seaport-management" href="<c:url value="/web/seaports/"/>"><spring:message
-                                        code="page.navbar.seaportmanagement"/></a>
-                            </li>
-                            <li>
-                                <a id="nav-connection-management"
-                                   href="<c:url value="/web/connections/"/>"><spring:message
-                                        code="page.navbar.connectionmanagement"/></a>
-                            </li>
-                            <li>
-                                <a id="nav-staticaddress-management"
-                                   href="<c:url value="/web/staticaddresses/"/>"><spring:message
-                                        code="page.navbar.staticaddresses"/></a>
-                            </li>
-                            <li>
-                                <a id="nav-routerevision-management"
-                                   href="<c:url value="/web/routerevisions"/>"><spring:message
-                                        code="page.navbar.routerevisions"/></a>
-                            </li>
-                        </ul>
-                    </li>
-
+                    <sec:authorize access="hasRole('ROLE_ADMIN')">
+                        <li class="dropdown">
+                            <a id="nav-management" data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                Management <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a id="nav-terminal-management" href="<c:url value="/web/terminals/"/>"><spring:message
+                                            code="page.navbar.terminalmanagement"/></a>
+                                </li>
+                                <li>
+                                    <a id="nav-seaport-management" href="<c:url value="/web/seaports/"/>"><spring:message
+                                            code="page.navbar.seaportmanagement"/></a>
+                                </li>
+                                <li>
+                                    <a id="nav-connection-management"
+                                       href="<c:url value="/web/connections/"/>"><spring:message
+                                            code="page.navbar.connectionmanagement"/></a>
+                                </li>
+                                <li>
+                                    <a id="nav-staticaddress-management"
+                                       href="<c:url value="/web/staticaddresses/"/>"><spring:message
+                                            code="page.navbar.staticaddresses"/></a>
+                                </li>
+                                <li>
+                                    <a id="nav-routerevision-management"
+                                       href="<c:url value="/web/routerevisions"/>"><spring:message
+                                            code="page.navbar.routerevisions"/></a>
+                                </li>
+                            </ul>
+                        </li>
+                    </sec:authorize>
                     <ul class="nav pull-right">
                         <li>
                             <a id="logged-in-text" style="color: black;">Logged in as <sec:authentication

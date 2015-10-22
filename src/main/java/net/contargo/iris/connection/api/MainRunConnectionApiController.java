@@ -94,6 +94,10 @@ public class MainRunConnectionApiController {
     }
 
 
+    @ApiOperation(
+        value = "Creates the given mainrun connection. Needs user role admin.",
+        notes = "Creates the given mainrun connection. Needs user role admin."
+    )
     @RequestMapping(method = POST, value = "")
     public ResponseEntity createConnection(@Valid @RequestBody MainRunConnectionDto dto, Errors errors) {
 
@@ -116,6 +120,10 @@ public class MainRunConnectionApiController {
     }
 
 
+    @ApiOperation(
+        value = "Updates the given mainrun connection for the given id. Needs user role admin.",
+        notes = "Updates the given mainrun connection for the given id. Needs user role admin."
+    )
     @RequestMapping(method = PUT, value = "/{id}")
     public ResponseEntity<MainRunConnectionDto> updateConnection(@Valid @RequestBody MainRunConnectionDto dto,
         Errors errors) {

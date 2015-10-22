@@ -109,8 +109,8 @@ public class SeaportApiController {
 
 
     @ApiOperation(
-        value = "Saves the given seaport with the specified UID.",
-        notes = "Saves the given seaport with the specified UID.", response = Void.class
+        value = "Saves the given seaport with the specified UID. Needs user role admin.",
+        notes = "Saves the given seaport with the specified UID. Needs user role admin.", response = Void.class
     )
     @RequestMapping(value = "/{seaportUid}", method = RequestMethod.PUT)
     public ResponseEntity syncSeaport(@PathVariable("seaportUid") BigInteger seaportUID,

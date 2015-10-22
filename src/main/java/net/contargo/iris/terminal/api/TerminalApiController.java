@@ -158,8 +158,8 @@ public class TerminalApiController {
 
 
     @ApiOperation(
-        value = "Saves the terminal with the given terminalUID.",
-        notes = "Saves the terminal with the given terminalUID.", response = Void.class
+        value = "Saves the terminal with the given terminalUID. Needs user role admin.",
+        notes = "Saves the terminal with the given terminalUID. Needs user role admin.", response = Void.class
     )
     @RequestMapping(value = "/{terminalUid}", method = PUT)
     public ResponseEntity syncTerminal(@PathVariable("terminalUid") BigInteger terminalUid,

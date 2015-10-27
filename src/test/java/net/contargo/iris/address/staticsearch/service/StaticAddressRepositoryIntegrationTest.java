@@ -365,8 +365,7 @@ public class StaticAddressRepositoryIntegrationTest {
 
         em.persist(staticAddress);
 
-        List<StaticAddress> staticAddressList = sut.findByCityNormalizedAndSuburbNormalizedAndPostalcode(city, suburb,
-                postalcode);
+        List<StaticAddress> staticAddressList = sut.findByCityAndSuburbAndPostalcode(city, suburb, postalcode);
 
         assertThat(staticAddressList.get(0), is(staticAddress));
         assertThat(staticAddressList, hasSize(1));

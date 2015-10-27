@@ -76,10 +76,6 @@ public interface StaticAddressRepository extends JpaRepository<StaticAddress, Lo
     Page<StaticAddress> findMissingHashKeys(Pageable pageable);
 
 
-    List<StaticAddress> findByCityNormalizedAndSuburbNormalizedAndPostalcode(String city, String suburb,
-        String postalcode);
-
-
     StaticAddress findByLatitudeAndLongitude(BigDecimal latitude, BigDecimal longitude);
 
 
@@ -87,4 +83,7 @@ public interface StaticAddressRepository extends JpaRepository<StaticAddress, Lo
 
 
     List<StaticAddress> findByPostalcode(String postalCode);
+
+
+    List<StaticAddress> findByCityAndSuburbAndPostalcode(String city, String suburb, String postalcode);
 }

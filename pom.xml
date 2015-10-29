@@ -44,6 +44,8 @@
         <org.slf4j-version>1.7.6</org.slf4j-version>
         <jetty.version>8.1.16.v20140903</jetty.version>
         <logback.version>1.1.2</logback.version>
+        <org.aspectj-version>1.7.2</org.aspectj-version>
+
 
         <!-- Unit test and integration test coverage for sonar -->
         <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
@@ -465,6 +467,24 @@
             <version>1.2</version>
             <scope>provided</scope>
         </dependency>
+        <!-- AspectJ -->
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+            <version>${org.aspectj-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>${org.aspectj-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.timgroup</groupId>
+            <artifactId>java-statsd-client</artifactId>
+            <version>3.0.1</version>
+        </dependency>
+
     </dependencies>
 
     <build>

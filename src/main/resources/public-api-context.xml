@@ -18,6 +18,7 @@
 
     <!-- Enables the Spring MVC @Controller programming model -->
     <annotation-driven/>
+    <beans:import resource="monitoring-context.xml"/>
 
     <!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
     <beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">

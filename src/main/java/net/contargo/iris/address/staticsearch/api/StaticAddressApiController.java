@@ -7,7 +7,6 @@ import net.contargo.iris.GeoLocation;
 import net.contargo.iris.address.api.ListOfAddressListsResponse;
 import net.contargo.iris.address.dto.AddressDto;
 import net.contargo.iris.address.staticsearch.dto.StaticAddressDtoService;
-import net.contargo.iris.address.staticsearch.dto.StaticAddressesResponse;
 import net.contargo.iris.address.staticsearch.dto.StaticAddressesUidResponse;
 
 import org.slf4j.Logger;
@@ -56,19 +55,6 @@ public class StaticAddressApiController {
 
         this.staticAddressDtoService = staticAddressDtoService;
     }
-
-    @ApiOperation(value = "Returns all static addresses.", notes = "Returns all static addresses.")
-    @RequestMapping(method = RequestMethod.GET)
-    public StaticAddressesResponse getAll() {
-
-        StaticAddressesResponse response = new StaticAddressesResponse();
-        response.setAddressDtoList(staticAddressDtoService.getAll());
-
-        response.add(linkTo(getClass()).withSelfRel());
-
-        return response;
-    }
-
 
     @ApiOperation(
         value = "Returns all static addresses filtered by postalcode, city and country.",

@@ -34,15 +34,6 @@ public class StaticAddressDtoServiceImpl implements StaticAddressDtoService {
     }
 
 
-    @Override
-    public List<AddressDto> getAll() {
-
-        List<StaticAddress> staticAddresses = staticAddressService.getAll();
-
-        return convertStaticAddressListToDTOList(staticAddresses);
-    }
-
-
     private List<AddressDto> convertStaticAddressListToDTOList(List<StaticAddress> addressList) {
 
         List<AddressDto> addressDtoList = new ArrayList<>();

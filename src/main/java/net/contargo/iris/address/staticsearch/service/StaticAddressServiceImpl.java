@@ -147,13 +147,6 @@ public class StaticAddressServiceImpl implements StaticAddressService {
     }
 
 
-    @Override
-    public List<StaticAddress> getAll() {
-
-        return repository.findAll();
-    }
-
-
     /**
      * @param  staticAddressId
      *

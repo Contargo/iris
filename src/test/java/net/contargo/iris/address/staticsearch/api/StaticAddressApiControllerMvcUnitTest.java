@@ -23,7 +23,6 @@ import org.springframework.web.context.WebApplicationContext;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -75,38 +74,6 @@ public class StaticAddressApiControllerMvcUnitTest {
 
 
     @Test
-    public void getAll() throws Exception {
-
-        Map<String, String> addressMap = new HashMap<>();
-        addressMap.put("city", CITY);
-        addressMap.put("country_code", COUNTRY);
-        addressMap.put("postcode", POSTALCODE);
-        addressMap.put("suburb", SUBURB);
-
-        Address address = new Address();
-        address.setLatitude(BigDecimal.ONE);
-        address.setLongitude(BigDecimal.ONE);
-        address.setAddress(addressMap);
-
-        AddressDto dto = new AddressDto(address);
-
-        when(staticAddressDtoServiceMock.getAll()).thenReturn(Arrays.asList(dto));
-
-        ResultActions resultActions = mockMvc.perform(get("/staticaddresses").accept(APPLICATION_JSON));
-
-        resultActions.andExpect(status().isOk()).andExpect(content().contentType("application/json"));
-        resultActions.andExpect((jsonPath("$.staticAddressesResponse.addressDtoList[0].address.city", is(CITY))));
-        resultActions.andExpect((jsonPath("$.staticAddressesResponse.addressDtoList[0].address.postcode",
-                    is(POSTALCODE))));
-        resultActions.andExpect((jsonPath("$.staticAddressesResponse.addressDtoList[0].address.country_code",
-                    is(COUNTRY))));
-        resultActions.andExpect((jsonPath("$.staticAddressesResponse.addressDtoList[0].address.suburb", is(SUBURB))));
-        resultActions.andExpect((jsonPath("$.staticAddressesResponse.addressDtoList[0].latitude", is(1.0))));
-        resultActions.andExpect((jsonPath("$.staticAddressesResponse.addressDtoList[0].longitude", is(1.0))));
-    }
-
-
-    @Test
     public void getByPostalCodeAndCityAndCountry() throws Exception {
 
         Map<String, String> addressMap = new HashMap<>();
@@ -140,8 +107,10 @@ public class StaticAddressApiControllerMvcUnitTest {
         when(staticAddressDtoServiceMock.getStaticAddressByBoundingBox(any(GeoLocation.class), eq(20d))).thenReturn(
             asList(BigInteger.ONE, BigInteger.TEN));
 
-        ResultActions resultActions = mockMvc.perform(get("/staticaddresses").param("lat", "10").param("lon", "1")
-                .param("distance", "20").accept(APPLICATION_JSON));
+        ResultActions resultActions = mockMvc.perform(get("/staticaddresses").param("lat", "10")
+                .param("lon", "1")
+                .param("distance", "20")
+                .accept(APPLICATION_JSON));
 
         resultActions.andExpect(status().isOk()).andExpect(content().contentType("application/json;charset=UTF-8"));
         resultActions.andExpect((jsonPath("$.uids", hasSize(2))));

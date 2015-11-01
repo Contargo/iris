@@ -90,20 +90,6 @@ public class StaticAddressDtoServiceImplUnitTest {
 
 
     @Test
-    public void getAll() {
-
-        when(staticAddressServiceMock.getAll()).thenReturn(asList(staticAddress));
-
-        List<AddressDto> actualList = sut.getAll();
-
-        assertThat(actualList.size(), is(1));
-        assertThat(actualList.get(0).getAddress().get("city"), is(CITY));
-        assertThat(actualList.get(0).getAddress().get("postcode"), is(POSTALCODE));
-        assertThat(actualList.get(0).getCountryCode(), is(COUNTRY));
-    }
-
-
-    @Test
     public void testGetStaticAddressByGeolocation() {
 
         GeoLocation location = new GeoLocation(BigDecimal.ONE, BigDecimal.TEN);

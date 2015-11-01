@@ -587,19 +587,6 @@ public class StaticAddressServiceImplUnitTest {
 
 
     @Test
-    public void getAll() {
-
-        List<StaticAddress> staticAddresses = new ArrayList<>();
-        staticAddresses.add(kaSuedstadt);
-        staticAddresses.add(kaWeststadt);
-
-        when(staticAddressRepositoryMock.findAll()).thenReturn(staticAddresses);
-
-        assertThat(sut.getAll(), is(staticAddresses));
-    }
-
-
-    @Test
     public void testGetAddressListListForStaticAddressId() {
 
         List<AddressList> expectedListOfLists = new ArrayList<>();

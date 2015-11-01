@@ -76,14 +76,6 @@ public interface StaticAddressService {
 
 
     /**
-     * Finds all {@link StaticAddress}.
-     *
-     * @return  a list of all {@link StaticAddress}.
-     */
-    List<StaticAddress> getAll();
-
-
-    /**
      * @param  staticAddressId
      *
      * @return  The _one_ Address for the given static address ID. For consistent processing on client side it is

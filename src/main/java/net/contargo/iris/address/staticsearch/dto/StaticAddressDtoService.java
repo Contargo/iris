@@ -27,14 +27,6 @@ public interface StaticAddressDtoService {
 
 
     /**
-     * Finds all {@link AddressDto} of static addresses.
-     *
-     * @return  a list of all {@link AddressDto} of static addresses.
-     */
-    List<AddressDto> getAll();
-
-
-    /**
      * Returns one {@link net.contargo.iris.address.staticsearch.StaticAddress} wrapped in a list of lists for
      * compatibility with the client and consistency to the other interfaces, that deliver actual lists of address
      * lists. The static address is the one matching to the given Geolocation.

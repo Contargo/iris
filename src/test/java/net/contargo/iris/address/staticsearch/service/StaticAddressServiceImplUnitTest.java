@@ -459,11 +459,11 @@ public class StaticAddressServiceImplUnitTest {
         List<StaticAddress> staticAddresses = new ArrayList<>();
         staticAddresses.add(berlinSchoenefeld);
 
-        berlinSchoenefeld.setCityNormalized(CITY_BERLIN_NORMALIZED);
-        berlinSchoenefeld.setSuburbNormalized(CITY_SCHOENEFELD_NORMALIZED);
+        berlinSchoenefeld.setCityNormalized(CITY_BERLIN);
+        berlinSchoenefeld.setSuburbNormalized(CITY_SCHOENEFELD);
 
-        when(staticAddressRepositoryMock.findByCityAndSuburbAndPostalcode(berlinSchoenefeld.getCityNormalized(),
-                    berlinSchoenefeld.getSuburbNormalized(), berlinSchoenefeld.getPostalcode())).thenReturn(
+        when(staticAddressRepositoryMock.findByCityAndSuburbAndPostalcode(berlinSchoenefeld.getCity(),
+                    berlinSchoenefeld.getSuburb(), berlinSchoenefeld.getPostalcode())).thenReturn(
             staticAddresses);
 
         sut.saveStaticAddress(berlinSchoenefeld);
@@ -569,8 +569,8 @@ public class StaticAddressServiceImplUnitTest {
     public void updateStaticAddressWithKeyValueChangesAndDuplicates() {
 
         berlinSchoenefeld.setId(1L);
-        berlinSchoenefeld.setCityNormalized(CITY_BERLIN_NORMALIZED);
-        berlinSchoenefeld.setSuburbNormalized(CITY_SCHOENEFELD_NORMALIZED);
+        berlinSchoenefeld.setCity(CITY_BERLIN);
+        berlinSchoenefeld.setSuburb(CITY_SCHOENEFELD);
 
         List<StaticAddress> staticAddresses = new ArrayList<>();
         staticAddresses.add(berlinSchoenefeld);
@@ -578,8 +578,8 @@ public class StaticAddressServiceImplUnitTest {
         when(staticAddressRepositoryMock.findOne(berlinSchoenefeld.getId())).thenReturn(
             berlinSchoenefeldWithoutPostalcode);
 
-        when(staticAddressRepositoryMock.findByCityAndSuburbAndPostalcode(berlinSchoenefeld.getCityNormalized(),
-                    berlinSchoenefeld.getSuburbNormalized(), berlinSchoenefeld.getPostalcode())).thenReturn(
+        when(staticAddressRepositoryMock.findByCityAndSuburbAndPostalcode(berlinSchoenefeld.getCity(),
+                    berlinSchoenefeld.getSuburb(), berlinSchoenefeld.getPostalcode())).thenReturn(
             staticAddresses);
 
         sut.saveStaticAddress(berlinSchoenefeld);

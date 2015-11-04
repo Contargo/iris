@@ -353,7 +353,7 @@ public class StaticAddressServiceImpl implements StaticAddressService {
     private boolean checkDuplicateAddressParameters(StaticAddress staticAddress) {
 
         List<StaticAddress> staticAddresses = repository.findByCityAndSuburbAndPostalcode(
-                staticAddress.getCityNormalized(), staticAddress.getSuburbNormalized(), staticAddress.getPostalcode());
+                staticAddress.getCity(), staticAddress.getSuburb(), staticAddress.getPostalcode());
 
         return !staticAddresses.isEmpty();
     }

@@ -19,7 +19,6 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import javax.persistence.EntityManager;
@@ -29,9 +28,14 @@ import static org.hamcrest.CoreMatchers.is;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import static java.math.BigDecimal.ONE;
+
 
 /**
+ * Unit test of {@link StaticAddressService Impl}.
+ *
  * @author  Arnold Franke - franke@synyx.de
+ * @author  Tobias Schneider - schneider@synyx.de
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:application-context.xml")
@@ -56,35 +60,33 @@ public class StaticAddressServiceImplIntegrationTest {
     public void setUp() {
 
         sut = new StaticAddressServiceImpl(staticAddressRepository, uniqueIdSequenceService, normalizerService);
-        staticAddress = new StaticAddress();
-        staticAddress.setLatitude(BigDecimal.ONE);
-        staticAddress.setLongitude(BigDecimal.ONE);
-        staticAddress.setCity("City");
-        staticAddress.setCityNormalized("CITY");
-        staticAddress.setPostalcode("12345");
-        staticAddress.setCountry("DE");
 
-        em.createQuery("DELETE FROM StaticAddress s").executeUpdate();
+        staticAddress = new StaticAddress();
+        staticAddress.setLatitude(ONE);
+        staticAddress.setLongitude(ONE);
+        staticAddress.setCity("Entenhausen");
+        staticAddress.setCityNormalized("ENTENHAUSEN");
+        staticAddress.setPostalcode("999999");
+        staticAddress.setCountry("DE");
     }
 
 
     @Test
-    public void testSaveWithoutUniqueId() {
+    public void saveWithoutUniqueId() {
 
         UniqueIdSequence nextSequenceObject = getNextSequenceObjectFromDb();
-
         BigInteger nextSequence = nextSequenceObject.getNextId();
+
         StaticAddress savedStaticAddress = sut.saveStaticAddress(staticAddress);
         assertThat(savedStaticAddress.getUniqueId(), is(nextSequence));
-
         assertThat(getNextSequenceObjectFromDb().getNextId(), is(nextSequence.add(BigInteger.ONE)));
     }
 
 
     private UniqueIdSequence getNextSequenceObjectFromDb() {
 
-        String queryString = "SELECT o FROM UniqueIdSequence o WHERE o.entityName = 'StaticAddress'";
-
-        return em.createQuery(queryString, UniqueIdSequence.class).getSingleResult();
+        return em.createQuery("SELECT o FROM UniqueIdSequence o WHERE o.entityName = 'StaticAddress'",
+                UniqueIdSequence.class)
+            .getSingleResult();
     }
 }

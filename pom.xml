@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>net.contargo</groupId>
@@ -46,14 +47,12 @@
         <logback.version>1.1.2</logback.version>
         <org.aspectj-version>1.7.2</org.aspectj-version>
 
-
         <!-- Unit test and integration test coverage for sonar -->
         <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
         <sonar.jacoco.reportPath>${project.build.directory}/coverage-reports/jacoco-ut.exec</sonar.jacoco.reportPath>
-        <sonar.jacoco.itReportPath>${project.build.directory}/coverage-reports/jacoco-it.exec</sonar.jacoco.itReportPath>
-
+        <sonar.jacoco.itReportPath>${project.build.directory}/coverage-reports/jacoco-it.exec
+        </sonar.jacoco.itReportPath>
         <sonar.javascript.lcov.reportPath>target/jasmine/total-coverage.dat</sonar.javascript.lcov.reportPath>
-
         <srcDir>src/main/java</srcDir>
     </properties>
 
@@ -61,8 +60,8 @@
         <url>https://github.com/Contargo/iris</url>
         <connection>scm:git:https://github.com/Contargo/iris.git</connection>
         <developerConnection>scm:git:https://github.com/Contargo/iris.git</developerConnection>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
 
     <distributionManagement>
         <snapshotRepository>
@@ -468,12 +467,14 @@
             <version>1.2</version>
             <scope>provided</scope>
         </dependency>
+
         <!-- AspectJ -->
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjrt</artifactId>
             <version>${org.aspectj-version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjweaver</artifactId>
@@ -485,7 +486,6 @@
             <artifactId>java-statsd-client</artifactId>
             <version>3.0.1</version>
         </dependency>
-
     </dependencies>
 
     <build>

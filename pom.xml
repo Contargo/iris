@@ -40,7 +40,7 @@
 
         <org.springframework-version>4.2.2.RELEASE</org.springframework-version>
         <org.springframework.security-version>3.2.9.RELEASE</org.springframework.security-version>
-        <org.springframework.data.jpa-version>1.8.0.RELEASE</org.springframework.data.jpa-version>
+        <org.springframework.data.jpa-version>1.9.1.RELEASE</org.springframework.data.jpa-version>
 
         <org.slf4j-version>1.7.6</org.slf4j-version>
         <jetty.version>8.1.16.v20140903</jetty.version>

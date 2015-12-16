@@ -18,6 +18,7 @@ import java.util.List;
  * Repository for {@link net.contargo.iris.routedatarevision.RouteDataRevision RouteDataRevision} instances.
  *
  * @author  Tobias Schneider - schneider@synyx.de
+ * @author  David Schilling - schilling@synyx.de
  */
 public interface RouteDataRevisionRepository extends JpaRepository<RouteDataRevision, Long> {
 
@@ -26,9 +27,13 @@ public interface RouteDataRevisionRepository extends JpaRepository<RouteDataRevi
             + "FROM "
             + "    ("
             + "        SELECT *, "
-            + "               (6371000 * acos(cos(radians(:latitude)) * cos(radians(latitude)) "
-            + "               * cos(radians(longitude) - radians(:longitude)) + sin(radians(:latitude)) "
-            + "               * sin(radians(latitude)))) AS distance "
+            + "               (6371000 * acos( "
+            + "                 GREATEST(-1, LEAST(1, "
+            + "                     cos(radians(:latitude)) * cos(radians(latitude)) "
+            + "                     * cos(radians(longitude) - radians(:longitude)) + sin(radians(:latitude)) "
+            + "                     * sin(radians(latitude))"
+            + "                 ))"
+            + "                )) AS distance "
             + "        FROM RouteDataRevision "
             + "        WHERE terminal_id = :terminal AND "
             + "              validFrom <= :date AND "

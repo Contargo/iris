@@ -11,7 +11,12 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 
-public class DateUtilTest {
+/**
+ * Unit test of {@link DateUtil}.
+ *
+ * @author  Tobias Schneider - schneider@synyx.de
+ */
+public class DateUtilUnitTest {
 
     @Test
     public void asLocalDate() {

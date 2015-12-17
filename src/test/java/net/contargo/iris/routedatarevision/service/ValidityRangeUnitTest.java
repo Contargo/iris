@@ -11,7 +11,12 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 
-public class ValidityRangeTest {
+/**
+ * Unit test of {@link ValidityRange}.
+ *
+ * @author  Tobias Schneider - schneider@synyx.de
+ */
+public class ValidityRangeUnitTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void createWithValidFromNull() {

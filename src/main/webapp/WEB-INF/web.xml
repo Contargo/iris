@@ -17,8 +17,6 @@
     </listener>
 
     <session-config>
-        <!--  set session timeout to 8 hours -->
-        <session-timeout>480</session-timeout>
         <cookie-config>
             <name>IRISSESSION</name>
         </cookie-config>

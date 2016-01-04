@@ -33,8 +33,7 @@ import javax.validation.constraints.Size;
 // NOSONAR Don't want to override equals
 public class StaticAddress extends GeoLocation {
 
-    public static final String STATIC_ID = "static_id";
-
+    private static final String STATIC_ID = "static_id";
     private static final int POSTAL_CODE_MAX_SIZE = 10;
     private static final int COUNTRY_MAX_SIZE = 5;
     private static final int HASHKEY_MAX_SIZE = 5;

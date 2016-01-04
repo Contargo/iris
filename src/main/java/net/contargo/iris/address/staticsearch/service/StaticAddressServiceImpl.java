@@ -158,22 +158,6 @@ public class StaticAddressServiceImpl implements StaticAddressService {
     }
 
 
-    private void setEmptyValues(StaticAddress staticAddress) {
-
-        if (staticAddress.getCity() == null) {
-            staticAddress.setCity("");
-        }
-
-        if (staticAddress.getPostalcode() == null) {
-            staticAddress.setPostalcode("");
-        }
-
-        if (staticAddress.getSuburb() == null) {
-            staticAddress.setSuburb("");
-        }
-    }
-
-
     @Override
     public void normalizeFields(StaticAddress staticAddress) {
 
@@ -234,12 +218,26 @@ public class StaticAddressServiceImpl implements StaticAddressService {
     }
 
 
+    private void setEmptyValues(StaticAddress staticAddress) {
+
+        if (staticAddress.getCity() == null) {
+            staticAddress.setCity("");
+        }
+
+        if (staticAddress.getPostalcode() == null) {
+            staticAddress.setPostalcode("");
+        }
+
+        if (staticAddress.getSuburb() == null) {
+            staticAddress.setSuburb("");
+        }
+    }
+
+
     private StaticAddress updateStaticAddress(StaticAddress staticAddress) {
 
         StaticAddress staticAddressFromDb = repository.findOne(staticAddress.getId());
-
         boolean addressParametersDifferent = staticAddressFromDb.areAddressParametersDifferent(staticAddress);
-
         boolean coordinatesDifferent = staticAddressFromDb.areLatitudeAndLongitudeDifferent(staticAddress);
 
         if (addressParametersDifferent && checkDuplicateAddressParameters(staticAddress)) {

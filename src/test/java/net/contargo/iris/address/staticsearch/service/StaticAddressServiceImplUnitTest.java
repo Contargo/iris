@@ -34,6 +34,8 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+
 import static org.hamcrest.Matchers.closeTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -57,6 +59,7 @@ import static java.math.BigInteger.ONE;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 
 
 /**
@@ -68,32 +71,30 @@ import static java.util.Collections.emptyList;
 @RunWith(MockitoJUnitRunner.class)
 public class StaticAddressServiceImplUnitTest {
 
-    public static final long STATIC_ADDRESS_ID = 66L;
+    private static final long STATIC_ADDRESS_ID = 66L;
+    private static final String POSTAL_CODE_76137 = "76137";
+    private static final String POSTALCODE_76189 = "76189";
+    private static final String COUNTRY_DE = "DE";
+    private static final String CITY_KARLSRUHE = "Karlsruhe";
+    private static final String CITY_BERLIN = "Berlin";
+    private static final String CITY_OBERREUT = "Oberreut";
+    private static final String CITY_SCHOENEFELD = "Schoenefeld";
+    private static final String CITY_NEUSTADT_AN_DER_WEINSTRASSE = "Neustadt an der Weinstrasse";
+    private static final String CITY_KARLSRUHE_NORMALIZED = "KARLSRUHE";
+    private static final String CITY_BERLIN_NORMALIZED = "BERLIN";
+    private static final String CITY_SCHOENEFELD_NORMALIZED = "SCHOENEFELD";
+    private static final String CITY_OBERREUT_NORMALIZED = "CITY_OBERREUT";
+    private static final String CITY_NEUSTADT_NORMALIZED = "NEUSTADTANDERWEINSTRASSE";
+    private static final BigInteger UNIQUE_ID = new BigInteger("130100000000008");
 
-    public static final String POSTAL_CODE_76137 = "76137";
-    public static final String POSTALCODE_76189 = "76189";
-
-    public static final String COUNTRY_DE = "DE";
-
-    public static final String CITY_KARLSRUHE = "Karlsruhe";
-    public static final String CITY_BERLIN = "Berlin";
-    public static final String CITY_OBERREUT = "Oberreut";
-    public static final String CITY_SCHOENEFELD = "Schoenefeld";
-    public static final String CITY_NEUSTADT_AN_DER_WEINSTRASSE = "Neustadt an der Weinstrasse";
-
-    public static final String CITY_KARLSRUHE_NORMALIZED = "KARLSRUHE";
-    public static final String CITY_BERLIN_NORMALIZED = "BERLIN";
-    public static final String CITY_SCHOENEFELD_NORMALIZED = "SCHOENEFELD";
-    public static final String CITY_OBERREUT_NORMALIZED = "CITY_OBERREUT";
-    public static final String CITY_NEUSTADT_AN_DER_WEINSTRASSE_NORMALIZED = "NEUSTADTANDERWEINSTRASSE";
-    public static final BigInteger UNIQUE_ID = new BigInteger("130100000000008");
+    private StaticAddressServiceImpl sut;
 
     @Mock
     private StaticAddressRepository staticAddressRepositoryMock;
     @Mock
     private UniqueIdSequenceServiceImpl uniqueIdSequenceServiceMock;
-
-    private StaticAddressServiceImpl sut;
+    @Mock
+    private NormalizerServiceImpl normalizerServiceMock;
 
     private StaticAddress kaSuedstadt;
     private StaticAddress kaWeststadt;
@@ -101,70 +102,60 @@ public class StaticAddressServiceImplUnitTest {
     private StaticAddress berlinSchoenefeld;
     private StaticAddress berlinSchoenefeldWithoutPostalcode;
 
-    private NormalizerServiceImpl normalizerService;
-
     @Before
     public void setup() {
 
-        staticAddressRepositoryMock = mock(StaticAddressRepository.class);
-        normalizerService = mock(NormalizerServiceImpl.class);
-        sut = new StaticAddressServiceImpl(staticAddressRepositoryMock, uniqueIdSequenceServiceMock, normalizerService);
+        sut = new StaticAddressServiceImpl(staticAddressRepositoryMock, uniqueIdSequenceServiceMock,
+                normalizerServiceMock);
 
-        when(normalizerService.normalize(CITY_KARLSRUHE)).thenReturn(CITY_KARLSRUHE_NORMALIZED);
-        when(normalizerService.normalize(CITY_BERLIN)).thenReturn(CITY_BERLIN_NORMALIZED);
-        when(normalizerService.normalize(CITY_OBERREUT)).thenReturn(CITY_OBERREUT_NORMALIZED);
-        when(normalizerService.normalize(CITY_SCHOENEFELD)).thenReturn(CITY_SCHOENEFELD_NORMALIZED);
-        when(normalizerService.normalize(CITY_NEUSTADT_AN_DER_WEINSTRASSE)).thenReturn(
-            CITY_NEUSTADT_AN_DER_WEINSTRASSE_NORMALIZED);
+        when(normalizerServiceMock.normalize(CITY_KARLSRUHE)).thenReturn(CITY_KARLSRUHE_NORMALIZED);
+        when(normalizerServiceMock.normalize(CITY_BERLIN)).thenReturn(CITY_BERLIN_NORMALIZED);
+        when(normalizerServiceMock.normalize(CITY_OBERREUT)).thenReturn(CITY_OBERREUT_NORMALIZED);
+        when(normalizerServiceMock.normalize(CITY_SCHOENEFELD)).thenReturn(CITY_SCHOENEFELD_NORMALIZED);
+        when(normalizerServiceMock.normalize(CITY_NEUSTADT_AN_DER_WEINSTRASSE)).thenReturn(CITY_NEUSTADT_NORMALIZED);
 
-        initTestAddresses();
+        initaddresses();
     }
 
 
     @Test
-    public void testFindByPostalCodeAndCity() {
+    public void findByPostalCodeAndCity() {
 
         String postalCode = "78137";
         String city = CITY_KARLSRUHE;
         String normalizedCity = CITY_KARLSRUHE_NORMALIZED;
 
-        when(staticAddressRepositoryMock.findByPostalCodeAndCity(postalCode, normalizedCity + "%")).thenReturn(asList(
-                kaSuedstadt));
+        when(staticAddressRepositoryMock.findByPostalCodeAndCity(postalCode, normalizedCity + "%")).thenReturn(
+            singletonList(kaSuedstadt));
 
-        AddressList result = sut.findAddresses(postalCode, city, "");
-
-        assertThat(result.getAddresses().size(), is(1));
-
+        AddressList addresses = sut.findAddresses(postalCode, city, "");
+        assertThat(addresses.getAddresses().size(), is(1));
         verify(staticAddressRepositoryMock).findByPostalCodeAndCity(postalCode, normalizedCity + "%");
     }
 
 
     @Test
-    public void testFindByPostalcodeOnly() {
+    public void findByPostalcodeOnly() {
 
         String postalCode = "78137";
 
-        when(staticAddressRepositoryMock.findByPostalcode(postalCode)).thenReturn(asList(kaSuedstadt));
+        when(staticAddressRepositoryMock.findByPostalcode(postalCode)).thenReturn(singletonList(kaSuedstadt));
 
-        AddressList result = sut.findAddresses(postalCode, "", "");
-
-        assertThat(result.getAddresses().size(), is(1));
-
+        AddressList addresses = sut.findAddresses(postalCode, "", "");
+        assertThat(addresses.getAddresses().size(), is(1));
         verify(staticAddressRepositoryMock, times(2)).findByPostalcode(postalCode);
     }
 
 
     @Test
-    public void testFindByPostalcodeOnlyWithNullValues() {
+    public void findByPostalcodeOnlyWithNullValues() {
 
         String postalCode = "12345";
 
-        when(staticAddressRepositoryMock.findByPostalcode(postalCode)).thenReturn(asList(kaSuedstadt));
+        when(staticAddressRepositoryMock.findByPostalcode(postalCode)).thenReturn(singletonList(kaSuedstadt));
 
-        AddressList result = sut.findAddresses(postalCode, null, null);
-
-        assertThat(result.getAddresses().size(), is(1));
-
+        AddressList addresses = sut.findAddresses(postalCode, null, null);
+        assertThat(addresses.getAddresses().size(), is(1));
         verify(staticAddressRepositoryMock, times(2)).findByPostalcode(postalCode);
     }
 
@@ -183,9 +174,8 @@ public class StaticAddressServiceImplUnitTest {
         when(staticAddressRepositoryMock.findByCountryAndPostalCodeOrCity(postalCode, normalizedCity + "%", country))
             .thenReturn(asList(kaSuedstadt, kaWeststadt, kaNordstadt));
 
-        AddressList result = sut.findAddresses(postalCode, city, country);
-
-        assertThat(result.getAddresses().size(), is(3));
+        AddressList addresses = sut.findAddresses(postalCode, city, country);
+        assertThat(addresses.getAddresses().size(), is(3));
         verify(staticAddressRepositoryMock).findByCountryAndPostalCodeAndCity(postalCode, normalizedCity + "%",
             country);
         verify(staticAddressRepositoryMock).findByCountryAndPostalCodeOrCity(postalCode, normalizedCity + "%", country);
@@ -193,7 +183,7 @@ public class StaticAddressServiceImplUnitTest {
 
 
     @Test
-    public void testFindByCity() {
+    public void findByCity() {
 
         String postalCode = "";
         String city = CITY_KARLSRUHE;
@@ -214,7 +204,7 @@ public class StaticAddressServiceImplUnitTest {
 
 
     @Test
-    public void testFindById() {
+    public void findById() {
 
         StaticAddress expectedAddress = new StaticAddress();
         expectedAddress.setCountry("Unique Attribute for distinction");
@@ -245,7 +235,7 @@ public class StaticAddressServiceImplUnitTest {
 
 
     @Test
-    public void testFindByPostalCodeAndCityAndCountry() {
+    public void findByPostalCodeAndCityAndCountry() {
 
         String postalCode = POSTAL_CODE_76137;
         String city = CITY_KARLSRUHE;
@@ -253,11 +243,10 @@ public class StaticAddressServiceImplUnitTest {
         String country = COUNTRY_DE;
 
         when(staticAddressRepositoryMock.findByCountryAndPostalCodeAndCity(postalCode, normalizedCity + "%", country))
-            .thenReturn(asList(kaSuedstadt));
+            .thenReturn(singletonList(kaSuedstadt));
 
-        AddressList result = sut.findAddresses(postalCode, city, country);
-
-        assertThat(result.getAddresses().size(), is(1));
+        AddressList addresses = sut.findAddresses(postalCode, city, country);
+        assertThat(addresses.getAddresses().size(), is(1));
         verify(staticAddressRepositoryMock).findByCountryAndPostalCodeAndCity(postalCode, normalizedCity + "%",
             country);
     }
@@ -272,16 +261,15 @@ public class StaticAddressServiceImplUnitTest {
         String country = COUNTRY_DE;
 
         when(staticAddressRepositoryMock.findByCountryAndPostalCodeAndCity(postalCode, normalizedCity, country))
-            .thenReturn(asList(kaSuedstadt));
+            .thenReturn(singletonList(kaSuedstadt));
 
-        List<StaticAddress> result = sut.getAddressesByDetails(postalCode, city, country);
-
-        assertThat(result.size(), is(1));
+        List<StaticAddress> addressesByDetails = sut.getAddressesByDetails(postalCode, city, country);
+        assertThat(addressesByDetails.size(), is(1));
     }
 
 
     @Test
-    public void testFindLatLong() {
+    public void findLatLong() {
 
         BigDecimal lat = new BigDecimal("49.123");
         BigDecimal lon = new BigDecimal("8.123");
@@ -290,17 +278,15 @@ public class StaticAddressServiceImplUnitTest {
         when(staticAddressRepositoryMock.findByLatitudeAndLongitude(loc.getLatitude(), loc.getLongitude())).thenReturn(
             kaSuedstadt);
 
-        StaticAddress result = sut.getForLocation(loc);
-
-        assertThat(result, CoreMatchers.notNullValue());
-
-        assertThat(result.toAddress().getDisplayName(), CoreMatchers.equalTo(kaSuedstadt.toAddress().getDisplayName()));
+        StaticAddress staticAddress = sut.getForLocation(loc);
+        assertThat(staticAddress, CoreMatchers.notNullValue());
+        assertThat(staticAddress.toAddress().getDisplayName(), equalTo(kaSuedstadt.toAddress().getDisplayName()));
         verify(staticAddressRepositoryMock).findByLatitudeAndLongitude(loc.getLatitude(), loc.getLongitude());
     }
 
 
     @Test
-    public void testFallbackFindByPostalCodeAndCity() {
+    public void fallbackFindByPostalCodeAndCity() {
 
         String postalCode = "76131";
         String city = CITY_KARLSRUHE;
@@ -312,40 +298,32 @@ public class StaticAddressServiceImplUnitTest {
         when(staticAddressRepositoryMock.findByPostalCodeOrCity(postalCode, normalizedCity + "%")).thenReturn(asList(
                 kaSuedstadt, kaWeststadt, kaNordstadt));
 
-        AddressList result = sut.findAddresses(postalCode, city, country);
-
-        assertThat(result.getAddresses().size(), is(3));
-
+        AddressList addressList = sut.findAddresses(postalCode, city, country);
+        assertThat(addressList.getAddresses().size(), is(3));
         verify(staticAddressRepositoryMock).findByPostalCodeAndCity(postalCode, normalizedCity + "%");
         verify(staticAddressRepositoryMock).findByPostalCodeOrCity(postalCode, normalizedCity + "%");
     }
 
 
     @Test
-    public void testFallbackSplittingSearchParameter() {
+    public void fallbackSplittingSearchParameter() {
 
         String postalCode = "";
         String country = "";
 
-        when(staticAddressRepositoryMock.findByPostalCodeAndCity(postalCode,
-                    CITY_NEUSTADT_AN_DER_WEINSTRASSE_NORMALIZED + "%")).thenReturn(new ArrayList<>());
-        when(staticAddressRepositoryMock.findByPostalCodeOrCity(postalCode,
-                    CITY_NEUSTADT_AN_DER_WEINSTRASSE_NORMALIZED + "%")).thenReturn(new ArrayList<>());
+        when(staticAddressRepositoryMock.findByPostalCodeAndCity(postalCode, CITY_NEUSTADT_NORMALIZED + "%"))
+            .thenReturn(new ArrayList<>());
+        when(staticAddressRepositoryMock.findByPostalCodeOrCity(postalCode, CITY_NEUSTADT_NORMALIZED + "%")).thenReturn(
+            new ArrayList<>());
 
         sut.findAddresses(postalCode, CITY_NEUSTADT_AN_DER_WEINSTRASSE, country);
-
-        verify(staticAddressRepositoryMock).findByPostalCodeAndCity("",
-            CITY_NEUSTADT_AN_DER_WEINSTRASSE_NORMALIZED + "%");
-        verify(staticAddressRepositoryMock).findByPostalCodeOrCity("",
-            CITY_NEUSTADT_AN_DER_WEINSTRASSE_NORMALIZED + "%");
+        verify(staticAddressRepositoryMock).findByPostalCodeAndCity("", CITY_NEUSTADT_NORMALIZED + "%");
+        verify(staticAddressRepositoryMock).findByPostalCodeOrCity("", CITY_NEUSTADT_NORMALIZED + "%");
     }
 
 
-    /**
-     * Check transformation of {@link StaticAddress} to {@link Address}.
-     */
     @Test
-    public void testAddressTransformation() {
+    public void addressTransformation() {
 
         String postalCode = POSTAL_CODE_76137;
         String city = CITY_KARLSRUHE;
@@ -353,19 +331,16 @@ public class StaticAddressServiceImplUnitTest {
         String country = COUNTRY_DE;
 
         when(staticAddressRepositoryMock.findByCountryAndPostalCodeAndCity(postalCode, normalizedCity + "%", country))
-            .thenReturn(asList(kaSuedstadt));
+            .thenReturn(singletonList(kaSuedstadt));
 
-        AddressList result = sut.findAddresses(postalCode, city, country);
+        AddressList addresses = sut.findAddresses(postalCode, city, country);
+        assertThat(addresses.getAddresses().size(), is(1));
 
-        assertThat(result.getAddresses().size(), is(1));
-
-        Address address = result.getAddresses().get(0);
-
-        Assert.assertEquals("76137 Karlsruhe (Suedstadt)", address.getDisplayName());
-        Assert.assertEquals(COUNTRY_DE, address.getAddress().get(Address.COUNTRY_CODE));
-        Assert.assertNotNull(address.getLatitude());
-        Assert.assertNotNull(address.getLongitude());
-
+        Address address = addresses.getAddresses().get(0);
+        assertThat(address.getDisplayName(), is("76137 Karlsruhe (Suedstadt)"));
+        assertThat(address.getAddress().get(Address.COUNTRY_CODE), is(COUNTRY_DE));
+        assertThat(address.getLatitude(), notNullValue());
+        assertThat(address.getLongitude(), notNullValue());
         verify(staticAddressRepositoryMock).findByCountryAndPostalCodeAndCity(postalCode, normalizedCity + "%",
             country);
     }
@@ -377,8 +352,7 @@ public class StaticAddressServiceImplUnitTest {
         berlinSchoenefeld.setUniqueId(UNIQUE_ID);
         when(staticAddressRepositoryMock.save(berlinSchoenefeld)).thenReturn(berlinSchoenefeld);
 
-        StaticAddress staticAddress = this.sut.saveStaticAddress(berlinSchoenefeld);
-
+        StaticAddress staticAddress = sut.saveStaticAddress(berlinSchoenefeld);
         assertThat(staticAddress, is(berlinSchoenefeld));
         verify(staticAddressRepositoryMock).save(berlinSchoenefeld);
     }
@@ -400,7 +374,6 @@ public class StaticAddressServiceImplUnitTest {
 
         StaticAddress savedBerlinSchoenefeld = sut.saveStaticAddress(berlinSchoenefeld);
         assertThat(savedBerlinSchoenefeld.getUniqueId(), notNullValue());
-
         verify(staticAddressRepositoryMock).save(captor.capture());
         assertThat(captor.getValue().getUniqueId(), is(savedBerlinSchoenefeld.getUniqueId()));
     }
@@ -412,8 +385,8 @@ public class StaticAddressServiceImplUnitTest {
         when(uniqueIdSequenceServiceMock.getNextId("StaticAddress")).thenReturn(ONE);
         when(staticAddressRepositoryMock.findByUniqueId(ONE)).thenReturn(null);
 
-        assertThat(sut.determineUniqueId(), is(ONE));
-
+        BigInteger uniqueId = sut.determineUniqueId();
+        assertThat(uniqueId, is(ONE));
         verify(uniqueIdSequenceServiceMock, times(1)).getNextId("StaticAddress");
     }
 
@@ -444,7 +417,7 @@ public class StaticAddressServiceImplUnitTest {
 
         when(staticAddressRepositoryMock.save(berlinSchoenefeldWithNull)).thenReturn(berlinSchoenefeld);
 
-        this.sut.saveStaticAddress(berlinSchoenefeldWithNull);
+        sut.saveStaticAddress(berlinSchoenefeldWithNull);
 
         verify(berlinSchoenefeldWithNull, times(1)).setSuburb("");
         verify(berlinSchoenefeldWithNull, times(1)).setCity("");
@@ -454,7 +427,7 @@ public class StaticAddressServiceImplUnitTest {
 
 
     @Test
-    public void testNormalizingProcess() {
+    public void normalizingProcess() {
 
         StaticAddress berlinSchoenefeldWithNull = mock(StaticAddress.class);
 
@@ -465,7 +438,7 @@ public class StaticAddressServiceImplUnitTest {
 
         when(staticAddressRepositoryMock.save(berlinSchoenefeldWithNull)).thenReturn(berlinSchoenefeld);
 
-        this.sut.saveStaticAddress(berlinSchoenefeldWithNull);
+        sut.saveStaticAddress(berlinSchoenefeldWithNull);
 
         verify(berlinSchoenefeldWithNull, times(1)).setSuburbNormalized(CITY_OBERREUT_NORMALIZED);
         verify(berlinSchoenefeldWithNull, times(1)).setCityNormalized(CITY_KARLSRUHE_NORMALIZED);
@@ -504,7 +477,7 @@ public class StaticAddressServiceImplUnitTest {
 
 
     @Test
-    public void updateStaticAddress() {
+    public void updaaticAddress() {
 
         berlinSchoenefeld.setId(1L);
 
@@ -515,7 +488,7 @@ public class StaticAddressServiceImplUnitTest {
 
 
     @Test
-    public void updateStaticAddressWithChangedGeocoordinates() {
+    public void updaaticAddressWithChangedGeocoordinates() {
 
         berlinSchoenefeld.setId(1L);
 
@@ -541,7 +514,7 @@ public class StaticAddressServiceImplUnitTest {
 
 
     @Test(expected = StaticAddressCoordinatesDuplicationException.class)
-    public void updateStaticAddressWithDuplicateCoordinatesError() {
+    public void updaaticAddressWithDuplicateCoordinatesError() {
 
         berlinSchoenefeld.setId(1L);
 
@@ -566,7 +539,7 @@ public class StaticAddressServiceImplUnitTest {
 
 
     @Test
-    public void updateStaticAddressWithKeyValueChanges() {
+    public void updaaticAddressWithKeyValueChanges() {
 
         berlinSchoenefeld.setId(1L);
         berlinSchoenefeld.setCityNormalized(CITY_BERLIN_NORMALIZED);
@@ -586,7 +559,7 @@ public class StaticAddressServiceImplUnitTest {
 
 
     @Test(expected = StaticAddressDuplicationException.class)
-    public void updateStaticAddressWithKeyValueChangesAndDuplicates() {
+    public void updaaticAddressWithKeyValueChangesAndDuplicates() {
 
         berlinSchoenefeld.setId(1L);
         berlinSchoenefeld.setCity(CITY_BERLIN);
@@ -612,7 +585,7 @@ public class StaticAddressServiceImplUnitTest {
         StaticAddress expectedAddress = new StaticAddress();
         expectedAddress.setCountry("Unique Attribute for distinction");
 
-        AddressList expectedList = new AddressList("Result ", asList(expectedAddress.toAddress()));
+        AddressList expectedList = new AddressList("Result ", singletonList(expectedAddress.toAddress()));
         expectedListOfLists.add(expectedList);
 
         when(staticAddressRepositoryMock.findOne(STATIC_ADDRESS_ID)).thenReturn(expectedAddress);
@@ -637,7 +610,7 @@ public class StaticAddressServiceImplUnitTest {
         StaticAddress expectedAddress = new StaticAddress();
         expectedAddress.setCountry("Unique Attribute for distinction");
 
-        AddressList expectedList = new AddressList("Result ", asList(expectedAddress.toAddress()));
+        AddressList expectedList = new AddressList("Result ", singletonList(expectedAddress.toAddress()));
         expectedListOfLists.add(expectedList);
 
         when(staticAddressRepositoryMock.findByLatitudeAndLongitude(any(BigDecimal.class), any(BigDecimal.class)))
@@ -676,8 +649,8 @@ public class StaticAddressServiceImplUnitTest {
         address.setCity("FOO");
         address.setSuburb("BAR");
 
-        when(normalizerService.normalize("FOO")).thenReturn("foo");
-        when(normalizerService.normalize("BAR")).thenReturn("bar");
+        when(normalizerServiceMock.normalize("FOO")).thenReturn("foo");
+        when(normalizerServiceMock.normalize("BAR")).thenReturn("bar");
 
         sut.normalizeFields(address);
 
@@ -720,7 +693,7 @@ public class StaticAddressServiceImplUnitTest {
         when(staticAddressRepositoryMock.findByBoundingBox(argThat(closeTo(BigDecimal.ONE, BigDecimal.ZERO)),
                     argThat(closeTo(BigDecimal.ONE, BigDecimal.ZERO)),
                     argThat(closeTo(BigDecimal.TEN, BigDecimal.ZERO)),
-                    argThat(closeTo(BigDecimal.TEN, BigDecimal.ZERO)))).thenReturn(asList(berlinSchoenefeld));
+                    argThat(closeTo(BigDecimal.TEN, BigDecimal.ZERO)))).thenReturn(singletonList(berlinSchoenefeld));
 
         List<StaticAddress> addresses = sut.getAddressesInBoundingBox(location, distance);
 
@@ -728,7 +701,7 @@ public class StaticAddressServiceImplUnitTest {
     }
 
 
-    private void initTestAddresses() {
+    private void initaddresses() {
 
         kaSuedstadt = new StaticAddress();
         kaSuedstadt.setId(76137L);

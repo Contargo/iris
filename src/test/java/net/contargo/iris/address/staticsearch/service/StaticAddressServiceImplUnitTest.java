@@ -218,7 +218,7 @@ public class StaticAddressServiceImplUnitTest {
         expectedAddress.setCountry("Unique Attribute for distinction");
         when(staticAddressRepositoryMock.findOne(STATIC_ADDRESS_ID)).thenReturn(expectedAddress);
 
-        Assert.assertEquals(expectedAddress, sut.findbyId(STATIC_ADDRESS_ID));
+        Assert.assertEquals(expectedAddress, sut.findById(STATIC_ADDRESS_ID));
         verify(staticAddressRepositoryMock).findOne(STATIC_ADDRESS_ID);
     }
 
@@ -463,8 +463,7 @@ public class StaticAddressServiceImplUnitTest {
         berlinSchoenefeld.setSuburbNormalized(CITY_SCHOENEFELD);
 
         when(staticAddressRepositoryMock.findByCityAndSuburbAndPostalcode(berlinSchoenefeld.getCity(),
-                    berlinSchoenefeld.getSuburb(), berlinSchoenefeld.getPostalcode())).thenReturn(
-            staticAddresses);
+                    berlinSchoenefeld.getSuburb(), berlinSchoenefeld.getPostalcode())).thenReturn(staticAddresses);
 
         sut.saveStaticAddress(berlinSchoenefeld);
     }
@@ -579,8 +578,7 @@ public class StaticAddressServiceImplUnitTest {
             berlinSchoenefeldWithoutPostalcode);
 
         when(staticAddressRepositoryMock.findByCityAndSuburbAndPostalcode(berlinSchoenefeld.getCity(),
-                    berlinSchoenefeld.getSuburb(), berlinSchoenefeld.getPostalcode())).thenReturn(
-            staticAddresses);
+                    berlinSchoenefeld.getSuburb(), berlinSchoenefeld.getPostalcode())).thenReturn(staticAddresses);
 
         sut.saveStaticAddress(berlinSchoenefeld);
     }

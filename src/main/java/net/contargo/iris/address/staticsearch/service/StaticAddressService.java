@@ -11,6 +11,7 @@ import java.util.List;
  * Provides service methods for {@link StaticAddress} entities.
  *
  * @author  Aljona Murygina - murygina@synyx.de
+ * @author  Tobias Schneider - schneider@synyx.de
  */
 public interface StaticAddressService {
 
@@ -27,40 +28,51 @@ public interface StaticAddressService {
 
 
     /**
-     * Finds all {@link StaticAddress} by the given parameters postalCode, city and country. The procedure of this
+     * Finds all {@link StaticAddress}s by the given parameters postalCode, city and country. The procedure of this
      * method is following (step to next procedure if result list is empty): 1. Execute an AND search, i.e. find
      * addresses by postal code AND city 2. Execute an OR search, i.e. find addresses by postal code OR city 3. Execute
      * a split search, i.e. if the city string is "Neustadt an der Weinstrasse" and nothing is found for that then
      * execute search for "Neustadt"
      *
-     * @param  postalCode  String
-     * @param  city  String
-     * @param  country  String
+     * @param  postalCode  as search parameter for {@link StaticAddress}
+     * @param  city  as search parameter for {@link StaticAddress}
+     * @param  country  as search parameter for {@link StaticAddress}
      *
      * @return  List of {@link StaticAddress}es.
      */
     List<StaticAddress> getAddressesByDetailsWithFallbacks(String postalCode, String city, String country);
 
 
+    /**
+     * Finds all {@link StaticAddress}s with the given parameter of postalCode, city and country.
+     *
+     * @param  postalCode  as search parameter for {@link StaticAddress}
+     * @param  city  as search parameter for {@link StaticAddress}
+     * @param  country  as search parameter for {@link StaticAddress}
+     *
+     * @return  List of {@link StaticAddress}s filtered by the given search parameters.
+     */
     List<StaticAddress> getAddressesByDetails(String postalCode, String city, String country);
 
 
     /**
-     * Finds an Address at the exact given location or null.
+     * Finds an {@link StaticAddress} at the exact given location or null.
      *
-     * @param  loc
+     * @param  loc  {@link GeoLocation} as search parameter for {@link StaticAddress}
      *
-     * @return
+     * @return  {@link StaticAddress} of the given {@link GeoLocation}
      */
     StaticAddress getForLocation(GeoLocation loc);
 
 
     /**
-     * @param  staticAddressId
+     * Finds an {@link StaticAddress} by the given id.
      *
-     * @return
+     * @param  staticAddressId  as search parameter for {@link StaticAddress}
+     *
+     * @return  {@link StaticAddress} of the given id
      */
-    StaticAddress findbyId(Long staticAddressId);
+    StaticAddress findById(Long staticAddressId);
 
 
     /**
@@ -93,6 +105,11 @@ public interface StaticAddressService {
     List<AddressList> getAddressListListForGeolocation(GeoLocation location);
 
 
+    /**
+     * Normalizes {@link StaticAddress} city and suburb attributes.
+     *
+     * @param  staticAddress  to normalize it attributes
+     */
     void normalizeFields(StaticAddress staticAddress);
 
 

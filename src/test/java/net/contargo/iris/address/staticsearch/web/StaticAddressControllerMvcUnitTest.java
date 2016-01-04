@@ -104,7 +104,7 @@ public class StaticAddressControllerMvcUnitTest {
     @Test
     public void getStaticAddress() throws Exception {
 
-        when(staticAddressServiceMock.findbyId(1L)).thenReturn(new StaticAddress());
+        when(staticAddressServiceMock.findById(1L)).thenReturn(new StaticAddress());
 
         MockHttpServletRequestBuilder requestBuilder = get("/staticaddresses/1");
 

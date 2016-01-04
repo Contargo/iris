@@ -25,20 +25,22 @@ import java.lang.invoke.MethodHandles;
 import java.math.BigInteger;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.persistence.Entity;
 
 import static org.slf4j.LoggerFactory.getLogger;
+
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 
 
 /**
  * Implementation of {@link StaticAddressService}.
  *
  * @author  Aljona Murygina - murygina@synyx.de
+ * @author  Tobias Schneider - schneider@synyx.de
  */
 @Transactional
 public class StaticAddressServiceImpl implements StaticAddressService {
@@ -59,25 +61,11 @@ public class StaticAddressServiceImpl implements StaticAddressService {
         this.normalizerService = normalizerService;
     }
 
-    /**
-     * Finds all {@link Address}es by the given parameters postalCode, city and country. The procedure of this method is
-     * following (step to next procedure if result list is empty): 1. Execute an AND search, i.e. find addresses by
-     * postal code AND city 2. Execute an OR search, i.e. find addresses by postal code OR city 3. Execute a split
-     * search, i.e. if the city string is "Neustadt an der Weinstrasse" and nothing is found for that then execute
-     * search for "Neustadt"
-     *
-     * @param  postalCode  String
-     * @param  city  String
-     * @param  country  String
-     *
-     * @return  {@link AddressList}
-     */
     @Override
     public AddressList findAddresses(String postalCode, String city, String country) {
 
         List<StaticAddress> staticAddresses = getAddressesByDetailsWithFallbacks(postalCode, city, country);
-
-        List<Address> addresses = staticAddresses.stream().map(StaticAddress::toAddress).collect(Collectors.toList());
+        List<Address> addresses = staticAddresses.stream().map(StaticAddress::toAddress).collect(toList());
 
         return new AddressList("City and Suburb Results", addresses);
     }
@@ -108,9 +96,7 @@ public class StaticAddressServiceImpl implements StaticAddressService {
     @Override
     public List<StaticAddress> getAddressesByDetails(String postalCode, String city, String country) {
 
-        String normalizedCity = normalizerService.normalize(city);
-
-        return repository.findByCountryAndPostalCodeAndCity(postalCode, normalizedCity, country);
+        return repository.findByCountryAndPostalCodeAndCity(postalCode, normalizerService.normalize(city), country);
     }
 
 
@@ -124,7 +110,7 @@ public class StaticAddressServiceImpl implements StaticAddressService {
 
     @Override
     @Transactional(readOnly = true)
-    public StaticAddress findbyId(Long staticAddressId) {
+    public StaticAddress findById(Long staticAddressId) {
 
         return repository.findOne(staticAddressId);
     }
@@ -134,7 +120,6 @@ public class StaticAddressServiceImpl implements StaticAddressService {
     public synchronized StaticAddress saveStaticAddress(StaticAddress staticAddress) {
 
         setEmptyValues(staticAddress);
-
         normalizeFields(staticAddress);
 
         if (staticAddress.getId() == null) {
@@ -145,45 +130,29 @@ public class StaticAddressServiceImpl implements StaticAddressService {
     }
 
 
-    /**
-     * @param  staticAddressId
-     *
-     * @return  The _one_ Address for the given static address ID. For consistent processing on client side it is
-     *          wrapped in a list of AddressLists.
-     */
     @Override
     public List<AddressList> getAddressListListForStaticAddressId(Long staticAddressId) {
 
-        StaticAddress staticAddress = findbyId(staticAddressId);
+        StaticAddress staticAddress = findById(staticAddressId);
 
         if (staticAddress == null) {
-            return Collections.emptyList();
+            return emptyList();
         }
 
-        AddressList staticAddressList = new AddressList("Result ", Arrays.asList(staticAddress.toAddress()));
-
-        return Arrays.asList(staticAddressList);
+        return singletonList(new AddressList("Result ", singletonList(staticAddress.toAddress())));
     }
 
 
-    /**
-     * @param  location
-     *
-     * @return  The _one_ Address for the given geoLocation. For consistent processing on client side it is wrapped in a
-     *          list of AddressLists.
-     */
     @Override
     public List<AddressList> getAddressListListForGeolocation(GeoLocation location) {
 
         StaticAddress staticAddress = getForLocation(location);
 
         if (staticAddress == null) {
-            return Collections.emptyList();
+            return emptyList();
         }
 
-        AddressList staticAddressList = new AddressList("Result ", Arrays.asList(staticAddress.toAddress()));
-
-        return Arrays.asList(staticAddressList);
+        return singletonList(new AddressList("Result ", singletonList(staticAddress.toAddress())));
     }
 
 

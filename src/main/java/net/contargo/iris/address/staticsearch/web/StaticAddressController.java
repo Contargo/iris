@@ -90,7 +90,7 @@ public class StaticAddressController {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public String getStaticAddress(Model model, @PathVariable Long id) {
 
-        model.addAttribute(ENTITY_ATTRIBUTE, staticAddressService.findbyId(id));
+        model.addAttribute(ENTITY_ATTRIBUTE, staticAddressService.findById(id));
 
         return CONTROLLER_CONTEXT + ENTITY_FORM_VIEW;
     }

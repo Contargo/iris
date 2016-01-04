@@ -412,7 +412,7 @@ public class StaticAddressServiceImpl implements StaticAddressService {
 
 
     /**
-     * Retrieves total amount of pages, according to pagesize.
+     * Retrieves total amount of pages, according to page size.
      *
      * @param  currentPage
      * @param  pageSize
@@ -428,7 +428,7 @@ public class StaticAddressServiceImpl implements StaticAddressService {
 
 
     /**
-     * Retreive only empty pages from repository..
+     * Retrieve only empty pages from repository.
      *
      * @param  pageable
      *

@@ -48,9 +48,7 @@ public class StaticAddressServiceImpl implements StaticAddressService {
     private static final int PAGE_SIZE = 50;
 
     private final StaticAddressRepository repository;
-
     private final SequenceService uniqueIdSequenceService;
-
     private final NormalizerServiceImpl normalizerService;
 
     public StaticAddressServiceImpl(StaticAddressRepository repository, SequenceService uniqueIdSequenceService,
@@ -352,8 +350,8 @@ public class StaticAddressServiceImpl implements StaticAddressService {
 
     private boolean checkDuplicateAddressParameters(StaticAddress staticAddress) {
 
-        List<StaticAddress> staticAddresses = repository.findByCityAndSuburbAndPostalcode(
-                staticAddress.getCity(), staticAddress.getSuburb(), staticAddress.getPostalcode());
+        List<StaticAddress> staticAddresses = repository.findByCityAndSuburbAndPostalcode(staticAddress.getCity(),
+                staticAddress.getSuburb(), staticAddress.getPostalcode());
 
         return !staticAddresses.isEmpty();
     }

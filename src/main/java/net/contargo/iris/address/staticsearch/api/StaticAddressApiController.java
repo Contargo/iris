@@ -17,7 +17,6 @@ import org.springframework.stereotype.Controller;
 
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -31,6 +30,8 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 
 /**
@@ -61,7 +62,7 @@ public class StaticAddressApiController {
         notes = "Returns all static addresses filtered by postalcode, city and country.", response = AddressDto.class,
         responseContainer = "List"
     )
-    @RequestMapping(method = RequestMethod.GET, params = { "postalCode", "city", "country" })
+    @RequestMapping(method = GET, params = { "postalCode", "city", "country" })
     @ResponseBody
     public Collection<AddressDto> getByPostalCodeAndCityAndCountry(
         @RequestParam(value = "postalCode") String postalCode,
@@ -77,7 +78,7 @@ public class StaticAddressApiController {
         notes = "Returns all static addresses filtered by the given geolocation."
     )
     @ModelAttribute("geoCodeResponse")
-    @RequestMapping(method = RequestMethod.GET, params = { LAT, LON })
+    @RequestMapping(method = GET, params = { LAT, LON })
     public ListOfAddressListsResponse getStaticAddressByGeolocation(@RequestParam(LAT) BigDecimal latitude,
         @RequestParam(LON) BigDecimal longitude) {
 
@@ -96,7 +97,7 @@ public class StaticAddressApiController {
         value = "Returns a list of static address uids that are located in a bounding box with a given radius.",
         notes = "Returns a list of static address uids that are located in a bounding box with a given radius."
     )
-    @RequestMapping(method = RequestMethod.GET, params = { LAT, LON, "distance" })
+    @RequestMapping(method = GET, params = { LAT, LON, "distance" })
     @ResponseBody
     public StaticAddressesUidResponse staticAddressesByBoundingBox(@RequestParam(LAT) BigDecimal latitude,
         @RequestParam(LON) BigDecimal longitude,

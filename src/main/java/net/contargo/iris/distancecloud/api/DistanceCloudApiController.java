@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -19,6 +18,8 @@ import java.math.BigInteger;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 
 /**
@@ -41,16 +42,14 @@ public class DistanceCloudApiController {
         notes = "Calculates the cloud-distance between the given terminal and static address.",
         value = "Calculates the cloud-distance between the given terminal and static address."
     )
-    @RequestMapping(value = "distancecloudaddress", method = RequestMethod.GET)
+    @RequestMapping(value = "distancecloudaddress", method = GET)
     @ResponseBody
     public DistanceCloudAddressResponse cloudAddress(@RequestParam("terminal") BigInteger terminalUid,
         @RequestParam("address") BigInteger staticAddressUid) {
 
         DistanceCloudAddressDto address = distanceCloudAddressDtoService.getAddressInCloud(terminalUid,
                 staticAddressUid);
-
         DistanceCloudAddressResponse distanceCloudAddressResponse = new DistanceCloudAddressResponse(address);
-
         distanceCloudAddressResponse.add(linkTo(methodOn(getClass()).cloudAddress(terminalUid, staticAddressUid))
             .withSelfRel());
 

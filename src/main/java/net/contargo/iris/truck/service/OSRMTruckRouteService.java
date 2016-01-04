@@ -8,7 +8,9 @@ import net.contargo.iris.truck.TruckRoute;
 import org.springframework.cache.annotation.Cacheable;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
+
+import static java.math.BigDecimal.ZERO;
+import static java.math.RoundingMode.HALF_UP;
 
 
 /**
@@ -48,9 +50,8 @@ public class OSRMTruckRouteService implements TruckRouteService {
 
         BigDecimal toll = extractToll(osrmResult.getRouteInstructions());
         BigDecimal distance = new BigDecimal(osrmResult.getTotalDistance()).divide(METERS_PER_KILOMETER, SCALE,
-                RoundingMode.HALF_UP);
-        BigDecimal duration = new BigDecimal(osrmResult.getTotalTime()).divide(SECONDS_PER_MINUTE, SCALE,
-                RoundingMode.HALF_UP);
+                HALF_UP);
+        BigDecimal duration = new BigDecimal(osrmResult.getTotalTime()).divide(SECONDS_PER_MINUTE, SCALE, HALF_UP);
 
         return new TruckRoute(distance, toll, duration);
     }
@@ -58,7 +59,7 @@ public class OSRMTruckRouteService implements TruckRouteService {
 
     private BigDecimal extractToll(String[][] routeInstructions) {
 
-        BigDecimal toll = BigDecimal.ZERO;
+        BigDecimal toll = ZERO;
         toll = toll.setScale(SCALE);
 
         for (String[] routeInstruction : routeInstructions) {

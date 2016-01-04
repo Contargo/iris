@@ -52,6 +52,8 @@
         <sonar.jacoco.itReportPath>${project.build.directory}/coverage-reports/jacoco-it.exec
         </sonar.jacoco.itReportPath>
         <sonar.javascript.lcov.reportPath>target/jasmine/total-coverage.dat</sonar.javascript.lcov.reportPath>
+        <sonar.exclusions>src/main/webapp/client/js/lib/**,src/main/webapp/api-docs/**</sonar.exclusions>
+
         <srcDir>src/main/java</srcDir>
     </properties>
 

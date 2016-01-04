@@ -23,19 +23,19 @@ var ConnectionServer = function (contextpath) {
         },
         getSeaports: function (callback, errorCallback) {
             get(seaportsUrl, function (response) {
-                    callback(response.seaports)
+                    callback(response.seaports);
                 }, function () {
                     errorCallback('Error retrieving seaports');
                 }
-            )
+            );
         },
         getTerminals: function (callback, errorCallback) {
             get(terminalsUrl, function (response) {
-                    callback(response.response.terminals)
+                    callback(response.response.terminals);
                 }, function () {
                     errorCallback('Error retrieving terminals');
                 }
-            )
+            );
         },
         updateConnection: function (connection, callback, errorCallback) {
             put(connectionUrl.replace('{connectionId}', connection.id), connection,

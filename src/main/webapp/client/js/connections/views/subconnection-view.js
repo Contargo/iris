@@ -74,7 +74,7 @@ var SubconnectionView = Backbone.View.extend({
         this.model.collection.trigger('removeLast');
     },
 
-    createTemplateModel: function(model) {
+    createTemplateModel: function (model) {
         'use strict';
         return {
             id: model.get('id'),
@@ -82,6 +82,6 @@ var SubconnectionView = Backbone.View.extend({
             endpoint2: model.get('endpoint2').toJSON(),
             distances: model.get('distances').toJSON(),
             routeType: model.get('routeType').toJSON()
-        }
+        };
     }
 });

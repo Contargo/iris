@@ -6,7 +6,7 @@ var TerminalsView = Backbone.View.extend({
         'change #terminal': 'changeTerminal'
     },
 
-    initialize: function (options) {
+    initialize: function () {
         'use strict';
         _.bindAll(this, 'render');
 
@@ -22,8 +22,8 @@ var TerminalsView = Backbone.View.extend({
     render: function () {
         'use strict';
         var model = this.model.toJSON();
-        model.forEach(function(element) {
-            element.nicename = element.name +  (element.enabled ? ' (enabled)': ' (not enabled)');
+        model.forEach(function (element) {
+            element.nicename = element.name + (element.enabled ? ' (enabled)' : ' (not enabled)');
         });
         this.$el.html(this.template({terminals: model}));
     },

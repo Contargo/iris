@@ -5,8 +5,8 @@ var RouteTypesView = Backbone.View.extend({
     events: {
         'change #routeType': 'changeRouteType'
     },
-    
-    initialize: function (options) {
+
+    initialize: function () {
         'use strict';
         _.bindAll(this, 'render');
 
@@ -24,7 +24,7 @@ var RouteTypesView = Backbone.View.extend({
         this.$el.html(this.template({types: this.model.toJSON()}));
     },
 
-    changeRouteType: function(event) {
+    changeRouteType: function (event) {
         'use strict';
         this.model.setSelected(event.target.value);
     }

@@ -6,7 +6,7 @@ var SeaportsView = Backbone.View.extend({
         'change #seaport': 'changeSeaport'
     },
 
-    initialize: function (options) {
+    initialize: function () {
         'use strict';
         _.bindAll(this, 'render');
 
@@ -22,8 +22,8 @@ var SeaportsView = Backbone.View.extend({
     render: function () {
         'use strict';
         var model = this.model.toJSON();
-        model.forEach(function(element) {
-            element.nicename = element.name +  (element.enabled ? ' (enabled)': ' (not enabled)');
+        model.forEach(function (element) {
+            element.nicename = element.name + (element.enabled ? ' (enabled)' : ' (not enabled)');
         });
         this.$el.html(this.template({seaports: model}));
     },

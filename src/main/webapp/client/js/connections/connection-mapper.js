@@ -44,7 +44,6 @@ ConnectionMapper.prototype.subconnectionFromJson = function (subconnection, seap
 
 ConnectionMapper.prototype.connectionToJson = function (connection) {
     'use strict';
-    var that = this;
     return {
         id: connection.get('id'),
         seaportUid: connection.get('seaport').get('uniqueId'),

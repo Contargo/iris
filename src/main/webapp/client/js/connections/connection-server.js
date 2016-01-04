@@ -4,7 +4,6 @@ var ConnectionServer = function (contextpath) {
     if (!contextpath) {
         throw 'need context path';
     }
-
     var api = contextpath + 'api/';
     var connectionsUrl = api + 'connections/';
     var connectionUrl = api + 'connections/{connectionId}';

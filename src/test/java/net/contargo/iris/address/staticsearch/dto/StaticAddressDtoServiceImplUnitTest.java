@@ -32,6 +32,7 @@ import static org.mockito.Mockito.when;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 
 
 /**
@@ -48,17 +49,20 @@ public class StaticAddressDtoServiceImplUnitTest {
     private static final String POSTALCODE = "postalcode";
     private static final String COUNTRY = "country";
 
+    private StaticAddressDtoServiceImpl sut;
+
     @Mock
     private StaticAddressService staticAddressServiceMock;
-    private StaticAddressDtoServiceImpl sut;
+
+    private Address address;
     private StaticAddress staticAddress;
     private StaticAddress staticAddress2;
-    private Address address;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
 
         sut = new StaticAddressDtoServiceImpl(staticAddressServiceMock);
+
         staticAddress = new StaticAddress();
         staticAddress.setLatitude(BigDecimal.ONE);
         staticAddress.setLongitude(BigDecimal.ONE);
@@ -66,8 +70,10 @@ public class StaticAddressDtoServiceImplUnitTest {
         staticAddress.setPostalcode(POSTALCODE);
         staticAddress.setCountry(COUNTRY);
         staticAddress.setUniqueId(BigInteger.TEN);
+
         staticAddress2 = new StaticAddress();
         staticAddress2.setUniqueId(BigInteger.ONE);
+
         address = new Address();
         address.setLatitude(staticAddress.getLatitude());
         address.setLongitude(staticAddress.getLongitude());
@@ -75,9 +81,9 @@ public class StaticAddressDtoServiceImplUnitTest {
 
 
     @Test
-    public void testGetAddressesByDetails() {
+    public void getAddressesByDetails() {
 
-        when(staticAddressServiceMock.getAddressesByDetails(POSTALCODE, CITY, COUNTRY)).thenReturn(asList(
+        when(staticAddressServiceMock.getAddressesByDetails(POSTALCODE, CITY, COUNTRY)).thenReturn(singletonList(
                 staticAddress));
 
         List<AddressDto> actualList = sut.getAddressesByDetails(POSTALCODE, CITY, COUNTRY);
@@ -90,14 +96,15 @@ public class StaticAddressDtoServiceImplUnitTest {
 
 
     @Test
-    public void testGetStaticAddressByGeolocation() {
+    public void getStaticAddressByGeolocation() {
 
         GeoLocation location = new GeoLocation(BigDecimal.ONE, BigDecimal.TEN);
 
-        when(staticAddressServiceMock.getAddressListListForGeolocation(location)).thenReturn(asList(
-                new AddressList("name1", asList(address))));
+        when(staticAddressServiceMock.getAddressListListForGeolocation(location)).thenReturn(singletonList(
+                new AddressList("name1", singletonList(address))));
 
-        List<AddressListDto> expected = asList(new AddressListDto("name1", asList(new AddressDto(address))));
+        List<AddressListDto> expected = singletonList(new AddressListDto("name1",
+                    singletonList(new AddressDto(address))));
         assertReflectionEquals(sut.getStaticAddressByGeolocation(location), expected);
     }
 
@@ -109,7 +116,6 @@ public class StaticAddressDtoServiceImplUnitTest {
                 staticAddress2));
 
         List<BigInteger> uids = sut.getStaticAddressByBoundingBox(address, 20d);
-
         assertThat(uids, contains(BigInteger.TEN, BigInteger.ONE));
     }
 }

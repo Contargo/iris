@@ -1,7 +1,6 @@
 package net.contargo.iris.address.staticsearch.dto;
 
 import net.contargo.iris.GeoLocation;
-import net.contargo.iris.address.AddressList;
 import net.contargo.iris.address.dto.AddressDto;
 import net.contargo.iris.address.dto.AddressListDto;
 import net.contargo.iris.address.staticsearch.StaticAddress;
@@ -9,12 +8,17 @@ import net.contargo.iris.address.staticsearch.service.StaticAddressService;
 
 import java.math.BigInteger;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 
 /**
+ * Default implementation of the {@link StaticAddressDtoService}.
+ *
  * @author  Arnold Franke - franke@synyx.de
+ * @author  Tobias Schneider - schneider@synyx.de
  */
 public class StaticAddressDtoServiceImpl implements StaticAddressDtoService {
 
@@ -28,50 +32,27 @@ public class StaticAddressDtoServiceImpl implements StaticAddressDtoService {
     @Override
     public List<AddressDto> getAddressesByDetails(String postalCode, String city, String country) {
 
-        List<StaticAddress> addressList = staticAddressService.getAddressesByDetails(postalCode, city, country);
-
-        return convertStaticAddressListToDTOList(addressList);
-    }
-
-
-    private List<AddressDto> convertStaticAddressListToDTOList(List<StaticAddress> addressList) {
-
-        List<AddressDto> addressDtoList = new ArrayList<>();
-
-        for (StaticAddress staticAddress : addressList) {
-            addressDtoList.add(new AddressDto(staticAddress.toAddress()));
-        }
-
-        return addressDtoList;
+        return staticAddressService.getAddressesByDetails(postalCode, city, country).stream().map(staticAddress ->
+                    new AddressDto(staticAddress.toAddress())).collect(toList());
     }
 
 
     @Override
     public List<AddressListDto> getStaticAddressByGeolocation(GeoLocation location) {
 
-        List<AddressList> addressListList = staticAddressService.getAddressListListForGeolocation(location);
-
-        List<AddressListDto> addressListDtoList = new ArrayList<>();
-
-        for (AddressList addressList : addressListList) {
-            addressListDtoList.add(new AddressListDto(addressList)); // NOSONAR
-        }
-
-        return addressListDtoList;
+        return staticAddressService.getAddressListListForGeolocation(location)
+            .stream()
+            .map(AddressListDto::new)
+            .collect(toList());
     }
 
 
     @Override
     public List<BigInteger> getStaticAddressByBoundingBox(GeoLocation location, Double distance) {
 
-        List<StaticAddress> staticAddresses = staticAddressService.getAddressesInBoundingBox(location, distance);
-
-        List<BigInteger> result = new ArrayList<>();
-
-        for (StaticAddress staticAddress : staticAddresses) {
-            result.add(staticAddress.getUniqueId());
-        }
-
-        return result;
+        return staticAddressService.getAddressesInBoundingBox(location, distance)
+            .stream()
+            .map(StaticAddress::getUniqueId)
+            .collect(Collectors.toList());
     }
 }

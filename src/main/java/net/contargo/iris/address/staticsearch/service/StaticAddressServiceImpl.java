@@ -119,6 +119,20 @@ public class StaticAddressServiceImpl implements StaticAddressService {
 
 
     @Override
+    @Transactional(readOnly = true)
+    public StaticAddress findByUId(BigInteger staticAddressUId) {
+
+        StaticAddress staticAddress = repository.findByUniqueId(staticAddressUId);
+
+        if (staticAddress == null) {
+            throw new StaticAddressNotFoundException();
+        }
+
+        return staticAddress;
+    }
+
+
+    @Override
     public synchronized StaticAddress saveStaticAddress(StaticAddress staticAddress) {
 
         setEmptyValues(staticAddress);
@@ -293,6 +307,7 @@ public class StaticAddressServiceImpl implements StaticAddressService {
 
     private boolean isUniqueIdAlreadyAssigned(BigInteger uniqueId) {
 
+        // Please use the service method when refactoring StaticAddressServiceImpl#findByUId
         return repository.findByUniqueId(uniqueId) != null;
     }
 

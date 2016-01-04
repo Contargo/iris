@@ -1,8 +1,8 @@
 package net.contargo.iris.distancecloud.service;
 
-import net.contargo.iris.GeoLocation;
 import net.contargo.iris.address.staticsearch.StaticAddress;
-import net.contargo.iris.address.staticsearch.persistence.StaticAddressRepository;
+import net.contargo.iris.address.staticsearch.service.StaticAddressNotFoundException;
+import net.contargo.iris.address.staticsearch.service.StaticAddressService;
 import net.contargo.iris.distancecloud.DistanceCloudAddress;
 import net.contargo.iris.gis.service.GisService;
 import net.contargo.iris.rounding.RoundingService;
@@ -31,8 +31,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.isEmptyString;
 
-import static org.mockito.Matchers.any;
-
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
@@ -60,7 +58,7 @@ public class DistanceCloudAddressServiceImplUnitTest {
     private DistanceCloudAddressServiceImpl sut;
 
     @Mock
-    private StaticAddressRepository repositoryMock;
+    private StaticAddressService staticAddressServiceMock;
     @Mock
     private TruckRouteService truckRouteServiceMock;
     @Mock
@@ -81,7 +79,7 @@ public class DistanceCloudAddressServiceImplUnitTest {
         terminal = new Terminal();
         staticAddress = createAddressForCloudTest(ONE, ONE);
 
-        sut = new DistanceCloudAddressServiceImpl(truckRouteServiceMock, repositoryMock, roundingServiceMock,
+        sut = new DistanceCloudAddressServiceImpl(truckRouteServiceMock, staticAddressServiceMock, roundingServiceMock,
                 gisServiceMock, terminalServiceMock, routeDataRevisionServiceMock);
     }
 
@@ -90,7 +88,7 @@ public class DistanceCloudAddressServiceImplUnitTest {
     public void getAddressInCloudByMaps() {
 
         when(terminalServiceMock.getByUniqueId(TERMINAL_UID)).thenReturn(terminal);
-        when(repositoryMock.findByUniqueId(STATIC_ADDRESS_UID)).thenReturn(staticAddress);
+        when(staticAddressServiceMock.findByUId(STATIC_ADDRESS_UID)).thenReturn(staticAddress);
 
         when(routeDataRevisionServiceMock.getRouteDataRevision(terminal, staticAddress)).thenReturn(null);
         when(truckRouteServiceMock.route(terminal, staticAddress)).thenReturn(new TruckRoute(ZERO, ONE, TEN));
@@ -115,7 +113,7 @@ public class DistanceCloudAddressServiceImplUnitTest {
     public void getAddressInCloudByRouteRevision() {
 
         when(terminalServiceMock.getByUniqueId(TERMINAL_UID)).thenReturn(terminal);
-        when(repositoryMock.findByUniqueId(STATIC_ADDRESS_UID)).thenReturn(staticAddress);
+        when(staticAddressServiceMock.findByUId(STATIC_ADDRESS_UID)).thenReturn(staticAddress);
 
         RouteDataRevision routeDataRevision = new RouteDataRevision();
         routeDataRevision.setTruckDistanceOneWayInKilometer(ONE);
@@ -136,17 +134,30 @@ public class DistanceCloudAddressServiceImplUnitTest {
 
 
     @Test
-    public void getAddressInCloudWithError() {
+    public void getAddressInCloudWithRoutingError() {
 
         when(terminalServiceMock.getByUniqueId(TERMINAL_UID)).thenReturn(terminal);
-        when(repositoryMock.findByUniqueId(STATIC_ADDRESS_UID)).thenReturn(staticAddress);
+        when(staticAddressServiceMock.findByUId(STATIC_ADDRESS_UID)).thenReturn(staticAddress);
 
-        doThrow(OSRMNonRoutableRouteException.class).when(truckRouteServiceMock)
-            .route(any(GeoLocation.class), any(GeoLocation.class));
+        doThrow(OSRMNonRoutableRouteException.class).when(truckRouteServiceMock).route(terminal, staticAddress);
 
         DistanceCloudAddress cloudAddress = sut.getAddressInCloud(TERMINAL_UID, STATIC_ADDRESS_UID);
-
         assertThat(cloudAddress.getErrorMessage(), is("Routing not possible"));
+
+        verifyZeroInteractions(roundingServiceMock);
+        verifyZeroInteractions(gisServiceMock);
+    }
+
+
+    @Test
+    public void getAddressInCloudWithStaticAddressError() {
+
+        when(terminalServiceMock.getByUniqueId(TERMINAL_UID)).thenReturn(terminal);
+        when(staticAddressServiceMock.findByUId(STATIC_ADDRESS_UID)).thenThrow(new StaticAddressNotFoundException());
+
+        DistanceCloudAddress cloudAddress = sut.getAddressInCloud(TERMINAL_UID, STATIC_ADDRESS_UID);
+        assertThat(cloudAddress.getErrorMessage(), is("StaticAddress with given id not found"));
+        assertThat(cloudAddress.getUniqueId(), is(STATIC_ADDRESS_UID));
 
         verifyZeroInteractions(roundingServiceMock);
         verifyZeroInteractions(gisServiceMock);

@@ -53,6 +53,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import static java.math.BigInteger.ONE;
+
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
@@ -224,6 +226,25 @@ public class StaticAddressServiceImplUnitTest {
 
 
     @Test
+    public void findByUId() {
+
+        StaticAddress expectedAddress = new StaticAddress();
+        when(staticAddressRepositoryMock.findByUniqueId(ONE)).thenReturn(expectedAddress);
+
+        StaticAddress staticAddress = sut.findByUId(ONE);
+        assertThat(staticAddress, is(expectedAddress));
+    }
+
+
+    @Test(expected = StaticAddressNotFoundException.class)
+    public void findByUIdException() {
+
+        when(staticAddressRepositoryMock.findByUniqueId(ONE)).thenReturn(null);
+        sut.findByUId(ONE);
+    }
+
+
+    @Test
     public void testFindByPostalCodeAndCityAndCountry() {
 
         String postalCode = POSTAL_CODE_76137;
@@ -388,10 +409,10 @@ public class StaticAddressServiceImplUnitTest {
     @Test
     public void determineUniqueId() {
 
-        when(uniqueIdSequenceServiceMock.getNextId("StaticAddress")).thenReturn(BigInteger.ONE);
-        when(staticAddressRepositoryMock.findByUniqueId(BigInteger.ONE)).thenReturn(null);
+        when(uniqueIdSequenceServiceMock.getNextId("StaticAddress")).thenReturn(ONE);
+        when(staticAddressRepositoryMock.findByUniqueId(ONE)).thenReturn(null);
 
-        assertThat(sut.determineUniqueId(), is(BigInteger.ONE));
+        assertThat(sut.determineUniqueId(), is(ONE));
 
         verify(uniqueIdSequenceServiceMock, times(1)).getNextId("StaticAddress");
     }
@@ -400,8 +421,8 @@ public class StaticAddressServiceImplUnitTest {
     @Test
     public void determineUniqueIdWithSecondRetry() {
 
-        when(uniqueIdSequenceServiceMock.getNextId("StaticAddress")).thenReturn(BigInteger.ONE);
-        when(staticAddressRepositoryMock.findByUniqueId(BigInteger.ONE)).thenReturn(new StaticAddress());
+        when(uniqueIdSequenceServiceMock.getNextId("StaticAddress")).thenReturn(ONE);
+        when(staticAddressRepositoryMock.findByUniqueId(ONE)).thenReturn(new StaticAddress());
 
         assertThat(sut.determineUniqueId(), is(new BigInteger("2")));
 

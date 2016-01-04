@@ -194,7 +194,7 @@
 
     <bean id="cloudRoutingService" class="net.contargo.iris.distancecloud.service.DistanceCloudAddressServiceImpl">
         <constructor-arg name="truckRouteService" ref="truckRouteService"/>
-        <constructor-arg name="staticAddressRepository" ref="staticAddressRepository"/>
+        <constructor-arg name="staticAddressService" ref="staticAddressService"/>
         <constructor-arg name="roundingService" ref="roundingService"/>
         <constructor-arg name="gisService" ref="gisService"/>
         <constructor-arg name="terminalService" ref="terminalService"/>

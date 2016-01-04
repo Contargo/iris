@@ -4,6 +4,8 @@ import net.contargo.iris.GeoLocation;
 import net.contargo.iris.address.AddressList;
 import net.contargo.iris.address.staticsearch.StaticAddress;
 
+import java.math.BigInteger;
+
 import java.util.List;
 
 
@@ -73,6 +75,16 @@ public interface StaticAddressService {
      * @return  {@link StaticAddress} of the given id
      */
     StaticAddress findById(Long staticAddressId);
+
+
+    /**
+     * Finds an {@link StaticAddress} by the given unique id.
+     *
+     * @param  staticAddressUId  as search parameter for {@link StaticAddress}
+     *
+     * @return  {@link StaticAddress} of the given unique id
+     */
+    StaticAddress findByUId(BigInteger staticAddressUId);
 
 
     /**

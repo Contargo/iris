@@ -2,7 +2,8 @@ package net.contargo.iris.distancecloud.service;
 
 import net.contargo.iris.GeoLocation;
 import net.contargo.iris.address.staticsearch.StaticAddress;
-import net.contargo.iris.address.staticsearch.persistence.StaticAddressRepository;
+import net.contargo.iris.address.staticsearch.service.StaticAddressNotFoundException;
+import net.contargo.iris.address.staticsearch.service.StaticAddressService;
 import net.contargo.iris.distancecloud.DistanceCloudAddress;
 import net.contargo.iris.gis.service.GisService;
 import net.contargo.iris.rounding.RoundingService;
@@ -36,17 +37,17 @@ public class DistanceCloudAddressServiceImpl implements DistanceCloudAddressServ
 
     private final RoundingService roundingService;
     private final TruckRouteService truckRouteService;
-    private final StaticAddressRepository staticAddressRepository;
+    private final StaticAddressService staticAddressService;
     private final GisService gisService;
     private final TerminalService terminalService;
     private final RouteDataRevisionService routeRevisionService;
 
     public DistanceCloudAddressServiceImpl(TruckRouteService truckRouteService,
-        StaticAddressRepository staticAddressRepository, RoundingService roundingService, GisService gisService,
+        StaticAddressService staticAddressService, RoundingService roundingService, GisService gisService,
         TerminalService terminalService, RouteDataRevisionService routeRevisionService) {
 
         this.truckRouteService = truckRouteService;
-        this.staticAddressRepository = staticAddressRepository;
+        this.staticAddressService = staticAddressService;
         this.roundingService = roundingService;
         this.gisService = gisService;
         this.terminalService = terminalService;
@@ -57,7 +58,18 @@ public class DistanceCloudAddressServiceImpl implements DistanceCloudAddressServ
     public DistanceCloudAddress getAddressInCloud(BigInteger terminalUid, BigInteger staticAddressUid) {
 
         Terminal terminal = terminalService.getByUniqueId(terminalUid);
-        StaticAddress staticAddress = staticAddressRepository.findByUniqueId(staticAddressUid);
+        StaticAddress staticAddress;
+
+        try {
+            staticAddress = staticAddressService.findByUId(staticAddressUid);
+        } catch (StaticAddressNotFoundException e) {
+            LOG.info("DistanceCloud: StaticAddress with id {} not found", staticAddressUid);
+
+            StaticAddress exceptionStaticAddress = new StaticAddress();
+            exceptionStaticAddress.setUniqueId(staticAddressUid);
+
+            return createError(exceptionStaticAddress, "StaticAddress with given id not found");
+        }
 
         try {
             LOG.info("DistanceCloud: Creating distance-cloud-address item for {} and {}", terminal, staticAddress);
@@ -73,9 +85,9 @@ public class DistanceCloudAddressServiceImpl implements DistanceCloudAddressServ
 
             return distanceCloudAddress;
         } catch (OSRMNonRoutableRouteException e) {
-            LOG.info("Could not determine route, adding information to distance cloud address bean", e);
+            LOG.info("DistanceCloud: Could not determine route, adding information to distance cloud address bean", e);
 
-            return createError(staticAddress);
+            return createError(staticAddress, "Routing not possible");
         }
     }
 
@@ -119,10 +131,10 @@ public class DistanceCloudAddressServiceImpl implements DistanceCloudAddressServ
     }
 
 
-    private DistanceCloudAddress createError(StaticAddress staticAddress) {
+    private DistanceCloudAddress createError(StaticAddress staticAddress, String errorMessage) {
 
         DistanceCloudAddress distanceCloudAddress = new DistanceCloudAddress(staticAddress);
-        distanceCloudAddress.setErrorMessage("Routing not possible");
+        distanceCloudAddress.setErrorMessage(errorMessage);
 
         return distanceCloudAddress;
     }

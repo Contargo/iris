@@ -62,6 +62,7 @@ public class StaticAddressServiceImpl implements StaticAddressService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public AddressList findAddresses(String postalCode, String city, String country) {
 
         List<StaticAddress> staticAddresses = getAddressesByDetailsWithFallbacks(postalCode, city, country);
@@ -94,6 +95,7 @@ public class StaticAddressServiceImpl implements StaticAddressService {
 
 
     @Override
+    @Transactional(readOnly = true)
     public List<StaticAddress> getAddressesByDetails(String postalCode, String city, String country) {
 
         return repository.findByCountryAndPostalCodeAndCity(postalCode, normalizerService.normalize(city), country);

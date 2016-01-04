@@ -4,7 +4,6 @@ import net.contargo.iris.GeoLocation;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.commons.lang.builder.ToStringBuilder;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -140,6 +139,12 @@ public class Terminal extends GeoLocation {
     @Override
     public String toString() {
 
-        return new ToStringBuilder(this).append("id", id).append("name", name).append("enabled", enabled).toString();
+        return "Terminal{"
+            + "id=" + id
+            + ", name='" + name + '\''
+            + ", enabled=" + enabled
+            + ", region=" + region
+            + ", uniqueId=" + uniqueId
+            + "} " + super.toString();
     }
 }

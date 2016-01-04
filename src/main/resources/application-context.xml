@@ -198,6 +198,7 @@
         <constructor-arg name="roundingService" ref="roundingService"/>
         <constructor-arg name="gisService" ref="gisService"/>
         <constructor-arg name="terminalService" ref="terminalService"/>
+        <constructor-arg name="routeRevisionService" ref="routeDataRevisionService"/>
     </bean>
 
     <bean id="distanceCloudAddressDtoService"

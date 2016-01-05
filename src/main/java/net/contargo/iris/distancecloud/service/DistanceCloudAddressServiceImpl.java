@@ -63,7 +63,7 @@ public class DistanceCloudAddressServiceImpl implements DistanceCloudAddressServ
         try {
             staticAddress = staticAddressService.findByUId(staticAddressUid);
         } catch (StaticAddressNotFoundException e) {
-            LOG.info("DistanceCloud: StaticAddress with id {} not found", staticAddressUid);
+            LOG.debug("DistanceCloud: StaticAddress with id {} not found", staticAddressUid);
 
             StaticAddress exceptionStaticAddress = new StaticAddress();
             exceptionStaticAddress.setUniqueId(staticAddressUid);
@@ -72,7 +72,7 @@ public class DistanceCloudAddressServiceImpl implements DistanceCloudAddressServ
         }
 
         try {
-            LOG.info("DistanceCloud: Creating distance-cloud-address item for {} and {}", terminal, staticAddress);
+            LOG.debug("DistanceCloud: Creating distance-cloud-address item for {} and {}", terminal, staticAddress);
 
             DistanceCloudAddress distanceCloudAddress;
             RouteDataRevision routeDataRevision = routeRevisionService.getRouteDataRevision(terminal, staticAddress);
@@ -85,7 +85,7 @@ public class DistanceCloudAddressServiceImpl implements DistanceCloudAddressServ
 
             return distanceCloudAddress;
         } catch (OSRMNonRoutableRouteException e) {
-            LOG.info("DistanceCloud: Could not determine route, adding information to distance cloud address bean", e);
+            LOG.debug("DistanceCloud: Could not determine route, adding information to distance cloud address bean", e);
 
             return createError(staticAddress, "Routing not possible");
         }
@@ -94,7 +94,7 @@ public class DistanceCloudAddressServiceImpl implements DistanceCloudAddressServ
 
     private DistanceCloudAddress createDistanceCloudAddress(GeoLocation geoLocation, StaticAddress staticAddress) {
 
-        LOG.info("DistanceCloud: Use maps routing as base for the distance values ");
+        LOG.debug("DistanceCloud: Use maps routing as base for the distance values ");
 
         TruckRoute terminalToAddressRoute = truckRouteService.route(geoLocation, staticAddress);
         DistanceCloudAddress cloudAddress = new DistanceCloudAddress(staticAddress);
@@ -120,7 +120,7 @@ public class DistanceCloudAddressServiceImpl implements DistanceCloudAddressServ
     private DistanceCloudAddress createDistanceCloudAddressWithRouteRevision(RouteDataRevision routeDataRevision,
         StaticAddress staticAddress) {
 
-        LOG.info("DistanceCloud: Use route revision as base for the distance values");
+        LOG.debug("DistanceCloud: Use route revision as base for the distance values");
 
         DistanceCloudAddress cloudAddress = new DistanceCloudAddress(staticAddress);
         cloudAddress.setDistance(routeDataRevision.getTruckDistanceOneWayInKilometer());

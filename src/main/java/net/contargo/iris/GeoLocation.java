@@ -8,7 +8,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import org.hibernate.validator.constraints.Range;
 
-import org.springframework.format.number.NumberFormatter;
+import org.springframework.format.number.NumberStyleFormatter;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -121,7 +121,7 @@ public class GeoLocation {
 
     public String getNiceName() {
 
-        NumberFormatter nf = new NumberFormatter("#0.0#####");
+        NumberStyleFormatter nf = new NumberStyleFormatter("#0.0#####");
         NumberFormat numberFormat = nf.getNumberFormat(Locale.getDefault());
 
         return numberFormat.format(getLatitude()) + ":" + numberFormat.format(getLongitude());

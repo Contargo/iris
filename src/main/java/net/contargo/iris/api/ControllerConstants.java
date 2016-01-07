@@ -17,7 +17,6 @@ public final class ControllerConstants {
     public static final String MESSAGE = "message";
     public static final String REDIRECT = "redirect:";
     public static final String RESPONSE = "response";
-    public static final String WEB = "web";
     public static final String WEBAPI_ROOT_URL = "/web/";
 
     private ControllerConstants() {

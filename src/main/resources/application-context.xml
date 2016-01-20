@@ -360,7 +360,11 @@
         </constructor-arg>
     </bean>
 
-    <bean id="userAuthenticationService" class="net.contargo.iris.security.SpringUserAuthenticationService"/>
+    <bean id="userAuthenticationService" class="net.contargo.iris.security.SpringUserAuthenticationService">
+        <constructor-arg name="classificationsByUser">
+            <util:properties location="classpath:userclassification.properties, classpath:userclassification-${environment:dev}.properties"/>
+        </constructor-arg>
+    </bean>
 
     <bean class="net.contargo.iris.connection.dto.MainRunConnectionDtoServiceImpl">
         <constructor-arg name="mainRunConnectionService" ref="connectionService"/>

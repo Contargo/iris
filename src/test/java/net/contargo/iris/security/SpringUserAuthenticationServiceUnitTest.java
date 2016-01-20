@@ -1,6 +1,5 @@
 package net.contargo.iris.security;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -9,6 +8,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -26,15 +28,10 @@ public class SpringUserAuthenticationServiceUnitTest {
 
     private SpringUserAuthenticationService sut;
 
-    @Before
-    public void setUp() {
-
-        sut = new SpringUserAuthenticationService();
-    }
-
-
     @Test
     public void getCurrentUser() {
+
+        sut = new SpringUserAuthenticationService(new HashMap<>());
 
         UserDetails userDetails = new User("user", "password", singletonList(new SimpleGrantedAuthority("USER")));
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
@@ -44,5 +41,20 @@ public class SpringUserAuthenticationServiceUnitTest {
         Authentication currentUser = sut.getCurrentUser();
         assertThat(currentUser.getPrincipal(), is(userDetails));
         assertThat(currentUser.getName(), is("user"));
+    }
+
+
+    @Test
+    public void getUserClassification() {
+
+        Map<String, String> map = new HashMap<>();
+        map.put("userA", "EXTERN");
+        map.put("userB", "INTERN");
+
+        sut = new SpringUserAuthenticationService(map);
+
+        assertThat(sut.getUserClassification("userA"), is(UserClassification.EXTERN));
+        assertThat(sut.getUserClassification("userB"), is(UserClassification.INTERN));
+        assertThat(sut.getUserClassification("userC"), is(UserClassification.UNCLASSIFIED));
     }
 }

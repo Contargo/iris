@@ -4,6 +4,8 @@ import net.contargo.iris.connection.dto.RouteDataDto;
 import net.contargo.iris.connection.dto.RouteDto;
 import net.contargo.iris.connection.dto.RoutePartDto;
 import net.contargo.iris.route.dto.EnricherDtoService;
+import net.contargo.iris.security.UserAuthenticationService;
+import net.contargo.iris.security.UserClassification;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -11,6 +13,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -20,7 +26,6 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
@@ -39,6 +44,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
+
 
 /**
  * @author  Arnold Franke - franke@synyx.de
@@ -50,6 +58,8 @@ public class RouteEnricherApiControllerMvcUnitTest {
 
     @Autowired
     private EnricherDtoService enricherDtoServiceMock;
+    @Autowired
+    private UserAuthenticationService userAuthenticationService;
     @Autowired
     private WebApplicationContext webApplicationContext;
     private MockMvc mockMvc;
@@ -68,9 +78,15 @@ public class RouteEnricherApiControllerMvcUnitTest {
         routeDto.setName("RuthResponse");
 
         RouteDataDto routeData = new RouteDataDto();
-        List<RoutePartDto> routePartList = Arrays.asList(new RoutePartDto());
+        List<RoutePartDto> routePartList = singletonList(new RoutePartDto());
         routeData.setParts(routePartList);
         routeDto.setData(routeData);
+
+        UserDetails userDetails = new User("foo", "passsword", emptyList());
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails,
+                "password");
+        when(userAuthenticationService.getCurrentUser()).thenReturn(authentication);
+        when(userAuthenticationService.getUserClassification("foo")).thenReturn(UserClassification.EXTERN);
 
         when(enricherDtoServiceMock.enrich(any(RouteDto.class))).thenReturn(routeDto);
 

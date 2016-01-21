@@ -8,6 +8,7 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import net.contargo.iris.api.ControllerConstants;
 import net.contargo.iris.connection.dto.RouteDto;
 import net.contargo.iris.route.dto.EnricherDtoService;
+import net.contargo.iris.security.UserAuthenticationService;
 import net.contargo.iris.terminal.dto.TerminalDto;
 import net.contargo.iris.terminal.dto.TerminalDtoService;
 
@@ -48,12 +49,15 @@ public class RouteEnricherApiController {
 
     private final EnricherDtoService enricherDtoService;
     private final TerminalDtoService terminalDtoService;
+    private final UserAuthenticationService userAuthenticationService;
 
     @Autowired
-    RouteEnricherApiController(EnricherDtoService enricherDtoService, TerminalDtoService terminalDtoService) {
+    RouteEnricherApiController(EnricherDtoService enricherDtoService, TerminalDtoService terminalDtoService,
+        UserAuthenticationService userAuthenticationService) {
 
         this.enricherDtoService = enricherDtoService;
         this.terminalDtoService = terminalDtoService;
+        this.userAuthenticationService = userAuthenticationService;
     }
 
     @ApiOperation(
@@ -73,7 +77,7 @@ public class RouteEnricherApiController {
     @ModelAttribute(ControllerConstants.RESPONSE)
     public RouteResponse getEnrichedRoute(@ApiIgnore RouteDto route,
         @RequestParam(value = "terminal", required = false)
-        @ApiIgnore String terminalUid, Model model, Authentication authentication) {
+        @ApiIgnore String terminalUid, Model model) {
 
         model.asMap().remove("routeDto");
 
@@ -85,6 +89,8 @@ public class RouteEnricherApiController {
         RouteResponse response = new RouteResponse();
         response.setRoute(enricherDtoService.enrich(route));
         response.add(linkTo(getClass()).withSelfRel());
+
+        Authentication authentication = userAuthenticationService.getCurrentUser();
 
         LOG.info("API: Responding routedetails with a route with {} parts. Route name is {} - user: {}",
             response.getRoute().size(), response.getRoute().getName(), authentication.getName());

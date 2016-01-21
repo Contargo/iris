@@ -15,6 +15,8 @@ import org.slf4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.security.core.Authentication;
+
 import org.springframework.stereotype.Controller;
 
 import org.springframework.ui.Model;
@@ -71,7 +73,7 @@ public class RouteEnricherApiController {
     @ModelAttribute(ControllerConstants.RESPONSE)
     public RouteResponse getEnrichedRoute(@ApiIgnore RouteDto route,
         @RequestParam(value = "terminal", required = false)
-        @ApiIgnore String terminalUid, Model model) {
+        @ApiIgnore String terminalUid, Model model, Authentication authentication) {
 
         model.asMap().remove("routeDto");
 
@@ -84,8 +86,8 @@ public class RouteEnricherApiController {
         response.setRoute(enricherDtoService.enrich(route));
         response.add(linkTo(getClass()).withSelfRel());
 
-        LOG.info("API: Responding routedetails with a route with {} parts. Route name is {}",
-            response.getRoute().size(), response.getRoute().getName());
+        LOG.info("API: Responding routedetails with a route with {} parts. Route name is {} - user: {}",
+            response.getRoute().size(), response.getRoute().getName(), authentication.getName());
 
         return response;
     }

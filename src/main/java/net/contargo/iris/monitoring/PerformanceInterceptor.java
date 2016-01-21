@@ -4,12 +4,14 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Component;
 
 
 /**
- * @author David Schilling - schilling@synyx.de
+ * @author  David Schilling - schilling@synyx.de
  */
 @Aspect
 @Component
@@ -24,8 +26,8 @@ public class PerformanceInterceptor {
     }
 
     @Around(
-                "routeEnricherApiControllerGetEnrichedRoute() || "
-                +   "addressApiControllerAddressesByAddressDetails()"
+        "routeEnricherApiControllerGetEnrichedRoute() || "
+        + "addressApiControllerAddressesByAddressDetails()"
     )
     public Object doAround(ProceedingJoinPoint joinPoint) throws Throwable {
 
@@ -40,8 +42,6 @@ public class PerformanceInterceptor {
     }
 
 
-
-
     @Pointcut("execution(* net.contargo.iris.route.api.RouteEnricherApiController.getEnrichedRoute(..))")
     public void routeEnricherApiControllerGetEnrichedRoute() {
 
@@ -52,6 +52,13 @@ public class PerformanceInterceptor {
     @Pointcut("execution(* net.contargo.iris.address.api.AddressApiController.addressesByAddressDetails(..))")
     public void addressApiControllerAddressesByAddressDetails() {
 
-        // intercepts routeEnricherApiControllerGetEnrichedRoute
+        // intercepts addressApiControllerAddressesByAddressDetails
+    }
+
+
+    @Pointcut("execution(* net.contargo.iris.address.api.AddressApiController.addressByGeolocation(..))")
+    public void addressApiControllerAddressByGeolocation() {
+
+        // intercepts addressApiControllerAddressByGeolocation
     }
 }

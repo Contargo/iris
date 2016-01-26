@@ -4,7 +4,6 @@ import net.contargo.iris.address.Address;
 import net.contargo.iris.address.service.AddressListFilter;
 import net.contargo.iris.api.NotFoundException;
 import net.contargo.iris.route.RoutePart;
-import net.contargo.iris.route.RouteType;
 import net.contargo.iris.routedatarevision.RouteDataRevision;
 import net.contargo.iris.routedatarevision.service.RouteDataRevisionService;
 import net.contargo.iris.terminal.Terminal;
@@ -12,6 +11,8 @@ import net.contargo.iris.terminal.Terminal;
 import org.slf4j.Logger;
 
 import java.lang.invoke.MethodHandles;
+
+import static net.contargo.iris.route.RouteType.TRUCK;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -41,7 +42,7 @@ public class RouteDataRevisionPartEnricher implements RoutePartEnricher {
     @Override
     public void enrich(RoutePart routePart, EnricherContext context) throws CriticalEnricherException {
 
-        if (routePart.getRouteType() == RouteType.TRUCK) {
+        if (routePart.getRouteType() == TRUCK) {
             try {
                 Terminal terminal = extractTerminal(routePart);
                 Address address = extractAddress(routePart);

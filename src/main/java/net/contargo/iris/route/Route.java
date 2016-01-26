@@ -1,6 +1,7 @@
 package net.contargo.iris.route;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import net.contargo.iris.GeoLocation;
 import net.contargo.iris.container.ContainerState;
 import net.contargo.iris.terminal.Terminal;
@@ -11,6 +12,11 @@ import java.util.Map;
 
 import static net.contargo.iris.container.ContainerState.EMPTY;
 import static net.contargo.iris.container.ContainerState.FULL;
+import static net.contargo.iris.route.RouteDirection.EXPORT;
+import static net.contargo.iris.route.RouteDirection.IMPORT;
+import static net.contargo.iris.route.RouteProduct.ONEWAY;
+import static net.contargo.iris.route.RouteProduct.ROUNDTRIP;
+import static net.contargo.iris.route.RouteType.TRUCK;
 
 
 /**
@@ -23,9 +29,7 @@ import static net.contargo.iris.container.ContainerState.FULL;
 public class Route {
 
     private RouteData data = new RouteData();
-
     private Terminal responsibleTerminal;
-
     private Map<String, String> errors = new HashMap<>();
 
     public RouteData getData() {
@@ -108,7 +112,7 @@ public class Route {
         List<RoutePart> routeParts = getData().getParts();
 
         if (routeParts.isEmpty()) {
-            return RouteProduct.ONEWAY;
+            return ONEWAY;
         }
 
         // if first part and last part of route are identical, than the route is a round trip
@@ -116,16 +120,16 @@ public class Route {
         GeoLocation end = routeParts.get(routeParts.size() - 1).getDestination();
 
         if (start.equals(end)) {
-            return RouteProduct.ROUNDTRIP;
+            return ROUNDTRIP;
         }
 
-        return RouteProduct.ONEWAY;
+        return ONEWAY;
     }
 
 
     public boolean isRoundTrip() {
 
-        return RouteProduct.ROUNDTRIP.equals(getProduct());
+        return ROUNDTRIP.equals(getProduct());
     }
 
 
@@ -171,9 +175,9 @@ public class Route {
     private RouteDirection determineRouteDirection(ContainerState oldState, ContainerState newState) {
 
         if (EMPTY.equals(oldState) && FULL.equals(newState)) {
-            return RouteDirection.EXPORT;
+            return EXPORT;
         } else if (FULL.equals(oldState) && EMPTY.equals(newState)) {
-            return RouteDirection.IMPORT;
+            return IMPORT;
         } else {
             return null;
         }
@@ -189,7 +193,7 @@ public class Route {
     public Boolean isTriangle() {
 
         TruckRouteParts onewayTruckParts = data.getOnewayTruckParts();
-        List<RoutePart> truckParts = data.getRoutePartsOfType(RouteType.TRUCK);
+        List<RoutePart> truckParts = data.getRoutePartsOfType(TRUCK);
 
         return onewayTruckParts.getTruckRoutePartList().size() == truckParts.size();
     }

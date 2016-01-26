@@ -33,7 +33,6 @@ public class RoutePart {
     private ContainerType containerType;
     private ContainerState containerState;
     private RoutePartData data = new RoutePartData();
-
     private List<SubRoutePart> subRouteParts = new ArrayList<>();
 
     public RoutePart() {
@@ -218,7 +217,7 @@ public class RoutePart {
             return (Terminal) getDestination();
         }
 
-        throw new IllegalStateException("Neither origin nor destination is a Teminal");
+        throw new IllegalStateException("Neither origin nor destination is a Terminal");
     }
 
 

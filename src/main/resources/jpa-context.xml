@@ -44,12 +44,14 @@
         <property name="contexts" value="${liquibase.context}"/>
     </bean>
 
-    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+    <bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource">
         <property name="driverClassName" value="${database.driver}"/>
         <property name="url" value="${database.url}"/>
         <property name="username" value="${database.username}"/>
         <property name="password" value="${database.password}"/>
         <property name="validationQuery" value="SELECT 1"/>
         <property name="testOnBorrow" value="true"/>
+        <property name="maxActive" value="${database.maxActive}"/>
+        <property name="jmxEnabled" value="true"/>
     </bean>
 </beans>

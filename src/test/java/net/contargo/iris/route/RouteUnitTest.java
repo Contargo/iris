@@ -1,5 +1,7 @@
 package net.contargo.iris.route;
 
+import net.contargo.iris.GeoLocation;
+
 import org.junit.Test;
 
 import org.junit.runner.RunWith;
@@ -15,6 +17,8 @@ import static net.contargo.iris.container.ContainerState.EMPTY;
 import static net.contargo.iris.container.ContainerState.FULL;
 import static net.contargo.iris.route.RouteDirection.EXPORT;
 import static net.contargo.iris.route.RouteDirection.IMPORT;
+import static net.contargo.iris.route.RouteType.BARGE;
+import static net.contargo.iris.route.RouteType.TRUCK;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -26,6 +30,7 @@ import static org.mockito.Mockito.when;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 
 
 /**
@@ -160,7 +165,7 @@ public class RouteUnitTest {
         when(onewayTruckPartsListMock.size()).thenReturn(2);
         when(onewayTruckRoutePartsMock.getTruckRoutePartList()).thenReturn(onewayTruckPartsListMock);
         when(routeDataMock.getOnewayTruckParts()).thenReturn(onewayTruckRoutePartsMock);
-        when(routeDataMock.getRoutePartsOfType(RouteType.TRUCK)).thenReturn(truckPartsListMock);
+        when(routeDataMock.getRoutePartsOfType(TRUCK)).thenReturn(truckPartsListMock);
         sut.setData(routeDataMock);
 
         assertThat(sut.isTriangle(), is(true));
@@ -168,5 +173,35 @@ public class RouteUnitTest {
         when(onewayTruckPartsListMock.size()).thenReturn(3);
 
         assertThat(sut.isTriangle(), is(false));
+    }
+
+
+    @Test
+    public void isDirectTruckRoute() {
+
+        Route route = createRouteWithTypes(asList(TRUCK, TRUCK));
+
+        assertThat(route.isDirectTruckRoute(), is(true));
+    }
+
+
+    @Test
+    public void isDirectTruckRoutePartWithWrongType() {
+
+        Route route = createRouteWithTypes(asList(TRUCK, BARGE));
+
+        assertThat(route.isDirectTruckRoute(), is(false));
+    }
+
+
+    private Route createRouteWithTypes(List<RouteType> routeTypes) {
+
+        Route route = new Route();
+        RouteData routeData = new RouteData();
+        routeData.setParts(routeTypes.stream().map(routeType ->
+                    new RoutePart(new GeoLocation(), new GeoLocation(), routeType)).collect(toList()));
+        route.setData(routeData);
+
+        return route;
     }
 }

@@ -3,9 +3,11 @@ package net.contargo.iris.route;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.math.BigDecimal;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
 
 /**
  * This class represents a collection of attributes associated with a {@link Route}. Any of these attributes might be

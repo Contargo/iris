@@ -16,9 +16,11 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static net.contargo.iris.route.RouteType.RAIL;
+import static net.contargo.iris.route.RouteType.TRUCK;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 
 import static org.mockito.Matchers.any;
@@ -30,6 +32,7 @@ import static org.mockito.Mockito.when;
 import static java.math.BigDecimal.TEN;
 import static java.math.BigDecimal.ZERO;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 
 
@@ -108,6 +111,27 @@ public class EnricherServiceImplUnitTest {
 
         sut.enrich(route);
 
+        assertThat(route.getErrors().get("swiss-route"), is("no route revision available"));
+    }
+
+
+    @Test
+    public void enrichWithSwissRoutingAndDirectTruck() throws CriticalEnricherException {
+
+        RouteData routeData = new RouteData();
+        routeData.setParts(asList(new RoutePart(new GeoLocation(), new GeoLocation(), TRUCK),
+                new RoutePart(new GeoLocation(), new GeoLocation(), TRUCK)));
+
+        route.setData(routeData);
+
+        RoutePartEnricher dummy = (routePart1, context) ->
+                context.addError("swiss-route", "no route revision available");
+
+        sut = new EnricherServiceImpl(singletonList(dummy), singletonList(routeTotalEnricherMock));
+
+        sut.enrich(route);
+
+        assertThat(route.getErrors().keySet(), hasSize(1));
         assertThat(route.getErrors().get("swiss-route"), is("no route revision available"));
     }
 }

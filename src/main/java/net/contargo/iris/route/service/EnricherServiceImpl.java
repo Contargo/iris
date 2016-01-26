@@ -48,7 +48,7 @@ public class EnricherServiceImpl implements EnricherService {
                 enrich(routePart, enricherContext, routePartEnricherList);
             }
 
-            if (enricherContext.getErrors().containsKey("swiss-route")) {
+            if (enricherContext.getErrors().containsKey("swiss-route") && !route.isDirectTruckRoute()) {
                 handleError(route, enricherContext);
             } else {
                 enrich(route, enricherContext, routeTotalEnricherList);

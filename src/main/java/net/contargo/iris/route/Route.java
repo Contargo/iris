@@ -197,4 +197,15 @@ public class Route {
 
         return onewayTruckParts.getTruckRoutePartList().size() == truckParts.size();
     }
+
+
+    /**
+     * A direct truck route is a {@link Route} that only contains {@link RoutePart}s with the {@link RouteType} 'TRUCK'.
+     *
+     * @return  true if the {@link Route} is a direct truck route, otherwise false
+     */
+    public boolean isDirectTruckRoute() {
+
+        return data.getRoutePartsOfType(TRUCK).size() == data.getParts().size();
+    }
 }

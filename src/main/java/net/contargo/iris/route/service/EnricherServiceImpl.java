@@ -69,9 +69,7 @@ public class EnricherServiceImpl implements EnricherService {
         throws CriticalEnricherException {
 
         for (RoutePartEnricher routePartEnricher : routePartEnrichers) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Enriching route using RoutePartEnricher {}", routePartEnricher.getClass().getSimpleName());
-            }
+            LOG.debug("Enriching route using RoutePartEnricher {}", routePartEnricher.getClass().getSimpleName());
 
             routePartEnricher.enrich(routePart, context);
         }
@@ -82,9 +80,7 @@ public class EnricherServiceImpl implements EnricherService {
         throws CriticalEnricherException {
 
         for (RouteTotalEnricher routeTotalEnricher : routeTotalEnrichers) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Enriching route using RouteTotalEnricher {}", routeTotalEnricher.getClass().getSimpleName());
-            }
+            LOG.debug("Enriching route using RouteTotalEnricher {}", routeTotalEnricher.getClass().getSimpleName());
 
             routeTotalEnricher.enrich(route, context);
         }

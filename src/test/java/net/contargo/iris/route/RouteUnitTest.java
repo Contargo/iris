@@ -25,6 +25,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 
 
 /**
@@ -41,7 +42,7 @@ public class RouteUnitTest {
     private List<RoutePart> routeParts2Mock;
 
     @Test
-    public void testOneway() {
+    public void isRoundTripButOneWay() {
 
         Route route = RouteCreationUtil.createOneWayImportRoute();
         assertThat(route.isRoundTrip(), is(false));
@@ -49,7 +50,7 @@ public class RouteUnitTest {
 
 
     @Test
-    public void testRoundtrip() {
+    public void isRoundTrip() {
 
         Route route = RouteCreationUtil.createRoundTripImportRoute();
         assertThat(route.isRoundTrip(), is(true));
@@ -60,8 +61,7 @@ public class RouteUnitTest {
     public void getDirectionPartsEmpty() {
 
         Route route = RouteCreationUtil.createOneWayImportRoute();
-
-        route.getData().setParts(new ArrayList<RoutePart>());
+        route.getData().setParts(new ArrayList<>());
 
         assertThat(route.getDirection(), nullValue());
     }
@@ -85,7 +85,7 @@ public class RouteUnitTest {
 
         Route sut = new Route();
         RouteData data = new RouteData();
-        data.setParts(new ArrayList<RoutePart>());
+        data.setParts(new ArrayList<>());
         sut.setData(data);
 
         // invariant preventing sut#getDirection to determine a direction
@@ -100,7 +100,7 @@ public class RouteUnitTest {
 
         Route sut = new Route();
         RouteData data = new RouteData();
-        data.setParts(asList(routePartA));
+        data.setParts(singletonList(routePartA));
         sut.setData(data);
 
         // invariant preventing sut#getDirection to determine a direction
@@ -149,7 +149,7 @@ public class RouteUnitTest {
 
 
     @Test
-    public void testIsTriangle() {
+    public void isTriangle() {
 
         Route sut = new Route();
         RouteData routeDataMock = mock(RouteData.class);

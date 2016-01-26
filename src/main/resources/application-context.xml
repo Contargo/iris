@@ -307,6 +307,7 @@
         <constructor-arg name="routeTotalEnricherList">
             <!-- Please keep in mind that the order of the enrichers is very important - before you add or remove something -->
             <list>
+                <bean class="net.contargo.iris.route.service.RouteDataRevisionEnricher"/>
                 <bean class="net.contargo.iris.route.service.Co2TotalEnricher"/>
                 <bean class="net.contargo.iris.route.service.TruckingTotalEnricher"/>
                 <bean class="net.contargo.iris.route.service.TotalEnricher"/>

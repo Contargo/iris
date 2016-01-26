@@ -48,11 +48,7 @@ public class EnricherServiceImpl implements EnricherService {
                 enrich(routePart, enricherContext, routePartEnricherList);
             }
 
-            if (enricherContext.getErrors().containsKey("swiss-route") && !route.isDirectTruckRoute()) {
-                handleError(route, enricherContext);
-            } else {
-                enrich(route, enricherContext, routeTotalEnricherList);
-            }
+            enrich(route, enricherContext, routeTotalEnricherList);
         } catch (CriticalEnricherException e) {
             handleError(route, enricherContext);
 
@@ -100,8 +96,6 @@ public class EnricherServiceImpl implements EnricherService {
 
         route.setData(data);
 
-        if (!context.getErrors().containsKey("swiss-route")) {
-            context.addError("route", "Routing failed");
-        }
+        context.addError("route", "Routing failed");
     }
 }

@@ -107,7 +107,6 @@ public class RouteDataRevisionServiceImplUnitTest {
 
         when(terminalServiceMock.getByUniqueId(BigInteger.ONE)).thenReturn(terminal);
 
-        Date date = new Date();
         when(routeDataRevisionRepositoryMock.findNearest(eq(terminal), eq(address.getLatitude()),
                     eq(address.getLongitude()), Mockito.any(Date.class))).thenReturn(routeDataRevisionDB);
 

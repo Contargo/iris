@@ -44,6 +44,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 
 
 /**
@@ -191,7 +192,7 @@ public class NominatimAddressServiceUnitTest {
         expectedAddress.setDisplayName("Alleinstellungsmerkmal für die expectedAddress");
 
         when(nominatimUrlBuilderMock.buildOsmUrl(OSM_ID)).thenReturn(DUMMY_URL);
-        when(nominatimResponderMock.getAddressesFromOSMId(DUMMY_URL)).thenReturn(asList(expectedAddress));
+        when(nominatimResponderMock.getAddressesFromOSMId(DUMMY_URL)).thenReturn(singletonList(expectedAddress));
 
         Address actualAddress = sut.getAddressByOsmId(OSM_ID);
 

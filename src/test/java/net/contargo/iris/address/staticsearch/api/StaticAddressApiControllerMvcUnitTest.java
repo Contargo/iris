@@ -43,6 +43,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 
 
 /**
@@ -89,7 +90,8 @@ public class StaticAddressApiControllerMvcUnitTest {
 
         AddressDto dto = new AddressDto(address);
 
-        when(staticAddressDtoServiceMock.getAddressesByDetails("76131", "Karlsruhe", "DE")).thenReturn(asList(dto));
+        when(staticAddressDtoServiceMock.getAddressesByDetails("76131", "Karlsruhe", "DE")).thenReturn(singletonList(
+                dto));
 
         ResultActions resultActions = mockMvc.perform(get(
                     "/staticaddresses?postalCode=76131&country=DE&city=Karlsruhe").accept(APPLICATION_JSON));

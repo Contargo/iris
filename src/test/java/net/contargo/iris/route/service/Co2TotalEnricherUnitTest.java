@@ -24,7 +24,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 
 
 /**
@@ -56,7 +56,7 @@ public class Co2TotalEnricherUnitTest {
         RoutePart routePart = new RoutePart();
         routePart.setRouteType(RouteType.RAIL);
         routePart.getData().setCo2(BigDecimal.TEN);
-        route.getData().setParts(asList(routePart));
+        route.getData().setParts(singletonList(routePart));
 
         when(co2ServiceMock.getEmissionDirectTruck(route)).thenReturn(co2EmissionDirectTruck);
         when(co2ServiceMock.getEmission(route)).thenReturn(co2Emission);

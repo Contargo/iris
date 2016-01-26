@@ -1,7 +1,6 @@
 package net.contargo.iris.terminal.api;
 
 import net.contargo.iris.connection.dto.SeaportTerminalConnectionDtoService;
-import net.contargo.iris.route.RouteType;
 import net.contargo.iris.seaport.dto.SeaportDto;
 import net.contargo.iris.seaport.dto.SeaportDtoService;
 import net.contargo.iris.terminal.dto.TerminalDto;
@@ -16,8 +15,6 @@ import org.mockito.Mockito;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.http.MediaType;
-
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -28,6 +25,8 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+
+import static net.contargo.iris.route.RouteType.RAIL;
 
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.endsWith;
@@ -42,6 +41,8 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -50,6 +51,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 
 
 /**
@@ -122,7 +124,7 @@ public class TerminalApiControllerMvcUnitTest {
 
         when(terminalDtoService.getAllActive()).thenReturn(asList(terminalDto1, terminalDto2));
 
-        ResultActions resultActions = mockMvc.perform(get("/terminals").accept(MediaType.APPLICATION_JSON));
+        ResultActions resultActions = mockMvc.perform(get("/terminals").accept(APPLICATION_JSON));
         resultActions.andExpect(status().isOk());
         resultActions.andExpect(content().contentType("application/json"));
 
@@ -150,8 +152,7 @@ public class TerminalApiControllerMvcUnitTest {
 
         when(terminalDtoService.getAll()).thenReturn(asList(terminalDto1, terminalDto2));
 
-        ResultActions resultActions = mockMvc.perform(get("/terminals?activeOnly=false").accept(
-                    MediaType.APPLICATION_JSON));
+        ResultActions resultActions = mockMvc.perform(get("/terminals?activeOnly=false").accept(APPLICATION_JSON));
         resultActions.andExpect(status().isOk());
         resultActions.andExpect(content().contentType("application/json"));
 
@@ -178,12 +179,12 @@ public class TerminalApiControllerMvcUnitTest {
     public void getTerminalsForSeaportAndRouteType() throws Exception {
 
         when(seaportDtoService.getByUid(new BigInteger("42"))).thenReturn(seaportDto1);
-        when(seaportTerminalConnectionDtoService.findTerminalsConnectedToSeaPortByRouteType(seaportDto1,
-                    RouteType.RAIL)).thenReturn(asList(terminalDto2));
+        when(seaportTerminalConnectionDtoService.findTerminalsConnectedToSeaPortByRouteType(seaportDto1, RAIL))
+            .thenReturn(singletonList(terminalDto2));
 
         ResultActions resultActions = mockMvc.perform(get("/terminals").param("seaportUid", "42")
                 .param("routeType", "RAIL")
-                .accept(MediaType.APPLICATION_JSON));
+                .accept(APPLICATION_JSON));
         resultActions.andExpect(status().isOk());
         resultActions.andExpect(content().contentType("application/json"));
 
@@ -205,7 +206,7 @@ public class TerminalApiControllerMvcUnitTest {
 
         ResultActions resultActions = mockMvc.perform(get("/terminals").param("seaportId", "42")
                 .param("routeType", "RAIL")
-                .accept(MediaType.APPLICATION_JSON));
+                .accept(APPLICATION_JSON));
         resultActions.andExpect(status().isOk());
         resultActions.andExpect(jsonPath("$response.terminals", empty()));
     }
@@ -216,7 +217,7 @@ public class TerminalApiControllerMvcUnitTest {
 
         when(terminalDtoService.getByUid(new BigInteger("42"))).thenReturn(terminalDto2);
 
-        ResultActions resultActions = mockMvc.perform(get("/terminals/42").accept(MediaType.APPLICATION_JSON));
+        ResultActions resultActions = mockMvc.perform(get("/terminals/42").accept(APPLICATION_JSON));
         resultActions.andExpect(status().isOk());
         resultActions.andExpect(content().contentType("application/json"));
 
@@ -235,7 +236,7 @@ public class TerminalApiControllerMvcUnitTest {
     @Test
     public void getTerminalWithInvalidId() throws Exception {
 
-        ResultActions resultActions = mockMvc.perform(get("/terminals/314").accept(MediaType.APPLICATION_JSON));
+        ResultActions resultActions = mockMvc.perform(get("/terminals/314").accept(APPLICATION_JSON));
         resultActions.andExpect(status().isNotFound());
     }
 
@@ -247,8 +248,7 @@ public class TerminalApiControllerMvcUnitTest {
 
         when(terminalDtoService.existsByUniqueId(uniqueId)).thenReturn(false);
 
-        ResultActions resultActions = mockMvc.perform(put("/terminals/8491748714921").contentType(
-                        MediaType.APPLICATION_JSON)
+        ResultActions resultActions = mockMvc.perform(put("/terminals/8491748714921").contentType(APPLICATION_JSON)
                 .content("{\"name\": \"foo\", \"enabled\": true, \"latitude\": 0, \"longitude\": 0}"));
 
         resultActions.andExpect(status().isCreated());
@@ -267,8 +267,7 @@ public class TerminalApiControllerMvcUnitTest {
 
         when(terminalDtoService.existsByUniqueId(uniqueId)).thenReturn(true);
 
-        ResultActions resultActions = mockMvc.perform(put("/terminals/8491748714921").contentType(
-                        MediaType.APPLICATION_JSON)
+        ResultActions resultActions = mockMvc.perform(put("/terminals/8491748714921").contentType(APPLICATION_JSON)
                 .content("{\"name\": \"foo\", \"enabled\": true, \"latitude\": 0, \"longitude\": 0}"));
 
         resultActions.andExpect(status().isNoContent());

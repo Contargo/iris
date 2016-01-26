@@ -1,7 +1,6 @@
 package net.contargo.iris.connection.service;
 
 import net.contargo.iris.connection.persistence.MainRunConnectionRepository;
-import net.contargo.iris.route.RouteType;
 import net.contargo.iris.seaport.Seaport;
 import net.contargo.iris.seaport.service.SeaportService;
 import net.contargo.iris.terminal.Terminal;
@@ -20,6 +19,9 @@ import java.math.BigInteger;
 
 import java.util.List;
 
+import static net.contargo.iris.route.RouteType.RAIL;
+import static net.contargo.iris.route.RouteType.TRUCK;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -29,7 +31,7 @@ import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 
 
 /**
@@ -65,9 +67,9 @@ public class SeaportTerminalConnectionServiceImplUnitTest {
     @Test
     public void findSeaPortsConnectedByTruckRouteType() {
 
-        when(seaportServiceMock.getAllActive()).thenReturn(asList(seaport));
+        when(seaportServiceMock.getAllActive()).thenReturn(singletonList(seaport));
 
-        List<Seaport> seaports = sut.findSeaPortsConnectedByRouteType(RouteType.TRUCK);
+        List<Seaport> seaports = sut.findSeaPortsConnectedByRouteType(TRUCK);
 
         assertThat(seaports, hasSize(1));
         assertThat(seaports, contains(seaport));
@@ -79,10 +81,9 @@ public class SeaportTerminalConnectionServiceImplUnitTest {
     @Test
     public void findSeaPortsConnectedByRailRouteType() {
 
-        when(mainRunConnectionRepositoryMock.findSeaportsConnectedByRouteType(RouteType.RAIL)).thenReturn(asList(
-                seaport));
+        when(mainRunConnectionRepositoryMock.findSeaportsConnectedByRouteType(RAIL)).thenReturn(singletonList(seaport));
 
-        List<Seaport> seaports = sut.findSeaPortsConnectedByRouteType(RouteType.RAIL);
+        List<Seaport> seaports = sut.findSeaPortsConnectedByRouteType(RAIL);
 
         assertThat(seaports, hasSize(1));
         assertThat(seaports, contains(seaport));
@@ -94,9 +95,9 @@ public class SeaportTerminalConnectionServiceImplUnitTest {
     @Test
     public void getTerminalsConnectedToSeaPortByTruckRouteType() {
 
-        when(terminalServiceMock.getAllActive()).thenReturn(asList(terminal));
+        when(terminalServiceMock.getAllActive()).thenReturn(singletonList(terminal));
 
-        List<Terminal> terminals = sut.getTerminalsConnectedToSeaPortByRouteType(seaport, RouteType.TRUCK);
+        List<Terminal> terminals = sut.getTerminalsConnectedToSeaPortByRouteType(seaport, TRUCK);
 
         assertThat(terminals, hasSize(1));
         assertThat(terminals, contains(terminal));
@@ -108,10 +109,10 @@ public class SeaportTerminalConnectionServiceImplUnitTest {
     @Test
     public void getTerminalsConnectedToSeaPortByRailRouteType() {
 
-        when(mainRunConnectionRepositoryMock.getTerminalsConnectedToSeaPortByRouteType(seaport.getUniqueId(),
-                RouteType.RAIL)).thenReturn(asList(terminal));
+        when(mainRunConnectionRepositoryMock.getTerminalsConnectedToSeaPortByRouteType(seaport.getUniqueId(), RAIL))
+            .thenReturn(singletonList(terminal));
 
-        List<Terminal> terminals = sut.getTerminalsConnectedToSeaPortByRouteType(seaport, RouteType.RAIL);
+        List<Terminal> terminals = sut.getTerminalsConnectedToSeaPortByRouteType(seaport, RAIL);
 
         assertThat(terminals, hasSize(1));
         assertThat(terminals, contains(terminal));

@@ -21,7 +21,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +28,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import static org.apache.commons.lang.CharEncoding.UTF_8;
+
+import static java.util.Collections.singletonList;
 
 
 /**
@@ -108,23 +109,31 @@ public class TestExplainView extends MappingJackson2JsonView implements Applicat
 
         String url = urlB.toString();
 
-        builder.append("You requested this page using url <b>").append(url).append("</b> and Accept-Header <b>").append(
-            accept).append("</b>  <br/><br/>");
+        builder.append("You requested this page using url <b>")
+            .append(url)
+            .append("</b> and Accept-Header <b>")
+            .append(accept)
+            .append("</b>  <br/><br/>");
 
         builder.append("You requested this page as HTML (Probably because your client has text/html "
             + "prior to application/json or application/xml in the Accept-Header.");
         builder.append("If you are intersted in another format please adjust your Accept-Header "
             + "or append .json or .xml at the url:<ul>");
 
-        for (String type : Arrays.asList("json")) {
+        for (String type : singletonList("json")) {
             String typeUrl = url + "." + type;
 
             if (q != null) {
                 typeUrl = request.getRequestURL().append(".").append(type).append("?").append(q).toString();
             }
 
-            builder.append("<li><a href='").append(typeUrl).append("'>Show as ").append(type).append("</a>  (").append(
-                typeUrl).append(")</li>");
+            builder.append("<li><a href='")
+                .append(typeUrl)
+                .append("'>Show as ")
+                .append(type)
+                .append("</a>  (")
+                .append(typeUrl)
+                .append(")</li>");
         }
 
         builder.append("</ul>");
@@ -160,11 +169,19 @@ public class TestExplainView extends MappingJackson2JsonView implements Applicat
             }
 
             if (decodedLink.contains("{")) {
-                builder.append("<li>").append(singleLink.getRel()).append(": ").append(decodedLink).append(
-                    " (url contains placeholders)</li>");
+                builder.append("<li>")
+                    .append(singleLink.getRel())
+                    .append(": ")
+                    .append(decodedLink)
+                    .append(" (url contains placeholders)</li>");
             } else {
-                builder.append("<li><a href='").append(decodedLink).append("'>").append(singleLink.getRel()).append(
-                    "</a> (").append(decodedLink).append(")</li>");
+                builder.append("<li><a href='")
+                    .append(decodedLink)
+                    .append("'>")
+                    .append(singleLink.getRel())
+                    .append("</a> (")
+                    .append(decodedLink)
+                    .append(")</li>");
             }
         }
 

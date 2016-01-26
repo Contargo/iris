@@ -11,7 +11,6 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +30,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
+
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 
 
 /**
@@ -113,13 +115,13 @@ public class AddressDtoServiceImplUnitTest {
     public void testGetAddressesByDetails() {
 
         Address secondAddress = new Address(BigDecimal.TEN, BigDecimal.TEN);
-        List<AddressList> addressListList = Arrays.asList(new AddressList("name1", Arrays.asList(address)),
-                new AddressList("name2", Arrays.asList(secondAddress)));
+        List<AddressList> addressListList = asList(new AddressList("name1", singletonList(address)),
+                new AddressList("name2", singletonList(secondAddress)));
         when(addressServiceWrapperMock.getAddressesByDetails(addressDetails)).thenReturn(addressListList);
 
-        List<AddressListDto> expectedAddressListDtoList = Arrays.asList(new AddressListDto("name1",
-                    Arrays.asList(new AddressDto(address))),
-                new AddressListDto("name2", Arrays.asList(new AddressDto(secondAddress))));
+        List<AddressListDto> expectedAddressListDtoList = asList(new AddressListDto("name1",
+                    singletonList(new AddressDto(address))),
+                new AddressListDto("name2", singletonList(new AddressDto(secondAddress))));
 
         List<AddressListDto> actualAddressListDtoList = sut.getAddressesByDetails(addressDetails);
         assertThat(actualAddressListDtoList.size(), is(expectedAddressListDtoList.size()));
@@ -138,11 +140,11 @@ public class AddressDtoServiceImplUnitTest {
     public void testGetAddressesByDetailsPlain() {
 
         Address secondAddress = new Address(BigDecimal.TEN, BigDecimal.TEN);
-        List<AddressList> addressListList = Arrays.asList(new AddressList("name1", Arrays.asList(address)),
-                new AddressList("name2", Arrays.asList(secondAddress)));
+        List<AddressList> addressListList = asList(new AddressList("name1", singletonList(address)),
+                new AddressList("name2", singletonList(secondAddress)));
         when(addressServiceWrapperMock.getAddressesByDetails(addressDetails)).thenReturn(addressListList);
 
-        List<AddressDto> expectedAddressDtoList = Arrays.asList(new AddressDto(address), new AddressDto(secondAddress));
+        List<AddressDto> expectedAddressDtoList = asList(new AddressDto(address), new AddressDto(secondAddress));
 
         List<AddressDto> actualAddressDtoList = sut.getAddressesByDetailsPlain(addressDetails);
         assertReflectionEquals(actualAddressDtoList, expectedAddressDtoList);
@@ -153,9 +155,9 @@ public class AddressDtoServiceImplUnitTest {
     public void testGetAddressesWherePlaceIsIn() {
 
         Address secondAddress = new Address(BigDecimal.TEN, BigDecimal.TEN);
-        when(addressServiceMock.getAddressesWherePlaceIsIn(PLACE_ID)).thenReturn(Arrays.asList(address, secondAddress));
+        when(addressServiceMock.getAddressesWherePlaceIsIn(PLACE_ID)).thenReturn(asList(address, secondAddress));
 
-        List<AddressDto> expectedAddressList = Arrays.asList(new AddressDto(address), new AddressDto(secondAddress));
+        List<AddressDto> expectedAddressList = asList(new AddressDto(address), new AddressDto(secondAddress));
 
         List<AddressDto> actualAddressList = sut.getAddressesWherePlaceIsIn(PLACE_ID);
         assertReflectionEquals(actualAddressList, expectedAddressList);

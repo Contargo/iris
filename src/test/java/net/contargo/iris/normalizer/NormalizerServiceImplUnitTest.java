@@ -55,9 +55,7 @@ public class NormalizerServiceImplUnitTest {
     @Test
     public void testNullText() {
 
-        String text = null;
-
-        assertThat(text, is(sut.normalize(text)));
+        assertThat(null, is(sut.normalize(null)));
     }
 
 

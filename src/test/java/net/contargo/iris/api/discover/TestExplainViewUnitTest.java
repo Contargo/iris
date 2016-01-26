@@ -36,7 +36,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 
 
 /**
@@ -71,7 +71,8 @@ public class TestExplainViewUnitTest {
         when(requestMock.getQueryString()).thenReturn("queryString");
         when(requestMock.getRemoteHost()).thenReturn("127.0.0.1");
 
-        UserDetails userDetails = new User("admin@synyx.de", "password", asList(new SimpleGrantedAuthority("USER")));
+        UserDetails userDetails = new User("admin@synyx.de", "password",
+                singletonList(new SimpleGrantedAuthority("USER")));
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
             new UsernamePasswordAuthenticationToken(userDetails, null);
 

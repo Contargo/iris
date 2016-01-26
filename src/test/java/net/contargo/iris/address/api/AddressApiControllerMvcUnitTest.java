@@ -24,7 +24,6 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.math.BigDecimal;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,6 +42,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
+
+import static java.util.Collections.singletonList;
 
 
 /**
@@ -76,18 +77,18 @@ public class AddressApiControllerMvcUnitTest {
 
         AddressDto addressDto = new AddressDto(address);
         when(addressDtoServiceMock.getAddressByOsmId(AddressApiControllerMvcUnitTest.OSM_ID)).thenReturn(addressDto);
-        when(addressDtoServiceMock.wrapInListOfAddressLists(any(AddressDto.class))).thenReturn(Arrays.asList(
-                new AddressListDto("Result", Arrays.asList(addressDto))));
+        when(addressDtoServiceMock.wrapInListOfAddressLists(any(AddressDto.class))).thenReturn(singletonList(
+                new AddressListDto("Result", singletonList(addressDto))));
         when(addressDtoServiceMock.getAddressForGeoLocation(new GeoLocation(BigDecimal.ONE, BigDecimal.ONE)))
             .thenReturn(addressDto);
 
         Map<String, String> addressDetails = new HashMap<>();
         addressDetails.put(AddressDetailKey.CITY.getKey(), "Karlsruhe");
         addressDetails.put(AddressDetailKey.NAME.getKey(), "zkm");
-        when(addressDtoServiceMock.getAddressesByDetails(addressDetails)).thenReturn(Arrays.asList(
-                new AddressListDto("name1", Arrays.asList(addressDto))));
-        when(addressDtoServiceMock.getAddressesByDetailsPlain(addressDetails)).thenReturn(Arrays.asList(addressDto));
-        when(addressDtoServiceMock.getAddressesWherePlaceIsIn(1L)).thenReturn(Arrays.asList(addressDto));
+        when(addressDtoServiceMock.getAddressesByDetails(addressDetails)).thenReturn(singletonList(
+                new AddressListDto("name1", singletonList(addressDto))));
+        when(addressDtoServiceMock.getAddressesByDetailsPlain(addressDetails)).thenReturn(singletonList(addressDto));
+        when(addressDtoServiceMock.getAddressesWherePlaceIsIn(1L)).thenReturn(singletonList(addressDto));
     }
 
 
@@ -158,7 +159,8 @@ public class AddressApiControllerMvcUnitTest {
 
         ResultActions resultActions = mockMvc.perform(get("/places/1/addresses").accept(APPLICATION_JSON));
 
-        resultActions.andExpect(status().isOk()).andExpect(content().contentType("application/json")).andExpect(
-            (jsonPath("$.addresses[0].displayName", is("76137 Karlsruhe"))));
+        resultActions.andExpect(status().isOk())
+            .andExpect(content().contentType("application/json"))
+            .andExpect((jsonPath("$.addresses[0].displayName", is("76137 Karlsruhe"))));
     }
 }

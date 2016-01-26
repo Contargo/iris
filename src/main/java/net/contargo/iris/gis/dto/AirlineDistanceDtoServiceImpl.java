@@ -30,13 +30,12 @@ public class AirlineDistanceDtoServiceImpl implements AirlineDistanceDtoService 
     public AirlineDistanceDto calcAirLineDistInMeters(String alat, String alon, String blat, String blon) {
 
         // the scope identifies the distance that gets calculated
-        StringBuilder scope = new StringBuilder();
-        scope.append("?alat=").append(alat).append("&alon=").append(alon);
-        scope.append("&blat=").append(blat).append("&blon=").append(blon);
+        String scope = "?alat=" + alat + "&alon=" + alon
+            + "&blat=" + blat + "&blon=" + blon;
 
         GeoLocation a = new GeoLocation(new BigDecimal(alat), new BigDecimal(alon));
         GeoLocation b = new GeoLocation(new BigDecimal(blat), new BigDecimal(blon));
 
-        return new AirlineDistanceDto(gisService.calcAirLineDistInMeters(a, b), METER, scope.toString());
+        return new AirlineDistanceDto(gisService.calcAirLineDistInMeters(a, b), METER, scope);
     }
 }

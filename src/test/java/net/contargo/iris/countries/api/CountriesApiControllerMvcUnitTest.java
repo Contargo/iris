@@ -33,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 
 
 /**
@@ -60,7 +60,7 @@ public class CountriesApiControllerMvcUnitTest {
     @Test
     public void geoCodeByOsmId() throws Exception {
 
-        when(countryDtoServiceMock.getCountries()).thenReturn(asList(new CountryDto(GERMANY, GER)));
+        when(countryDtoServiceMock.getCountries()).thenReturn(singletonList(new CountryDto(GERMANY, GER)));
 
         MockHttpServletRequestBuilder builder = get("/countries");
         builder.accept(APPLICATION_JSON);

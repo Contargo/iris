@@ -10,7 +10,6 @@
 
     <aop:aspectj-autoproxy/>
     <context:component-scan base-package="net.contargo.iris.monitoring"/>
-    <context:mbean-export registration="ignoreExisting"/>
 
     <bean name="performanceStats" class="net.contargo.iris.monitoring.PerformanceStats">
         <constructor-arg name="statsdHost" value="${statsd.host}"/>

@@ -54,4 +54,14 @@
         <property name="maxActive" value="${database.maxActive}"/>
         <property name="jmxEnabled" value="true"/>
     </bean>
+
+
+    <bean id="jmxExporter" class="org.springframework.jmx.export.MBeanExporter" lazy-init="false">
+        <property name="registrationPolicy" value="REPLACE_EXISTING"/>
+        <property name="beans">
+            <map>
+                <entry key="bean:name=DataSource" value="#{dataSource.getPool().getJmxPool()}"/>
+            </map>
+        </property>
+    </bean>
 </beans>

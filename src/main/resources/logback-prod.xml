@@ -20,6 +20,13 @@
         </encoder>
     </appender>
 
+    <property resource="application-${environment}.properties" />
+
+    <appender name="gelf" class="de.appelgriepsch.logback.GelfAppender">
+        <server>${graylog.server}</server>
+        <additionalFields>application=IRIS,environment=${environment},facility=Tomcat,location=Central</additionalFields>
+    </appender>
+
     <!-- Application Loggers -->
     <logger name="net.contargo">
         <level value="info" />
@@ -37,5 +44,6 @@
     <root>
         <level value="info" />
         <appender-ref ref="file" />
+        <appender-ref ref="gelf" />
     </root>
 </configuration>

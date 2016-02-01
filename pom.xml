@@ -253,6 +253,11 @@
             <artifactId>logback-ext-spring</artifactId>
             <version>0.1.2</version>
         </dependency>
+        <dependency>
+            <groupId>de.appelgriepsch.logback</groupId>
+            <artifactId>logback-gelf-appender</artifactId>
+            <version>1.0</version>
+        </dependency>
 
         <!-- Test -->
         <dependency>
@@ -407,6 +412,16 @@
                     <include>**/*.xml</include>
                     <include>**/*.properties</include>
                     <include>**/*.json</include>
+                </includes>
+                <excludes>
+                    <exclude>logback-prod.xml</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <includes>
+                    <include>logback-prod.xml</include>
                 </includes>
             </resource>
         </resources>

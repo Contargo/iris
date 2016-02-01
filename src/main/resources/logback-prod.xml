@@ -22,6 +22,16 @@
 
     <property resource="application-${environment}.properties" />
 
+    <if condition='isDefined("graylog.server")'>
+        <then>
+            <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+                <encoder>
+                    <pattern>%d | %5p  | %t | %-55logger{55} | %m %n</pattern>
+                </encoder>
+            </appender>
+        </then>
+    </if>
+
     <appender name="gelf" class="de.appelgriepsch.logback.GelfAppender">
         <server>${graylog.server}</server>
         <additionalFields>application=IRIS,environment=${environment},facility=Tomcat,location=Central</additionalFields>
@@ -41,9 +51,19 @@
         <level value="info" />
     </logger>
 
-    <root>
-        <level value="info" />
-        <appender-ref ref="file" />
-        <appender-ref ref="gelf" />
-    </root>
+    <if condition='isDefined("graylog.server")'>
+        <then>
+            <root>
+                <level value="info" />
+                <appender-ref ref="console" />
+            </root>
+        </then>
+        <else>
+            <root>
+                <level value="info" />
+                <appender-ref ref="file" />
+            </root>
+        </else>
+    </if>
+
 </configuration>

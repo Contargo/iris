@@ -85,7 +85,7 @@ There are two different roles defined in IRIS:
 
 ### User Credentials
 
-User Credentials are are located in ```src/main/resources/usercredentials-<envname>.properties```.
+User Credentials are located in ```src/main/resources/usercredentials-<envname>.properties```.
 
 For development IRIS ships with two predefined users:
 - admin@example.com with password admin: ROLE_ADMIN
@@ -105,6 +105,13 @@ youruser@example.com=e3c652f0ba0b4801205814f8b6bc49672c4c74e25b497770bb89b22cdeb
 
 You can specify login, password, role and set the enabled flag.
 
+### Logging
+
+Logging in IRIS uses Logback.
+
+The default logback configuration is located in ```src/main/resources/logback.xml```. It configures a console appender and a rolling file appender. The log file is located in ```logs/iris.log```.
+
+Additionally, there is another logback configuration suited for production use located in ```src/main/resources/logback-prod.xml```. It can be activated using the ```logback.configuration.file``` property. This logging configuration does not include the console appender. An extra GELF appender can be activated by providing the property ```graylog.server``` that points to your graylog host.
 
 ## Application Start
 

@@ -24,10 +24,9 @@
 
     <if condition='isDefined("graylog.server")'>
         <then>
-            <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
-                <encoder>
-                    <pattern>%d | %5p  | %t | %-55logger{55} | %m %n</pattern>
-                </encoder>
+            <appender name="gelf" class="de.appelgriepsch.logback.GelfAppender">
+                <server>${graylog.server}</server>
+                <additionalFields>application=IRIS,environment=${environment},facility=Tomcat,location=Central</additionalFields>
             </appender>
         </then>
     </if>
@@ -55,7 +54,7 @@
         <then>
             <root>
                 <level value="info" />
-                <appender-ref ref="console" />
+                <appender-ref ref="gelf" />
             </root>
         </then>
         <else>

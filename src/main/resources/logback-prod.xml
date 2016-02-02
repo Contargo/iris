@@ -26,6 +26,7 @@
         <then>
             <appender name="gelf" class="de.appelgriepsch.logback.GelfAppender">
                 <server>${graylog.server}</server>
+                <includeLevelName>true</includeLevelName>
                 <additionalFields>application=IRIS,environment=${environment},facility=Tomcat,location=Central</additionalFields>
             </appender>
         </then>

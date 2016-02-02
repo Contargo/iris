@@ -1,7 +1,16 @@
 
 package net.contargo.iris.api;
 
+import net.contargo.iris.security.UserAuthenticationService;
+
+import org.junit.Before;
 import org.junit.Test;
+
+import org.junit.runner.RunWith;
+
+import org.mockito.Mock;
+
+import org.mockito.runners.MockitoJUnitRunner;
 
 import org.springframework.http.HttpStatus;
 
@@ -33,20 +42,29 @@ import static javax.servlet.http.HttpServletResponse.SC_SERVICE_UNAVAILABLE;
  * @author  Aljona Murygina - murygina@synyx.de
  * @author  Tobias Schneider - schneider@synyx.de
  */
+@RunWith(MockitoJUnitRunner.class)
 public class PublicAPIExceptionHandlerUnitTest {
 
-    private final PublicAPIExceptionHandler sut;
+    private PublicAPIExceptionHandler sut;
 
     private final MockHttpServletRequest requestMock;
     private final MockHttpServletResponse responseMock;
+
+    @Mock
+    private UserAuthenticationService userAuthenticationServiceMock;
 
     public PublicAPIExceptionHandlerUnitTest() {
 
         requestMock = new MockHttpServletRequest();
         responseMock = new MockHttpServletResponse();
-
-        sut = new PublicAPIExceptionHandler();
     }
+
+    @Before
+    public void setUp() {
+
+        sut = new PublicAPIExceptionHandler(userAuthenticationServiceMock);
+    }
+
 
     @Test
     public void resolveIllegalArgumentException() {

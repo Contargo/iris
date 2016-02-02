@@ -94,7 +94,9 @@
     </bean>
 
     <!-- own ExceptionHandler for our Public API -->
-    <bean class="net.contargo.iris.api.PublicAPIExceptionHandler"/>
+    <bean class="net.contargo.iris.api.PublicAPIExceptionHandler">
+        <constructor-arg ref="userAuthenticationService"/>
+    </bean>
 
     <!-- set locale default to en -->
     <bean id="localeResolver" class="org.springframework.web.servlet.i18n.FixedLocaleResolver">

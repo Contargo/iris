@@ -502,3 +502,11 @@ span.error {
 .subconnection-header-normal:first-child {
     margin-right: 7px;
 }
+
+
+#internal_server_error {
+    background: none repeat scroll 0 0 #FFEEEE;
+    border: 1px solid #990000;
+    color: red;
+    padding: 10px;
+}

@@ -1,7 +1,11 @@
 package net.contargo.iris.api;
 
+import net.contargo.iris.security.UserAuthenticationService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import org.springframework.security.core.Authentication;
 
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.servlet.HandlerExceptionResolver;
@@ -24,10 +28,17 @@ import static javax.servlet.http.HttpServletResponse.SC_SERVICE_UNAVAILABLE;
  *
  * @author  Aljona Murygina - murygina@synyx.de
  * @author  Tobias Schneider - schneider@synyx.de
+ * @author  David Schilling - schilling@synyx.de
  */
 public class PublicAPIExceptionHandler implements HandlerExceptionResolver {
 
     private static final Logger LOG = LoggerFactory.getLogger(PublicAPIExceptionHandler.class);
+    private final UserAuthenticationService userAuthenticationService;
+
+    public PublicAPIExceptionHandler(UserAuthenticationService userAuthenticationService) {
+
+        this.userAuthenticationService = userAuthenticationService;
+    }
 
     @Override
     public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler,
@@ -35,7 +46,9 @@ public class PublicAPIExceptionHandler implements HandlerExceptionResolver {
 
         ModelAndView modelAndView = new ModelAndView();
 
-        LOG.error("REST-API Exception: " + ex.getMessage());
+        Authentication currentUser = userAuthenticationService.getCurrentUser();
+
+        LOG.error("REST-API Exception by {}: ", currentUser, ex);
 
         try {
             if (ex instanceof IllegalArgumentException) {

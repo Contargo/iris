@@ -82,6 +82,18 @@
         <servlet-name>webServlet</servlet-name>
     </filter-mapping>
 
+    <!-- Puts request information into the Mapped Diagnostic Context -->
+    <filter>
+        <filter-name>MDCInsertingServletFilter</filter-name>
+        <filter-class>
+            ch.qos.logback.classic.helpers.MDCInsertingServletFilter
+        </filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>MDCInsertingServletFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
     <!-- Enables Spring Security -->
     <filter>
         <filter-name>springSecurityFilterChain</filter-name>

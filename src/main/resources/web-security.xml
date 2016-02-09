@@ -35,7 +35,7 @@
         <property name="defaultEntryPoint" ref="formAuthenticationEntryPoint"/>
     </bean>
 
-    <bean id="basicAuthenticationEntryPoint" class="org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint">
+    <bean id="basicAuthenticationEntryPoint" class="net.contargo.iris.security.IRISBasicAuthEntryPoint">
         <property name="realmName" value="IRIS API"/>
     </bean>
 

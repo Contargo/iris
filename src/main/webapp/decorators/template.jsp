@@ -33,6 +33,7 @@
     <script src="<c:url value="/client/js/lib/bootstrap-notify.js" />"></script>
     <script src="<c:url value="/client/js/lib/bootstrap-datepicker.js" />"></script>
     <script src="<c:url value="/client/js/lib/select2.js" />"></script>
+    <script src="<c:url value="/client/js/logoutHandling.js" />"></script>
 
     <decorator:head/>
 </head>

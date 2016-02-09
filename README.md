@@ -29,7 +29,7 @@ If you are interested to use IRIS in Switzerland read this: [ASTAG](docs/astag.m
 
 
 #Prerequisites
- - MySQL/MariaDb 5.5 or higher
+ - MariaDb 5.5 or higher
  - Maven 3 or higher
  - JDK 8 or higher
 
@@ -67,7 +67,7 @@ mvn jetty:run  # -> leads to use application-superdev.properties
 
 #### Database
 
-All database connection settings are configured in ```application-<envname>.properties```. Adapt the corresponding properties to match your MySQL/MariaDb database connection settings.
+All database connection settings are configured in ```application-<envname>.properties```. Adapt the corresponding properties to match your MariaDb database connection settings.
 
 All needed database tables are created on application start using [Liquibase](http://www.liquibase.org/).
 
@@ -115,7 +115,7 @@ Additionally, there is another logback configuration suited for production use l
 
 ## Application Start
 
-In order to build the application you need Maven 3 and Oracle JDK 7. You also need your MySQL/MariaDb database set up as described above. You can then start the local web server:
+In order to build the application you need Maven 3 and Oracle JDK 7. You also need your MariaDb database set up as described above. You can then start the local web server:
 ```sh
 $ mvn jetty:run
 ```

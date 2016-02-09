@@ -7,3 +7,6 @@ jdk:
 
 before_script:
   - mysql -e 'create database iris;'
+
+addons:
+    mariadb: "10.0"

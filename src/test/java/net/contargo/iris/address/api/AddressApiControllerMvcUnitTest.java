@@ -56,14 +56,14 @@ import static java.util.Collections.singletonList;
 @WebAppConfiguration
 public class AddressApiControllerMvcUnitTest {
 
-    static final int OSM_ID = 12;
+    private static final int OSM_ID = 12;
 
     @Autowired
     private WebApplicationContext webApplicationContext;
-    private MockMvc mockMvc;
-
     @Autowired
     private AddressDtoService addressDtoServiceMock;
+
+    private MockMvc mockMvc;
 
     @Before
     public void setUp() throws Exception {
@@ -99,9 +99,9 @@ public class AddressApiControllerMvcUnitTest {
 
         resultActions.andExpect(status().isOk());
         resultActions.andExpect(content().contentType("application/json"));
-        resultActions.andExpect((jsonPath("$.geoCodeResponse.addresses[0].addresses[0].displayName",
-                    is("76137 Karlsruhe"))));
-        resultActions.andExpect((jsonPath("$.geoCodeResponse.links", empty())));
+        resultActions.andExpect(jsonPath("$.geoCodeResponse.addresses[0].addresses[0].displayName",
+                is("76137 Karlsruhe")));
+        resultActions.andExpect(jsonPath("$.geoCodeResponse.links", empty()));
     }
 
 
@@ -113,11 +113,11 @@ public class AddressApiControllerMvcUnitTest {
 
         resultActions.andExpect(status().isOk());
         resultActions.andExpect(content().contentType("application/json"));
-        resultActions.andExpect((jsonPath("$.reverseGeocodeResponse.address.displayName", is("76137 Karlsruhe"))));
-        resultActions.andExpect((jsonPath("$.reverseGeocodeResponse.links", hasSize(1))));
-        resultActions.andExpect((jsonPath("$.reverseGeocodeResponse.links[0].rel", is("self"))));
-        resultActions.andExpect((jsonPath("$.reverseGeocodeResponse.links[0].href",
-                    is("http://localhost/reversegeocode/1:1/"))));
+        resultActions.andExpect(jsonPath("$.reverseGeocodeResponse.address.displayName", is("76137 Karlsruhe")));
+        resultActions.andExpect(jsonPath("$.reverseGeocodeResponse.links", hasSize(1)));
+        resultActions.andExpect(jsonPath("$.reverseGeocodeResponse.links[0].rel", is("self")));
+        resultActions.andExpect(jsonPath("$.reverseGeocodeResponse.links[0].href",
+                is("http://localhost/reversegeocode/1:1/")));
     }
 
 
@@ -129,12 +129,12 @@ public class AddressApiControllerMvcUnitTest {
 
         resultActions.andExpect(status().isOk());
         resultActions.andExpect(content().contentType("application/json"));
-        resultActions.andExpect((jsonPath("$.geoCodeResponse.addresses[0].addresses[0].displayName",
-                    is("76137 Karlsruhe"))));
-        resultActions.andExpect((jsonPath("$.geoCodeResponse.links", hasSize(1))));
-        resultActions.andExpect((jsonPath("$.geoCodeResponse.links[0].rel", is("self"))));
-        resultActions.andExpect((jsonPath("$.geoCodeResponse.links[0].href",
-                    is("http://localhost/geocodes?city=Karlsruhe&name=zkm"))));
+        resultActions.andExpect(jsonPath("$.geoCodeResponse.addresses[0].addresses[0].displayName",
+                is("76137 Karlsruhe")));
+        resultActions.andExpect(jsonPath("$.geoCodeResponse.links", hasSize(1)));
+        resultActions.andExpect(jsonPath("$.geoCodeResponse.links[0].rel", is("self")));
+        resultActions.andExpect(jsonPath("$.geoCodeResponse.links[0].href",
+                is("http://localhost/geocodes?city=Karlsruhe&name=zkm")));
     }
 
 
@@ -146,11 +146,11 @@ public class AddressApiControllerMvcUnitTest {
 
         resultActions.andExpect(status().isOk());
         resultActions.andExpect(content().contentType("application/json"));
-        resultActions.andExpect((jsonPath("$.simpleGeoCodeResponse.addresses[0].displayName", is("76137 Karlsruhe"))));
-        resultActions.andExpect((jsonPath("$.simpleGeoCodeResponse.links", hasSize(1))));
-        resultActions.andExpect((jsonPath("$.simpleGeoCodeResponse.links[0].rel", is("self"))));
-        resultActions.andExpect((jsonPath("$.simpleGeoCodeResponse.links[0].href",
-                    is("http://localhost/simplegeocodes?city=Karlsruhe&name=zkm"))));
+        resultActions.andExpect(jsonPath("$.simpleGeoCodeResponse.addresses[0].displayName", is("76137 Karlsruhe")));
+        resultActions.andExpect(jsonPath("$.simpleGeoCodeResponse.links", hasSize(1)));
+        resultActions.andExpect(jsonPath("$.simpleGeoCodeResponse.links[0].rel", is("self")));
+        resultActions.andExpect(jsonPath("$.simpleGeoCodeResponse.links[0].href",
+                is("http://localhost/simplegeocodes?city=Karlsruhe&name=zkm")));
     }
 
 
@@ -161,6 +161,6 @@ public class AddressApiControllerMvcUnitTest {
 
         resultActions.andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
-            .andExpect((jsonPath("$.addresses[0].displayName", is("76137 Karlsruhe"))));
+            .andExpect(jsonPath("$.addresses[0].displayName", is("76137 Karlsruhe")));
     }
 }

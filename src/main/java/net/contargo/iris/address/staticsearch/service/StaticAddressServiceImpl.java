@@ -65,8 +65,9 @@ public class StaticAddressServiceImpl implements StaticAddressService {
     @Transactional(readOnly = true)
     public AddressList findAddresses(String postalCode, String city, String country) {
 
-        List<StaticAddress> staticAddresses = getAddressesByDetailsWithFallbacks(postalCode, city, country);
-        List<Address> addresses = staticAddresses.stream().map(StaticAddress::toAddress).collect(toList());
+        List<Address> addresses = getAddressesByDetailsWithFallbacks(postalCode, city, country).stream()
+            .map(StaticAddress::toAddress)
+            .collect(toList());
 
         return new AddressList("City and Suburb Results", addresses);
     }

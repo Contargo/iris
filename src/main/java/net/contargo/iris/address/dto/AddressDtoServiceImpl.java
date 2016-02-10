@@ -2,7 +2,6 @@ package net.contargo.iris.address.dto;
 
 import net.contargo.iris.GeoLocation;
 import net.contargo.iris.address.Address;
-import net.contargo.iris.address.AddressList;
 import net.contargo.iris.address.nominatim.service.AddressService;
 import net.contargo.iris.address.service.AddressServiceWrapper;
 
@@ -62,9 +61,10 @@ public class AddressDtoServiceImpl implements AddressDtoService {
     @Override
     public List<AddressListDto> getAddressesByDetails(Map<String, String> addressDetails) {
 
-        List<AddressList> addressListList = addressServiceWrapper.getAddressesByDetails(addressDetails);
-
-        return addressListList.stream().map(AddressListDto::new).collect(Collectors.toList());
+        return addressServiceWrapper.getAddressesByDetails(addressDetails)
+            .stream()
+            .map(AddressListDto::new)
+            .collect(Collectors.toList());
     }
 
 
@@ -85,14 +85,9 @@ public class AddressDtoServiceImpl implements AddressDtoService {
     @Override
     public List<AddressDto> getAddressesWherePlaceIsIn(Long placeId) {
 
-        List<Address> addressList = addressService.getAddressesWherePlaceIsIn(placeId);
-
-        List<AddressDto> addressDtoList = new ArrayList<>();
-
-        for (Address address : addressList) {
-            addressDtoList.add(new AddressDto(address)); // NOSONAR Instantiating object is necessary
-        }
-
-        return addressDtoList;
+        return addressService.getAddressesWherePlaceIsIn(placeId)
+            .stream()
+            .map(AddressDto::new)
+            .collect(Collectors.toList());
     }
 }

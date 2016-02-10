@@ -126,6 +126,12 @@ public class AddressServiceWrapper {
     }
 
 
+    public Address getByHashKey(String hashKey) {
+
+        return staticAddressService.findByHashKey(hashKey).toAddress();
+    }
+
+
     /**
      * In Swiss only the results of the static addresses (ASTAG) are relevant. So all swiss nominatim results are
      * filtered out.

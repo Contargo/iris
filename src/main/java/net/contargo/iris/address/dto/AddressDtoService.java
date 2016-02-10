@@ -14,7 +14,9 @@ import java.util.Map;
 public interface AddressDtoService {
 
     /**
-     * @param  osmId
+     * Returns a {@link AddressDto} with information behind the given osmId.
+     *
+     * @param  osmId  search parameter
      *
      * @return  The address for a certain osmId
      */
@@ -74,4 +76,14 @@ public interface AddressDtoService {
      * @return  All addresses belonging to the OSM-Place defined by the OSM Place ID
      */
     List<AddressDto> getAddressesWherePlaceIsIn(Long placeId);
+
+
+    /**
+     * Returns one {@link AddressDto} with the given hashKey.
+     *
+     * @param  hashKey  as search parameter
+     *
+     * @return  the {@link AddressDto} with the given hashKey
+     */
+    AddressDto getAddressesByHashKey(String hashKey);
 }

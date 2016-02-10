@@ -6,6 +6,7 @@ import net.contargo.iris.address.dto.AddressDto;
 import net.contargo.iris.address.dto.AddressDtoService;
 import net.contargo.iris.address.dto.AddressListDto;
 import net.contargo.iris.address.nominatim.service.AddressDetailKey;
+import net.contargo.iris.address.staticsearch.validator.HashKeyValidator;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -62,6 +63,8 @@ public class AddressApiControllerMvcUnitTest {
     private WebApplicationContext webApplicationContext;
     @Autowired
     private AddressDtoService addressDtoServiceMock;
+    @Autowired
+    private HashKeyValidator hashKeyValidatorMock;
 
     private MockMvc mockMvc;
 
@@ -135,6 +138,24 @@ public class AddressApiControllerMvcUnitTest {
         resultActions.andExpect(jsonPath("$.geoCodeResponse.links[0].rel", is("self")));
         resultActions.andExpect(jsonPath("$.geoCodeResponse.links[0].href",
                 is("http://localhost/geocodes?city=Karlsruhe&name=zkm")));
+    }
+
+
+    @Test
+    public void addressesByAddressDetailsWithHashKey() throws Exception {
+
+        String hashKey = "DAJHZ";
+        when(hashKeyValidatorMock.validate(hashKey)).thenReturn(true);
+
+        String displayName = "StaticAddress from HashKey";
+        AddressDto addressDto = new AddressDto(new Address(displayName));
+        when(addressDtoServiceMock.getAddressesByHashKey(hashKey)).thenReturn(addressDto);
+
+        ResultActions resultActions = mockMvc.perform(get("/geocodes/?street=" + hashKey).accept(APPLICATION_JSON));
+
+        resultActions.andExpect(status().isOk());
+        resultActions.andExpect(content().contentType("application/json"));
+        resultActions.andExpect(jsonPath("$.geoCodeResponse.addresses[0].addresses[0].displayName", is(displayName)));
     }
 
 

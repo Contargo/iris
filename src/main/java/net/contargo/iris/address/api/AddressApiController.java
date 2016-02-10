@@ -7,6 +7,8 @@ import com.wordnik.swagger.annotations.ApiParam;
 import net.contargo.iris.GeoLocation;
 import net.contargo.iris.address.dto.AddressDto;
 import net.contargo.iris.address.dto.AddressDtoService;
+import net.contargo.iris.address.dto.AddressListDto;
+import net.contargo.iris.address.staticsearch.validator.HashKeyValidator;
 
 import org.slf4j.Logger;
 
@@ -25,6 +27,7 @@ import java.lang.reflect.Method;
 
 import java.math.BigDecimal;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +43,8 @@ import static net.contargo.iris.address.nominatim.service.AddressDetailKey.STREE
 import static org.slf4j.LoggerFactory.getLogger;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+
+import static java.util.Collections.singletonList;
 
 
 /**
@@ -58,11 +63,13 @@ public class AddressApiController {
     private static final Logger LOG = getLogger(MethodHandles.lookup().lookupClass());
 
     private final AddressDtoService addressDtoService;
+    private final HashKeyValidator hashKeyValidator;
 
     @Autowired
-    public AddressApiController(AddressDtoService addressDtoService) {
+    public AddressApiController(AddressDtoService addressDtoService, HashKeyValidator hashKeyValidator) {
 
         this.addressDtoService = addressDtoService;
+        this.hashKeyValidator = hashKeyValidator;
     }
 
     @ApiOperation(
@@ -120,11 +127,20 @@ public class AddressApiController {
         @RequestParam(required = false, value = "country") String country,
         @RequestParam(required = false, value = "name") String name, HttpServletRequest request) {
 
+        List<AddressListDto> addressListDtos = new ArrayList<>();
+
+        if (hashKeyValidator.validate(street)) {
+            List<AddressDto> address = singletonList(addressDtoService.getAddressesByHashKey(street));
+            addressListDtos = singletonList(new AddressListDto("Static address with hashkey " + street, address));
+        }
+
         Map<String, String> addressDetails = putRequestParamsToMap(street, postalCode, city, country, name);
 
-        ListOfAddressListsResponse response = new ListOfAddressListsResponse(addressDtoService.getAddressesByDetails(
-                    addressDetails));
+        if (addressListDtos.isEmpty()) {
+            addressListDtos = addressDtoService.getAddressesByDetails(addressDetails);
+        }
 
+        ListOfAddressListsResponse response = new ListOfAddressListsResponse(addressListDtos);
         response.add(linkTo(getClass()).slash("geocodes?" + request.getQueryString()).withSelfRel());
 
         LOG.info("API: Responding to request for address by address details: {}", addressDetails.toString());

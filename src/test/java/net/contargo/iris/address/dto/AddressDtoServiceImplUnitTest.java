@@ -162,4 +162,17 @@ public class AddressDtoServiceImplUnitTest {
         List<AddressDto> actualAddressList = sut.getAddressesWherePlaceIsIn(PLACE_ID);
         assertReflectionEquals(actualAddressList, expectedAddressList);
     }
+
+
+    @Test
+    public void getAddressesByHashKey() {
+
+        String hashKey = "ABCDE";
+        String displayName = "displayName";
+        Address address = new Address(displayName);
+        when(addressServiceWrapperMock.getByHashKey(hashKey)).thenReturn(address);
+
+        AddressDto addressDto = sut.getAddressesByHashKey(hashKey);
+        assertThat(addressDto.getDisplayName(), is(displayName));
+    }
 }

@@ -370,4 +370,6 @@
     <bean class="net.contargo.iris.connection.dto.MainRunConnectionDtoServiceImpl">
         <constructor-arg name="mainRunConnectionService" ref="connectionService"/>
     </bean>
+
+    <bean class="net.contargo.iris.address.staticsearch.validator.HashKeyValidator"/>
 </beans>

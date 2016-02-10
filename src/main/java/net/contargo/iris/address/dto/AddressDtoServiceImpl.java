@@ -90,4 +90,11 @@ public class AddressDtoServiceImpl implements AddressDtoService {
             .map(AddressDto::new)
             .collect(Collectors.toList());
     }
+
+
+    @Override
+    public AddressDto getAddressesByHashKey(String hashKey) {
+
+        return new AddressDto(addressServiceWrapper.getByHashKey(hashKey));
+    }
 }

@@ -701,6 +701,18 @@ public class StaticAddressServiceImplUnitTest {
     }
 
 
+    @Test
+    public void findByHashKey() {
+
+        String hashKey = "ABCDE";
+        StaticAddress expectedStaticAddress = new StaticAddress();
+        when(staticAddressRepositoryMock.findByHashKey(hashKey)).thenReturn(expectedStaticAddress);
+
+        StaticAddress staticAddress = sut.findByHashKey(hashKey);
+        assertThat(staticAddress, is(expectedStaticAddress));
+    }
+
+
     private void initaddresses() {
 
         kaSuedstadt = new StaticAddress();

@@ -31,7 +31,7 @@ public interface StaticAddressDtoService {
      * compatibility with the client and consistency to the other interfaces, that deliver actual lists of address
      * lists. The static address is the one matching to the given Geolocation.
      *
-     * @param  location
+     * @param  location  as search parameter
      *
      * @return  static address wrapped in a list of lists.
      */
@@ -48,4 +48,14 @@ public interface StaticAddressDtoService {
      * @return  a list of static address uids
      */
     List<BigInteger> getStaticAddressByBoundingBox(GeoLocation location, Double distance);
+
+
+    /**
+     * Retrieves a static address by his hashkey.
+     *
+     * @param  hashKey  as search parameter
+     *
+     * @return  a static address wrapped in a {@link AddressDto}
+     */
+    AddressDto getStaticAddressByHashKey(String hashKey);
 }

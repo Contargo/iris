@@ -119,4 +119,20 @@ public class StaticAddressApiControllerMvcUnitTest {
         resultActions.andExpect((jsonPath("$.uids[0]", is(1))));
         resultActions.andExpect((jsonPath("$.uids[1]", is(10))));
     }
+
+
+    @Test
+    public void getByHashKey() throws Exception {
+
+        String hashKey = "ABCDE";
+        String displayName = "displayName";
+        AddressDto addressDto = new AddressDto(new Address(displayName));
+        when(staticAddressDtoServiceMock.getStaticAddressByHashKey(hashKey)).thenReturn(addressDto);
+
+        ResultActions resultActions = mockMvc.perform(get("/staticaddresses").param("hashkey", hashKey)
+                .accept(APPLICATION_JSON));
+
+        resultActions.andExpect(status().isOk());
+        resultActions.andExpect((jsonPath("$.displayName", is(displayName))));
+    }
 }

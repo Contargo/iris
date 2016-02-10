@@ -58,6 +58,18 @@ public class StaticAddressApiController {
     }
 
     @ApiOperation(
+        value = "Returns the static addresses filtered with the given hashkey",
+        notes = "Returns the static addresses filtered with the given hashkey", response = AddressDto.class
+    )
+    @RequestMapping(method = GET, params = { "hashkey" })
+    @ResponseBody
+    public AddressDto getByHashKey(@RequestParam(value = "hashkey") String hashKey) {
+
+        return staticAddressDtoService.getStaticAddressByHashKey(hashKey);
+    }
+
+
+    @ApiOperation(
         value = "Returns all static addresses filtered by postalcode, city and country.",
         notes = "Returns all static addresses filtered by postalcode, city and country.", response = AddressDto.class,
         responseContainer = "List"

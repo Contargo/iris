@@ -86,4 +86,7 @@ public interface StaticAddressRepository extends JpaRepository<StaticAddress, Lo
 
 
     List<StaticAddress> findByCityAndSuburbAndPostalcode(String city, String suburb, String postalcode);
+
+
+    StaticAddress findByHashKey(String hashKey);
 }

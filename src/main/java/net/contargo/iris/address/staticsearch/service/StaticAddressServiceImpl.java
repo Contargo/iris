@@ -121,6 +121,14 @@ public class StaticAddressServiceImpl implements StaticAddressService {
 
     @Override
     @Transactional(readOnly = true)
+    public StaticAddress findByHashKey(String hashKey) {
+
+        return repository.findByHashKey(hashKey);
+    }
+
+
+    @Override
+    @Transactional(readOnly = true)
     public StaticAddress findByUId(BigInteger staticAddressUId) {
 
         StaticAddress staticAddress = repository.findByUniqueId(staticAddressUId);

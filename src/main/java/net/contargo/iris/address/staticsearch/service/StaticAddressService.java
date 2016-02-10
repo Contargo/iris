@@ -78,6 +78,16 @@ public interface StaticAddressService {
 
 
     /**
+     * Finds exactly one or no {@link StaticAddress} by the given hashKey.
+     *
+     * @param  hashKey  as search parameter for {@link StaticAddress}
+     *
+     * @return  {@link StaticAddress} with the provided hashKey
+     */
+    StaticAddress findByHashKey(String hashKey);
+
+
+    /**
      * Finds an {@link StaticAddress} by the given unique id.
      *
      * @param  staticAddressUId  as search parameter for {@link StaticAddress}

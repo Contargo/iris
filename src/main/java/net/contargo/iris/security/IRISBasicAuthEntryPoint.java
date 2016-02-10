@@ -23,7 +23,13 @@ public class IRISBasicAuthEntryPoint extends BasicAuthenticationEntryPoint {
     public void commence(HttpServletRequest request, HttpServletResponse response,
         AuthenticationException authException) throws IOException, ServletException {
 
-        response.addHeader("WWW-Authenticate", "xBasic realm=\"" + getRealmName() + "\"");
+        // Suppress Basic Auth Header when client is a browser.
+        String userAgent = request.getHeader("User-Agent");
+
+        if (userAgent == null || !userAgent.toLowerCase().contains("mozilla")) {
+            response.addHeader("WWW-Authenticate", "Basic realm=\"" + getRealmName() + "\"");
+        }
+
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());
     }
 }

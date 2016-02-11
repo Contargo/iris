@@ -156,7 +156,6 @@ public class AddressServiceWrapperUnitTest {
         assertThat(result.get(1).getAddresses().get(0), is(a));
 
         verify(cacheMock).cache(result);
-        verify(addressListFilterMock).filterOutByCountryCode(any(), eq("CH"));
     }
 
 
@@ -194,7 +193,6 @@ public class AddressServiceWrapperUnitTest {
         assertThat(addresses, hasSize(3));
         assertThat(addresses.get(1).getParentAddress(), is(neustadtHessen));
         assertThat(addresses.get(2).getParentAddress(), is(neustadtSachsen));
-        verify(addressListFilterMock).filterOutByCountryCode(any(), eq("CH"));
     }
 
 

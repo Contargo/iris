@@ -6,6 +6,10 @@ import org.junit.Test;
 import java.util.HashMap;
 import java.util.Map;
 
+import static junit.framework.Assert.assertTrue;
+
+import static junit.framework.TestCase.assertFalse;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import static org.hamcrest.Matchers.is;
@@ -140,5 +144,34 @@ public class AddressUnitTest {
         sut.setShortName("");
 
         assertThat(sut.getNiceName(), is("Display Name"));
+    }
+
+
+    @Test
+    public void isStaticAddress() {
+
+        Address sut = new Address();
+
+        sut.setAddress(addressDetailsMap);
+        assertFalse(sut.isStatic());
+
+        addressDetailsMap.put("static_id", "foo");
+        assertTrue(sut.isStatic());
+    }
+
+
+    @Test
+    public void inSwitzerland() {
+
+        Address sut = new Address();
+
+        sut.setAddress(addressDetailsMap);
+        assertFalse(sut.inSwitzerland());
+
+        addressDetailsMap.put("country_code", "DE");
+        assertFalse(sut.inSwitzerland());
+
+        addressDetailsMap.put("country_code", "CH");
+        assertTrue(sut.inSwitzerland());
     }
 }

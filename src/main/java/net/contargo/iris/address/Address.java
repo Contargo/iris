@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import net.contargo.iris.GeoLocation;
+import net.contargo.iris.address.staticsearch.StaticAddress;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -32,6 +33,7 @@ public class Address extends GeoLocation {
     private static final String SHORT_NAME = "short_name";
     private static final String SUBURB = "suburb";
     private static final String CITY = "city";
+    private static final String POSTCODE = "postcode";
 
     @JsonProperty(DISPLAY_NAME)
     private String displayName;
@@ -138,22 +140,48 @@ public class Address extends GeoLocation {
 
         final Address oth = (Address) o;
 
-        return new EqualsBuilder().append(displayName, oth.displayName).append(osmId, oth.osmId).append(placeId,
-                oth.placeId).append(shortName, oth.shortName).appendSuper(super.equals(o)).isEquals();
+        return new EqualsBuilder().append(displayName, oth.displayName)
+            .append(osmId, oth.osmId)
+            .append(placeId, oth.placeId)
+            .append(shortName, oth.shortName)
+            .appendSuper(super.equals(o))
+            .isEquals();
     }
 
 
     @Override
     public int hashCode() {
 
-        return new HashCodeBuilder().append(displayName).append(osmId).append(placeId).append(shortName).appendSuper(
-                super.hashCode()).toHashCode();
+        return new HashCodeBuilder().append(displayName)
+            .append(osmId)
+            .append(placeId)
+            .append(shortName)
+            .appendSuper(super.hashCode())
+            .toHashCode();
     }
 
 
     public String getCountryCode() {
 
         return this.address.get(COUNTRY_CODE);
+    }
+
+
+    public String getPostcode() {
+
+        return this.address.get(POSTCODE);
+    }
+
+
+    public String getCity() {
+
+        return this.address.get(CITY);
+    }
+
+
+    public String getSuburb() {
+
+        return this.address.get(SUBURB);
     }
 
 
@@ -193,6 +221,18 @@ public class Address extends GeoLocation {
         }
 
         return null;
+    }
+
+
+    public boolean isStatic() {
+
+        return address.get(StaticAddress.STATIC_ID) != null;
+    }
+
+
+    public boolean inSwitzerland() {
+
+        return this.getCountryCode() != null && "CH".equals(this.getCountryCode().toUpperCase());
     }
 
 

@@ -117,7 +117,7 @@ public class AddressServiceWrapper {
 
         if (street != null && !"".equals(street)) {
             List<AddressList> nominatimResult = resolveByNominatim(addressDetails);
-            result.addAll(filterOutSwissAddresses(nominatimResult));
+            result.addAll(nominatimResult);
         }
 
         addressCache.cache(result);

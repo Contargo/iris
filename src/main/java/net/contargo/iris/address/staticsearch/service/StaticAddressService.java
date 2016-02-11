@@ -151,4 +151,7 @@ public interface StaticAddressService {
      * @return  a list of static addresses
      */
     List<StaticAddress> getAddressesInBoundingBox(GeoLocation geoLocation, Double km);
+
+
+    List<StaticAddress> findByPostalcode(String postalcode);
 }

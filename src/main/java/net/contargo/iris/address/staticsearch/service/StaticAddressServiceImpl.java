@@ -248,6 +248,13 @@ public class StaticAddressServiceImpl implements StaticAddressService {
     }
 
 
+    @Override
+    public List<StaticAddress> findByPostalcode(String postalcode) {
+
+        return repository.findByPostalcode(postalcode);
+    }
+
+
     private void setEmptyValues(StaticAddress staticAddress) {
 
         if (staticAddress.getCity() == null) {

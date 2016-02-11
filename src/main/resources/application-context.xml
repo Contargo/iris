@@ -283,6 +283,9 @@
                 <bean class="net.contargo.iris.route.service.GeoLocationPartEnricher">
                     <constructor-arg name="geoLocationService" ref="geoLocationService"/>
                 </bean>
+                <bean id="swissPartEnricher" class="net.contargo.iris.route.service.SwissPartEnricher">
+                    <constructor-arg name="nominatimToStaticAddressMapper" ref="nominatimToStaticAddressMapper"/>
+                </bean>
                 <bean class="net.contargo.iris.route.service.AirLineDistancePartEnricher">
                     <constructor-arg name="gisService" ref="gisService"/>
                     <constructor-arg name="roundingService" ref="roundingService"/>
@@ -372,4 +375,30 @@
     </bean>
 
     <bean class="net.contargo.iris.address.staticsearch.validator.HashKeyValidator"/>
+    <bean id="nominatimToStaticAddressMapper"
+          class="net.contargo.iris.address.staticsearch.service.NominatimToStaticAddressMapperImpl">
+        <constructor-arg name="mappingProcessor" ref="postcodeCitySuburbStaticAddressMappingProcessor"/>
+        <constructor-arg name="selector">
+            <bean class="net.contargo.iris.address.staticsearch.service.StaticAddressSelectorImpl">
+                <constructor-arg name="gisService" ref="gisService"/>
+            </bean>
+        </constructor-arg>
+    </bean>
+    
+    <bean id="postcodeCitySuburbStaticAddressMappingProcessor" class="net.contargo.iris.address.staticsearch.service.PostcodeCitySuburbStaticAddressMappingProcessor">
+        <constructor-arg name="next" ref="postcodeCityStaticAddressMappingProcessor"/>
+        <constructor-arg name="normalizerService" ref="normalizerService"/>
+        <constructor-arg name="staticAddressService" ref="staticAddressService"/>
+    </bean>
+    <bean id="postcodeCityStaticAddressMappingProcessor" class="net.contargo.iris.address.staticsearch.service.PostcodeCityStaticAddressMappingProcessor">
+        <constructor-arg name="next" ref="postcodeStaticAddressMappingProcessor"/>
+        <constructor-arg name="staticAddressService" ref="staticAddressService"/>
+        <constructor-arg name="normalizerService" ref="normalizerService"/>
+    </bean>
+    <bean id="postcodeStaticAddressMappingProcessor" class="net.contargo.iris.address.staticsearch.service.PostcodeStaticAddressMappingProcessor">
+         <constructor-arg name="next">
+            <null/>
+        </constructor-arg>
+        <constructor-arg ref="staticAddressService" name="staticAddressService"/>
+    </bean>
 </beans>

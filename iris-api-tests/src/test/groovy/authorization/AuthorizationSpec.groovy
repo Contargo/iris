@@ -23,7 +23,7 @@ class AuthorizationSpec extends Specification {
         response.status == 401
 
         and: "response should have correct authentication header"
-        response.getFirstHeader("WWW-Authenticate").getValue() == "xBasic realm=\"IRIS API\""
+        response.getFirstHeader("WWW-Authenticate").getValue() == "Basic realm=\"IRIS API\""
     }
 
     def "request for seaport synchronisation for non allowed user"() {

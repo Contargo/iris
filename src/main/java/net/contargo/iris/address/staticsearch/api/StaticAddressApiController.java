@@ -8,13 +8,18 @@ import net.contargo.iris.address.api.ListOfAddressListsResponse;
 import net.contargo.iris.address.dto.AddressDto;
 import net.contargo.iris.address.staticsearch.dto.StaticAddressDtoService;
 import net.contargo.iris.address.staticsearch.dto.StaticAddressesUidResponse;
+import net.contargo.iris.address.staticsearch.service.StaticAddressNotFoundException;
+import net.contargo.iris.api.RestApiErrorDto;
 
 import org.slf4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.http.ResponseEntity;
+
 import org.springframework.stereotype.Controller;
 
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,6 +35,8 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
@@ -127,5 +134,12 @@ public class StaticAddressApiController {
             .withSelfRel());
 
         return response;
+    }
+
+
+    @ExceptionHandler(StaticAddressNotFoundException.class)
+    ResponseEntity<RestApiErrorDto> handleStaticAddressNotFoundException(StaticAddressNotFoundException e) {
+
+        return new ResponseEntity<>(new RestApiErrorDto(e.getErrorCode(), e.getMessage(), null), BAD_REQUEST);
     }
 }

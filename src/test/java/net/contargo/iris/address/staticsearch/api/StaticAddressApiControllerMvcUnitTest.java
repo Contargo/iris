@@ -4,6 +4,7 @@ import net.contargo.iris.GeoLocation;
 import net.contargo.iris.address.Address;
 import net.contargo.iris.address.dto.AddressDto;
 import net.contargo.iris.address.staticsearch.dto.StaticAddressDtoService;
+import net.contargo.iris.address.staticsearch.service.StaticAddressNotFoundException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -32,6 +33,7 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -69,6 +71,8 @@ public class StaticAddressApiControllerMvcUnitTest {
 
     @Before
     public void before() {
+
+        reset(staticAddressDtoServiceMock);
 
         mockMvc = webAppContextSetup(webApplicationContext).build();
     }
@@ -131,8 +135,23 @@ public class StaticAddressApiControllerMvcUnitTest {
 
         ResultActions resultActions = mockMvc.perform(get("/staticaddresses").param("hashkey", hashKey)
                 .accept(APPLICATION_JSON));
-
         resultActions.andExpect(status().isOk());
-        resultActions.andExpect((jsonPath("$.displayName", is(displayName))));
+        resultActions.andExpect(jsonPath("$.displayName", is(displayName)));
+    }
+
+
+    @Test
+    public void getByHashKeyWithException() throws Exception {
+
+        String hashKey = "ABCDE";
+        when(staticAddressDtoServiceMock.getStaticAddressByHashKey(hashKey)).thenThrow(
+            new StaticAddressNotFoundException("Static address with hash key - " + hashKey + " - is not available."));
+
+        ResultActions resultActions = mockMvc.perform(get("/staticaddresses").param("hashkey", hashKey)
+                .accept(APPLICATION_JSON));
+        resultActions.andExpect(status().isBadRequest());
+        resultActions.andExpect(jsonPath("$.code", is("staticaddress.not.found")));
+        resultActions.andExpect(jsonPath("$.message",
+                is("Static address with hash key - " + hashKey + " - is not available.")));
     }
 }

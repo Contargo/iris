@@ -6,12 +6,15 @@ import net.contargo.iris.address.dto.AddressDto;
 import net.contargo.iris.address.dto.AddressDtoService;
 import net.contargo.iris.address.dto.AddressListDto;
 import net.contargo.iris.address.nominatim.service.AddressDetailKey;
+import net.contargo.iris.address.staticsearch.service.StaticAddressNotFoundException;
 import net.contargo.iris.address.staticsearch.validator.HashKeyValidator;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import org.junit.runner.RunWith;
+
+import org.mockito.ArgumentCaptor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -28,12 +31,16 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 
 import static org.mockito.Matchers.any;
 
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -70,6 +77,8 @@ public class AddressApiControllerMvcUnitTest {
 
     @Before
     public void setUp() throws Exception {
+
+        reset(addressDtoServiceMock);
 
         mockMvc = webAppContextSetup(webApplicationContext).build();
 
@@ -152,10 +161,26 @@ public class AddressApiControllerMvcUnitTest {
         when(addressDtoServiceMock.getAddressesByHashKey(hashKey)).thenReturn(addressDto);
 
         ResultActions resultActions = mockMvc.perform(get("/geocodes/?street=" + hashKey).accept(APPLICATION_JSON));
-
         resultActions.andExpect(status().isOk());
         resultActions.andExpect(content().contentType("application/json"));
         resultActions.andExpect(jsonPath("$.geoCodeResponse.addresses[0].addresses[0].displayName", is(displayName)));
+    }
+
+
+    @Test
+    public void addressesByAddressDetailsWithHashKeyAndException() throws Exception {
+
+        String hashKey = "DAJHZ";
+        when(hashKeyValidatorMock.validate(hashKey)).thenReturn(true);
+        when(addressDtoServiceMock.getAddressesByHashKey(hashKey)).thenThrow(new StaticAddressNotFoundException());
+
+        ResultActions resultActions = mockMvc.perform(get("/geocodes/?street=" + hashKey).accept(APPLICATION_JSON));
+        resultActions.andExpect(status().isOk());
+        resultActions.andExpect(content().contentType("application/json"));
+
+        ArgumentCaptor<Map> captor = ArgumentCaptor.forClass(Map.class);
+        verify(addressDtoServiceMock).getAddressesByDetails(captor.capture());
+        assertThat(captor.getValue().get("street"), is(""));
     }
 
 

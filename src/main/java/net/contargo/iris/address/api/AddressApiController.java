@@ -8,6 +8,7 @@ import net.contargo.iris.GeoLocation;
 import net.contargo.iris.address.dto.AddressDto;
 import net.contargo.iris.address.dto.AddressDtoService;
 import net.contargo.iris.address.dto.AddressListDto;
+import net.contargo.iris.address.staticsearch.service.StaticAddressNotFoundException;
 import net.contargo.iris.address.staticsearch.validator.HashKeyValidator;
 
 import org.slf4j.Logger;
@@ -130,8 +131,14 @@ public class AddressApiController {
         List<AddressListDto> addressListDtos = new ArrayList<>();
 
         if (hashKeyValidator.validate(street)) {
-            List<AddressDto> address = singletonList(addressDtoService.getAddressesByHashKey(street));
-            addressListDtos = singletonList(new AddressListDto("Static address with hashkey " + street, address));
+            try {
+                List<AddressDto> address = singletonList(addressDtoService.getAddressesByHashKey(street));
+                addressListDtos = singletonList(new AddressListDto("City and Suburb Results for hash key " + street,
+                            address));
+            } catch (StaticAddressNotFoundException e) {
+                street = "";
+                LOG.info("IRIS could not provide a static address with the hash key {}", street);
+            }
         }
 
         Map<String, String> addressDetails = putRequestParamsToMap(street, postalCode, city, country, name);

@@ -7,9 +7,7 @@ package net.contargo.iris.api;
 public class RestApiErrorDto {
 
     private final String code;
-
     private final String message;
-
     private final ValidationErrorDTO validationError;
 
     public RestApiErrorDto(String code, String message) {

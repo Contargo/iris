@@ -713,6 +713,16 @@ public class StaticAddressServiceImplUnitTest {
     }
 
 
+    @Test(expected = StaticAddressNotFoundException.class)
+    public void findByHashKeyWithException() {
+
+        String hashKey = "ABCDE";
+        when(staticAddressRepositoryMock.findByHashKey(hashKey)).thenReturn(null);
+
+        sut.findByHashKey(hashKey);
+    }
+
+
     private void initaddresses() {
 
         kaSuedstadt = new StaticAddress();

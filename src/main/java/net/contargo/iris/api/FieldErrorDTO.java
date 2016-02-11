@@ -7,7 +7,6 @@ package net.contargo.iris.api;
 public class FieldErrorDTO {
 
     private String field;
-
     private String message;
 
     public FieldErrorDTO(String field, String message) {

@@ -123,7 +123,14 @@ public class StaticAddressServiceImpl implements StaticAddressService {
     @Transactional(readOnly = true)
     public StaticAddress findByHashKey(String hashKey) {
 
-        return repository.findByHashKey(hashKey);
+        StaticAddress staticAddress = repository.findByHashKey(hashKey);
+
+        if (staticAddress == null) {
+            throw new StaticAddressNotFoundException("Static address with hash key - " + hashKey
+                + " - is not available.");
+        }
+
+        return staticAddress;
     }
 
 

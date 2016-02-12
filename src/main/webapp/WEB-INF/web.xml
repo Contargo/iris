@@ -11,6 +11,12 @@
         <param-value>classpath:application-context.xml</param-value>
     </context-param>
 
+    <context-param>
+        <param-name>contextInitializerClasses</param-name>
+        <param-value>net.contargo.iris.startup.ContargoApplicationInitializer</param-value>
+    </context-param>
+
+
     <!-- Creates the Spring Container shared by all Servlets and Filters -->
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>

@@ -103,6 +103,8 @@
         <property name="defaultLocale" value="en_EN"/>
     </bean>
 
+    <bean class="net.contargo.iris.actuator.ActuatorConfig"/>
+
     <context:annotation-config/>
     <bean class="net.contargo.iris.config.SwaggerConfig"/>
     <mvc:resources location="/api-docs/" mapping="/**"/>

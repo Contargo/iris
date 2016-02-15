@@ -15,6 +15,8 @@ import java.math.BigDecimal;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 /**
@@ -176,6 +178,22 @@ public class Address extends GeoLocation {
     public String getCity() {
 
         return this.address.get(CITY);
+    }
+
+
+    /**
+     * Combines city, town and village by joining them with a comma if present.
+     *
+     * @return  the joined string
+     */
+    public String getCombinedCity() {
+
+        String village = this.address.get("village");
+        String town = this.address.get("town");
+        String suburb = this.address.get(SUBURB);
+        String city = this.address.get(CITY);
+
+        return Stream.of(city, town, village, suburb).filter(value -> value != null).collect(Collectors.joining(", "));
     }
 
 

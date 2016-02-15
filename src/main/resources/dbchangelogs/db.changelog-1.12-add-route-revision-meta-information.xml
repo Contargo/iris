@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet author="thieme@synyx.de" id="add-route-revision-meta-information">
+
+        <addColumn tableName="RouteDataRevision">
+            <column name="city" type="varchar(255)"/>
+            <column name="cityNormalized" type="varchar(255)"/>
+            <column name="postalCode" type="varchar(10)"/>
+            <column name="country" type="varchar(5)"/>
+        </addColumn>
+        
+        <createIndex tableName="RouteDataRevision" indexName="RouteDataRevision_search_city">
+            <column name="cityNormalized"/>
+        </createIndex>
+
+        <createIndex tableName="RouteDataRevision" indexName="RouteDataRevision_search_postalcode">
+            <column name="postalCode"/>
+        </createIndex>
+
+        <createIndex tableName="RouteDataRevision" indexName="RouteDataRevision_search_city_and_postalcode">
+            <column name="cityNormalized"/>
+            <column name="postalCode"/>
+        </createIndex>
+
+    </changeSet>
+
+</databaseChangeLog>

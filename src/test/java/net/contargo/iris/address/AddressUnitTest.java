@@ -13,6 +13,7 @@ import static junit.framework.TestCase.assertFalse;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.isEmptyString;
 
 
 /**
@@ -173,5 +174,25 @@ public class AddressUnitTest {
 
         addressDetailsMap.put("country_code", "CH");
         assertTrue(sut.inSwitzerland());
+    }
+
+
+    @Test
+    public void getCombinedCity() {
+
+        Address sut = new Address();
+        sut.getAddress().put("city", "Rottweil");
+        sut.getAddress().put("suburb", "Wimmelburg");
+        sut.getAddress().put("village", "Schonach");
+        sut.getAddress().put("town", "Gomaringen");
+        assertThat(sut.getCombinedCity(), is("Rottweil, Gomaringen, Schonach, Wimmelburg"));
+    }
+
+
+    @Test
+    public void getCombinedCityEmpty() {
+
+        Address sut = new Address();
+        assertThat(sut.getCombinedCity(), isEmptyString());
     }
 }

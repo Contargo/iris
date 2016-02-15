@@ -74,6 +74,12 @@
                     <spring:message code="routerevision.radius" var="label"/>
                     <display:column title="${label}" property="radiusInMeter" sortable="true"/>
 
+                    <spring:message code="routerevision.postalcode" var="label"/>
+                    <display:column title="${label}" property="postalCode" sortable="true"/>
+
+                    <spring:message code="routerevision.city" var="label"/>
+                    <display:column title="${label}" property="city" sortable="true"/>
+
                     <display:column class="table-buttons">
 
                         <a href="<c:url value="/web/routerevisions/${routerevision.id}" />" class="btn btn-primary">

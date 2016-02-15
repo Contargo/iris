@@ -48,4 +48,6 @@
 
     <include file="dbchangelogs/db.changelog-1.8-alter-route-revision-date-constraints.xml"/>
 
+    <include file="dbchangelogs/db.changelog-1.12-add-route-revision-meta-information.xml"/>
+
 </databaseChangeLog>

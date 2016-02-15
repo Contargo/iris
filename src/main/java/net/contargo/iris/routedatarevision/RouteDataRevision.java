@@ -32,6 +32,9 @@ public class RouteDataRevision {
     private static final int MAX_VALUE_COORD = 180;
     private static final int MIN_VALUE_COORD = -180;
     private static final int COMMENT_SIZE = 5000;
+    private static final int MAX_SIZE_CITY = 255;
+    private static final int MAX_SIZE_POSTAL_CODE = 10;
+    private static final int MAX_SIZE_COUNTRY = 5;
 
     @Id
     @GeneratedValue
@@ -67,6 +70,18 @@ public class RouteDataRevision {
 
     @Temporal(TemporalType.DATE)
     private Date validTo;
+
+    @Size(max = MAX_SIZE_CITY)
+    private String city;
+
+    @Size(max = MAX_SIZE_CITY)
+    private String cityNormalized;
+
+    @Size(max = MAX_SIZE_POSTAL_CODE)
+    private String postalCode;
+
+    @Size(max = MAX_SIZE_COUNTRY)
+    private String country;
 
     public Long getId() {
 
@@ -203,5 +218,53 @@ public class RouteDataRevision {
     public ValidityRange getValidityRange() {
 
         return new ValidityRange(DateUtil.asLocalDate(validFrom), DateUtil.asLocalDate(validTo));
+    }
+
+
+    public String getCity() {
+
+        return city;
+    }
+
+
+    public void setCity(String city) {
+
+        this.city = city;
+    }
+
+
+    public String getCityNormalized() {
+
+        return cityNormalized;
+    }
+
+
+    public void setCityNormalized(String cityNormalized) {
+
+        this.cityNormalized = cityNormalized;
+    }
+
+
+    public String getPostalCode() {
+
+        return postalCode;
+    }
+
+
+    public void setPostalCode(String postalCode) {
+
+        this.postalCode = postalCode;
+    }
+
+
+    public String getCountry() {
+
+        return country;
+    }
+
+
+    public void setCountry(String country) {
+
+        this.country = country;
     }
 }

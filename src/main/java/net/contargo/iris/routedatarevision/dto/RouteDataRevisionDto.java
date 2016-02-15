@@ -74,6 +74,10 @@ public class RouteDataRevisionDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_FORMAT, timezone = "CET")
     private Date validTo;
 
+    private String country;
+    private String city;
+    private String postalCode;
+
     public RouteDataRevisionDto(RouteDataRevision routeDataRevision) {
 
         id = routeDataRevision.getId();
@@ -87,6 +91,9 @@ public class RouteDataRevisionDto {
         comment = routeDataRevision.getComment();
         validFrom = routeDataRevision.getValidFrom();
         validTo = routeDataRevision.getValidTo();
+        country = routeDataRevision.getCountry();
+        city = routeDataRevision.getCity();
+        postalCode = routeDataRevision.getPostalCode();
     }
 
 
@@ -260,5 +267,23 @@ public class RouteDataRevisionDto {
     public String getTerminalUid() {
 
         return null == terminal ? null : terminal.getUniqueId();
+    }
+
+
+    public String getCountry() {
+
+        return country;
+    }
+
+
+    public String getCity() {
+
+        return city;
+    }
+
+
+    public String getPostalCode() {
+
+        return postalCode;
     }
 }

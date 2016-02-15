@@ -2,6 +2,8 @@ package net.contargo.iris.routedatarevision.service;
 
 import net.contargo.iris.GeoLocation;
 import net.contargo.iris.address.Address;
+import net.contargo.iris.address.service.AddressServiceWrapper;
+import net.contargo.iris.normalizer.NormalizerService;
 import net.contargo.iris.routedatarevision.RouteDataRevision;
 import net.contargo.iris.routedatarevision.ValidityRange;
 import net.contargo.iris.routedatarevision.persistence.RouteDataRevisionRepository;
@@ -15,6 +17,7 @@ import org.junit.Test;
 
 import org.junit.runner.RunWith;
 
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
@@ -55,13 +58,18 @@ public class RouteDataRevisionServiceImplUnitTest {
     private RouteDataRevisionRepository routeDataRevisionRepositoryMock;
     @Mock
     private TerminalService terminalServiceMock;
+    @Mock
+    private AddressServiceWrapper addressServiceWrapperMock;
+    @Mock
+    private NormalizerService normalizerServiceMock;
 
     private Terminal terminal;
 
     @Before
     public void before() {
 
-        sut = new RouteDataRevisionServiceImpl(routeDataRevisionRepositoryMock, terminalServiceMock);
+        sut = new RouteDataRevisionServiceImpl(routeDataRevisionRepositoryMock, terminalServiceMock,
+                addressServiceWrapperMock, normalizerServiceMock);
         terminal = new Terminal();
     }
 
@@ -184,16 +192,35 @@ public class RouteDataRevisionServiceImplUnitTest {
     @Test
     public void save() {
 
+        BigDecimal lat = BigDecimal.TEN;
+        BigDecimal lon = BigDecimal.ONE;
+
+        Address address = new Address();
+        address.getAddress().put("village", "Ehningen");
+        address.getAddress().put("country_code", "DE");
+        address.getAddress().put("postcode", "66666");
+
         RouteDataRevision routeDataRevision = new RouteDataRevision();
         routeDataRevision.setId(5L);
+        routeDataRevision.setLatitude(lat);
+        routeDataRevision.setLongitude(lon);
 
         when(routeDataRevisionRepositoryMock.save(routeDataRevision)).thenReturn(routeDataRevision);
         when(routeDataRevisionRepositoryMock.findOne(5L)).thenReturn(routeDataRevision);
+        when(addressServiceWrapperMock.getAddressForGeoLocation(new GeoLocation(lat, lon))).thenReturn(address);
+        when(normalizerServiceMock.normalize("Ehningen")).thenReturn("EHNINGEN");
 
         RouteDataRevision result = sut.save(routeDataRevision);
 
+        ArgumentCaptor<RouteDataRevision> captor = ArgumentCaptor.forClass(RouteDataRevision.class);
+
         assertThat(result, is(routeDataRevision));
-        verify(routeDataRevisionRepositoryMock).save(routeDataRevision);
+        verify(routeDataRevisionRepositoryMock).save(captor.capture());
+
+        assertThat(captor.getValue().getCity(), is("Ehningen"));
+        assertThat(captor.getValue().getCityNormalized(), is("EHNINGEN"));
+        assertThat(captor.getValue().getCountry(), is("DE"));
+        assertThat(captor.getValue().getPostalCode(), is("66666"));
     }
 
 

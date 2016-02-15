@@ -111,6 +111,10 @@
                     <iris:inputField property="airlineDistanceInKilometer"
                                      messageKey="routerevision.airlinedistance" unitMessageKey="unit.kilometer"/>
 
+                    <iris:inputField property="city" messageKey="routerevision.city" readonly="true"/>
+                    <iris:inputField property="postalCode" messageKey="routerevision.postalcode" readonly="true"/>
+                    <iris:inputField property="country" messageKey="routerevision.country" readonly="true"/>
+
                     <iris:textArea property="comment" messageKey="routerevision.comment" maxlength="5000"/>
 
                     <div class="form-actions">

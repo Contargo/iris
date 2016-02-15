@@ -1,7 +1,10 @@
 package net.contargo.iris.routedatarevision.service;
 
 import net.contargo.iris.GeoLocation;
+import net.contargo.iris.address.Address;
+import net.contargo.iris.address.service.AddressServiceWrapper;
 import net.contargo.iris.api.NotFoundException;
+import net.contargo.iris.normalizer.NormalizerService;
 import net.contargo.iris.routedatarevision.RouteDataRevision;
 import net.contargo.iris.routedatarevision.ValidityRange;
 import net.contargo.iris.routedatarevision.dto.RouteDataRevisionDto;
@@ -15,6 +18,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import java.text.SimpleDateFormat;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -24,18 +28,24 @@ public class RouteDataRevisionServiceImpl implements RouteDataRevisionService {
 
     private final RouteDataRevisionRepository routeDataRevisionRepository;
     private final TerminalService terminalService;
+    private final AddressServiceWrapper addressServiceWrapper;
+    private final NormalizerService normalizerService;
 
     public RouteDataRevisionServiceImpl(RouteDataRevisionRepository routeDataRevisionRepository,
-        TerminalService terminalService) {
+        TerminalService terminalService, AddressServiceWrapper addressServiceWrapper,
+        NormalizerService normalizerService) {
 
         this.routeDataRevisionRepository = routeDataRevisionRepository;
         this.terminalService = terminalService;
+        this.addressServiceWrapper = addressServiceWrapper;
+        this.normalizerService = normalizerService;
     }
 
     @Override
     @Transactional(readOnly = true)
     public RouteDataRevision getRouteDataRevision(Terminal terminal, GeoLocation destination) {
-        return routeDataRevisionRepository.findNearest(terminal, destination.getLatitude(), destination.getLongitude(), 
+
+        return routeDataRevisionRepository.findNearest(terminal, destination.getLatitude(), destination.getLongitude(),
                 new Date());
     }
 
@@ -52,13 +62,13 @@ public class RouteDataRevisionServiceImpl implements RouteDataRevisionService {
         }
 
         RouteDataRevision nearest = routeDataRevisionRepository.findNearest(terminal, destination.getLatitude(),
-                destination.getLongitude(), date == null? new Date(): date);
+                destination.getLongitude(), date == null ? new Date() : date);
 
         if (nearest == null) {
             throw new RevisionDoesNotExistException("Route revision for terminal with uid " + terminalUid
-                    + ", coordinates " + destination.getLatitude() + "," + destination.getLongitude() + " and date: " 
-                    + new SimpleDateFormat(RouteDataRevisionDto.DATE_FORMAT, Locale.getDefault()).format(date)
-                    + " does not exist", "routerevision.notfound");
+                + ", coordinates " + destination.getLatitude() + "," + destination.getLongitude() + " and date: "
+                + new SimpleDateFormat(RouteDataRevisionDto.DATE_FORMAT, Locale.getDefault()).format(date)
+                + " does not exist", "routerevision.notfound");
         }
 
         return nearest;
@@ -94,6 +104,14 @@ public class RouteDataRevisionServiceImpl implements RouteDataRevisionService {
 
     @Override
     public RouteDataRevision save(RouteDataRevision routeDataRevision) {
+
+        GeoLocation geoLocation = new GeoLocation(routeDataRevision.getLatitude(), routeDataRevision.getLongitude());
+        Address address = addressServiceWrapper.getAddressForGeoLocation(geoLocation);
+
+        routeDataRevision.setCountry(address.getCountryCode());
+        routeDataRevision.setCity(address.getCombinedCity());
+        routeDataRevision.setCityNormalized(normalizerService.normalize(address.getCombinedCity()));
+        routeDataRevision.setPostalCode(address.getPostcode());
 
         RouteDataRevision save = routeDataRevisionRepository.save(routeDataRevision);
 

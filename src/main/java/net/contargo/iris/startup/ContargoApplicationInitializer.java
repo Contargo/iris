@@ -27,7 +27,7 @@ public class ContargoApplicationInitializer implements ApplicationContextInitial
     public void initialize(ConfigurableApplicationContext applicationContext) {
 
         try {
-            String env = System.getenv("environment") != null ? System.getenv("environment") : "dev";
+            String env = System.getenv("environment") == null ? "dev" : System.getenv("environment");
 
             ConfigurableEnvironment environment = applicationContext.getEnvironment();
 

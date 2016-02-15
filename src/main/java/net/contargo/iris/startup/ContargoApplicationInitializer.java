@@ -22,12 +22,17 @@ import java.lang.invoke.MethodHandles;
 public class ContargoApplicationInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final String ENVIRONMENT = "environment";
 
     @Override
     public void initialize(ConfigurableApplicationContext applicationContext) {
 
         try {
-            String env = System.getenv("environment") == null ? "dev" : System.getenv("environment");
+            String env = System.getenv(ENVIRONMENT);
+
+            if (env == null) {
+                env = System.getProperty(ENVIRONMENT, "dev");
+            }
 
             ConfigurableEnvironment environment = applicationContext.getEnvironment();
 

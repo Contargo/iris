@@ -12,7 +12,7 @@ public class HashKeyValidator {
 
     private static final String HASHKEY_PATTERN = "^[A-Z0-9]{5}$";
 
-    private Pattern pattern;
+    private final Pattern pattern;
 
     public HashKeyValidator() {
 

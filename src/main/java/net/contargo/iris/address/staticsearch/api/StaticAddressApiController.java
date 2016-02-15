@@ -36,7 +36,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
@@ -140,6 +140,6 @@ public class StaticAddressApiController {
     @ExceptionHandler(StaticAddressNotFoundException.class)
     ResponseEntity<RestApiErrorDto> handleStaticAddressNotFoundException(StaticAddressNotFoundException e) {
 
-        return new ResponseEntity<>(new RestApiErrorDto(e.getErrorCode(), e.getMessage(), null), BAD_REQUEST);
+        return new ResponseEntity<>(new RestApiErrorDto(e.getErrorCode(), e.getMessage(), null), NOT_FOUND);
     }
 }

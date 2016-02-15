@@ -60,7 +60,6 @@ public class StaticAddressApiControllerMvcUnitTest {
     private static final String CITY = "Karlsruhe";
     private static final String POSTALCODE = "76131";
     private static final String COUNTRY = "DE";
-    private static final String SUBURB = "Neureuth";
 
     @Autowired
     StaticAddressDtoService staticAddressDtoServiceMock;
@@ -101,9 +100,9 @@ public class StaticAddressApiControllerMvcUnitTest {
                     "/staticaddresses?postalCode=76131&country=DE&city=Karlsruhe").accept(APPLICATION_JSON));
 
         resultActions.andExpect(status().isOk()).andExpect(content().contentType("application/json;charset=UTF-8"));
-        resultActions.andExpect((jsonPath("$.[0].address.country_code", is(COUNTRY))));
-        resultActions.andExpect((jsonPath("$.[0].address.city", is(CITY))));
-        resultActions.andExpect((jsonPath("$.[0].address.postcode", is(POSTALCODE))));
+        resultActions.andExpect(jsonPath("$.[0].address.country_code", is(COUNTRY)));
+        resultActions.andExpect(jsonPath("$.[0].address.city", is(CITY)));
+        resultActions.andExpect(jsonPath("$.[0].address.postcode", is(POSTALCODE)));
     }
 
 
@@ -119,9 +118,9 @@ public class StaticAddressApiControllerMvcUnitTest {
                 .accept(APPLICATION_JSON));
 
         resultActions.andExpect(status().isOk()).andExpect(content().contentType("application/json;charset=UTF-8"));
-        resultActions.andExpect((jsonPath("$.uids", hasSize(2))));
-        resultActions.andExpect((jsonPath("$.uids[0]", is(1))));
-        resultActions.andExpect((jsonPath("$.uids[1]", is(10))));
+        resultActions.andExpect(jsonPath("$.uids", hasSize(2)));
+        resultActions.andExpect(jsonPath("$.uids[0]", is(1)));
+        resultActions.andExpect(jsonPath("$.uids[1]", is(10)));
     }
 
 
@@ -149,7 +148,7 @@ public class StaticAddressApiControllerMvcUnitTest {
 
         ResultActions resultActions = mockMvc.perform(get("/staticaddresses").param("hashkey", hashKey)
                 .accept(APPLICATION_JSON));
-        resultActions.andExpect(status().isBadRequest());
+        resultActions.andExpect(status().isNotFound());
         resultActions.andExpect(jsonPath("$.code", is("staticaddress.not.found")));
         resultActions.andExpect(jsonPath("$.message",
                 is("Static address with hash key - " + hashKey + " - is not available.")));

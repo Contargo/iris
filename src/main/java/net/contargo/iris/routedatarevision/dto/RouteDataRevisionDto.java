@@ -74,8 +74,13 @@ public class RouteDataRevisionDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_FORMAT, timezone = "CET")
     private Date validTo;
 
+    @JsonIgnore
     private String country;
+
+    @JsonIgnore
     private String city;
+
+    @JsonIgnore
     private String postalCode;
 
     public RouteDataRevisionDto(RouteDataRevision routeDataRevision) {

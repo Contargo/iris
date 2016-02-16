@@ -1,6 +1,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib uri="http://displaytag.sf.net" prefix="display" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="iris" tagdir="/WEB-INF/tags" %>
 
 <!DOCTYPE html>
 <html>
@@ -26,98 +28,100 @@
             <div class="content">
 
                 <c:url value="${BASE_URL}/new" var="COMPLETE_CREATE_URL"/>
-                <div class="management-button-top">
-                    <a href="${COMPLETE_CREATE_URL}" class="btn btn-primary btn-create-top" id="top-new">
-                        <i class="icon-plus-sign icon-white"></i>
-                        <spring:message code="table.newLabel"/>
-                    </a>
-                </div>
-                <div class="margin-bottom-5">
-                    <select id="selectedTerminal">
-                        <option></option>
-                        <c:forEach items="${terminals}" var="terminal">
-                            <c:choose>
-                                <c:when test="${terminal.id eq selectedTerminal}">
-                                    <option value="${terminal.id}" selected="selected">${terminal.niceName}</option>
-                                </c:when>
-                                <c:otherwise>
-                                    <option value="${terminal.id}">${terminal.niceName}</option>
-                                </c:otherwise>
-                            </c:choose>
-                        </c:forEach>
-                    </select>
-                    <a id="filter-reset" href="${BASE_URL}" class="btn btn-primary"><spring:message
-                            code="routerevision.table.filter.reset"/></a>
-                </div>
+                <form:form action="${BASE_URL}" modelAttribute="request" method="GET" cssClass="form-horizontal">
+                    <fieldset>
+                        <div class="control-group">
+                            <form:label path="${terminalId}" cssClass="control-label"
+                                        cssErrorClass="control-label error">
+                                <spring:message code="routerevision.terminal"/>
+                            </form:label>
+                            <div class="controls">
+                                <form:select path="terminalId" cssErrorClass="error">
+                                    <option></option>
+                                    <c:forEach var="terminal" items="${terminals}">
+                                        <form:option value="${terminal.id}" label="${terminal.niceName}"/>
+                                    </c:forEach>
+                                </form:select>
+                            </div>
+                        </div>
+                        <iris:inputField property="postalcode" messageKey="routerevision.postalcode"/>
+                        <iris:inputField property="city" messageKey="routerevision.city"/>
 
-                <display:table name="routeRevisions" class="table iris-table" uid="routerevision"
-                               requestURI="${BASE_URL}">
+                        <div class="form-actions">
+                            <input id="search" class="btn btn-primary" type="submit"
+                                   value="<spring:message code="staticaddress.label.search" />"/>
 
-                    <spring:message code="routerevision.terminal" var="label"/>
-                    <display:column title="${label}" property="terminal.name" sortable="true"/>
+                            <a id="reset" class="btn btn-primary" onclick="resetForm()">
+                                <spring:message code="routerevision.reset"/>
+                            </a>
 
-                    <spring:message code="routerevision.truckdistanceoneway" var="label"/>
-                    <display:column title="${label}" property="truckDistanceOneWayInKilometer" sortable="true"/>
+                            <a href="${COMPLETE_CREATE_URL}" id="new" class="btn btn-primary">
+                                <i class="icon-plus-sign icon-white"></i>
+                                <spring:message code="table.newLabel"/>
+                            </a>
+                        </div>
+                    </fieldset>
+                </form:form>
 
-                    <spring:message code="routerevision.tolldistanceoneway" var="label"/>
-                    <display:column title="${label}" property="tollDistanceOneWayInKilometer" sortable="true"/>
+                <c:if test="${routeRevisions != null}">
+                    <display:table name="routeRevisions" class="table iris-table" uid="routerevision"
+                                   requestURI="${BASE_URL}">
 
-                    <spring:message code="routerevision.airlinedistance" var="label"/>
-                    <display:column title="${label}" property="airlineDistanceInKilometer" sortable="true"/>
+                        <spring:message code="routerevision.terminal" var="label"/>
+                        <display:column title="${label}" property="terminal.name" sortable="true"/>
 
-                    <spring:message code="routerevision.latitude" var="label"/>
-                    <display:column title="${label}" property="latitude" sortable="true"/>
+                        <spring:message code="routerevision.truckdistanceoneway" var="label"/>
+                        <display:column title="${label}" property="truckDistanceOneWayInKilometer" sortable="true"/>
 
-                    <spring:message code="routerevision.longitude" var="label"/>
-                    <display:column title="${label}" property="longitude" sortable="true"/>
+                        <spring:message code="routerevision.tolldistanceoneway" var="label"/>
+                        <display:column title="${label}" property="tollDistanceOneWayInKilometer" sortable="true"/>
 
-                    <spring:message code="routerevision.radius" var="label"/>
-                    <display:column title="${label}" property="radiusInMeter" sortable="true"/>
+                        <spring:message code="routerevision.airlinedistance" var="label"/>
+                        <display:column title="${label}" property="airlineDistanceInKilometer" sortable="true"/>
 
-                    <spring:message code="routerevision.postalcode" var="label"/>
-                    <display:column title="${label}" property="postalCode" sortable="true"/>
+                        <spring:message code="routerevision.latitude" var="label"/>
+                        <display:column title="${label}" property="latitude" sortable="true"/>
 
-                    <spring:message code="routerevision.city" var="label"/>
-                    <display:column title="${label}" property="city" sortable="true"/>
+                        <spring:message code="routerevision.longitude" var="label"/>
+                        <display:column title="${label}" property="longitude" sortable="true"/>
 
-                    <display:column class="table-buttons">
+                        <spring:message code="routerevision.radius" var="label"/>
+                        <display:column title="${label}" property="radiusInMeter" sortable="true"/>
 
-                        <a href="<c:url value="/web/routerevisions/${routerevision.id}" />" class="btn btn-primary">
-                            <i class="icon-edit icon-white"></i>
-                            <spring:message code="table.editLabel"/>
-                        </a>
+                        <spring:message code="routerevision.postalcode" var="label"/>
+                        <display:column title="${label}" property="postalCode" sortable="true"/>
 
-                    </display:column>
-                </display:table>
+                        <spring:message code="routerevision.city" var="label"/>
+                        <display:column title="${label}" property="city" sortable="true"/>
 
-                <div class="management-button-bottom">
-                    <a href="${COMPLETE_CREATE_URL}" class="btn btn-primary btn-create-bottom" id="bottom-new">
-                        <i class="icon-plus-sign icon-white"></i>
-                        <spring:message code="table.newLabel"/>
-                    </a>
-                </div>
+                        <display:column class="table-buttons">
 
+                            <a href="<c:url value="/web/routerevisions/${routerevision.id}" />" class="btn btn-primary">
+                                <i class="icon-edit icon-white"></i>
+                                <spring:message code="table.editLabel"/>
+                            </a>
+
+                        </display:column>
+                    </display:table>
+                </c:if>
             </div>
         </div>
     </div>
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
-        var $selectedTerminal = $('#selectedTerminal');
+        var $selectedTerminal = $('#terminalId');
         $selectedTerminal.select2({
             width: 'resolve',
             placeholder: 'Select a terminal'
         });
-        $selectedTerminal.on('change', function () {
-            var terminalId = $selectedTerminal.select2('val');
-
-            var params = "?";
-            if (terminalId != 0) {
-                params += "terminalId=" + terminalId;
-            }
-            window.location.replace("${BASE_URL}" + params);
-        });
     });
+
+    function resetForm() {
+        $('#terminalId').select2('val', '');
+        $('#postalcode').val('');
+        $('#city').val('');
+    }
 </script>
 </body>
 </html>

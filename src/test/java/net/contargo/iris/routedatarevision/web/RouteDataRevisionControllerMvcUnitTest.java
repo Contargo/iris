@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import org.junit.runner.RunWith;
 
-import org.mockito.Mockito;
+import org.mockito.ArgumentCaptor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -28,10 +28,16 @@ import java.math.BigDecimal;
 
 import java.util.List;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.isA;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 
 import static org.mockito.Mockito.reset;
@@ -44,10 +50,12 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 
 
@@ -87,28 +95,63 @@ public class RouteDataRevisionControllerMvcUnitTest {
 
 
     @Test
-    public void getAll() throws Exception {
+    public void searchWithoutQuery() throws Exception {
 
-        when(routeDataRevisionDtoServiceMock.getRouteDataRevisions()).thenReturn(routeDataRevisions);
+        when(terminalServiceMock.getAll()).thenReturn(asList(new Terminal(), new Terminal()));
 
-        ResultActions resultActions = perform(get("/routerevisions").accept(APPLICATION_JSON));
+        ResultActions resultActions = perform(get("/routerevisions"));
         resultActions.andExpect(status().isOk());
-        resultActions.andExpect(model().attribute("routeRevisions", is(routeDataRevisions)));
-        resultActions.andExpect(model().attribute("selectedTerminal", nullValue()));
+        resultActions.andExpect(model().attribute("routeRevisions", nullValue()));
+        resultActions.andExpect(model().attribute("terminals", hasSize(2)));
+        resultActions.andExpect(model().attribute("request", notNullValue()));
+
+        verifyZeroInteractions(routeDataRevisionDtoServiceMock);
     }
 
 
     @Test
-    public void getAllByTerminal() throws Exception {
+    public void searchWithTooFewParameters() throws Exception {
 
-        when(routeDataRevisionDtoServiceMock.getRouteDataRevisions(5L)).thenReturn(routeDataRevisions);
+        when(terminalServiceMock.getAll()).thenReturn(asList(new Terminal(), new Terminal()));
 
-        ResultActions resultActions = perform(get("/routerevisions").param("terminalId", "5").accept(APPLICATION_JSON));
+        ResultActions resultActions = perform(get("/routerevisions").param("city", "Karlsruhe"));
         resultActions.andExpect(status().isOk());
-        resultActions.andExpect(model().attribute("routeRevisions", is(routeDataRevisions)));
-        resultActions.andExpect(model().attribute("selectedTerminal", 5L));
+        resultActions.andExpect(model().attribute("routeRevisions", nullValue()));
+        resultActions.andExpect(model().attribute("terminals", hasSize(2)));
+        resultActions.andExpect(model().attribute("request", notNullValue()));
+        resultActions.andExpect(model().attribute("request", hasProperty("city", is("Karlsruhe"))));
+        resultActions.andExpect(model().attribute("message",
+                hasProperty("message", is("routerevision.parameter.count"))));
 
-        verify(routeDataRevisionDtoServiceMock).getRouteDataRevisions(5L);
+        verifyZeroInteractions(routeDataRevisionDtoServiceMock);
+    }
+
+
+    @Test
+    public void search() throws Exception {
+
+        ArgumentCaptor<RouteRevisionRequest> captor = ArgumentCaptor.forClass(RouteRevisionRequest.class);
+
+        when(terminalServiceMock.getAll()).thenReturn(asList(new Terminal(), new Terminal()));
+        when(routeDataRevisionDtoServiceMock.search(any(RouteRevisionRequest.class))).thenReturn(routeDataRevisions);
+
+        ResultActions resultActions = perform(get("/routerevisions").param("city", "Karlsruhe")
+                .param("postalcode", "76135")
+                .param("terminalId", "42"));
+        resultActions.andExpect(status().isOk());
+        resultActions.andDo(print());
+        resultActions.andExpect(model().attribute("routeRevisions", routeDataRevisions));
+        resultActions.andExpect(model().attribute("terminals", hasSize(2)));
+        resultActions.andExpect(model().attribute("request", hasProperty("city", is("Karlsruhe"))));
+        resultActions.andExpect(model().attribute("request", hasProperty("postalcode", is("76135"))));
+        resultActions.andExpect(model().attribute("request", hasProperty("terminalId", is(42L))));
+        resultActions.andExpect(model().attribute("message", nullValue()));
+
+        verify(routeDataRevisionDtoServiceMock).search(captor.capture());
+
+        assertThat(captor.getValue().getCity(), is("Karlsruhe"));
+        assertThat(captor.getValue().getPostalcode(), is("76135"));
+        assertThat(captor.getValue().getTerminalId(), is(42L));
     }
 
 
@@ -137,10 +180,9 @@ public class RouteDataRevisionControllerMvcUnitTest {
     @Test
     public void create() throws Exception {
 
-        when(routeDataRevisionDtoServiceMock.save(Mockito.any(RouteDataRevisionDto.class))).thenReturn(
-            routeDataRevision);
+        when(routeDataRevisionDtoServiceMock.save(any(RouteDataRevisionDto.class))).thenReturn(routeDataRevision);
         when(routeDataRevisionDtoServiceMock.existsEntry(eq("10"), eq(BigDecimal.TEN), eq(BigDecimal.ONE),
-                    Mockito.any(ValidityRange.class), eq(null))).thenReturn(false);
+                    any(ValidityRange.class), eq(null))).thenReturn(false);
 
         ResultActions resultActions = perform(post(
                         "/routerevisions?terminal.uniqueId=10&latitude=10&longitude=1&truckDistanceOneWayInKilometer=1&"
@@ -154,8 +196,7 @@ public class RouteDataRevisionControllerMvcUnitTest {
     @Test
     public void createValidationErrors() throws Exception {
 
-        when(routeDataRevisionDtoServiceMock.save(Mockito.any(RouteDataRevisionDto.class))).thenReturn(
-            routeDataRevision);
+        when(routeDataRevisionDtoServiceMock.save(any(RouteDataRevisionDto.class))).thenReturn(routeDataRevision);
 
         ResultActions resultActions = perform(post("/routerevisions").param("terminal.uniqueId", "foo")
                 .contentType(APPLICATION_JSON));
@@ -195,8 +236,7 @@ public class RouteDataRevisionControllerMvcUnitTest {
     @Test
     public void update() throws Exception {
 
-        when(routeDataRevisionDtoServiceMock.save(Mockito.any(RouteDataRevisionDto.class))).thenReturn(
-            routeDataRevision);
+        when(routeDataRevisionDtoServiceMock.save(any(RouteDataRevisionDto.class))).thenReturn(routeDataRevision);
 
         ResultActions resultActions = perform(put(
                         "/routerevisions/7?id=7&terminal.uniqueId=10&latitude=10&longitude=1&truckDistanceOneWayInKilometer=1&"

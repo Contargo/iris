@@ -3,6 +3,7 @@ package net.contargo.iris.routedatarevision.service;
 import net.contargo.iris.GeoLocation;
 import net.contargo.iris.routedatarevision.RouteDataRevision;
 import net.contargo.iris.routedatarevision.ValidityRange;
+import net.contargo.iris.routedatarevision.web.RouteRevisionRequest;
 import net.contargo.iris.terminal.Terminal;
 
 import java.math.BigDecimal;
@@ -113,4 +114,14 @@ public interface RouteDataRevisionService {
      */
     boolean overlapsWithExisting(BigInteger terminalUniqueId, BigDecimal latitude, BigDecimal longitude,
         ValidityRange validityRange, Long routeRevisionId);
+
+
+    /**
+     * Search {@link RouteDataRevision}s by specified parameters.
+     *
+     * @param  routeRevisionRequest  search request dto that specifies the search parameters
+     *
+     * @return  a list of matching {@link RouteDataRevision}s
+     */
+    List<RouteDataRevision> search(RouteRevisionRequest routeRevisionRequest);
 }

@@ -7,6 +7,7 @@ import net.contargo.iris.normalizer.NormalizerService;
 import net.contargo.iris.routedatarevision.RouteDataRevision;
 import net.contargo.iris.routedatarevision.ValidityRange;
 import net.contargo.iris.routedatarevision.persistence.RouteDataRevisionRepository;
+import net.contargo.iris.routedatarevision.web.RouteRevisionRequest;
 import net.contargo.iris.terminal.Terminal;
 import net.contargo.iris.terminal.service.TerminalService;
 
@@ -19,9 +20,10 @@ import org.junit.runner.RunWith;
 
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 
 import org.mockito.runners.MockitoJUnitRunner;
+
+import org.springframework.data.jpa.domain.Specification;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -35,6 +37,9 @@ import static org.hamcrest.CoreMatchers.is;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import static org.hamcrest.Matchers.hasSize;
+
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 
 import static org.mockito.Mockito.verify;
@@ -81,7 +86,7 @@ public class RouteDataRevisionServiceImplUnitTest {
         RouteDataRevision routeDataRevisionDB = new RouteDataRevision();
 
         when(routeDataRevisionRepositoryMock.findNearest(eq(terminal), eq(address.getLatitude()),
-                    eq(address.getLongitude()), Mockito.any(Date.class))).thenReturn(routeDataRevisionDB);
+                    eq(address.getLongitude()), any(Date.class))).thenReturn(routeDataRevisionDB);
 
         RouteDataRevision routeDataRevision = sut.getRouteDataRevision(terminal, address);
 
@@ -116,7 +121,7 @@ public class RouteDataRevisionServiceImplUnitTest {
         when(terminalServiceMock.getByUniqueId(BigInteger.ONE)).thenReturn(terminal);
 
         when(routeDataRevisionRepositoryMock.findNearest(eq(terminal), eq(address.getLatitude()),
-                    eq(address.getLongitude()), Mockito.any(Date.class))).thenReturn(routeDataRevisionDB);
+                    eq(address.getLongitude()), any(Date.class))).thenReturn(routeDataRevisionDB);
 
         RouteDataRevision routeDataRevision = sut.getRouteDataRevision(BigInteger.ONE, address, null);
 
@@ -248,5 +253,25 @@ public class RouteDataRevisionServiceImplUnitTest {
 
         assertThat(sut.overlapsWithExisting(BigInteger.ONE, BigDecimal.TEN, BigDecimal.ONE,
                 new ValidityRange(LocalDate.now().plusDays(1), LocalDate.now().plusDays(2)), 7L), is(false));
+    }
+
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void search() {
+
+        RouteRevisionRequest routeRevisionRequest = new RouteRevisionRequest();
+        routeRevisionRequest.setCity("Mücheln");
+
+        RouteDataRevision routeDataRevision = new RouteDataRevision();
+        RouteDataRevision routeDataRevision2 = new RouteDataRevision();
+
+        when(normalizerServiceMock.normalize("Mücheln")).thenReturn("MUECHELN");
+        when(routeDataRevisionRepositoryMock.findAll(any(Specification.class))).thenReturn(asList(routeDataRevision,
+                routeDataRevision2));
+
+        List<RouteDataRevision> results = sut.search(routeRevisionRequest);
+
+        assertThat(results, hasSize(2));
     }
 }

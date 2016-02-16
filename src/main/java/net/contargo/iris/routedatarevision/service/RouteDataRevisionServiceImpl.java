@@ -9,8 +9,11 @@ import net.contargo.iris.routedatarevision.RouteDataRevision;
 import net.contargo.iris.routedatarevision.ValidityRange;
 import net.contargo.iris.routedatarevision.dto.RouteDataRevisionDto;
 import net.contargo.iris.routedatarevision.persistence.RouteDataRevisionRepository;
+import net.contargo.iris.routedatarevision.web.RouteRevisionRequest;
 import net.contargo.iris.terminal.Terminal;
 import net.contargo.iris.terminal.service.TerminalService;
+
+import org.springframework.data.jpa.domain.Specifications;
 
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +25,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import static net.contargo.iris.routedatarevision.service.RouteRevisionSpecifications.hasCity;
+import static net.contargo.iris.routedatarevision.service.RouteRevisionSpecifications.hasPostalCode;
+import static net.contargo.iris.routedatarevision.service.RouteRevisionSpecifications.hasTerminal;
+
+import static org.springframework.data.jpa.domain.Specifications.where;
 
 
 public class RouteDataRevisionServiceImpl implements RouteDataRevisionService {
@@ -128,5 +137,19 @@ public class RouteDataRevisionServiceImpl implements RouteDataRevisionService {
 
         return revisions.stream().filter(revision -> !revision.getId().equals(routeRevisionId)).anyMatch(revision ->
                     validityRange.overlapWith(revision.getValidityRange()));
+    }
+
+
+    @Override
+    public List<RouteDataRevision> search(RouteRevisionRequest routeRevisionRequest) {
+
+        String normalizedCity = normalizerService.normalize(routeRevisionRequest.getCity());
+        String postalcode = routeRevisionRequest.getPostalcode();
+        Long terminalId = routeRevisionRequest.getTerminalId();
+
+        Specifications<RouteDataRevision> spec = where(hasCity(normalizedCity)).and(hasPostalCode(postalcode))
+            .and(hasTerminal(terminalId));
+
+        return routeDataRevisionRepository.findAll(spec);
     }
 }

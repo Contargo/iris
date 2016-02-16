@@ -2,6 +2,7 @@ package net.contargo.iris.routedatarevision.dto;
 
 import net.contargo.iris.GeoLocation;
 import net.contargo.iris.routedatarevision.ValidityRange;
+import net.contargo.iris.routedatarevision.web.RouteRevisionRequest;
 
 import java.math.BigDecimal;
 
@@ -98,4 +99,14 @@ public interface RouteDataRevisionDtoService {
      *          {@link net.contargo.iris.terminal.Terminal} and {@link net.contargo.iris.address.Address}
      */
     RouteDataRevisionDto findNearest(String terminalUniqueId, GeoLocation geoLocation, Date date);
+
+
+    /**
+     * Search {@link RouteDataRevisionDto}s by specified parameters.
+     *
+     * @param  routeRevisionRequest  search request dto that specifies the search parameters
+     *
+     * @return  a list of matching {@link RouteDataRevisionDto}s
+     */
+    List<RouteDataRevisionDto> search(RouteRevisionRequest routeRevisionRequest);
 }

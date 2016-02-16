@@ -4,6 +4,7 @@ import net.contargo.iris.GeoLocation;
 import net.contargo.iris.routedatarevision.RouteDataRevision;
 import net.contargo.iris.routedatarevision.ValidityRange;
 import net.contargo.iris.routedatarevision.service.RouteDataRevisionService;
+import net.contargo.iris.routedatarevision.web.RouteRevisionRequest;
 import net.contargo.iris.terminal.Terminal;
 import net.contargo.iris.terminal.service.TerminalService;
 import net.contargo.iris.util.DateUtil;
@@ -26,12 +27,15 @@ import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 
 import static org.junit.Assert.assertThat;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 import static java.util.Collections.singletonList;
 
@@ -159,5 +163,19 @@ public class RouteDataRevisionDtoServiceImplUnitTest {
 
         assertThat(result.getAirlineDistanceInKilometer(), is(BigDecimal.ONE));
         assertThat(result.getTerminal().getName(), is("Foo"));
+    }
+
+
+    @Test
+    public void search() {
+
+        RouteRevisionRequest routeRevisionRequest = new RouteRevisionRequest();
+
+        when(routeDataRevisionServiceMock.search(routeRevisionRequest)).thenReturn(routeDataRevisions);
+
+        List<RouteDataRevisionDto> searchResult = sut.search(routeRevisionRequest);
+
+        assertThat(searchResult, hasSize(1));
+        assertReflectionEquals(routeDataRevisionDto, searchResult.get(0));
     }
 }

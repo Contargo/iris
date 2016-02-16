@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.text.SimpleDateFormat;
@@ -77,21 +77,21 @@ public class RouteDataRevisionController {
     }
 
 
-    @RequestMapping(value = "", method = GET)
-    public String getAll(Model model,
-        @RequestParam(value = "terminalId", required = false) Long terminalId) {
+    @RequestMapping(method = RequestMethod.GET)
+    public String search(Model model, @ModelAttribute RouteRevisionRequest routeRevisionRequest) {
 
-        List<RouteDataRevisionDto> routeDataRevisions;
+        if (!routeRevisionRequest.isEmpty()) {
+            if (routeRevisionRequest.isValid()) {
+                List<RouteDataRevisionDto> routeRevisions = routeDataRevisionDtoService.search(routeRevisionRequest);
 
-        if (terminalId == null) {
-            routeDataRevisions = routeDataRevisionDtoService.getRouteDataRevisions();
-        } else {
-            routeDataRevisions = routeDataRevisionDtoService.getRouteDataRevisions(terminalId);
-            model.addAttribute("selectedTerminal", terminalId);
+                model.addAttribute("routeRevisions", routeRevisions);
+            } else {
+                model.addAttribute("message", Message.error("routerevision.parameter.count"));
+            }
         }
 
-        model.addAttribute("routeRevisions", routeDataRevisions);
         model.addAttribute("terminals", terminalService.getAll());
+        model.addAttribute("request", routeRevisionRequest);
 
         return CONTROLLER_CONTEXT + "routeRevisions";
     }

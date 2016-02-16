@@ -28,6 +28,10 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import static net.contargo.iris.routedatarevision.service.RouteRevisionSpecifications.hasCity;
+import static net.contargo.iris.routedatarevision.service.RouteRevisionSpecifications.hasPostalCode;
+import static net.contargo.iris.routedatarevision.service.RouteRevisionSpecifications.hasTerminal;
+
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.nullValue;
 
@@ -36,6 +40,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 
 import static org.hamcrest.core.Is.is;
+
+import static org.springframework.data.jpa.domain.Specifications.where;
+
+import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 import static java.math.BigDecimal.ONE;
 import static java.math.BigDecimal.TEN;
@@ -162,6 +170,54 @@ public class RouteDataRevisionRepositoryIntegrationTest {
         List<RouteDataRevision> routeDataRevisionOptional = sut.findByTerminalAndLatitudeAndLongitude(BigInteger.TEN,
                 valueOf(49.1001), valueOf(8.9102));
         assertThat(routeDataRevisionOptional, hasSize(0));
+    }
+
+
+    @Test
+    public void specifications() {
+
+        Terminal gomaringen = new Terminal(new GeoLocation(ONE, ONE));
+        gomaringen.setName("Gomaringen");
+        gomaringen.setUniqueId(BigInteger.TEN);
+
+        Terminal eisleben = new Terminal(new GeoLocation(ONE, TEN));
+        eisleben.setName("Eisleben1");
+        eisleben.setUniqueId(BigInteger.ZERO);
+
+        RouteDataRevision revision1 = createRouteDataRevision(gomaringen, ZERO, ZERO, ZERO, ONE, ONE, TEN, "",
+                new Date(), null);
+        revision1.setCity("Stuttgart");
+        revision1.setCityNormalized("STUTTGART");
+        revision1.setPostalCode("70173");
+        revision1.setCountry("de");
+
+        RouteDataRevision revision2 = createRouteDataRevision(eisleben, ZERO, ZERO, ZERO, ONE, ONE, TEN, "", new Date(),
+                null);
+        revision2.setCity("Halle");
+        revision2.setCityNormalized("HALLEEE");
+        revision2.setPostalCode("70173");
+        revision2.setCountry("de");
+
+        em.persist(gomaringen);
+        em.persist(eisleben);
+        em.persist(revision1);
+        em.persist(revision2);
+        em.flush();
+
+        Long gomaringenId = gomaringen.getId();
+        List<RouteDataRevision> results = sut.findAll(where(hasTerminal(gomaringenId)).and(hasPostalCode("70173")));
+
+        assertThat(results, hasSize(1));
+        assertReflectionEquals(revision1, results.get(0));
+
+        results = sut.findAll(where(hasPostalCode("70173")));
+        assertThat(results, hasSize(2));
+        assertReflectionEquals(revision1, results.get(0));
+        assertReflectionEquals(revision2, results.get(1));
+
+        results = sut.findAll(where(hasCity("ALLEEE")));
+        assertThat(results, hasSize(1));
+        assertReflectionEquals(revision2, results.get(0));
     }
 
 

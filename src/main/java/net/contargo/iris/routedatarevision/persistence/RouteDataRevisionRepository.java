@@ -4,6 +4,7 @@ import net.contargo.iris.routedatarevision.RouteDataRevision;
 import net.contargo.iris.terminal.Terminal;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -20,7 +21,8 @@ import java.util.List;
  * @author  Tobias Schneider - schneider@synyx.de
  * @author  David Schilling - schilling@synyx.de
  */
-public interface RouteDataRevisionRepository extends JpaRepository<RouteDataRevision, Long> {
+public interface RouteDataRevisionRepository extends JpaRepository<RouteDataRevision, Long>,
+    JpaSpecificationExecutor<RouteDataRevision> {
 
     @Query(
         value = "SELECT * "

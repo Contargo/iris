@@ -4,6 +4,7 @@ import net.contargo.iris.GeoLocation;
 import net.contargo.iris.routedatarevision.RouteDataRevision;
 import net.contargo.iris.routedatarevision.ValidityRange;
 import net.contargo.iris.routedatarevision.service.RouteDataRevisionService;
+import net.contargo.iris.routedatarevision.web.RouteRevisionRequest;
 import net.contargo.iris.terminal.Terminal;
 import net.contargo.iris.terminal.service.TerminalService;
 
@@ -75,6 +76,13 @@ public class RouteDataRevisionDtoServiceImpl implements RouteDataRevisionDtoServ
 
         return new RouteDataRevisionDto(routeDataRevisionService.getRouteDataRevision(new BigInteger(terminalUniqueId),
                     geoLocation, date));
+    }
+
+
+    @Override
+    public List<RouteDataRevisionDto> search(RouteRevisionRequest routeRevisionRequest) {
+
+        return convertToDtoList(routeDataRevisionService.search(routeRevisionRequest));
     }
 
 

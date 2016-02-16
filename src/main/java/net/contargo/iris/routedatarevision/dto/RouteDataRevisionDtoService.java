@@ -1,8 +1,8 @@
 package net.contargo.iris.routedatarevision.dto;
 
 import net.contargo.iris.GeoLocation;
+import net.contargo.iris.routedatarevision.RouteRevisionRequest;
 import net.contargo.iris.routedatarevision.ValidityRange;
-import net.contargo.iris.routedatarevision.web.RouteRevisionRequest;
 
 import java.math.BigDecimal;
 

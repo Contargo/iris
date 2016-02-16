@@ -2,6 +2,7 @@ package net.contargo.iris.routedatarevision.web;
 
 import net.contargo.iris.Message;
 import net.contargo.iris.api.ControllerConstants;
+import net.contargo.iris.routedatarevision.RouteRevisionRequest;
 import net.contargo.iris.routedatarevision.ValidityRange;
 import net.contargo.iris.routedatarevision.dto.RouteDataRevisionDto;
 import net.contargo.iris.routedatarevision.dto.RouteDataRevisionDtoService;

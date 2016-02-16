@@ -5,9 +5,9 @@ import net.contargo.iris.address.Address;
 import net.contargo.iris.address.service.AddressServiceWrapper;
 import net.contargo.iris.normalizer.NormalizerService;
 import net.contargo.iris.routedatarevision.RouteDataRevision;
+import net.contargo.iris.routedatarevision.RouteRevisionRequest;
 import net.contargo.iris.routedatarevision.ValidityRange;
 import net.contargo.iris.routedatarevision.persistence.RouteDataRevisionRepository;
-import net.contargo.iris.routedatarevision.web.RouteRevisionRequest;
 import net.contargo.iris.terminal.Terminal;
 import net.contargo.iris.terminal.service.TerminalService;
 

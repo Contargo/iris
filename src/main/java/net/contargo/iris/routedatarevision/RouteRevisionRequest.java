@@ -1,4 +1,4 @@
-package net.contargo.iris.routedatarevision.web;
+package net.contargo.iris.routedatarevision;
 
 import org.springframework.util.StringUtils;
 

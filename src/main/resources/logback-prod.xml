@@ -51,6 +51,10 @@
         <level value="info" />
     </logger>
 
+    <logger name="com.mangofactory.swagger">
+        <level value="error" />
+    </logger>
+
     <if condition='isDefined("graylog.server")'>
         <then>
             <root>

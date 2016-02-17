@@ -40,6 +40,11 @@
         <level value="info" />
     </logger>
 
+    <logger name="com.mangofactory.swagger">
+        <level value="error" />
+    </logger>
+
+
     <root>
         <level value="info" />
         <appender-ref ref="console" />

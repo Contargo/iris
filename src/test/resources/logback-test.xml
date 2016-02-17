@@ -28,6 +28,11 @@
         <level value="warn" />
     </logger>
 
+    <logger name="com.mangofactory.swagger">
+        <level value="error" />
+    </logger>
+
+
     <root>
         <level value="warn" />
         <appender-ref ref="console" />

@@ -4,7 +4,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
-        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.0.xsd">
 
     <security:http use-expressions="true" entry-point-ref="delegatingAuthenticationEntryPoint">
         <security:intercept-url pattern="/web/login" access="permitAll()"/>
@@ -25,6 +25,7 @@
                              username-parameter="email" password-parameter="password"/>
         <security:logout logout-url="/web/logout"/>
         <security:http-basic entry-point-ref="basicAuthenticationEntryPoint"/>
+        <security:csrf disabled="true"/>
     </security:http>
 
     <bean id="delegatingAuthenticationEntryPoint" class="org.springframework.security.web.authentication.DelegatingAuthenticationEntryPoint">

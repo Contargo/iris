@@ -403,4 +403,7 @@
         </constructor-arg>
         <constructor-arg ref="staticAddressService" name="staticAddressService"/>
     </bean>
+    <bean class="net.contargo.iris.startup.RouteRevisionStartupService">
+        <constructor-arg name="service" ref="routeDataRevisionService"/>
+    </bean>
 </beans>

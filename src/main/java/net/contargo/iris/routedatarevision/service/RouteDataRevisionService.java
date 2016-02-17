@@ -124,4 +124,10 @@ public interface RouteDataRevisionService {
      * @return  a list of matching {@link RouteDataRevision}s
      */
     List<RouteDataRevision> search(RouteRevisionRequest routeRevisionRequest);
+
+
+    /**
+     * Enriches all {@link RouteDataRevision}s not having address information with address information.
+     */
+    void enrichWithAddressInformation();
 }

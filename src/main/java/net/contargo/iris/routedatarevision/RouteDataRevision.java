@@ -229,6 +229,10 @@ public class RouteDataRevision {
 
     public void setCity(String city) {
 
+        if (city != null && city.length() > MAX_SIZE_CITY) {
+            throw new IllegalArgumentException("City cannot be greater then " + MAX_SIZE_CITY);
+        }
+
         this.city = city;
     }
 
@@ -240,6 +244,10 @@ public class RouteDataRevision {
 
 
     public void setCityNormalized(String cityNormalized) {
+
+        if (cityNormalized != null && cityNormalized.length() > MAX_SIZE_CITY) {
+            throw new IllegalArgumentException("City cannot be greater then " + MAX_SIZE_CITY);
+        }
 
         this.cityNormalized = cityNormalized;
     }
@@ -253,6 +261,10 @@ public class RouteDataRevision {
 
     public void setPostalCode(String postalCode) {
 
+        if (postalCode != null && postalCode.length() > MAX_SIZE_POSTAL_CODE) {
+            throw new IllegalArgumentException("Country cannot be greater then " + MAX_SIZE_POSTAL_CODE);
+        }
+
         this.postalCode = postalCode;
     }
 
@@ -264,6 +276,10 @@ public class RouteDataRevision {
 
 
     public void setCountry(String country) {
+
+        if (country != null && country.length() > MAX_SIZE_COUNTRY) {
+            throw new IllegalArgumentException("Country cannot be greater then " + MAX_SIZE_COUNTRY);
+        }
 
         this.country = country;
     }

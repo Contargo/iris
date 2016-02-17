@@ -58,4 +58,7 @@ public interface RouteDataRevisionRepository extends JpaRepository<RouteDataRevi
     @Query("SELECT r FROM RouteDataRevision r WHERE r.terminal.uniqueId = ?1 and r.latitude = ?2 and longitude = ?3")
     List<RouteDataRevision> findByTerminalAndLatitudeAndLongitude(BigInteger terminalUniqueId, BigDecimal latitude,
         BigDecimal longitude);
+
+
+    List<RouteDataRevision> findByCityIsNullAndPostalCodeIsNull();
 }

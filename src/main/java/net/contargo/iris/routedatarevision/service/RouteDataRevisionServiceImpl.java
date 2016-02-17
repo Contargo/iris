@@ -13,9 +13,13 @@ import net.contargo.iris.routedatarevision.persistence.RouteDataRevisionReposito
 import net.contargo.iris.terminal.Terminal;
 import net.contargo.iris.terminal.service.TerminalService;
 
+import org.slf4j.Logger;
+
 import org.springframework.data.jpa.domain.Specifications;
 
 import org.springframework.transaction.annotation.Transactional;
+
+import java.lang.invoke.MethodHandles;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -30,10 +34,16 @@ import static net.contargo.iris.routedatarevision.service.RouteRevisionSpecifica
 import static net.contargo.iris.routedatarevision.service.RouteRevisionSpecifications.hasPostalCode;
 import static net.contargo.iris.routedatarevision.service.RouteRevisionSpecifications.hasTerminal;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import static org.springframework.data.jpa.domain.Specifications.where;
 
 
+@Transactional
 public class RouteDataRevisionServiceImpl implements RouteDataRevisionService {
+
+    private static final Logger LOG = getLogger(MethodHandles.lookup().lookupClass());
+    public static final int LOG_INTERVAL = 100;
 
     private final RouteDataRevisionRepository routeDataRevisionRepository;
     private final TerminalService terminalService;
@@ -117,10 +127,19 @@ public class RouteDataRevisionServiceImpl implements RouteDataRevisionService {
         GeoLocation geoLocation = new GeoLocation(routeDataRevision.getLatitude(), routeDataRevision.getLongitude());
         Address address = addressServiceWrapper.getAddressForGeoLocation(geoLocation);
 
-        routeDataRevision.setCountry(address.getCountryCode());
-        routeDataRevision.setCity(address.getCombinedCity());
-        routeDataRevision.setCityNormalized(normalizerService.normalize(address.getCombinedCity()));
-        routeDataRevision.setPostalCode(address.getPostcode());
+        String countryCode = address.getCountryCode();
+        String combinedCity = address.getCombinedCity();
+        String postcode = address.getPostcode();
+
+        try {
+            routeDataRevision.setCountry(countryCode);
+            routeDataRevision.setCity(combinedCity);
+            routeDataRevision.setCityNormalized(normalizerService.normalize(combinedCity));
+            routeDataRevision.setPostalCode(postcode);
+        } catch (IllegalArgumentException e) {
+            LOG.info("Invalid Address Information: city: {}, postalcode: {}, country: {}", combinedCity, postcode,
+                countryCode);
+        }
 
         RouteDataRevision save = routeDataRevisionRepository.save(routeDataRevision);
 
@@ -151,5 +170,27 @@ public class RouteDataRevisionServiceImpl implements RouteDataRevisionService {
             .and(hasTerminal(terminalId));
 
         return routeDataRevisionRepository.findAll(spec);
+    }
+
+
+    @Override
+    public void enrichWithAddressInformation() {
+
+        List<RouteDataRevision> revisions = routeDataRevisionRepository.findByCityIsNullAndPostalCodeIsNull();
+
+        long start = System.currentTimeMillis();
+
+        LOG.info("Enriching {} route revisions with address information", revisions.size());
+
+        for (int i = 0; i < revisions.size(); i++) {
+            if (i % LOG_INTERVAL == 0) {
+                LOG.info("Enriching route revisions with address information progress: {}/{}", i, revisions.size());
+            }
+
+            save(revisions.get(i));
+        }
+
+        LOG.info("Done enriching route revisions with address information (took {} ms)",
+            System.currentTimeMillis() - start);
     }
 }

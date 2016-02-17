@@ -38,10 +38,12 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.nullValue;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -230,6 +232,41 @@ public class RouteDataRevisionServiceImplUnitTest {
 
 
     @Test
+    public void saveValidationErrors() {
+
+        BigDecimal lat = BigDecimal.TEN;
+        BigDecimal lon = BigDecimal.ONE;
+
+        Address address = new Address();
+        address.getAddress().put("village", "Ehningen");
+        address.getAddress().put("country_code", "Ein zu langer Wert");
+        address.getAddress().put("postcode", "66666");
+
+        RouteDataRevision routeDataRevision = new RouteDataRevision();
+        routeDataRevision.setId(5L);
+        routeDataRevision.setLatitude(lat);
+        routeDataRevision.setLongitude(lon);
+
+        when(routeDataRevisionRepositoryMock.save(routeDataRevision)).thenReturn(routeDataRevision);
+        when(routeDataRevisionRepositoryMock.findOne(5L)).thenReturn(routeDataRevision);
+        when(addressServiceWrapperMock.getAddressForGeoLocation(new GeoLocation(lat, lon))).thenReturn(address);
+        when(normalizerServiceMock.normalize("Ehningen")).thenReturn("EHNINGEN");
+
+        RouteDataRevision result = sut.save(routeDataRevision);
+
+        ArgumentCaptor<RouteDataRevision> captor = ArgumentCaptor.forClass(RouteDataRevision.class);
+
+        assertThat(result, is(routeDataRevision));
+        verify(routeDataRevisionRepositoryMock).save(captor.capture());
+
+        assertThat(captor.getValue().getCity(), nullValue());
+        assertThat(captor.getValue().getCityNormalized(), nullValue());
+        assertThat(captor.getValue().getCountry(), nullValue());
+        assertThat(captor.getValue().getPostalCode(), nullValue());
+    }
+
+
+    @Test
     public void existsEntryNewSurroundsExisting() {
 
         RouteDataRevision firstExistingRevision = new RouteDataRevision();
@@ -273,5 +310,32 @@ public class RouteDataRevisionServiceImplUnitTest {
         List<RouteDataRevision> results = sut.search(routeRevisionRequest);
 
         assertThat(results, hasSize(2));
+    }
+
+
+    @Test
+    public void enrichWithAddressInformation() {
+
+        RouteDataRevision routeDataRevision = new RouteDataRevision();
+        routeDataRevision.setLongitude(BigDecimal.ONE);
+        routeDataRevision.setLatitude(BigDecimal.ONE);
+        routeDataRevision.setId(42L);
+
+        RouteDataRevision routeDataRevision2 = new RouteDataRevision();
+        routeDataRevision2.setLatitude(BigDecimal.TEN);
+        routeDataRevision2.setLongitude(BigDecimal.TEN);
+
+        when(routeDataRevisionRepositoryMock.findByCityIsNullAndPostalCodeIsNull()).thenReturn(asList(routeDataRevision,
+                routeDataRevision2));
+        when(addressServiceWrapperMock.getAddressForGeoLocation(new GeoLocation(BigDecimal.ONE, BigDecimal.ONE)))
+            .thenReturn(new Address());
+        when(addressServiceWrapperMock.getAddressForGeoLocation(new GeoLocation(BigDecimal.TEN, BigDecimal.TEN)))
+            .thenReturn(new Address());
+        when(routeDataRevisionRepositoryMock.save(any(RouteDataRevision.class))).thenReturn(routeDataRevision);
+        when(routeDataRevisionRepositoryMock.findOne(42L)).thenReturn(routeDataRevision);
+
+        sut.enrichWithAddressInformation();
+
+        verify(routeDataRevisionRepositoryMock, times(2)).save(any(RouteDataRevision.class));
     }
 }

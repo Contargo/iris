@@ -15,10 +15,17 @@ import org.springframework.ui.Model;
 
 /**
  * @author  Sandra Thieme - thieme@synyx.de
+ * @author  David Schilling - schilling@synyx.de
  */
 @Configuration
 @EnableSwagger
 public class SwaggerConfig {
+
+    private String[] includePattern = new String[] {
+        "\\/geocodes.*", "\\/osmaddresses.*", "\\/places.*", "\\/reversegeocode.*", "\\/airlineDistance.*",
+        "\\/countries.*", "\\/distancecloudaddress.*", "\\/connections.*", "\\/routedetails.*", "\\/routerevisions.*",
+        "\\/routes.*", "\\/seaports.*", "\\/staticaddresses.*", "\\/terminals.*", "\\/simplegeocodes.*"
+    };
 
     private SpringSwaggerConfig springSwaggerConfig;
 
@@ -32,10 +39,11 @@ public class SwaggerConfig {
     @Bean
     public SwaggerSpringMvcPlugin customImplementation() {
 
-        this.springSwaggerConfig.defaultSwaggerPathProvider().setApiResourcePrefix("api");
+        springSwaggerConfig.defaultSwaggerPathProvider().setApiResourcePrefix("api");
 
-        return new SwaggerSpringMvcPlugin(this.springSwaggerConfig).apiInfo(apiInfo()).ignoredParameterTypes(
-                Model.class);
+        return new SwaggerSpringMvcPlugin(springSwaggerConfig).apiInfo(apiInfo())
+            .includePatterns(includePattern)
+            .ignoredParameterTypes(Model.class);
     }
 
 

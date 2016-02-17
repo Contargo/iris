@@ -51,7 +51,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
@@ -140,7 +139,6 @@ public class RouteDataRevisionControllerMvcUnitTest {
                 .param("postalcode", "76135")
                 .param("terminalId", "42"));
         resultActions.andExpect(status().isOk());
-        resultActions.andDo(print());
         resultActions.andExpect(model().attribute("routeRevisions", routeDataRevisions));
         resultActions.andExpect(model().attribute("terminals", hasSize(2)));
         resultActions.andExpect(model().attribute("request", hasProperty("city", is("Karlsruhe"))));

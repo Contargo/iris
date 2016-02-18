@@ -177,7 +177,12 @@ public class Address extends GeoLocation {
 
     public String getCity() {
 
-        return this.address.get(CITY);
+        String village = this.address.get("village");
+        String town = this.address.get("town");
+        String suburb = this.address.get(SUBURB);
+        String city = this.address.get(CITY);
+
+        return Stream.of(city, town, village).filter(value -> !StringUtils.isEmpty(value)).findFirst().orElse(null);
     }
 
 
@@ -193,7 +198,9 @@ public class Address extends GeoLocation {
         String suburb = this.address.get(SUBURB);
         String city = this.address.get(CITY);
 
-        return Stream.of(city, town, village, suburb).filter(value -> value != null).collect(Collectors.joining(", "));
+        return Stream.of(city, town, village, suburb)
+            .filter(value -> !StringUtils.isEmpty(value))
+            .collect(Collectors.joining(", "));
     }
 
 

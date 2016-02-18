@@ -50,6 +50,7 @@ public class PostcodeCityStaticAddressMappingProcessorUnitTest {
     public void map() {
 
         Map<String, String> addressMap = new HashMap<>();
+        addressMap.put("country_code", "ch");
         addressMap.put("postcode", "12345");
         addressMap.put("city", CITY);
 
@@ -67,7 +68,7 @@ public class PostcodeCityStaticAddressMappingProcessorUnitTest {
         noneMatchingStaticAddressSuburb.setSuburb("bar");
 
         when(normalizerService.normalize(CITY)).thenReturn(CITY_NORMALIZED);
-        when(staticAddressService.findByPostalcode("12345")).thenReturn(asList(matchingStaticAddress,
+        when(staticAddressService.findByPostalcodeAndCountry("12345", "ch")).thenReturn(asList(matchingStaticAddress,
                 noneMatchingStaticAddressCity, noneMatchingStaticAddressSuburb));
 
         List<StaticAddress> map = sut.map(address);

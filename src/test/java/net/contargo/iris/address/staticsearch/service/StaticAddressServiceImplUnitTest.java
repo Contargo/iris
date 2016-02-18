@@ -148,6 +148,21 @@ public class StaticAddressServiceImplUnitTest {
 
 
     @Test
+    public void findByPostalcodeAndCountry() {
+
+        String postalCode = "78137";
+        String country = "ch";
+
+        when(staticAddressRepositoryMock.findByPostalcodeAndCountry(postalCode, country)).thenReturn(singletonList(
+                kaSuedstadt));
+
+        List<StaticAddress> result = sut.findByPostalcodeAndCountry(postalCode, country);
+        assertThat(result.size(), is(1));
+        assertThat(result.get(0), is(kaSuedstadt));
+    }
+
+
+    @Test
     public void findByPostalcodeOnlyWithNullValues() {
 
         String postalCode = "12345";

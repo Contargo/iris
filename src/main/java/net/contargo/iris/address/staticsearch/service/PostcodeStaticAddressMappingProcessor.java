@@ -24,6 +24,6 @@ class PostcodeStaticAddressMappingProcessor extends StaticAddressMappingProcesso
     @Override
     List<StaticAddress> map(Address address) {
 
-        return staticAddressService.findByPostalcode(address.getPostcode());
+        return staticAddressService.findByPostalcodeAndCountry(address.getPostcode(), address.getCountryCode());
     }
 }

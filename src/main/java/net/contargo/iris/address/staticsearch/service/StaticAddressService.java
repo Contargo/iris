@@ -154,4 +154,7 @@ public interface StaticAddressService {
 
 
     List<StaticAddress> findByPostalcode(String postalcode);
+
+
+    List<StaticAddress> findByPostalcodeAndCountry(String postalcode, String country);
 }

@@ -67,7 +67,7 @@ public class StaticAddressServiceImpl implements StaticAddressService {
 
         List<Address> addresses = getAddressesByDetailsWithFallbacks(postalCode, city, country).stream()
             .map(StaticAddress::toAddress)
-            .collect(toList());
+                .collect(toList());
 
         return new AddressList("City and Suburb Results", addresses);
     }
@@ -252,6 +252,13 @@ public class StaticAddressServiceImpl implements StaticAddressService {
     public List<StaticAddress> findByPostalcode(String postalcode) {
 
         return repository.findByPostalcode(postalcode);
+    }
+
+
+    @Override
+    public List<StaticAddress> findByPostalcodeAndCountry(String postalcode, String country) {
+
+        return repository.findByPostalcodeAndCountry(postalcode, country);
     }
 
 

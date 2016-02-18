@@ -33,9 +33,10 @@ class PostcodeCityStaticAddressMappingProcessor extends StaticAddressMappingProc
     List<StaticAddress> map(Address address) {
 
         String postcode = address.getPostcode();
+        String country = address.getCountryCode();
         String normalizedCity = normalizerService.normalize(address.getCity());
 
-        List<StaticAddress> addresses = staticAddressService.findByPostalcode(postcode);
+        List<StaticAddress> addresses = staticAddressService.findByPostalcodeAndCountry(postcode, country);
 
         return addresses.stream().filter(byCity(normalizedCity)).filter(isEmptySuburb()).collect(toList());
     }

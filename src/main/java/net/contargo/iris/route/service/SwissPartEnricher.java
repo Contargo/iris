@@ -54,7 +54,7 @@ public class SwissPartEnricher implements RoutePartEnricher {
             }
         } catch (NominatimToStaticAddressMapperException e) {
             context.addError("swiss-route", "could not map from nominatim to static address");
-            LOG.info("Could not map from nominatim to static address: {}", e.getAddress());
+            LOG.warn("Failed to map from nominatim address to static address: {}", e.getAddress());
         }
     }
 

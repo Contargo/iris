@@ -14,6 +14,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.isEmptyString;
+import static org.hamcrest.Matchers.nullValue;
 
 
 /**
@@ -194,5 +195,23 @@ public class AddressUnitTest {
 
         Address sut = new Address();
         assertThat(sut.getCombinedCity(), isEmptyString());
+    }
+
+
+    @Test
+    public void getCity() {
+
+        Address sut = new Address();
+
+        assertThat(sut.getCity(), nullValue());
+
+        sut.getAddress().put("village", "foo");
+        assertThat(sut.getCity(), is("foo"));
+
+        sut.getAddress().put("town", "bar");
+        assertThat(sut.getCity(), is("bar"));
+
+        sut.getAddress().put("city", "baz");
+        assertThat(sut.getCity(), is("baz"));
     }
 }

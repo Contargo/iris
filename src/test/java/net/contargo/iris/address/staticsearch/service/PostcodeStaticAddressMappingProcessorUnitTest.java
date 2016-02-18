@@ -45,6 +45,7 @@ public class PostcodeStaticAddressMappingProcessorUnitTest {
 
         Map<String, String> addressMap = new HashMap<>();
         addressMap.put("postcode", "12345");
+        addressMap.put("country_code", "ch");
 
         Address address = new Address();
         address.setAddress(addressMap);
@@ -52,7 +53,7 @@ public class PostcodeStaticAddressMappingProcessorUnitTest {
         StaticAddress matchingStaticAddress = new StaticAddress();
 
         List<StaticAddress> addresses = singletonList(matchingStaticAddress);
-        when(serviceMock.findByPostalcode("12345")).thenReturn(addresses);
+        when(serviceMock.findByPostalcodeAndCountry("12345", "ch")).thenReturn(addresses);
 
         List<StaticAddress> result = sut.map(address);
 

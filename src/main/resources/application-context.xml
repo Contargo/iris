@@ -12,7 +12,7 @@
     Configuring Context Parameters
     -->
     <import resource="jpa-context.xml"/>
-    <import resource="web-security.xml"/>
+    <import resource="${security-config-location:web-security.xml}"/>
 
     <context:annotation-config/>
 

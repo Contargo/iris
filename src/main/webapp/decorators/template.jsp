@@ -89,7 +89,7 @@
                                     property="principal.username"/></a>
                         </li>
                         <li>
-                            <a id="logoutlink" href="<c:url value="/web/logout"/>">Logout</a>
+                            <a id="logoutlink" href="<c:url value="/logout"/>">Logout</a>
                         </li>
                     </ul>
                 </sec:authorize>

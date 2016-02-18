@@ -12,8 +12,9 @@
     Configuring Context Parameters
     -->
     <import resource="jpa-context.xml"/>
-    <import resource="${security-config-location:web-security.xml}"/>
 
+
+    <bean class="net.contargo.iris.security.SecurityConfig"/>
     <context:annotation-config/>
 
     <context:property-placeholder ignore-resource-not-found="true"

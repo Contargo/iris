@@ -4,7 +4,6 @@ import net.contargo.iris.GeoLocation;
 import net.contargo.iris.address.Address;
 import net.contargo.iris.address.dto.AddressDto;
 import net.contargo.iris.address.staticsearch.dto.StaticAddressDtoService;
-import net.contargo.iris.address.staticsearch.service.StaticAddressNotFoundException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -121,36 +120,5 @@ public class StaticAddressApiControllerMvcUnitTest {
         resultActions.andExpect(jsonPath("$.uids", hasSize(2)));
         resultActions.andExpect(jsonPath("$.uids[0]", is(1)));
         resultActions.andExpect(jsonPath("$.uids[1]", is(10)));
-    }
-
-
-    @Test
-    public void getByHashKey() throws Exception {
-
-        String hashKey = "ABCDE";
-        String displayName = "displayName";
-        AddressDto addressDto = new AddressDto(new Address(displayName));
-        when(staticAddressDtoServiceMock.getStaticAddressByHashKey(hashKey)).thenReturn(addressDto);
-
-        ResultActions resultActions = mockMvc.perform(get("/staticaddresses").param("hashkey", hashKey)
-                .accept(APPLICATION_JSON));
-        resultActions.andExpect(status().isOk());
-        resultActions.andExpect(jsonPath("$.displayName", is(displayName)));
-    }
-
-
-    @Test
-    public void getByHashKeyWithException() throws Exception {
-
-        String hashKey = "ABCDE";
-        when(staticAddressDtoServiceMock.getStaticAddressByHashKey(hashKey)).thenThrow(
-            new StaticAddressNotFoundException("Static address with hash key - " + hashKey + " - is not available."));
-
-        ResultActions resultActions = mockMvc.perform(get("/staticaddresses").param("hashkey", hashKey)
-                .accept(APPLICATION_JSON));
-        resultActions.andExpect(status().isNotFound());
-        resultActions.andExpect(jsonPath("$.code", is("staticaddress.not.found")));
-        resultActions.andExpect(jsonPath("$.message",
-                is("Static address with hash key - " + hashKey + " - is not available.")));
     }
 }

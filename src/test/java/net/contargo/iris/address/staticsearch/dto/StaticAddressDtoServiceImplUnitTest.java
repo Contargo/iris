@@ -118,17 +118,4 @@ public class StaticAddressDtoServiceImplUnitTest {
         List<BigInteger> uids = sut.getStaticAddressByBoundingBox(address, 20d);
         assertThat(uids, contains(BigInteger.TEN, BigInteger.ONE));
     }
-
-
-    @Test
-    public void getStaticAddressByHashKey() {
-
-        String hashKey = "ABCDE";
-        StaticAddress staticAddress = new StaticAddress();
-        staticAddress.setCountry("DE");
-        when(staticAddressServiceMock.findByHashKey(hashKey)).thenReturn(staticAddress);
-
-        AddressDto staticAddressByHashKey = sut.getStaticAddressByHashKey(hashKey);
-        assertThat(staticAddressByHashKey.getCountryCode(), is("DE"));
-    }
 }

@@ -55,11 +55,4 @@ public class StaticAddressDtoServiceImpl implements StaticAddressDtoService {
             .map(StaticAddress::getUniqueId)
             .collect(Collectors.toList());
     }
-
-
-    @Override
-    public AddressDto getStaticAddressByHashKey(String hashKey) {
-
-        return new AddressDto(staticAddressService.findByHashKey(hashKey).toAddress());
-    }
 }

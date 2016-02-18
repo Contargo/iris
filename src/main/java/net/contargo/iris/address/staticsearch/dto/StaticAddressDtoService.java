@@ -48,14 +48,4 @@ public interface StaticAddressDtoService {
      * @return  a list of static address uids
      */
     List<BigInteger> getStaticAddressByBoundingBox(GeoLocation location, Double distance);
-
-
-    /**
-     * Retrieves a static address by his hashkey.
-     *
-     * @param  hashKey  as search parameter
-     *
-     * @return  a static address wrapped in a {@link AddressDto}
-     */
-    AddressDto getStaticAddressByHashKey(String hashKey);
 }

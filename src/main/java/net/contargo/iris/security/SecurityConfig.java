@@ -40,8 +40,8 @@ import static org.springframework.http.HttpMethod.PUT;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private static final int PASSWORD_STRENGTH = 256;
     private static final String ENVIRONMENT = "environment";
-    public static final int PASSWORD_STRENGTH = 256;
     private static final String ADMIN = "ADMIN";
     private static final String API = "/api/**";
 

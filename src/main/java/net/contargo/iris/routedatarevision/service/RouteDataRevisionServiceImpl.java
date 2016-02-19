@@ -43,7 +43,7 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 public class RouteDataRevisionServiceImpl implements RouteDataRevisionService {
 
     private static final Logger LOG = getLogger(MethodHandles.lookup().lookupClass());
-    public static final int LOG_INTERVAL = 100;
+    private static final int LOG_INTERVAL = 100;
 
     private final RouteDataRevisionRepository routeDataRevisionRepository;
     private final TerminalService terminalService;

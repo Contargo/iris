@@ -21,7 +21,7 @@ import org.springframework.ui.Model;
 @EnableSwagger
 public class SwaggerConfig {
 
-    private String[] includePattern = new String[] {
+    private final String[] includePattern = new String[] {
         "\\/geocodes.*", "\\/osmaddresses.*", "\\/places.*", "\\/reversegeocode.*", "\\/airlineDistance.*",
         "\\/countries.*", "\\/distancecloudaddress.*", "\\/connections.*", "\\/routedetails.*", "\\/routerevisions.*",
         "\\/routes.*", "\\/seaports.*", "\\/staticaddresses.*", "\\/terminals.*", "\\/simplegeocodes.*"

@@ -23,7 +23,7 @@ public class SwissPartEnricher implements RoutePartEnricher {
 
     private static final Logger LOG = getLogger(MethodHandles.lookup().lookupClass());
 
-    private NominatimToStaticAddressMapper nominatimToStaticAddressMapper;
+    private final NominatimToStaticAddressMapper nominatimToStaticAddressMapper;
 
     public SwissPartEnricher(NominatimToStaticAddressMapper nominatimToStaticAddressMapper) {
 

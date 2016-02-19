@@ -10,7 +10,7 @@ import javax.annotation.PostConstruct;
  */
 public class RouteRevisionStartupService {
 
-    private RouteDataRevisionService service;
+    private final RouteDataRevisionService service;
 
     public RouteRevisionStartupService(RouteDataRevisionService service) {
 

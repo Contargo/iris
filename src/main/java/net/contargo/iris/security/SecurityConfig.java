@@ -42,6 +42,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String ENVIRONMENT = "environment";
     public static final int PASSWORD_STRENGTH = 256;
+    private static final String ADMIN = "ADMIN";
+    private static final String API = "/api/**";
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -65,14 +67,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/web/login", "/api/info", "api/health")
             .permitAll()
             .antMatchers("/web/terminals/**", "/web/seaports/**", "/web/staticaddresses/**", "/web/routerevisions/**")
-            .hasRole("ADMIN")
-            .antMatchers(PUT, "/api/**")
-            .hasRole("ADMIN")
-            .antMatchers(POST, "/api/**")
-            .hasRole("ADMIN")
-            .antMatchers(DELETE, "/api/**")
-            .hasRole("ADMIN")
-            .antMatchers("/web/**", "/api/**", "/api-docs/**")
+            .hasRole(ADMIN)
+            .antMatchers(PUT, API)
+            .hasRole(ADMIN)
+            .antMatchers(POST, API)
+            .hasRole(ADMIN)
+            .antMatchers(DELETE, API)
+            .hasRole(ADMIN)
+            .antMatchers("/web/**", API, "/api-docs/**")
             .authenticated()
             .and()
             .formLogin()

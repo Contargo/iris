@@ -172,7 +172,7 @@ public class AddressApiControllerMvcUnitTest {
 
         String hashKey = "DAJHZ";
         when(hashKeyValidatorMock.validate(hashKey)).thenReturn(true);
-        when(addressDtoServiceMock.getAddressesByHashKey(hashKey)).thenThrow(new StaticAddressNotFoundException());
+        when(addressDtoServiceMock.getAddressesByHashKey(hashKey)).thenThrow(new StaticAddressNotFoundException(""));
 
         ResultActions resultActions = mockMvc.perform(get("/geocodes/?street=" + hashKey).accept(APPLICATION_JSON));
         resultActions.andExpect(status().isOk());

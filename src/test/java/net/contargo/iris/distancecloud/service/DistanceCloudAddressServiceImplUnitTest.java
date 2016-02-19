@@ -153,7 +153,7 @@ public class DistanceCloudAddressServiceImplUnitTest {
     public void getAddressInCloudWithStaticAddressError() {
 
         when(terminalServiceMock.getByUniqueId(TERMINAL_UID)).thenReturn(terminal);
-        when(staticAddressServiceMock.findByUId(STATIC_ADDRESS_UID)).thenThrow(new StaticAddressNotFoundException());
+        when(staticAddressServiceMock.findByUId(STATIC_ADDRESS_UID)).thenThrow(new StaticAddressNotFoundException(""));
 
         DistanceCloudAddress cloudAddress = sut.getAddressInCloud(TERMINAL_UID, STATIC_ADDRESS_UID);
         assertThat(cloudAddress.getErrorMessage(), is("StaticAddress with given id not found"));

@@ -141,7 +141,7 @@ public class StaticAddressServiceImpl implements StaticAddressService {
         StaticAddress staticAddress = repository.findByUniqueId(staticAddressUId);
 
         if (staticAddress == null) {
-            throw new StaticAddressNotFoundException();
+            throw new StaticAddressNotFoundException("Static address with uid " + staticAddressUId + " not found");
         }
 
         return staticAddress;

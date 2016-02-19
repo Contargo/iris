@@ -132,16 +132,6 @@ public class AddressServiceWrapper {
     }
 
 
-    /**
-     * In Swiss only the results of the static addresses (ASTAG) are relevant. So all swiss nominatim results are
-     * filtered out.
-     */
-    private List<AddressList> filterOutSwissAddresses(List<AddressList> nominatimResult) {
-
-        return addressListFilter.filterOutByCountryCode(nominatimResult, "CH");
-    }
-
-
     private AddressList resolveByStaticAddressService(String postalCode, String city, String country) {
 
         return staticAddressService.findAddresses(postalCode, city, country);

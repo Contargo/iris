@@ -2,6 +2,10 @@ package net.contargo.iris;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 
+import static net.contargo.iris.Message.MessageType.ERROR;
+import static net.contargo.iris.Message.MessageType.SUCCESS;
+import static net.contargo.iris.Message.MessageType.WARNING;
+
 
 /**
  * Bean representing a Message.
@@ -12,7 +16,10 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  */
 public final class Message {
 
-    public static enum MessageType {
+    // navigation constants
+    public static final String MESSAGE = "message";
+
+    public enum MessageType {
 
         SUCCESS,
         ERROR,
@@ -42,19 +49,19 @@ public final class Message {
 
     public static Message error(String message) {
 
-        return new Message(message, MessageType.ERROR);
+        return new Message(message, ERROR);
     }
 
 
     public static Message success(String message) {
 
-        return new Message(message, MessageType.SUCCESS);
+        return new Message(message, SUCCESS);
     }
 
 
     public static Message warning(String message) {
 
-        return new Message(message, MessageType.WARNING);
+        return new Message(message, WARNING);
     }
 
 

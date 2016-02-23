@@ -1,7 +1,6 @@
 package net.contargo.iris.routedatarevision.web;
 
 import net.contargo.iris.Message;
-import net.contargo.iris.api.ControllerConstants;
 import net.contargo.iris.routedatarevision.RouteRevisionRequest;
 import net.contargo.iris.routedatarevision.ValidityRange;
 import net.contargo.iris.routedatarevision.dto.RouteDataRevisionDto;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.text.SimpleDateFormat;
@@ -78,7 +76,7 @@ public class RouteDataRevisionController {
     }
 
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(method = GET)
     public String search(Model model, @ModelAttribute RouteRevisionRequest routeRevisionRequest) {
 
         if (!routeRevisionRequest.isEmpty()) {
@@ -171,7 +169,7 @@ public class RouteDataRevisionController {
 
         RouteDataRevisionDto savedDto = routeDataRevisionDtoService.save(routeDataRevisionDto);
 
-        redirectAttributes.addFlashAttribute(ControllerConstants.MESSAGE, successMessage);
+        redirectAttributes.addFlashAttribute(Message.MESSAGE, successMessage);
 
         return "redirect:/web/routerevisions/" + savedDto.getId();
     }

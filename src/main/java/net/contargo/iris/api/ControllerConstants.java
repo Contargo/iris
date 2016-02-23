@@ -13,8 +13,6 @@ public final class ControllerConstants {
 
     public static final Message UNIQUEID_ERROR_MESSAGE = error("uniqueid.error.message");
 
-    // navigation constants
-    public static final String MESSAGE = "message";
     public static final String REDIRECT = "redirect:";
     public static final String RESPONSE = "response";
     public static final String WEBAPI_ROOT_URL = "/web/";

@@ -141,16 +141,16 @@ public class StaticAddressController {
             StaticAddress savedStaticAddress = staticAddressService.saveStaticAddress(staticAddress);
 
             model.addAttribute(ENTITY_ATTRIBUTE, savedStaticAddress);
-            model.addAttribute(ControllerConstants.MESSAGE, message);
+            model.addAttribute(Message.MESSAGE, message);
         } catch (StaticAddressDuplicationException e) {
             model.addAttribute(ENTITY_ATTRIBUTE, staticAddress);
-            model.addAttribute(ControllerConstants.MESSAGE, DUPLICATION_ERROR_MESSAGE);
+            model.addAttribute(Message.MESSAGE, DUPLICATION_ERROR_MESSAGE);
         } catch (StaticAddressCoordinatesDuplicationException e) {
             model.addAttribute(ENTITY_ATTRIBUTE, staticAddress);
-            model.addAttribute(ControllerConstants.MESSAGE, DUPLICATION_GEOCOORDINATES_ERROR_MESSAGE);
+            model.addAttribute(Message.MESSAGE, DUPLICATION_GEOCOORDINATES_ERROR_MESSAGE);
         } catch (UniqueIdSequenceServiceException e) {
             model.addAttribute(ENTITY_ATTRIBUTE, staticAddress);
-            model.addAttribute(ControllerConstants.MESSAGE, ControllerConstants.UNIQUEID_ERROR_MESSAGE);
+            model.addAttribute(Message.MESSAGE, ControllerConstants.UNIQUEID_ERROR_MESSAGE);
             LOG.error(e.getMessage());
         }
 

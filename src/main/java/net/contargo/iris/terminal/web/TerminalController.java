@@ -122,7 +122,7 @@ public class TerminalController {
         }
 
         try {
-            redirectAttributes.addFlashAttribute(ControllerConstants.MESSAGE, successMessage);
+            redirectAttributes.addFlashAttribute(Message.MESSAGE, successMessage);
 
             Long id = terminalService.save(terminal).getId();
 
@@ -137,7 +137,7 @@ public class TerminalController {
             return CONTROLLER_CONTEXT + TERMINAL_FORM_VIEW;
         } catch (UniqueIdSequenceServiceException e) {
             model.addAttribute(TERMINAL_ATTRIBUTE, terminal);
-            model.addAttribute(ControllerConstants.MESSAGE, ControllerConstants.UNIQUEID_ERROR_MESSAGE);
+            model.addAttribute(Message.MESSAGE, ControllerConstants.UNIQUEID_ERROR_MESSAGE);
             LOG.error(e.getMessage());
 
             return CONTROLLER_CONTEXT + TERMINAL_FORM_VIEW;

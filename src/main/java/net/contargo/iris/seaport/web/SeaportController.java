@@ -131,7 +131,7 @@ public class SeaportController {
             return CONTROLLER_CONTEXT + SEAPORT_VIEW;
         } catch (UniqueIdSequenceServiceException e) {
             model.addAttribute(SEAPORT_ATTRIBUTE, seaport);
-            model.addAttribute(ControllerConstants.MESSAGE, ControllerConstants.UNIQUEID_ERROR_MESSAGE);
+            model.addAttribute(Message.MESSAGE, ControllerConstants.UNIQUEID_ERROR_MESSAGE);
             LOG.error(e.getMessage());
 
             return CONTROLLER_CONTEXT + SEAPORT_VIEW;

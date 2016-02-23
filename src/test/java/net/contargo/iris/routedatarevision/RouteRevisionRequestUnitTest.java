@@ -95,7 +95,7 @@ public class RouteRevisionRequestUnitTest {
 
         sut.setPostalcode("76135");
 
-        assertThat(sut.isValid(), is(false));
+        assertThat(sut.isValid(), is(true));
 
         sut.setCity("Eisleben");
 

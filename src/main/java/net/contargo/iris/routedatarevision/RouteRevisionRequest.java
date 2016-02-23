@@ -15,7 +15,7 @@ import static org.springframework.util.StringUtils.trimWhitespace;
  */
 public class RouteRevisionRequest {
 
-    private static final int LEAST_VALID_PARAMETER_COUNT = 2;
+    private static final int LEAST_VALID_PARAMETER_COUNT = 1;
     private static final int PARAMETER_COUNT = 3;
 
     private String postalcode;

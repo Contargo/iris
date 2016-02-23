@@ -1,5 +1,3 @@
 #ASTAG
 
-Geocoding in Switzerland behaves different then in other countries. In Switzerland only static addresses are used to find addresses. The reason for this is [ASTAG](http://www.astag.ch/).
-
-They define the distances in Switzerland. So if you want to use IRIS in Switzerland you have to use the static addresses and route data revisions defined by ASTAG.
+When routing involves loading places that are located in Switzerland (i.e. the loading place is either origin or destination of a route part), distances are always calculated based on static addresses and associated route revision data. This means, that even when a user selects a Nominatim address (i.e. a non-static addresses), that address gets mapped to the best matching static address. If this mapping is not possible (e.g. if there is no appropriate static address), then the routing will not succeed. Using static addresses only when routing to/from loading places in Switzerland accommodates the [ASTAG](http://www.astag.ch/) requirement: distances to various locations are defined and published by ASTAG. In IRIS these distances are represented as route data revisions.

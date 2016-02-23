@@ -74,6 +74,7 @@ public class RouteDataRevisionControllerMvcUnitTest {
     private RouteDataRevisionDtoService routeDataRevisionDtoServiceMock;
     @Autowired
     private TerminalService terminalServiceMock;
+
     private List<RouteDataRevisionDto> routeDataRevisions;
     private RouteDataRevisionDto routeDataRevision;
     private List<Terminal> terminals;
@@ -104,24 +105,6 @@ public class RouteDataRevisionControllerMvcUnitTest {
         resultActions.andExpect(model().attribute("routeRevisions", nullValue()));
         resultActions.andExpect(model().attribute("terminals", hasSize(2)));
         resultActions.andExpect(model().attribute("request", notNullValue()));
-
-        verifyZeroInteractions(routeDataRevisionDtoServiceMock);
-    }
-
-
-    @Test
-    public void searchWithTooFewParameters() throws Exception {
-
-        when(terminalServiceMock.getAll()).thenReturn(asList(new Terminal(), new Terminal()));
-
-        ResultActions resultActions = perform(get("/routerevisions").param("city", "Karlsruhe"));
-        resultActions.andExpect(status().isOk());
-        resultActions.andExpect(model().attribute("routeRevisions", nullValue()));
-        resultActions.andExpect(model().attribute("terminals", hasSize(2)));
-        resultActions.andExpect(model().attribute("request", notNullValue()));
-        resultActions.andExpect(model().attribute("request", hasProperty("city", is("Karlsruhe"))));
-        resultActions.andExpect(model().attribute("message",
-                hasProperty("message", is("routerevision.parameter.count"))));
 
         verifyZeroInteractions(routeDataRevisionDtoServiceMock);
     }

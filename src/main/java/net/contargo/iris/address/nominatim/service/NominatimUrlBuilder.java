@@ -34,7 +34,6 @@ class NominatimUrlBuilder {
     private static final String ADDRESS_DETAILS = "&addressdetails=1";
     private static final String COUNTRY = "&countrycodes=";
     private static final String WHITESPACE = " ";
-    private static final String OSMTYPE_W = "&osm_type=W";
     private static final String OSMID = "osm_id=";
     private static final String REVERSE_URL = "reverse?";
     private static final String LOG_TWO_PLACEHOLDERS = "{}{}";
@@ -107,15 +106,18 @@ class NominatimUrlBuilder {
 
 
     /**
-     * Build the osm url within the osm id.
+     * Builds an URL for a Nominatim reverse search. Note that a reverse search requires both, an OSM Id and OSM Type.
      *
-     * @param  osmId  to build osm url
+     * @param  osmId  the OSM Id
+     * @param  osmType  the OSM Type
      *
-     * @return  The URL for requesting ONE Address by osmId. The osm Type used is "N" for Node by default.
+     * @return  a reverse search URL
+     *
+     * @see  OsmType
      */
-    String buildOsmUrl(long osmId) {
+    String buildOsmUrl(long osmId, OsmType osmType) {
 
-        String osmUrl = baseUrl + REVERSE_URL + OSMID + osmId + OSMTYPE_W + FORMAT;
+        String osmUrl = baseUrl + REVERSE_URL + OSMID + osmId + "&osm_type=" + osmType.getKey() + FORMAT;
         LOG.debug(LOG_TWO_PLACEHOLDERS, LOG_BUILT_URL, osmUrl);
 
         return osmUrl;

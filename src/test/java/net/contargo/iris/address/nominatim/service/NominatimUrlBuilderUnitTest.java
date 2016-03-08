@@ -166,12 +166,17 @@ public class NominatimUrlBuilderUnitTest {
 
 
     @Test
-    public void testBuildOsmUrl() {
+    public void buildOsmUrl() {
 
-        String url = sut.buildOsmUrl(OSM_ID);
-        assertThat(url,
+        // using OsmType.WAY
+        assertThat(sut.buildOsmUrl(OSM_ID, OsmType.WAY),
             containsString("http://maps.contargo.net/nominatim/reverse?osm_id=" + OSM_ID
                 + "&osm_type=W&format=json"));
+
+        // using OsmType.NODE
+        assertThat(sut.buildOsmUrl(OSM_ID, OsmType.NODE),
+            containsString("http://maps.contargo.net/nominatim/reverse?osm_id=" + OSM_ID
+                + "&osm_type=N&format=json"));
     }
 
 

@@ -92,10 +92,18 @@ public class NominatimAddressService implements AddressService {
     @Override
     public Address getAddressByOsmId(long osmId) {
 
-        String suburbUrl = nominatimUrlBuilder.buildOsmUrl(osmId);
-        List<Address> foundAddresses = nominatimResponder.getAddressesFromOSMId(suburbUrl);
+        // Note that both, OSM Id and OSM Type are required for the Nominatim reverse search
+        // first try using OSM Type WAY
+        String url = nominatimUrlBuilder.buildOsmUrl(osmId, OsmType.WAY);
+        List<Address> addresses = nominatimResponder.getAddressesFromOSMId(url);
 
-        return foundAddresses.get(0);
+        if (addresses.get(0) == null || addresses.get(0).getOsmId() != osmId) {
+            // second try using OSM Type NODE
+            url = nominatimUrlBuilder.buildOsmUrl(osmId, OsmType.NODE);
+            addresses = nominatimResponder.getAddressesFromOSMId(url);
+        }
+
+        return addresses.get(0);
     }
 
 

@@ -8,7 +8,9 @@ import org.junit.Test;
 
 import org.junit.runner.RunWith;
 
+import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -41,6 +43,7 @@ import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Matchers.anyString;
 
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import static java.util.Arrays.asList;
@@ -186,17 +189,40 @@ public class NominatimAddressServiceUnitTest {
 
 
     @Test
-    public void testGetAddressByOsmId() {
+    public void getAddressByOsmIdWithOsmTypeWAY() {
 
         Address expectedAddress = new Address();
-        expectedAddress.setDisplayName("Alleinstellungsmerkmal für die expectedAddress");
+        expectedAddress.setOsmId(OSM_ID);
 
-        when(nominatimUrlBuilderMock.buildOsmUrl(OSM_ID)).thenReturn(DUMMY_URL);
+        when(nominatimUrlBuilderMock.buildOsmUrl(OSM_ID, OsmType.WAY)).thenReturn(DUMMY_URL);
         when(nominatimResponderMock.getAddressesFromOSMId(DUMMY_URL)).thenReturn(singletonList(expectedAddress));
 
-        Address actualAddress = sut.getAddressByOsmId(OSM_ID);
+        assertThat(sut.getAddressByOsmId(OSM_ID), is(expectedAddress));
 
-        assertThat(actualAddress, is(expectedAddress));
+        verify(nominatimUrlBuilderMock).buildOsmUrl(OSM_ID, OsmType.WAY);
+        verifyNoMoreInteractions(nominatimUrlBuilderMock);
+    }
+
+
+    @Test
+    public void getAddressByOsmIdWithOsmTypeNODE() {
+
+        Address addressWithoutExpectedOsmId = new Address();
+        addressWithoutExpectedOsmId.setOsmId(0);
+
+        Address expectedAddress = new Address();
+        expectedAddress.setOsmId(OSM_ID);
+
+        when(nominatimUrlBuilderMock.buildOsmUrl(OSM_ID, OsmType.WAY)).thenReturn(null);
+        when(nominatimUrlBuilderMock.buildOsmUrl(OSM_ID, OsmType.NODE)).thenReturn(DUMMY_URL);
+        when(nominatimResponderMock.getAddressesFromOSMId(null)).thenReturn(singletonList(addressWithoutExpectedOsmId));
+        when(nominatimResponderMock.getAddressesFromOSMId(DUMMY_URL)).thenReturn(singletonList(expectedAddress));
+
+        assertThat(sut.getAddressByOsmId(OSM_ID), is(expectedAddress));
+
+        InOrder inOrder = Mockito.inOrder(nominatimUrlBuilderMock);
+        inOrder.verify(nominatimUrlBuilderMock).buildOsmUrl(OSM_ID, OsmType.WAY);
+        inOrder.verify(nominatimUrlBuilderMock).buildOsmUrl(OSM_ID, OsmType.NODE);
     }
 
 

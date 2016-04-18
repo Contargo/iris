@@ -131,6 +131,20 @@ public class RouteDataRevisionServiceImplUnitTest {
     }
 
 
+    @Test(expected = RevisionDoesNotExistException.class)
+    public void getRouteDataRevisionByTerminalUidAndGeolocataionWithoutDateWithoutRevision() {
+
+        Address address = new Address(BigDecimal.ONE, BigDecimal.TEN);
+
+        when(terminalServiceMock.getByUniqueId(BigInteger.ONE)).thenReturn(terminal);
+
+        when(routeDataRevisionRepositoryMock.findNearest(eq(terminal), eq(address.getLatitude()),
+                    eq(address.getLongitude()), any(Date.class))).thenReturn(null);
+
+        sut.getRouteDataRevision(BigInteger.ONE, address, null);
+    }
+
+
     @Test
     public void getNoRouteDataRevisionByTerminalUidAndGeolocataion() {
 

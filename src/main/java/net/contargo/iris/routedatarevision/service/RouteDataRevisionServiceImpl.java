@@ -80,13 +80,15 @@ public class RouteDataRevisionServiceImpl implements RouteDataRevisionService {
                 "terminal.error.notfound");
         }
 
+        Date actualDate = date == null ? new Date() : date;
+
         RouteDataRevision nearest = routeDataRevisionRepository.findNearest(terminal, destination.getLatitude(),
-                destination.getLongitude(), date == null ? new Date() : date);
+                destination.getLongitude(), actualDate);
 
         if (nearest == null) {
             throw new RevisionDoesNotExistException("Route revision for terminal with uid " + terminalUid
                 + ", coordinates " + destination.getLatitude() + "," + destination.getLongitude() + " and date: "
-                + new SimpleDateFormat(RouteDataRevisionDto.DATE_FORMAT, Locale.getDefault()).format(date)
+                + new SimpleDateFormat(RouteDataRevisionDto.DATE_FORMAT, Locale.getDefault()).format(actualDate)
                 + " does not exist", "routerevision.notfound");
         }
 
@@ -167,7 +169,7 @@ public class RouteDataRevisionServiceImpl implements RouteDataRevisionService {
         Long terminalId = routeRevisionRequest.getTerminalId();
 
         Specifications<RouteDataRevision> spec = where(hasCity(normalizedCity)).and(hasPostalCode(postalcode))
-            .and(hasTerminal(terminalId));
+                .and(hasTerminal(terminalId));
 
         return routeDataRevisionRepository.findAll(spec);
     }

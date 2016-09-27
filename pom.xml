@@ -578,6 +578,10 @@
 
                     <keepServerAlive>true</keepServerAlive>
 
+                    <phantomjs>
+                        <version>2.1.1</version>
+                    </phantomjs>
+
                     <specIncludes>
                         <include>jasmine-jquery.js</include>
                         <include>globalsetup.js</include>

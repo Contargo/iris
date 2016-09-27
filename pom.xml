@@ -466,6 +466,9 @@
                     <includes>
                         <include>**/*IntegrationTest.java</include>
                     </includes>
+                    <systemPropertyVariables>
+                        <host.port>${host.port}</host.port>
+                    </systemPropertyVariables>
                 </configuration>
                 <executions>
                     <execution>
@@ -654,5 +657,58 @@
 
         <finalName>IRIS</finalName>
     </build>
+
+    <profiles>
+        <profile>
+            <id>docker</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>io.fabric8</groupId>
+                        <artifactId>docker-maven-plugin</artifactId>
+                        <version>0.16.2</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <images>
+                                <image>
+                                    <name>mariadb</name>
+                                    <run>
+                                        <ports>
+                                            <port>host.port:3306</port>
+                                        </ports>
+                                        <env>
+                                            <MYSQL_ALLOW_EMPTY_PASSWORD>yes</MYSQL_ALLOW_EMPTY_PASSWORD>
+                                            <MYSQL_DATABASE>iris</MYSQL_DATABASE>
+                                        </env>
+                                        <wait>
+                                            <log>mysqld: ready for connections</log>
+                                            <time>40000</time>
+                                        </wait>
+                                    </run>
+                                </image>
+                            </images>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>start</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>start</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>stop</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>stop</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+    
+            </build>
+        </profile>
+    </profiles>
 
 </project>

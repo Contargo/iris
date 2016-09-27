@@ -1,8 +1,22 @@
 package net.contargo.iris.osrm.service;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import net.contargo.iris.GeoLocation;
 
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+
+import java.io.IOException;
+
+import static net.contargo.iris.osrm.service.RoutingQueryResult.STATUS_NO_ROUTE;
+import static net.contargo.iris.osrm.service.RoutingQueryResult.STATUS_OK;
 
 
 /**
@@ -14,17 +28,68 @@ import org.springframework.web.client.RestTemplate;
 public class Osrm5QueryStrategy implements RoutingQueryStrategy {
 
     private final String baseUrl;
-    private final RestTemplate osrmRestClient;
+    private final RestTemplate restTemplate;
 
-    public Osrm5QueryStrategy(RestTemplate osrmRestClient, String baseUrl) {
+    public Osrm5QueryStrategy(RestTemplate restTemplate, String baseUrl) {
 
-        this.osrmRestClient = osrmRestClient;
+        this.restTemplate = restTemplate;
         this.baseUrl = baseUrl;
     }
 
     @Override
     public RoutingQueryResult route(GeoLocation start, GeoLocation destination) {
 
-        throw new UnsupportedOperationException();
+        try {
+            Osrm5Response osrm5Response = sendQuery(start, destination);
+
+            return new RoutingQueryResult(STATUS_OK, osrm5Response.getDistance().doubleValue(),
+                    osrm5Response.getDuration().doubleValue(), osrm5Response.getToll());
+        } catch (HttpClientErrorException e) {
+            return handleClientError(e);
+        }
+    }
+
+
+    private Osrm5Response sendQuery(GeoLocation start, GeoLocation destination) {
+
+        String uriPattern = baseUrl + "/v1/driving/%s,%s;%s,%s?overview=false&alternatives=false&steps=true";
+        String uri = String.format(uriPattern, start.getLongitude(), start.getLatitude(), destination.getLongitude(),
+                destination.getLatitude());
+
+        return restTemplate.exchange(uri, HttpMethod.GET, HttpEntity.EMPTY, Osrm5Response.class).getBody();
+    }
+
+
+    private RoutingQueryResult handleClientError(HttpClientErrorException clientException) {
+
+        try {
+            String response = clientException.getResponseBodyAsString();
+            ErrorResponse error = new ObjectMapper().readValue(response, ErrorResponse.class);
+
+            if (error.noRoute()) {
+                return new RoutingQueryResult(STATUS_NO_ROUTE, 0.0, 0.0, null);
+            }
+
+            throw clientException;
+        } catch (IOException ioException) {
+            throw clientException;
+        }
+    }
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    private static class ErrorResponse {
+
+        private String code;
+
+        @JsonCreator
+        public ErrorResponse(@JsonProperty("code") String code) {
+
+            this.code = code;
+        }
+
+        boolean noRoute() {
+
+            return "NoRoute".equals(code);
+        }
     }
 }

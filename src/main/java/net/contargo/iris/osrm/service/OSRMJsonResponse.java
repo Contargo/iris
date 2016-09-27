@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.math.BigDecimal;
 
-import static com.sun.webkit.graphics.GraphicsDecoder.SCALE;
-
 import static java.math.BigDecimal.ZERO;
 
 
@@ -27,7 +25,6 @@ class OSRMJsonResponse {
     private static final int INDEX_2 = 2;
 
     private int status;
-    private String status_message; // NOSONAR Field is legacy part of public API
     private OSRMJsonResponseRouteSummary route_summary; // NOSONAR Field is legacy part of public API
     private String[][] route_instructions; // NOSONAR Field is legacy part of public API
 

@@ -25,7 +25,6 @@ public class OSRMTruckRouteService implements TruckRouteService {
 
     private static final BigDecimal METERS_PER_KILOMETER = new BigDecimal("1000.0");
     private static final BigDecimal SECONDS_PER_MINUTE = new BigDecimal("60.0");
-    private static final int STATUS_NO_ROUTE = 207;
     private static final int SCALE = 5;
     private final RoutingQueryStrategyProvider routingQueryStrategyProvider;
 
@@ -42,7 +41,7 @@ public class OSRMTruckRouteService implements TruckRouteService {
 
         RoutingQueryResult osrmResult = strategy.route(start, destination);
 
-        if (osrmResult.getStatus() == STATUS_NO_ROUTE) {
+        if (osrmResult.noRoute()) {
             throw new OSRMNonRoutableRouteException("Start: "
                 + start.toString() + " Destination: " + destination.toString() + " Status: " + osrmResult.getStatus());
         }

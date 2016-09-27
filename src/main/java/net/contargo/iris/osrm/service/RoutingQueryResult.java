@@ -8,8 +8,12 @@ import java.math.BigDecimal;
  * OSRM service
  *
  * @author  Arnold Franke - franke@synyx.de
+ * @author  David Schilling - schilling@synyx.de
  */
 public final class RoutingQueryResult {
+
+    static final int STATUS_NO_ROUTE = 207;
+    static final int STATUS_OK = 200;
 
     private final int status;
     private final double totalDistance;
@@ -45,5 +49,11 @@ public final class RoutingQueryResult {
     public BigDecimal getToll() {
 
         return toll;
+    }
+
+
+    public boolean noRoute() {
+
+        return status == STATUS_NO_ROUTE;
     }
 }

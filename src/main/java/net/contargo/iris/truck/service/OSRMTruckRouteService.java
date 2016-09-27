@@ -9,7 +9,6 @@ import org.springframework.cache.annotation.Cacheable;
 
 import java.math.BigDecimal;
 
-import static java.math.BigDecimal.ZERO;
 import static java.math.RoundingMode.HALF_UP;
 
 
@@ -26,9 +25,6 @@ public class OSRMTruckRouteService implements TruckRouteService {
     private static final BigDecimal SECONDS_PER_MINUTE = new BigDecimal("60.0");
     private static final int STATUS_NO_ROUTE = 207;
     private static final int SCALE = 5;
-    private static final int STANDARD_STREETDETAILS_LENGTH = 4;
-    private static final int INDEX_3 = 3;
-    private static final int INDEX_2 = 2;
 
     private final OSRMQueryService osrmQueryService;
 
@@ -48,60 +44,11 @@ public class OSRMTruckRouteService implements TruckRouteService {
                 + start.toString() + " Destination: " + destination.toString() + " Status: " + osrmResult.getStatus());
         }
 
-        BigDecimal toll = extractToll(osrmResult.getRouteInstructions());
+        BigDecimal toll = osrmResult.getToll();
         BigDecimal distance = new BigDecimal(osrmResult.getTotalDistance()).divide(METERS_PER_KILOMETER, SCALE,
                 HALF_UP);
         BigDecimal duration = new BigDecimal(osrmResult.getTotalTime()).divide(SECONDS_PER_MINUTE, SCALE, HALF_UP);
 
         return new TruckRoute(distance, toll, duration);
-    }
-
-
-    private BigDecimal extractToll(String[][] routeInstructions) {
-
-        BigDecimal toll = ZERO;
-        toll = toll.setScale(SCALE);
-
-        for (String[] routeInstruction : routeInstructions) {
-            /*
-             * route_instructions:
-             *
-             * 0 - driving directions : integer numbers as defined in the source
-             * file DataStructures/TurnInstructions.h.
-             *
-             * 1 - way name (string)
-             *    [
-             *      street_name ("A 65")
-             *      street_type ("motorway")
-             *      toll_route ("yes")
-             *      country ("DE")
-             *    ]
-             *
-             * 2 - length in meters (integer)
-             *
-             * 3 - position
-             *
-             * 4 - time
-             *
-             * 5 - length with unit (string)
-             *
-             * 6 - Direction abbreviation (string) N: north, S: south, E: east, W: west, NW: North West, ...
-             *
-             * 7 - azimuth (float)
-             */
-            BigDecimal distance = new BigDecimal(routeInstruction[2]);
-            distance = distance.divide(METERS_PER_KILOMETER);
-
-            String[] streetDetails = routeInstruction[1].split("/;");
-
-            // currently, only german ("DE") toll roads are considered.
-            if (streetDetails.length == STANDARD_STREETDETAILS_LENGTH
-                    && ("yes".equalsIgnoreCase(streetDetails[INDEX_2])
-                        && "de".equalsIgnoreCase(streetDetails[INDEX_3]))) {
-                toll = toll.add(distance);
-            }
-        }
-
-        return toll;
     }
 }

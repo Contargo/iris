@@ -2,6 +2,12 @@ package net.contargo.iris.osrm.service;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.math.BigDecimal;
+
+import static com.sun.webkit.graphics.GraphicsDecoder.SCALE;
+
+import static java.math.BigDecimal.ZERO;
+
 
 /**
  * Response of the osrm server. This response contains two important information. The first are the total kilometers and
@@ -14,18 +20,16 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties({ "hint_data", "route_name", "via_indices", "found_alternative", "via_points" })
 class OSRMJsonResponse {
 
+    private static final BigDecimal METERS_PER_KILOMETER = new BigDecimal("1000.0");
+    private static final int SCALE = 5;
+    private static final int STANDARD_STREETDETAILS_LENGTH = 4;
+    private static final int INDEX_3 = 3;
+    private static final int INDEX_2 = 2;
+
     private int status;
     private String status_message; // NOSONAR Field is legacy part of public API
     private OSRMJsonResponseRouteSummary route_summary; // NOSONAR Field is legacy part of public API
     private String[][] route_instructions; // NOSONAR Field is legacy part of public API
-
-    public String[][] getRoute_instructions() { // NOSONAR Field is part of public API, therefore unchangable legacy
-
-        String[][] routeInstructions = route_instructions;
-
-        return routeInstructions;
-    }
-
 
     public void setRoute_instructions(String[][] routeInstructions) { // NOSONAR Field is legacy part of public API
 
@@ -45,18 +49,6 @@ class OSRMJsonResponse {
     }
 
 
-    public String getStatus_message() { // NOSONAR Field is legacy part of public API
-
-        return status_message;
-    }
-
-
-    public void setStatus_message(String statusMessage) { // NOSONAR Field is legacy part of public API
-
-        this.status_message = statusMessage;
-    }
-
-
     public OSRMJsonResponseRouteSummary getRoute_summary() { // NOSONAR Field is legacy part of public API
 
         return route_summary;
@@ -66,5 +58,64 @@ class OSRMJsonResponse {
     public void setRoute_summary(OSRMJsonResponseRouteSummary routeSummary) { // NOSONAR Field is part of public API
 
         this.route_summary = routeSummary;
+    }
+
+
+    public BigDecimal getToll() {
+
+        if (route_instructions == null) {
+            return ZERO;
+        } else {
+            return exportToll(route_instructions);
+        }
+    }
+
+
+    private BigDecimal exportToll(String[][] routeInstructions) {
+
+        BigDecimal toll = ZERO;
+        toll = toll.setScale(SCALE);
+
+        for (String[] routeInstruction : routeInstructions) {
+            /*
+             * route_instructions:
+             *
+             * 0 - driving directions : integer numbers as defined in the source
+             * file DataStructures/TurnInstructions.h.
+             *
+             * 1 - way name (string)
+             *    [
+             *      street_name ("A 65")
+             *      street_type ("motorway")
+             *      toll_route ("yes")
+             *      country ("DE")
+             *    ]
+             *
+             * 2 - length in meters (integer)
+             *
+             * 3 - position
+             *
+             * 4 - time
+             *
+             * 5 - length with unit (string)
+             *
+             * 6 - Direction abbreviation (string) N: north, S: south, E: east, W: west, NW: North West, ...
+             *
+             * 7 - azimuth (float)
+             */
+            BigDecimal distance = new BigDecimal(routeInstruction[2]);
+            distance = distance.divide(METERS_PER_KILOMETER);
+
+            String[] streetDetails = routeInstruction[1].split("/;");
+
+            // currently, only german ("DE") toll roads are considered.
+            if (streetDetails.length == STANDARD_STREETDETAILS_LENGTH
+                    && ("yes".equalsIgnoreCase(streetDetails[INDEX_2])
+                        && "de".equalsIgnoreCase(streetDetails[INDEX_3]))) {
+                toll = toll.add(distance);
+            }
+        }
+
+        return toll;
     }
 }

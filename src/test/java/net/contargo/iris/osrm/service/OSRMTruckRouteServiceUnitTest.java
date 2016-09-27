@@ -24,6 +24,9 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import static java.math.BigDecimal.TEN;
+import static java.math.BigDecimal.ZERO;
+
 
 /**
  * Unit test of {@link net.contargo.iris.truck.service.OSRMTruckRouteService}.
@@ -35,10 +38,6 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class OSRMTruckRouteServiceUnitTest {
 
-    public static final String GERMAN_STREET_WITH_TOLL = "strA/;anytype/;yes/;de";
-    public static final String GERMAN_STREET_WITHOUT_TOLL = "strA/;anytype/;no/;de";
-    public static final String FRENCH_STREET_WITH_TOLL = "strA/;anytype/;yes/;fr";
-    public static final String FRENCH_STREET_WITHOUT_TOLL = "strA/;anytype/;no/;fr";
     private static final double DEFAULT_TOTAL_DISTANCE = 1.1;
     private static final double DEFAULT_TOTAL_TIME = 2.2;
 
@@ -63,8 +62,7 @@ public class OSRMTruckRouteServiceUnitTest {
     @Test(expected = OSRMNonRoutableRouteException.class)
     public void routeIsNotRoutable() {
 
-        when(queryServiceMock.getOSRMXmlRoute(start, destination)).thenReturn(new OSRMQueryResult(207, 1.1, 2.2,
-                new String[1][1]));
+        when(queryServiceMock.getOSRMXmlRoute(start, destination)).thenReturn(new OSRMQueryResult(207, 1.1, 2.2, TEN));
 
         sut.route(start, destination);
     }
@@ -73,7 +71,7 @@ public class OSRMTruckRouteServiceUnitTest {
     @Test
     public void delegatesCallToQueryService() {
 
-        makeMockReturn(new String[][] {}, DEFAULT_TOTAL_DISTANCE, DEFAULT_TOTAL_TIME);
+        makeMockReturn(ZERO, DEFAULT_TOTAL_DISTANCE, DEFAULT_TOTAL_TIME);
 
         TruckRoute route = sut.route(start, destination);
         assertThat(route, notNullValue());
@@ -86,7 +84,7 @@ public class OSRMTruckRouteServiceUnitTest {
 
         OSRMJsonResponseRouteSummary summary = new OSRMJsonResponseRouteSummary();
         summary.setTotalDistance(12000);
-        makeMockReturn(new String[][] {}, 12000, DEFAULT_TOTAL_TIME);
+        makeMockReturn(ZERO, 12000, DEFAULT_TOTAL_TIME);
 
         TruckRoute route = sut.route(start, destination);
         assertThat(route, notNullValue());
@@ -99,7 +97,7 @@ public class OSRMTruckRouteServiceUnitTest {
 
         OSRMJsonResponseRouteSummary summary = new OSRMJsonResponseRouteSummary();
         summary.setTotalTime(120);
-        makeMockReturn(new String[][] {}, DEFAULT_TOTAL_DISTANCE, 120);
+        makeMockReturn(ZERO, DEFAULT_TOTAL_DISTANCE, 120);
 
         TruckRoute route = sut.route(start, destination);
         assertThat(route, notNullValue());
@@ -107,45 +105,9 @@ public class OSRMTruckRouteServiceUnitTest {
     }
 
 
-    @Test
-    public void parsesSectionsAndReturnsToll() {
+    private void makeMockReturn(BigDecimal toll, double totalDistance, double totalTime) {
 
-        String[][] instructions = {
-            { "", GERMAN_STREET_WITH_TOLL, "100", "" },
-            { "", GERMAN_STREET_WITH_TOLL, "300", "" },
-        };
-
-        makeMockReturn(instructions, DEFAULT_TOTAL_DISTANCE, DEFAULT_TOTAL_TIME);
-
-        TruckRoute route = sut.route(start, destination);
-
-        assertThat(route, notNullValue());
-        assertThat(route.getTollDistance(), equalTo(new BigDecimal("0.40000")));
-    }
-
-
-    @Test
-    public void doesNotAddNonTollPartsToToll() {
-
-        String[][] instructions = {
-            { "", GERMAN_STREET_WITHOUT_TOLL, "200", "" },
-            { "", GERMAN_STREET_WITH_TOLL, "100", "" },
-            { "", FRENCH_STREET_WITH_TOLL, "300", "" },
-            { "", FRENCH_STREET_WITHOUT_TOLL, "500", "" },
-        };
-
-        makeMockReturn(instructions, DEFAULT_TOTAL_DISTANCE, DEFAULT_TOTAL_TIME);
-
-        TruckRoute route = sut.route(start, destination);
-
-        assertThat(route, notNullValue());
-        assertThat(route.getTollDistance(), equalTo(new BigDecimal("0.10000")));
-    }
-
-
-    private void makeMockReturn(String[][] instructions, double totalDistance, double totalTime) {
-
-        OSRMQueryResult response = new OSRMQueryResult(0, totalDistance, totalTime, instructions);
+        OSRMQueryResult response = new OSRMQueryResult(0, totalDistance, totalTime, toll);
 
         when(queryServiceMock.getOSRMXmlRoute(start, destination)).thenReturn(response);
     }

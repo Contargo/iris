@@ -73,6 +73,6 @@ public class OSRMQueryServiceImpl implements OSRMQueryService {
             totalTime = response.getRoute_summary().getTotalTime();
         }
 
-        return new OSRMQueryResult(status, totalDistance, totalTime, response.getRoute_instructions());
+        return new OSRMQueryResult(status, totalDistance, totalTime, response.getToll());
     }
 }

@@ -96,7 +96,6 @@ public class OSRMQueryServiceImplUnitTest {
         assertThat(actualResult.getStatus(), is(207));
         assertThat(actualResult.getTotalDistance(), is(0d));
         assertThat(actualResult.getTotalTime(), is(0d));
-        assertThat(actualResult.getRouteInstructions().length, is(0));
     }
 
 

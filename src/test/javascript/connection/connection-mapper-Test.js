@@ -90,7 +90,7 @@ describe('ConnectionMapper', function () {
     it('converts subconnections to json', function() {
         var subconnections = new Subconnections(new Subconnection());
 
-        spyOn(sut, 'subconnectionToJson').andReturn({id: 3});
+        spyOn(sut, 'subconnectionToJson').and.returnValue({id: 3});
 
         var json = sut.subconnectionsToJson(subconnections);
         expect(json).toEqual([{ id: 3 }]);
@@ -146,7 +146,7 @@ describe('ConnectionMapper', function () {
             subconnection: new Subconnections()
         });
 
-        spyOn(sut, 'subconnectionsToJson').andReturn('subconnections');
+        spyOn(sut, 'subconnectionsToJson').and.returnValue('subconnections');
 
         var json = sut.connectionToJson(connection);
         expect(json).toEqual({

@@ -65,7 +65,7 @@ describe("TrianglePointsView instanciation", function () {
         expect(this.fakeViewRenderCalled).toBe(1);
         this.model.add(address2);
         expect(this.fakeViewRenderCalled).toBe(3);
-        expect(this.view.$el).toContain('a.CHILD');
+        expect(this.view.$el.html()).toContain('CHILD');
 
         this.view.$el.empty();
         this.model.remove(address);

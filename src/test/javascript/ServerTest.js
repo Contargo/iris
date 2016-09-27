@@ -57,7 +57,7 @@ describe("Servers geoCode", function () {
             callback(result);
         };
 
-        spyOn($, 'ajax').andCallFake(ajaxMock);
+        spyOn($, 'ajax').and.callFake(ajaxMock);
         spyOn(window, 'alert');
 
         var r = new GeoCodeRequest({countries: new SelectableAwareCollection([{}]), city : "Karlsruhe"});
@@ -75,7 +75,7 @@ describe("Servers geoCode", function () {
             callback(result);
         };
 
-        spyOn($, 'ajax').andCallFake(ajaxMock);
+        spyOn($, 'ajax').and.callFake(ajaxMock);
         var r = new GeoCodeRequest({countries: new SelectableAwareCollection([{}]), city : "Karlsruhe"});
         server.geoCode(r, callback);
         expect(callback).toHaveBeenCalledWith(addresses);
@@ -105,7 +105,7 @@ describe("Servers get active seaports", function () {
             callback(result);
         };
 
-        spyOn($, 'ajax').andCallFake(ajaxMock);
+        spyOn($, 'ajax').and.callFake(ajaxMock);
         spyOn(window, 'alert');
 
         server.getActiveSeaports(callback);
@@ -123,7 +123,7 @@ describe("Servers get active seaports", function () {
             var callback = x.success;
             callback(result);
         };
-        spyOn($, 'ajax').andCallFake(ajaxMock);
+        spyOn($, 'ajax').and.callFake(ajaxMock);
 
         server.getActiveSeaports(callback);
         expect(callback).toHaveBeenCalledWith(ports);
@@ -152,7 +152,7 @@ describe("Servers terminals", function () {
             callback(result);
         };
 
-        spyOn($, 'ajax').andCallFake(ajaxMock);
+        spyOn($, 'ajax').and.callFake(ajaxMock);
         spyOn(window, 'alert');
 
         server.terminals(callback);
@@ -169,7 +169,7 @@ describe("Servers terminals", function () {
             var callback = x.success;
             callback(result);
         };
-        spyOn($, 'ajax').andCallFake(ajaxMock);
+        spyOn($, 'ajax').and.callFake(ajaxMock);
 
         server.terminals(callback);
         expect(callback).toHaveBeenCalledWith(terminals);
@@ -202,7 +202,7 @@ describe("Servers seaportConnections", function () {
             callback(result);
         };
 
-        spyOn($, 'ajax').andCallFake(ajaxMock);
+        spyOn($, 'ajax').and.callFake(ajaxMock);
         spyOn(window, 'alert');
 
         var r = new GeoCodeRequest({countries: new SelectableAwareCollection([{}]), city : "Karlsruhe"});
@@ -221,7 +221,7 @@ describe("Servers seaportConnections", function () {
             callback(result);
         };
 
-        spyOn($, 'ajax').andCallFake(ajaxMock);
+        spyOn($, 'ajax').and.callFake(ajaxMock);
         var r = new GeoCodeRequest({countries: new SelectableAwareCollection([{}]), city : "Karlsruhe"});
         server.geoCode(r, callback);
         expect(callback).toHaveBeenCalledWith(addresses);

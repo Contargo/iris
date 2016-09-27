@@ -59,26 +59,26 @@ describe("ErrorObjectSyntaxChecker test suite", function () {
 
     describe("isValid", function () {
         it("true", function () {
-            spyOn(sut, "hasAllProperties").andReturn(true);
-            spyOn(sut, "allPropertiesDefined").andReturn(true);
+            spyOn(sut, "hasAllProperties").and.returnValue(true);
+            spyOn(sut, "allPropertiesDefined").and.returnValue(true);
             expect(sut.isValid(validErrorObject)).toBe(true);
         });
 
         it("properties not defined", function () {
-            spyOn(sut, "hasAllProperties").andReturn(true);
-            spyOn(sut, "allPropertiesDefined").andReturn(false);
+            spyOn(sut, "hasAllProperties").and.returnValue(true);
+            spyOn(sut, "allPropertiesDefined").and.returnValue(false);
             expect(sut.isValid(errorObjectMessageNull)).toBe(false);
         });
 
         it("not all properties available", function () {
-            spyOn(sut, "hasAllProperties").andReturn(false);
-            spyOn(sut, "allPropertiesDefined").andReturn(true);
+            spyOn(sut, "hasAllProperties").and.returnValue(false);
+            spyOn(sut, "allPropertiesDefined").and.returnValue(true);
             expect(sut.isValid(errorObjectWithoutMessage)).toBe(false);
         });
 
         it("properties not defined and not all properties available", function () {
-            spyOn(sut, "hasAllProperties").andReturn(false);
-            spyOn(sut, "allPropertiesDefined").andReturn(false);
+            spyOn(sut, "hasAllProperties").and.returnValue(false);
+            spyOn(sut, "allPropertiesDefined").and.returnValue(false);
             expect(sut.isValid(errorObjectWithoutMessageAndCodeNull)).toBe(false);
         });
     });
@@ -87,7 +87,7 @@ describe("ErrorObjectSyntaxChecker test suite", function () {
         var jsonErrorObject = '{"code": "offer.baf"}';
 
         it("true", function () {
-            spyOn(sut, "isValid").andReturn(true);
+            spyOn(sut, "isValid").and.returnValue(true);
             expect(sut.isValidJSONString(jsonErrorObject)).toBe(true);
         });
 
@@ -96,7 +96,7 @@ describe("ErrorObjectSyntaxChecker test suite", function () {
         });
 
         it("is not valid", function () {
-            spyOn(sut, "isValid").andReturn(false);
+            spyOn(sut, "isValid").and.returnValue(false);
             expect(sut.isValidJSONString(jsonErrorObject)).toBe(false);
         });
     });

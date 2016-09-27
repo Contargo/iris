@@ -15,7 +15,7 @@ describe("AddressCategoryView instanciation", function () {
     it("works all needed parameters", function () {
         var view = new AddressCategoryView({
             model: model,
-            searchStatus: searchStatus,
+            searchStatus: searchStatus
         });
         expect(view).toBeDefined();
     });
@@ -38,7 +38,7 @@ describe("AddressCategoryView rendering", function () {
 
     it("shows no message on initial load", function () {
         this.view.render();
-        expect(this.view.$el.html()).toContain('');
+        expect(this.view.$el.html()).toBe('');
     });
 
     it("shows 'no results found' message on search with no results", function () {
@@ -52,7 +52,7 @@ describe("AddressCategoryView rendering", function () {
         model.add(new AddressListModel({addresses: [new Address()]}));
 
         this.view.render();
-        expect(this.view.$el.html()).toContain('');
+        expect(this.view.$el.html()).toBe('');
     });
 
     it("renders itself to target on load", function () {
@@ -76,8 +76,9 @@ describe("AddressCategoryView rendering", function () {
         var addressesList = new AddressListModel({addresses: [address]});
 
         this.view.$el.empty();
+        searchStatus.setHaveSearched(true);
         model.add(addressesList);
-        expect(this.view.$el).toContain('.geocoding-results');
+        expect(this.view.$el.html()).toContain('geocoding-results');
 
         this.view.$el.empty();
         model.remove(addressesList);
@@ -148,7 +149,7 @@ describe("AddressListView rendering", function () {
 
         this.view.$el.empty();
         model.get("addresses").add(address);
-        expect(this.view.$el).toContain('.iris-table');
+        expect(this.view.$el.html()).toContain('iris-table');
 
         this.view.$el.empty();
         model.get("addresses").remove(address);

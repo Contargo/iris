@@ -31,11 +31,11 @@ describe('Connection View', function () {
             routeType: barge
         });
 
-        spyOn(SeaportsView.prototype, 'create').andCallFake(function() {return 0;});
-        spyOn(TerminalsView.prototype, 'create').andCallFake(function() {return 0;});
-        spyOn(RouteTypesView.prototype, 'create').andCallFake(function() {return 0;});
-        spyOn(DistancesView.prototype, 'create').andCallFake(function() {return 0;});
-        spyOn(SubconnectionView.prototype, 'create').andCallFake(function() {return 0;});
+        spyOn(SeaportsView.prototype, 'create').and.callFake(function() {return 0;});
+        spyOn(TerminalsView.prototype, 'create').and.callFake(function() {return 0;});
+        spyOn(RouteTypesView.prototype, 'create').and.callFake(function() {return 0;});
+        spyOn(DistancesView.prototype, 'create').and.callFake(function() {return 0;});
+        spyOn(SubconnectionView.prototype, 'create').and.callFake(function() {return 0;});
 
         exportTemplateManagerAsGlobalFunction("src/connections/templates/");
     });
@@ -120,7 +120,7 @@ describe('Connection View', function () {
             terminals: terminals,
             routeTypes: routeTypes
         });
-        spyOn(sut.model, 'hasValidLastSubConnectionTerminal').andReturn(false);
+        spyOn(sut.model, 'hasValidLastSubConnectionTerminal').and.returnValue(false);
         expect(sut.hasSubConnectionMatchingError()).toBeTruthy();
     });
 
@@ -131,7 +131,7 @@ describe('Connection View', function () {
             terminals: terminals,
             routeTypes: routeTypes
         });
-        spyOn(sut.model, 'hasValidLastSubConnectionTerminal').andReturn(true);
+        spyOn(sut.model, 'hasValidLastSubConnectionTerminal').and.returnValue(true);
         expect(sut.hasSubConnectionMatchingError()).toBeFalsy();
     });
 
@@ -143,7 +143,7 @@ describe('Connection View', function () {
             terminals: terminals,
             routeTypes: routeTypes
         });
-        spyOn(sut, 'hasFormError').andReturn(true);
+        spyOn(sut, 'hasFormError').and.returnValue(true);
         sut.$('#submit-button').click();
         expect(MessageView.prototype.create).toHaveBeenCalledWith({ message : 'Cannot create or update connection:' +
             ' validation errors.', className : 'message message-error message-width' });
@@ -157,7 +157,7 @@ describe('Connection View', function () {
             terminals: terminals,
             routeTypes: routeTypes
         });
-        spyOn(sut, 'hasSubConnectionMatchingError').andReturn(true);
+        spyOn(sut, 'hasSubConnectionMatchingError').and.returnValue(true);
         sut.$('#submit-button').click();
         expect(MessageView.prototype.create).toHaveBeenCalledWith({message: "Cannot create or update connection: " +
             "last subconnection terminal does not match connection terminal.", className: "message message-error " +

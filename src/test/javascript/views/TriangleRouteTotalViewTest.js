@@ -53,7 +53,7 @@ describe("TriangleRouteTotalView", function () {
     });
 
     it("renders clear button", function () {
-        expect(this.view.$el).toContain("a.clear");
+        expect(this.view.$el.html()).toContain("clear");
     });
 
     it("re-renders itself to target on change", function () {

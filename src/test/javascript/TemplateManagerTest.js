@@ -28,7 +28,7 @@ describe("TemplateManager", function() {
 
         this.manager = new TemplateManager();
 
-        spyOn($, "ajax").andCallFake(function(options) {
+        spyOn($, "ajax").and.callFake(function(options) {
             options.error(null, "argh", "argh");
         });
         
@@ -37,7 +37,7 @@ describe("TemplateManager", function() {
         }).toThrow();
 
         
-        $.ajax.reset();
+        $.ajax.calls.reset();
         
 
     });
@@ -49,7 +49,7 @@ describe("TemplateManager", function() {
         var data = "<span class='template'><span class='foo'>Template</span> {{name}}</span>";
         var templatename = "foo";
 
-        spyOn($, "ajax").andCallFake(function(options) {
+        spyOn($, "ajax").and.callFake(function(options) {
             expect(options.url).toContain(templatename);
             options.success(data);
         });
@@ -59,9 +59,9 @@ describe("TemplateManager", function() {
         
         var html = result({name : "wurst"});
         expect(html).toContain("wurst");
-        expect($(html)).toContain("span.foo");
+        expect(html).toContain("foo");
 
-        $.ajax.reset();
+        $.ajax.calls.reset();
 
     });
 
@@ -75,7 +75,7 @@ describe("TemplateManager", function() {
         var data = "<span class='template'>Template</span>";
         var templatename = "foo";
 
-        spyOn($, "ajax").andCallFake(function(options) {
+        spyOn($, "ajax").and.callFake(function(options) {
             expect(options.url).toContain(templatename);
             options.success(data);
         });
@@ -87,9 +87,9 @@ describe("TemplateManager", function() {
         expect(result2).toBeDefined();
         expect(result).toEqual(result2);
 
-        expect($.ajax.callCount).toEqual(1);
+        expect($.ajax.calls.count()).toEqual(1);
         
-        $.ajax.reset();
+        $.ajax.calls.reset();
 
     });
 });

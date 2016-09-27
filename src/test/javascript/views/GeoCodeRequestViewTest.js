@@ -38,7 +38,8 @@ describe("GeoCodeRequestView instanciation", function() {
     
     it("has a country select box in Bootstrap Dropdown Style", function() {
 
-        expect(this.view.$el).toContain("span.country-container div.btn-group");
+        expect(this.view.$el.html()).toContain("country-container");
+        expect(this.view.$el.html()).toContain("btn-group");
         
     });
 

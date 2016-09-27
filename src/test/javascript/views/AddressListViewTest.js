@@ -30,9 +30,9 @@ describe("A AddressListView", function () {
         it("html contains all important classes", function () {
 
             expect(view.el).toBeDefined();
-            expect(view.$el).toContain(".accordion-group");
-            expect(view.$el).toContain(".accordion-heading");
-            expect(view.$el).toContain(".selectAddressRow");
+            expect(view.$el.html()).toContain("accordion-group");
+            expect(view.$el.html()).toContain("accordion-heading");
+            expect(view.$el.html()).toContain("selectAddressRow");
 
         });
         

@@ -157,7 +157,7 @@ describe("GeoCoding address selection", function () {
         a1.set('selected', true);
         a1.set('selected', true);
 
-        expect(spy.calls.length).toEqual(1);
+        expect(spy.calls.count()).toEqual(1);
     });
 });
 

@@ -19,19 +19,19 @@ describe('ConnectionApp', function () {
         serverMock = jasmine.createSpyObj('serverMock', ['getConnection', 'getSeaports', 'getTerminals', 'createConnection', 'updateConnection']);
         sut = new ConnectionApp(serverMock, 2);
 
-        serverMock.getConnection.andCallFake(function (id, callback) {
+        serverMock.getConnection.and.callFake(function (id, callback) {
             callback(connection);
         });
-        serverMock.getSeaports.andCallFake(function (callback) {
+        serverMock.getSeaports.and.callFake(function (callback) {
             callback([1, 2]);
         });
-        serverMock.getTerminals.andCallFake(function (callback) {
+        serverMock.getTerminals.and.callFake(function (callback) {
             callback([3, 4]);
         });
 
         spyOn(MessageView.prototype, 'create');
 
-        spyOn(ConnectionView.prototype, 'create').andCallFake(function (options) {
+        spyOn(ConnectionView.prototype, 'create').and.callFake(function (options) {
             expect(options.seaports.length).toEqual(2);
             expect(options.terminals.length).toEqual(2);
             expect(options.model.get('id')).toEqual(5);
@@ -85,7 +85,7 @@ describe('ConnectionApp', function () {
 
     it('loadModels empty seaports', function () {
 
-        serverMock.getSeaports.andCallFake(function (callback) {
+        serverMock.getSeaports.and.callFake(function (callback) {
             callback([]);
         });
 
@@ -98,7 +98,7 @@ describe('ConnectionApp', function () {
 
     it('loadModels with seaport loading error', function () {
 
-        serverMock.getSeaports.andCallFake(function (callback, errorCallback) {
+        serverMock.getSeaports.and.callFake(function (callback, errorCallback) {
             errorCallback('errorCallback');
         });
 
@@ -110,7 +110,7 @@ describe('ConnectionApp', function () {
 
     it('loadModels empty terminals', function () {
 
-        serverMock.getTerminals.andCallFake(function (callback) {
+        serverMock.getTerminals.and.callFake(function (callback) {
             callback([]);
         });
 
@@ -122,7 +122,7 @@ describe('ConnectionApp', function () {
 
     it('loadModels with terminal loading error', function () {
 
-        serverMock.getTerminals.andCallFake(function (callback, errorCallback) {
+        serverMock.getTerminals.and.callFake(function (callback, errorCallback) {
             errorCallback('errorCallback');
         });
 
@@ -145,7 +145,7 @@ describe('ConnectionApp', function () {
 
     it('loadModels with connection loading error', function () {
 
-        serverMock.getConnection.andCallFake(function (id, callback, errorCallback) {
+        serverMock.getConnection.and.callFake(function (id, callback, errorCallback) {
             errorCallback('errorCallback');
         });
 
@@ -215,9 +215,9 @@ describe('ConnectionApp', function () {
     it('creates new connection', function () {
         sut.start();
         sut.connection.unset('id');
-        spyOn(sut.mapper, 'connectionToJson').andReturn({foo: 'bar'});
+        spyOn(sut.mapper, 'connectionToJson').and.returnValue({foo: 'bar'});
         spyOn(sut, 'redirect');
-        serverMock.createConnection.andCallFake(function (connection, callback) {
+        serverMock.createConnection.and.callFake(function (connection, callback) {
             callback('location');
         });
 
@@ -231,10 +231,10 @@ describe('ConnectionApp', function () {
     it('creates new connection with error', function () {
         sut.start();
         sut.connection.unset('id');
-        spyOn(sut.mapper, 'connectionToJson').andReturn({foo: 'bar'});
+        spyOn(sut.mapper, 'connectionToJson').and.returnValue({foo: 'bar'});
         spyOn(sut, 'redirect');
         spyOn(sut, 'handleSaveError');
-        serverMock.createConnection.andCallFake(function (connection, callback, errorCallback) {
+        serverMock.createConnection.and.callFake(function (connection, callback, errorCallback) {
             errorCallback('errorResponse');
         });
 
@@ -247,9 +247,9 @@ describe('ConnectionApp', function () {
 
     it('updates connection', function () {
         sut.start();
-        spyOn(sut.mapper, 'connectionToJson').andReturn({foo: 'bar'});
+        spyOn(sut.mapper, 'connectionToJson').and.returnValue({foo: 'bar'});
         spyOn(sut, 'loadModels');
-        serverMock.updateConnection.andCallFake(function (connection, callback, errorcallback) {
+        serverMock.updateConnection.and.callFake(function (connection, callback, errorcallback) {
             callback();
         });
 
@@ -262,10 +262,10 @@ describe('ConnectionApp', function () {
 
     it('updates connection with error', function () {
         sut.start();
-        spyOn(sut.mapper, 'connectionToJson').andReturn({foo: 'bar'});
+        spyOn(sut.mapper, 'connectionToJson').and.returnValue({foo: 'bar'});
         spyOn(sut, 'loadModels');
         spyOn(sut, 'handleSaveError');
-        serverMock.updateConnection.andCallFake(function (connection, callback, errorcallback) {
+        serverMock.updateConnection.and.callFake(function (connection, callback, errorcallback) {
             errorcallback('errorResponse');
         });
 
@@ -277,8 +277,8 @@ describe('ConnectionApp', function () {
     });
 
     it('handles save error', function () {
-        spyOn(sut.errorSyntaxChecker, 'isValidJSONString').andReturn(true);
-        spyOn(sut.validationMessageService, 'getValidationMessage').andReturn('wasd');
+        spyOn(sut.errorSyntaxChecker, 'isValidJSONString').and.returnValue(true);
+        spyOn(sut.validationMessageService, 'getValidationMessage').and.returnValue('wasd');
 
         sut.handleSaveError({
             responseText: 'abc',
@@ -291,7 +291,7 @@ describe('ConnectionApp', function () {
     });
 
     it('handles save error with invalid error object', function () {
-        spyOn(sut.errorSyntaxChecker, 'isValidJSONString').andReturn(false);
+        spyOn(sut.errorSyntaxChecker, 'isValidJSONString').and.returnValue(false);
         spyOn(sut.validationMessageService, 'getValidationMessage');
 
         sut.handleSaveError({

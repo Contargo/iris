@@ -103,10 +103,8 @@ describe("TrianglePoints", function() {
 
         expect(this.serverMock.getRouteDetails).toHaveBeenCalled();
 
-        var parts = this.serverMock.getRouteDetails.mostRecentCall.args[0];
 
-        expect(parts.size()).toEqual(3);
-
+        expect(pairs.size()).toEqual(3);
     });
 
     it("sets totals and part-details correctly upon getRoutePairs", function() {
@@ -126,10 +124,10 @@ describe("TrianglePoints", function() {
         expect(status.get("toll")).toBeUndefined();
         expect(status.get("duration")).toBeUndefined();
 
-        var parts = this.serverMock.getRouteDetails.mostRecentCall.args[0];
+        var parts = this.serverMock.getRouteDetails.calls.mostRecent().args[0];
         expect(parts.size()).toEqual(3);
 
-        var callback = this.serverMock.getRouteDetails.mostRecentCall.args[1];
+        var callback = this.serverMock.getRouteDetails.calls.mostRecent().args[1];
 
         expect(callback).toBeDefined();
 

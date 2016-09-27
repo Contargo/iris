@@ -60,8 +60,7 @@ describe("SelectableAwareCollection", function () {
             expect(element1.get("selected")).toBe(true);
 
             expect(spy).toHaveBeenCalled();
-            expect(spy.mostRecentCall.args[0]).toEqual(element1);
-            
+            expect(spy).toHaveBeenCalledWith(element1);
         });
         
         it("finds selected element", function () {

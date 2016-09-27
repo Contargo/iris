@@ -29,14 +29,14 @@ describe("A BootstrapDropDownView", function () {
         
         it("has Bootstrap button group", function () {
 
-            expect(this.view.$el).toContain("div.btn-group");
+            expect(this.view.$el.html()).toContain("btn-group");
         });
         
         it("renders children of Bootstrap button group", function () {
 
             expect(this.view.el).toBeDefined();
-            expect(this.view.$el).toContain("ul.dropdown-menu");
-            expect(this.view.$el).toContain("a.dropdown-toggle");
+            expect(this.view.$el.html()).toContain("dropdown-menu");
+            expect(this.view.$el.html()).toContain("dropdown-toggle");
             expect(this.view.$("ul.dropdown-menu").html()).toContain("30");
             expect(this.view.$("a.dropdown-toggle").html()).toContain("20"); // default value is set there
 

@@ -182,15 +182,15 @@
         </property>
     </bean>
 
-    <bean id="osrmQueryService" class="net.contargo.iris.osrm.service.OSRMQueryServiceImpl">
-        <constructor-arg name="baseUrl" value="${osrm.url}"/>
-        <constructor-arg name="osrmRestClient">
+    <bean id="routingQueryStrategyProvider" class="net.contargo.iris.osrm.service.RoutingQueryStrategyProvider">
+        <constructor-arg name="restTemplate">
             <bean class="org.springframework.web.client.RestTemplate"/>
         </constructor-arg>
+        <constructor-arg name="baseUri" value="${osrm.url}"/>
     </bean>
 
     <bean id="truckRouteService" class="net.contargo.iris.truck.service.OSRMTruckRouteService">
-        <constructor-arg name="osrmQueryService" ref="osrmQueryService"/>
+        <constructor-arg name="routingQueryStrategyProvider" ref="routingQueryStrategyProvider"/>
     </bean>
 
     <bean id="cloudRoutingService" class="net.contargo.iris.distancecloud.service.DistanceCloudAddressServiceImpl">

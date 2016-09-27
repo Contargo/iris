@@ -7,12 +7,14 @@ import org.springframework.web.client.RestTemplate;
 
 
 /**
- * Implementation of the OSRM query service.
+ * An OSRM specific implementation of {@code RoutingServiceQueryStrategy} suitable for querying an OSRM version 4
+ * routing service.
  *
  * @author  Sven Mueller - mueller@synyx.de
  * @author  Tobias Schneider - schneider@synyx.de
+ * @author  David Schilling - schilling@synyx.de
  */
-public class OSRMQueryServiceImpl implements OSRMQueryService {
+public class Osrm4QueryStrategy implements RoutingQueryStrategy {
 
     private static final int STATUS_NO_ROUTE = 207;
 
@@ -30,24 +32,24 @@ public class OSRMQueryServiceImpl implements OSRMQueryService {
     private final String baseUrl;
     private final RestTemplate osrmRestClient;
 
-    public OSRMQueryServiceImpl(RestTemplate osrmRestClient, String baseUrl) {
+    public Osrm4QueryStrategy(RestTemplate osrmRestClient, String baseUrl) {
 
         this.osrmRestClient = osrmRestClient;
         this.baseUrl = baseUrl;
     }
 
     @Override
-    public OSRMQueryResult getOSRMXmlRoute(GeoLocation start, GeoLocation destination) {
+    public RoutingQueryResult route(GeoLocation start, GeoLocation destination) {
 
         try {
-            return createOSRMQueryResult(route(start, destination));
+            return createOSRMQueryResult(routeRequest(start, destination));
         } catch (RestClientException e) {
             throw new RoutingException("Error querying OSRM service: ", e);
         }
     }
 
 
-    private OSRMJsonResponse route(GeoLocation start, GeoLocation destination) {
+    private OSRMJsonResponse routeRequest(GeoLocation start, GeoLocation destination) {
 
         return osrmRestClient.getForEntity(createOSRMQueryString(start, destination), OSRMJsonResponse.class).getBody();
     }
@@ -62,7 +64,7 @@ public class OSRMQueryServiceImpl implements OSRMQueryService {
     }
 
 
-    private OSRMQueryResult createOSRMQueryResult(OSRMJsonResponse response) {
+    private RoutingQueryResult createOSRMQueryResult(OSRMJsonResponse response) {
 
         double totalDistance = 0d;
         double totalTime = 0d;
@@ -73,6 +75,6 @@ public class OSRMQueryServiceImpl implements OSRMQueryService {
             totalTime = response.getRoute_summary().getTotalTime();
         }
 
-        return new OSRMQueryResult(status, totalDistance, totalTime, response.getToll());
+        return new RoutingQueryResult(status, totalDistance, totalTime, response.getToll());
     }
 }

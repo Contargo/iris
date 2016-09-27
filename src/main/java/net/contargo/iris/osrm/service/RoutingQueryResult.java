@@ -9,14 +9,14 @@ import java.math.BigDecimal;
  *
  * @author  Arnold Franke - franke@synyx.de
  */
-public final class OSRMQueryResult {
+public final class RoutingQueryResult {
 
     private final int status;
     private final double totalDistance;
     private final double totalTime;
     private final BigDecimal toll;
 
-    public OSRMQueryResult(int status, double totalDistance, double totalTime, BigDecimal toll) {
+    public RoutingQueryResult(int status, double totalDistance, double totalTime, BigDecimal toll) {
 
         this.status = status;
         this.totalDistance = totalDistance;

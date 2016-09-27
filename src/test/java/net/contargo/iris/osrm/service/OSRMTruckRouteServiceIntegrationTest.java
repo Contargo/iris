@@ -33,14 +33,14 @@ import static org.hamcrest.Matchers.closeTo;
 public class OSRMTruckRouteServiceIntegrationTest {
 
     @Autowired
-    private OSRMQueryService OSRMQueryService;
+    private RoutingQueryStrategyProvider provider;
 
     private OSRMTruckRouteService OSRMTruckRouteService;
 
     @Before
     public void setUp() {
 
-        OSRMTruckRouteService = new OSRMTruckRouteService(OSRMQueryService);
+        OSRMTruckRouteService = new OSRMTruckRouteService(provider);
     }
 
 

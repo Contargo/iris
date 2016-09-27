@@ -1,8 +1,9 @@
 package net.contargo.iris.truck.service;
 
 import net.contargo.iris.GeoLocation;
-import net.contargo.iris.osrm.service.OSRMQueryResult;
-import net.contargo.iris.osrm.service.OSRMQueryService;
+import net.contargo.iris.osrm.service.RoutingQueryResult;
+import net.contargo.iris.osrm.service.RoutingQueryStrategy;
+import net.contargo.iris.osrm.service.RoutingQueryStrategyProvider;
 import net.contargo.iris.truck.TruckRoute;
 
 import org.springframework.cache.annotation.Cacheable;
@@ -18,6 +19,7 @@ import static java.math.RoundingMode.HALF_UP;
  *
  * @author  Sven Mueller - mueller@synyx.de
  * @author  Tobias Schneider - schneider@synyx.de
+ * @author  David Schilling - schilling@synyx.de
  */
 public class OSRMTruckRouteService implements TruckRouteService {
 
@@ -25,19 +27,20 @@ public class OSRMTruckRouteService implements TruckRouteService {
     private static final BigDecimal SECONDS_PER_MINUTE = new BigDecimal("60.0");
     private static final int STATUS_NO_ROUTE = 207;
     private static final int SCALE = 5;
+    private final RoutingQueryStrategyProvider routingQueryStrategyProvider;
 
-    private final OSRMQueryService osrmQueryService;
+    public OSRMTruckRouteService(RoutingQueryStrategyProvider routingQueryStrategyProvider) {
 
-    public OSRMTruckRouteService(OSRMQueryService osrmQueryService) {
-
-        this.osrmQueryService = osrmQueryService;
+        this.routingQueryStrategyProvider = routingQueryStrategyProvider;
     }
 
     @Override
     @Cacheable(value = "routingCache")
     public TruckRoute route(GeoLocation start, GeoLocation destination) {
 
-        OSRMQueryResult osrmResult = osrmQueryService.getOSRMXmlRoute(start, destination);
+        RoutingQueryStrategy strategy = routingQueryStrategyProvider.strategy();
+
+        RoutingQueryResult osrmResult = strategy.route(start, destination);
 
         if (osrmResult.getStatus() == STATUS_NO_ROUTE) {
             throw new OSRMNonRoutableRouteException("Start: "

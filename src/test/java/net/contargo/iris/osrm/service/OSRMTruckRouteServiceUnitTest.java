@@ -34,6 +34,7 @@ import static java.math.BigDecimal.ZERO;
  * @author  Marc Kannegiesser - kannegiesser@synyx.de
  * @author  Tobias Schneider - schneider@synyx.de
  * @author  Arnold Franke - franke@synyx.de
+ * @author  David Schilling - schilling@synyx.de
  */
 @RunWith(MockitoJUnitRunner.class)
 public class OSRMTruckRouteServiceUnitTest {
@@ -44,7 +45,9 @@ public class OSRMTruckRouteServiceUnitTest {
     private OSRMTruckRouteService sut;
 
     @Mock
-    private OSRMQueryService queryServiceMock;
+    private RoutingQueryStrategy queryServiceMock;
+    @Mock
+    private RoutingQueryStrategyProvider provider;
 
     private GeoLocation start;
     private GeoLocation destination;
@@ -52,7 +55,9 @@ public class OSRMTruckRouteServiceUnitTest {
     @Before
     public void setup() {
 
-        sut = new OSRMTruckRouteService(queryServiceMock);
+        sut = new OSRMTruckRouteService(provider);
+
+        when(provider.strategy()).thenReturn(queryServiceMock);
 
         destination = new GeoLocation(49.1d, 8.1d);
         start = new GeoLocation(49d, 8d);
@@ -62,7 +67,7 @@ public class OSRMTruckRouteServiceUnitTest {
     @Test(expected = OSRMNonRoutableRouteException.class)
     public void routeIsNotRoutable() {
 
-        when(queryServiceMock.getOSRMXmlRoute(start, destination)).thenReturn(new OSRMQueryResult(207, 1.1, 2.2, TEN));
+        when(queryServiceMock.route(start, destination)).thenReturn(new RoutingQueryResult(207, 1.1, 2.2, TEN));
 
         sut.route(start, destination);
     }
@@ -75,7 +80,7 @@ public class OSRMTruckRouteServiceUnitTest {
 
         TruckRoute route = sut.route(start, destination);
         assertThat(route, notNullValue());
-        verify(queryServiceMock).getOSRMXmlRoute(start, destination);
+        verify(queryServiceMock).route(start, destination);
     }
 
 
@@ -107,8 +112,8 @@ public class OSRMTruckRouteServiceUnitTest {
 
     private void makeMockReturn(BigDecimal toll, double totalDistance, double totalTime) {
 
-        OSRMQueryResult response = new OSRMQueryResult(0, totalDistance, totalTime, toll);
+        RoutingQueryResult response = new RoutingQueryResult(0, totalDistance, totalTime, toll);
 
-        when(queryServiceMock.getOSRMXmlRoute(start, destination)).thenReturn(response);
+        when(queryServiceMock.route(start, destination)).thenReturn(response);
     }
 }

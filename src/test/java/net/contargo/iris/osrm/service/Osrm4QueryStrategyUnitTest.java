@@ -34,13 +34,13 @@ import static java.math.BigDecimal.TEN;
 
 
 /**
- * Unit test of {@link OSRMQueryServiceImpl}.
+ * Unit test of {@link Osrm4QueryStrategy}.
  *
  * @author  Arnold Franke - franke@synyx.de
  * @author  Tobias Schneider - schneider@synyx.de
  */
 @RunWith(MockitoJUnitRunner.class)
-public class OSRMQueryServiceImplUnitTest {
+public class Osrm4QueryStrategyUnitTest {
 
     private static final String BASE_URL = "baseUrl";
     private static final double TOTAL_DISTANCE = 28295.0;
@@ -48,7 +48,7 @@ public class OSRMQueryServiceImplUnitTest {
     private static final GeoLocation START_LOCATION = new GeoLocation(ONE, ONE);
     private static final GeoLocation DESTINATION_LOCATION = new GeoLocation(TEN, TEN);
 
-    private OSRMQueryService sut;
+    private RoutingQueryStrategy sut;
 
     @Mock
     private RestTemplate osrmRestClientMock;
@@ -56,7 +56,7 @@ public class OSRMQueryServiceImplUnitTest {
     @Before
     public void setUp() throws Exception {
 
-        sut = new OSRMQueryServiceImpl(osrmRestClientMock, BASE_URL);
+        sut = new Osrm4QueryStrategy(osrmRestClientMock, BASE_URL);
     }
 
 
@@ -74,7 +74,7 @@ public class OSRMQueryServiceImplUnitTest {
         ResponseEntity<OSRMJsonResponse> responseEntity = new ResponseEntity<>(osrmJsonResponse, OK);
         when(osrmRestClientMock.getForEntity(anyString(), eq(OSRMJsonResponse.class))).thenReturn(responseEntity);
 
-        OSRMQueryResult osrmResult = sut.getOSRMXmlRoute(START_LOCATION, DESTINATION_LOCATION);
+        RoutingQueryResult osrmResult = sut.route(START_LOCATION, DESTINATION_LOCATION);
 
         assertThat(osrmResult.getStatus(), is(200));
         assertThat(osrmResult.getTotalDistance(), is(TOTAL_DISTANCE));
@@ -91,7 +91,7 @@ public class OSRMQueryServiceImplUnitTest {
         ResponseEntity<OSRMJsonResponse> responseEntity = new ResponseEntity<>(osrmJsonResponse, OK);
         when(osrmRestClientMock.getForEntity(anyString(), eq(OSRMJsonResponse.class))).thenReturn(responseEntity);
 
-        OSRMQueryResult actualResult = sut.getOSRMXmlRoute(START_LOCATION, new GeoLocation(TEN, TEN));
+        RoutingQueryResult actualResult = sut.route(START_LOCATION, new GeoLocation(TEN, TEN));
 
         assertThat(actualResult.getStatus(), is(207));
         assertThat(actualResult.getTotalDistance(), is(0d));
@@ -104,6 +104,6 @@ public class OSRMQueryServiceImplUnitTest {
 
         doThrow(RoutingException.class).when(osrmRestClientMock).getForEntity(anyString(), eq(OSRMJsonResponse.class));
 
-        sut.getOSRMXmlRoute(START_LOCATION, new GeoLocation(TEN, TEN));
+        sut.route(START_LOCATION, new GeoLocation(TEN, TEN));
     }
 }

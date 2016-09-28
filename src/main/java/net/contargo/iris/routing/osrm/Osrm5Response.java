@@ -9,6 +9,9 @@ import java.util.List;
 
 
 /**
+ * Represents the response of an osrm request to /route in api version 5. Only relevant fields for iris are depicted
+ * here. See https://github.com/Project-OSRM/osrm-backend/blob/master/docs/http.md#service-route
+ *
  * @author  David Schilling - schilling@synyx.de
  */
 public class Osrm5Response {

@@ -1,4 +1,4 @@
-package net.contargo.iris.osrm.service;
+package net.contargo.iris.routing.osrm;
 
 import org.junit.Test;
 
@@ -9,19 +9,19 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 
-public class OSRMJsonResponseUnitTest {
+public class OSRM4ResponseUnitTest {
 
     private static final String GERMAN_STREET_WITH_TOLL = "strA/;anytype/;yes/;de";
     private static final String GERMAN_STREET_WITHOUT_TOLL = "strA/;anytype/;no/;de";
     private static final String FRENCH_STREET_WITH_TOLL = "strA/;anytype/;yes/;fr";
     private static final String FRENCH_STREET_WITHOUT_TOLL = "strA/;anytype/;no/;fr";
 
-    private OSRMJsonResponse sut;
+    private OSRM4Response sut;
 
     @Test
     public void calculateZeroToll() {
 
-        sut = new OSRMJsonResponse();
+        sut = new OSRM4Response();
         assertThat(sut.getToll(), is(BigDecimal.ZERO));
     }
 
@@ -34,7 +34,7 @@ public class OSRMJsonResponseUnitTest {
             { "", GERMAN_STREET_WITH_TOLL, "300", "" },
         };
 
-        sut = new OSRMJsonResponse();
+        sut = new OSRM4Response();
         sut.setRoute_instructions(instructions);
 
         assertThat(sut.getToll(), is(new BigDecimal("0.40000")));
@@ -51,7 +51,7 @@ public class OSRMJsonResponseUnitTest {
             { "", FRENCH_STREET_WITHOUT_TOLL, "500", "" },
         };
 
-        sut = new OSRMJsonResponse();
+        sut = new OSRM4Response();
         sut.setRoute_instructions(instructions);
 
         assertThat(sut.getToll(), is(new BigDecimal("0.10000")));

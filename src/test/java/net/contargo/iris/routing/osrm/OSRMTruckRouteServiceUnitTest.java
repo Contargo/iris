@@ -1,6 +1,9 @@
-package net.contargo.iris.osrm.service;
+package net.contargo.iris.routing.osrm;
 
 import net.contargo.iris.GeoLocation;
+import net.contargo.iris.routing.RoutingQueryResult;
+import net.contargo.iris.routing.RoutingQueryStrategy;
+import net.contargo.iris.routing.RoutingQueryStrategyProvider;
 import net.contargo.iris.truck.TruckRoute;
 import net.contargo.iris.truck.service.OSRMNonRoutableRouteException;
 import net.contargo.iris.truck.service.OSRMTruckRouteService;
@@ -87,7 +90,7 @@ public class OSRMTruckRouteServiceUnitTest {
     @Test
     public void parsesSectionsAndReturnsDistanceInMeters() {
 
-        OSRMJsonResponseRouteSummary summary = new OSRMJsonResponseRouteSummary();
+        OSRM4ResponseRouteSummary summary = new OSRM4ResponseRouteSummary();
         summary.setTotalDistance(12000);
         makeMockReturn(ZERO, 12000, DEFAULT_TOTAL_TIME);
 
@@ -100,7 +103,7 @@ public class OSRMTruckRouteServiceUnitTest {
     @Test
     public void parsesSectionsAndReturnsTimeInMinutes() {
 
-        OSRMJsonResponseRouteSummary summary = new OSRMJsonResponseRouteSummary();
+        OSRM4ResponseRouteSummary summary = new OSRM4ResponseRouteSummary();
         summary.setTotalTime(120);
         makeMockReturn(ZERO, DEFAULT_TOTAL_DISTANCE, 120);
 

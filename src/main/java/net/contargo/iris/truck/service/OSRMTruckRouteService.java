@@ -1,9 +1,9 @@
 package net.contargo.iris.truck.service;
 
 import net.contargo.iris.GeoLocation;
-import net.contargo.iris.osrm.service.RoutingQueryResult;
-import net.contargo.iris.osrm.service.RoutingQueryStrategy;
-import net.contargo.iris.osrm.service.RoutingQueryStrategyProvider;
+import net.contargo.iris.routing.RoutingQueryResult;
+import net.contargo.iris.routing.RoutingQueryStrategy;
+import net.contargo.iris.routing.RoutingQueryStrategyProvider;
 import net.contargo.iris.truck.TruckRoute;
 
 import org.springframework.cache.annotation.Cacheable;

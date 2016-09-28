@@ -1,9 +1,14 @@
-package net.contargo.iris.osrm.service;
+package net.contargo.iris.routing.osrm;
 
 import net.contargo.iris.GeoLocation;
+import net.contargo.iris.routing.RoutingException;
+import net.contargo.iris.routing.RoutingQueryResult;
+import net.contargo.iris.routing.RoutingQueryStrategy;
 
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+
+import static net.contargo.iris.routing.RoutingQueryResult.STATUS_NO_ROUTE;
 
 
 /**
@@ -15,8 +20,6 @@ import org.springframework.web.client.RestTemplate;
  * @author  David Schilling - schilling@synyx.de
  */
 public class Osrm4QueryStrategy implements RoutingQueryStrategy {
-
-    private static final int STATUS_NO_ROUTE = 207;
 
     private static final String Q_QUESTIONMARK = "?";
     private static final String Q_EQUALS = "=";
@@ -49,9 +52,9 @@ public class Osrm4QueryStrategy implements RoutingQueryStrategy {
     }
 
 
-    private OSRMJsonResponse routeRequest(GeoLocation start, GeoLocation destination) {
+    private OSRM4Response routeRequest(GeoLocation start, GeoLocation destination) {
 
-        return osrmRestClient.getForEntity(createOSRMQueryString(start, destination), OSRMJsonResponse.class).getBody();
+        return osrmRestClient.getForEntity(createOSRMQueryString(start, destination), OSRM4Response.class).getBody();
     }
 
 
@@ -64,7 +67,7 @@ public class Osrm4QueryStrategy implements RoutingQueryStrategy {
     }
 
 
-    private RoutingQueryResult createOSRMQueryResult(OSRMJsonResponse response) {
+    private RoutingQueryResult createOSRMQueryResult(OSRM4Response response) {
 
         double totalDistance = 0d;
         double totalTime = 0d;

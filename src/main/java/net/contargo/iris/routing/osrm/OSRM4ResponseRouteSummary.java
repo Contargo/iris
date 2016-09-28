@@ -1,4 +1,4 @@
-package net.contargo.iris.osrm.service;
+package net.contargo.iris.routing.osrm;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  *
  * @author  Tobias Schneider - schneider@synyx.de
  */
-class OSRMJsonResponseRouteSummary {
+class OSRM4ResponseRouteSummary {
 
     private static final String TOTAL_DISTANCE = "total_distance";
     private static final String TOTAL_TIME = "total_time";

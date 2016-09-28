@@ -1,4 +1,4 @@
-package net.contargo.iris.osrm.service;
+package net.contargo.iris.routing.osrm;
 
 /**
  * @author  Sandra Thieme - thieme@synyx.de

@@ -1,4 +1,4 @@
-package net.contargo.iris.osrm.service;
+package net.contargo.iris.routing.osrm;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -16,7 +16,7 @@ import static java.math.BigDecimal.ZERO;
  * @author  Tobias Schneider - schneider@synyx.de
  */
 @JsonIgnoreProperties({ "hint_data", "route_name", "via_indices", "found_alternative", "via_points" })
-class OSRMJsonResponse {
+class OSRM4Response {
 
     private static final BigDecimal METERS_PER_KILOMETER = new BigDecimal("1000.0");
     private static final int SCALE = 5;
@@ -25,7 +25,7 @@ class OSRMJsonResponse {
     private static final int INDEX_2 = 2;
 
     private int status;
-    private OSRMJsonResponseRouteSummary route_summary; // NOSONAR Field is legacy part of public API
+    private OSRM4ResponseRouteSummary route_summary; // NOSONAR Field is legacy part of public API
     private String[][] route_instructions; // NOSONAR Field is legacy part of public API
 
     public void setRoute_instructions(String[][] routeInstructions) { // NOSONAR Field is legacy part of public API
@@ -46,13 +46,13 @@ class OSRMJsonResponse {
     }
 
 
-    public OSRMJsonResponseRouteSummary getRoute_summary() { // NOSONAR Field is legacy part of public API
+    public OSRM4ResponseRouteSummary getRoute_summary() { // NOSONAR Field is legacy part of public API
 
         return route_summary;
     }
 
 
-    public void setRoute_summary(OSRMJsonResponseRouteSummary routeSummary) { // NOSONAR Field is part of public API
+    public void setRoute_summary(OSRM4ResponseRouteSummary routeSummary) { // NOSONAR Field is part of public API
 
         this.route_summary = routeSummary;
     }

@@ -1,4 +1,7 @@
-package net.contargo.iris.osrm.service;
+package net.contargo.iris.routing;
+
+import net.contargo.iris.routing.osrm.Osrm4QueryStrategy;
+import net.contargo.iris.routing.osrm.Osrm5QueryStrategy;
 
 import org.slf4j.Logger;
 

@@ -1,4 +1,4 @@
-package net.contargo.iris.osrm.service;
+package net.contargo.iris.routing;
 
 import net.contargo.iris.GeoLocation;
 
@@ -8,6 +8,7 @@ import net.contargo.iris.GeoLocation;
  *
  * @author  Sven Mueller - mueller@synyx.de
  * @author  Tobias Schneider - schneider@synyx.de
+ * @author  David Schilling - schilling@synyx.de
  */
 public interface RoutingQueryStrategy {
 

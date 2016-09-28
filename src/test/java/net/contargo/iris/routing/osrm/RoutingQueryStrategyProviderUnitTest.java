@@ -1,4 +1,7 @@
-package net.contargo.iris.osrm.service;
+package net.contargo.iris.routing.osrm;
+
+import net.contargo.iris.routing.RoutingQueryStrategy;
+import net.contargo.iris.routing.RoutingQueryStrategyProvider;
 
 import org.junit.Test;
 

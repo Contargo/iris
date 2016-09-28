@@ -1,6 +1,9 @@
-package net.contargo.iris.osrm.service;
+package net.contargo.iris.routing.osrm;
 
 import net.contargo.iris.GeoLocation;
+import net.contargo.iris.routing.RoutingException;
+import net.contargo.iris.routing.RoutingQueryResult;
+import net.contargo.iris.routing.RoutingQueryStrategy;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -63,16 +66,16 @@ public class Osrm4QueryStrategyUnitTest {
     @Test
     public void getOSRMXmlRoute() {
 
-        OSRMJsonResponseRouteSummary summary = new OSRMJsonResponseRouteSummary();
+        OSRM4ResponseRouteSummary summary = new OSRM4ResponseRouteSummary();
         summary.setTotalDistance(TOTAL_DISTANCE);
         summary.setTotalTime(TOTAL_TIME);
 
-        OSRMJsonResponse osrmJsonResponse = new OSRMJsonResponse();
-        osrmJsonResponse.setStatus(200);
-        osrmJsonResponse.setRoute_summary(summary);
+        OSRM4Response osrm4Response = new OSRM4Response();
+        osrm4Response.setStatus(200);
+        osrm4Response.setRoute_summary(summary);
 
-        ResponseEntity<OSRMJsonResponse> responseEntity = new ResponseEntity<>(osrmJsonResponse, OK);
-        when(osrmRestClientMock.getForEntity(anyString(), eq(OSRMJsonResponse.class))).thenReturn(responseEntity);
+        ResponseEntity<OSRM4Response> responseEntity = new ResponseEntity<>(osrm4Response, OK);
+        when(osrmRestClientMock.getForEntity(anyString(), eq(OSRM4Response.class))).thenReturn(responseEntity);
 
         RoutingQueryResult osrmResult = sut.route(START_LOCATION, DESTINATION_LOCATION);
 
@@ -85,11 +88,11 @@ public class Osrm4QueryStrategyUnitTest {
     @Test
     public void getOSRMXmlRouteNoRoute() throws IOException {
 
-        OSRMJsonResponse osrmJsonResponse = new OSRMJsonResponse();
-        osrmJsonResponse.setStatus(207);
+        OSRM4Response osrm4Response = new OSRM4Response();
+        osrm4Response.setStatus(207);
 
-        ResponseEntity<OSRMJsonResponse> responseEntity = new ResponseEntity<>(osrmJsonResponse, OK);
-        when(osrmRestClientMock.getForEntity(anyString(), eq(OSRMJsonResponse.class))).thenReturn(responseEntity);
+        ResponseEntity<OSRM4Response> responseEntity = new ResponseEntity<>(osrm4Response, OK);
+        when(osrmRestClientMock.getForEntity(anyString(), eq(OSRM4Response.class))).thenReturn(responseEntity);
 
         RoutingQueryResult actualResult = sut.route(START_LOCATION, new GeoLocation(TEN, TEN));
 
@@ -102,7 +105,7 @@ public class Osrm4QueryStrategyUnitTest {
     @Test(expected = RoutingException.class)
     public void getOSRMXmlRouteThrowsException() throws IOException {
 
-        doThrow(RoutingException.class).when(osrmRestClientMock).getForEntity(anyString(), eq(OSRMJsonResponse.class));
+        doThrow(RoutingException.class).when(osrmRestClientMock).getForEntity(anyString(), eq(OSRM4Response.class));
 
         sut.route(START_LOCATION, new GeoLocation(TEN, TEN));
     }

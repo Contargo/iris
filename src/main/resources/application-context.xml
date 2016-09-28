@@ -182,7 +182,7 @@
         </property>
     </bean>
 
-    <bean id="routingQueryStrategyProvider" class="net.contargo.iris.osrm.service.RoutingQueryStrategyProvider">
+    <bean id="routingQueryStrategyProvider" class="net.contargo.iris.routing.RoutingQueryStrategyProvider">
         <constructor-arg name="restTemplate">
             <bean class="org.springframework.web.client.RestTemplate"/>
         </constructor-arg>

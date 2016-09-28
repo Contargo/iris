@@ -3,10 +3,10 @@ package net.contargo.iris.route.service;
 
 import net.contargo.iris.distance.service.DistanceService;
 import net.contargo.iris.duration.service.DurationService;
-import net.contargo.iris.osrm.service.RoutingException;
 import net.contargo.iris.route.RoutePart;
 import net.contargo.iris.route.RoutePartData;
 import net.contargo.iris.route.RouteType;
+import net.contargo.iris.routing.RoutingException;
 import net.contargo.iris.truck.TruckRoute;
 import net.contargo.iris.truck.service.TruckRouteService;
 

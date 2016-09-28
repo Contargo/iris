@@ -1,4 +1,4 @@
-package net.contargo.iris.osrm.service;
+package net.contargo.iris.routing.osrm;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import net.contargo.iris.GeoLocation;
+import net.contargo.iris.routing.RoutingQueryResult;
+import net.contargo.iris.routing.RoutingQueryStrategy;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -15,8 +17,8 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 
-import static net.contargo.iris.osrm.service.RoutingQueryResult.STATUS_NO_ROUTE;
-import static net.contargo.iris.osrm.service.RoutingQueryResult.STATUS_OK;
+import static net.contargo.iris.routing.RoutingQueryResult.STATUS_NO_ROUTE;
+import static net.contargo.iris.routing.RoutingQueryResult.STATUS_OK;
 
 
 /**

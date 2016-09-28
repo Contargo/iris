@@ -1,6 +1,7 @@
-package net.contargo.iris.osrm.service;
+package net.contargo.iris.routing.osrm;
 
 import net.contargo.iris.GeoLocation;
+import net.contargo.iris.routing.RoutingQueryResult;
 
 import org.junit.Before;
 import org.junit.Test;

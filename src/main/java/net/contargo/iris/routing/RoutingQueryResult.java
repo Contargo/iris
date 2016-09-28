@@ -1,4 +1,4 @@
-package net.contargo.iris.osrm.service;
+package net.contargo.iris.routing;
 
 import java.math.BigDecimal;
 
@@ -12,8 +12,8 @@ import java.math.BigDecimal;
  */
 public final class RoutingQueryResult {
 
-    static final int STATUS_NO_ROUTE = 207;
-    static final int STATUS_OK = 200;
+    public static final int STATUS_NO_ROUTE = 207;
+    public static final int STATUS_OK = 200;
 
     private final int status;
     private final double totalDistance;

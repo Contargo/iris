@@ -1,20 +1,25 @@
-package net.contargo.iris.osrm.service;
+package net.contargo.iris.routing.osrm;
 
 import net.contargo.iris.GeoLocation;
+import net.contargo.iris.routing.RoutingException;
+import net.contargo.iris.routing.RoutingQueryResult;
+import net.contargo.iris.routing.RoutingQueryStrategy;
 
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import static net.contargo.iris.routing.RoutingQueryResult.STATUS_NO_ROUTE;
+
 
 /**
- * Implementation of the OSRM query service.
+ * An OSRM specific implementation of {@code RoutingServiceQueryStrategy} suitable for querying an OSRM version 4
+ * routing service.
  *
  * @author  Sven Mueller - mueller@synyx.de
  * @author  Tobias Schneider - schneider@synyx.de
+ * @author  David Schilling - schilling@synyx.de
  */
-public class OSRMQueryServiceImpl implements OSRMQueryService {
-
-    private static final int STATUS_NO_ROUTE = 207;
+public class Osrm4QueryStrategy implements RoutingQueryStrategy {
 
     private static final String Q_QUESTIONMARK = "?";
     private static final String Q_EQUALS = "=";
@@ -30,26 +35,26 @@ public class OSRMQueryServiceImpl implements OSRMQueryService {
     private final String baseUrl;
     private final RestTemplate osrmRestClient;
 
-    public OSRMQueryServiceImpl(RestTemplate osrmRestClient, String baseUrl) {
+    public Osrm4QueryStrategy(RestTemplate osrmRestClient, String baseUrl) {
 
         this.osrmRestClient = osrmRestClient;
         this.baseUrl = baseUrl;
     }
 
     @Override
-    public OSRMQueryResult getOSRMXmlRoute(GeoLocation start, GeoLocation destination) {
+    public RoutingQueryResult route(GeoLocation start, GeoLocation destination) {
 
         try {
-            return createOSRMQueryResult(route(start, destination));
+            return createOSRMQueryResult(routeRequest(start, destination));
         } catch (RestClientException e) {
             throw new RoutingException("Error querying OSRM service: ", e);
         }
     }
 
 
-    private OSRMJsonResponse route(GeoLocation start, GeoLocation destination) {
+    private OSRM4Response routeRequest(GeoLocation start, GeoLocation destination) {
 
-        return osrmRestClient.getForEntity(createOSRMQueryString(start, destination), OSRMJsonResponse.class).getBody();
+        return osrmRestClient.getForEntity(createOSRMQueryString(start, destination), OSRM4Response.class).getBody();
     }
 
 
@@ -62,7 +67,7 @@ public class OSRMQueryServiceImpl implements OSRMQueryService {
     }
 
 
-    private OSRMQueryResult createOSRMQueryResult(OSRMJsonResponse response) {
+    private RoutingQueryResult createOSRMQueryResult(OSRM4Response response) {
 
         double totalDistance = 0d;
         double totalTime = 0d;
@@ -73,6 +78,6 @@ public class OSRMQueryServiceImpl implements OSRMQueryService {
             totalTime = response.getRoute_summary().getTotalTime();
         }
 
-        return new OSRMQueryResult(status, totalDistance, totalTime, response.getRoute_instructions());
+        return new RoutingQueryResult(status, totalDistance, totalTime, response.getToll());
     }
 }

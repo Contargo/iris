@@ -1,6 +1,6 @@
-package net.contargo.iris.osrm.service;
+package net.contargo.iris.routing;
 
-import java.util.Arrays;
+import java.math.BigDecimal;
 
 
 /**
@@ -8,25 +8,24 @@ import java.util.Arrays;
  * OSRM service
  *
  * @author  Arnold Franke - franke@synyx.de
+ * @author  David Schilling - schilling@synyx.de
  */
-public final class OSRMQueryResult {
+public final class RoutingQueryResult {
+
+    public static final int STATUS_NO_ROUTE = 207;
+    public static final int STATUS_OK = 200;
 
     private final int status;
     private final double totalDistance;
     private final double totalTime;
-    private final String[][] routeInstructions;
+    private final BigDecimal toll;
 
-    public OSRMQueryResult(int status, double totalDistance, double totalTime, String[][] instructions) {
+    public RoutingQueryResult(int status, double totalDistance, double totalTime, BigDecimal toll) {
 
         this.status = status;
         this.totalDistance = totalDistance;
         this.totalTime = totalTime;
-
-        if (instructions == null) {
-            this.routeInstructions = new String[0][0];
-        } else {
-            this.routeInstructions = instructions.clone();
-        }
+        this.toll = toll;
     }
 
     public int getStatus() {
@@ -47,8 +46,14 @@ public final class OSRMQueryResult {
     }
 
 
-    public String[][] getRouteInstructions() {
+    public BigDecimal getToll() {
 
-        return Arrays.copyOf(routeInstructions, routeInstructions.length);
+        return toll;
+    }
+
+
+    public boolean noRoute() {
+
+        return status == STATUS_NO_ROUTE;
     }
 }

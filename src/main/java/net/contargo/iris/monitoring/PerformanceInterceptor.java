@@ -27,7 +27,8 @@ public class PerformanceInterceptor {
 
     @Around(
         "routeEnricherApiControllerGetEnrichedRoute() || "
-        + "addressApiControllerAddressesByAddressDetails()"
+        + "addressApiControllerAddressesByAddressDetails() || "
+        + "truckRouteServiceRoute()"
     )
     public Object doAround(ProceedingJoinPoint joinPoint) throws Throwable {
 
@@ -56,9 +57,9 @@ public class PerformanceInterceptor {
     }
 
 
-    @Pointcut("execution(* net.contargo.iris.address.api.AddressApiController.addressByGeolocation(..))")
-    public void addressApiControllerAddressByGeolocation() {
+    @Pointcut("execution(* net.contargo.iris.truck.service.TruckRouteService.route(..))")
+    public void truckRouteServiceRoute() {
 
-        // intercepts addressApiControllerAddressByGeolocation
+        // intercepts truckRouteServiceRoute
     }
 }

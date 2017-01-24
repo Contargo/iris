@@ -12,7 +12,7 @@
     Configuring Context Parameters
     -->
     <import resource="jpa-context.xml"/>
-
+    <import resource="monitoring-context.xml"/>
 
     <bean class="net.contargo.iris.security.SecurityConfig"/>
     <context:annotation-config/>

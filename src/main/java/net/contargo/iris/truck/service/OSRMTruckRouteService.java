@@ -6,8 +6,6 @@ import net.contargo.iris.routing.RoutingQueryStrategy;
 import net.contargo.iris.routing.RoutingQueryStrategyProvider;
 import net.contargo.iris.truck.TruckRoute;
 
-import org.springframework.cache.annotation.Cacheable;
-
 import java.math.BigDecimal;
 
 import static java.math.RoundingMode.HALF_UP;
@@ -34,7 +32,6 @@ public class OSRMTruckRouteService implements TruckRouteService {
     }
 
     @Override
-    @Cacheable(value = "routingCache")
     public TruckRoute route(GeoLocation start, GeoLocation destination) {
 
         RoutingQueryStrategy strategy = routingQueryStrategyProvider.strategy();

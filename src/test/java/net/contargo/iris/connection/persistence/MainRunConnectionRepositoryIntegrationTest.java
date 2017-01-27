@@ -11,7 +11,6 @@ import org.junit.runner.RunWith;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -40,7 +39,6 @@ import static org.hamcrest.Matchers.is;
 @ContextConfiguration(locations = "classpath*:application-context.xml")
 @Rollback
 @Transactional
-@DirtiesContext
 public class MainRunConnectionRepositoryIntegrationTest {
 
     private static final GeoLocation GEO_TERMINAL_1 = new GeoLocation(new BigDecimal("49.2"), new BigDecimal("8.6"));

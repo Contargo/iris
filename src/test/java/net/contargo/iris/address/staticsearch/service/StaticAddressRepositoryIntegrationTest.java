@@ -14,7 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -53,7 +52,6 @@ import static java.math.BigDecimal.ZERO;
 @ContextConfiguration(locations = { "classpath:application-context.xml" })
 @Rollback
 @Transactional
-@DirtiesContext
 public class StaticAddressRepositoryIntegrationTest {
 
     private static final String ENTENHAUSEN = "Entenhausen";

@@ -3,10 +3,7 @@ package net.contargo.iris.address.staticsearch.dto;
 import net.contargo.iris.GeoLocation;
 import net.contargo.iris.address.dto.AddressDto;
 import net.contargo.iris.address.dto.AddressListDto;
-import net.contargo.iris.address.staticsearch.StaticAddress;
 import net.contargo.iris.address.staticsearch.service.StaticAddressService;
-
-import java.math.BigInteger;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,11 +45,11 @@ public class StaticAddressDtoServiceImpl implements StaticAddressDtoService {
 
 
     @Override
-    public List<BigInteger> getStaticAddressByBoundingBox(GeoLocation location, Double distance) {
+    public List<StaticAddressDto> getStaticAddressByBoundingBox(GeoLocation location, Double distance) {
 
         return staticAddressService.getAddressesInBoundingBox(location, distance)
             .stream()
-            .map(StaticAddress::getUniqueId)
+            .map(StaticAddressDto::new)
             .collect(Collectors.toList());
     }
 }

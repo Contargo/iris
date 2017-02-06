@@ -5,6 +5,7 @@ import util.ClientFactory
 
 /**
  * @author Sandra Thieme - thieme@synyx.de
+ * @author David Schilling - schilling@synyx.de
  */
 class StaticAddressByBoundingBoxSpec extends Specification{
 
@@ -26,9 +27,12 @@ class StaticAddressByBoundingBoxSpec extends Specification{
         then: "response status code should be 200 (OK)"
         response.status == 200
 
-        and: "response consists of a list of static address uids"
-        def uidList = response.data.uids
-        uidList.size() == 1
-
+        and: "response consists of a list of static addresses"
+        def addresses = response.data
+        addresses.size() == 1
+        addresses[0].size() == 7
+        addresses[0].keySet().containsAll("uniqueId", "geoLocation", "country", "postalcode", "city", "suburb", "hashKey")
+        addresses[0].geoLocation.keySet().containsAll("latitude", "longitude", "type")
+        addresses[0].geoLocation.size() == 3
     }
 }

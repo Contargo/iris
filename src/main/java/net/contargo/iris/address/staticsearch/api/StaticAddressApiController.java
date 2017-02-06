@@ -6,8 +6,8 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import net.contargo.iris.GeoLocation;
 import net.contargo.iris.address.api.ListOfAddressListsResponse;
 import net.contargo.iris.address.dto.AddressDto;
+import net.contargo.iris.address.staticsearch.dto.StaticAddressDto;
 import net.contargo.iris.address.staticsearch.dto.StaticAddressDtoService;
-import net.contargo.iris.address.staticsearch.dto.StaticAddressesUidResponse;
 
 import org.slf4j.Logger;
 
@@ -25,11 +25,9 @@ import java.lang.invoke.MethodHandles;
 import java.math.BigDecimal;
 
 import java.util.Collection;
+import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
-
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
@@ -94,26 +92,22 @@ public class StaticAddressApiController {
 
 
     @ApiOperation(
-        value = "Returns a list of static address uids that are located in a bounding box with a given radius.",
-        notes = "Returns a list of static address uids that are located in a bounding box with a given radius."
+        value = "Returns a list of static addresses that are located in a bounding box with a given radius.",
+        notes = "Returns a list of static addresses that are located in a bounding box with a given radius."
     )
     @RequestMapping(method = GET, params = { LAT, LON, "distance" })
     @ResponseBody
-    public StaticAddressesUidResponse staticAddressesByBoundingBox(@RequestParam(LAT) BigDecimal latitude,
+    public List<StaticAddressDto> staticAddressesByBoundingBox(@RequestParam(LAT) BigDecimal latitude,
         @RequestParam(LON) BigDecimal longitude,
         @RequestParam("distance") Double distance) {
 
         GeoLocation location = new GeoLocation(latitude, longitude);
 
-        StaticAddressesUidResponse response = new StaticAddressesUidResponse(
-                staticAddressDtoService.getStaticAddressByBoundingBox(location, distance));
+        List<StaticAddressDto> addresses = staticAddressDtoService.getStaticAddressByBoundingBox(location, distance);
 
         LOG.info("API: Responding with {} items to boundingbox-request for geolocation {} with {} distance",
-            response.getUids().size(), location.toString(), distance);
+            addresses.size(), location.toString(), distance);
 
-        response.add(linkTo(methodOn(getClass()).staticAddressesByBoundingBox(latitude, longitude, distance))
-            .withSelfRel());
-
-        return response;
+        return addresses;
     }
 }

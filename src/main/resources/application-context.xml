@@ -200,19 +200,6 @@
         <constructor-arg name="routingQueryStrategyProvider" ref="routingQueryStrategyProvider"/>
     </bean>
 
-    <bean id="cloudRoutingService" class="net.contargo.iris.distancecloud.service.DistanceCloudAddressServiceImpl">
-        <constructor-arg name="truckRouteService" ref="truckRouteService"/>
-        <constructor-arg name="staticAddressService" ref="staticAddressService"/>
-        <constructor-arg name="roundingService" ref="roundingService"/>
-        <constructor-arg name="gisService" ref="gisService"/>
-        <constructor-arg name="terminalService" ref="terminalService"/>
-        <constructor-arg name="routeRevisionService" ref="routeDataRevisionService"/>
-    </bean>
-
-    <bean id="distanceCloudAddressDtoService"
-          class="net.contargo.iris.distancecloud.dto.DistanceCloudAddressDtoServiceImpl">
-        <constructor-arg ref="cloudRoutingService"/>
-    </bean>
 
     <!-- All Beans for Connection -->
     <bean id="connectionService" class="net.contargo.iris.connection.service.MainRunConnectionServiceImpl">

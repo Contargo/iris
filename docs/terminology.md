@@ -31,10 +31,6 @@ Different and multiple connections are possible. For example barge or rail or bo
 A static address is a city with its corresponding postal code and country. For example *68159 Mannheim, Germany*.
 
 
-##Cloud distance
-A previously defined area (radius) around a static address.
-
-
 ##Route types
 
 * **Barge:** Transport of goods / cargo on barge. 

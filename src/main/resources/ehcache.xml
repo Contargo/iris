@@ -31,7 +31,7 @@
     <cache name="addressCache" maxElementsInMemory="900" eternal="false"
            timeToIdleSeconds="500" timeToLiveSeconds="500" overflowToDisk="false"/>
 
-    <cache name="osrmCache" maxElementsInMemory="5000" eternal="false"
+    <cache name="osrmCache" maxElementsInMemory="20000" eternal="false"
            timeToIdleSeconds="172800" timeToLiveSeconds="172800" overflowToDisk="false"/>
 
 </ehcache>

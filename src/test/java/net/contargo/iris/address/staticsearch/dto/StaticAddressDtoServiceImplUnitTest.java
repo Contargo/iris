@@ -24,7 +24,6 @@ import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
-import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
 
 import static org.mockito.Mockito.when;
@@ -115,7 +114,10 @@ public class StaticAddressDtoServiceImplUnitTest {
         when(staticAddressServiceMock.getAddressesInBoundingBox(address, 20d)).thenReturn(asList(staticAddress,
                 staticAddress2));
 
-        List<BigInteger> uids = sut.getStaticAddressByBoundingBox(address, 20d);
-        assertThat(uids, contains(BigInteger.TEN, BigInteger.ONE));
+        List<StaticAddressDto> uids = sut.getStaticAddressByBoundingBox(address, 20d);
+        assertThat(uids.get(0).getUniqueId(), is("10"));
+        assertThat(uids.get(0).getGeoLocation().getLatitude().toString(), is("1.0000000000"));
+        assertThat(uids.get(0).getGeoLocation().getLatitude().toString(), is("1.0000000000"));
+        assertThat(uids.get(1).getUniqueId(), is("1"));
     }
 }

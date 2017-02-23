@@ -4,8 +4,6 @@ import net.contargo.iris.GeoLocation;
 import net.contargo.iris.address.dto.AddressDto;
 import net.contargo.iris.address.dto.AddressListDto;
 
-import java.math.BigInteger;
-
 import java.util.List;
 
 
@@ -39,13 +37,13 @@ public interface StaticAddressDtoService {
 
 
     /**
-     * Retrieves a list of static address uids that are located in a bounding box with radius {@code km} around
+     * Retrieves a list of static addresses that are located in a bounding box with radius {@code km} around
      * {@code geoLocation}.
      *
      * @param  location  the geolocation at the bounding box's center
      * @param  distance  the bounding box's radius
      *
-     * @return  a list of static address uids
+     * @return  a list of static addresses
      */
-    List<BigInteger> getStaticAddressByBoundingBox(GeoLocation location, Double distance);
+    List<StaticAddressDto> getStaticAddressByBoundingBox(GeoLocation location, Double distance);
 }

@@ -3,6 +3,8 @@ package net.contargo.iris.address.staticsearch.api;
 import net.contargo.iris.GeoLocation;
 import net.contargo.iris.address.Address;
 import net.contargo.iris.address.dto.AddressDto;
+import net.contargo.iris.address.dto.GeoLocationDto;
+import net.contargo.iris.address.staticsearch.dto.StaticAddressDto;
 import net.contargo.iris.address.staticsearch.dto.StaticAddressDtoService;
 
 import org.junit.Before;
@@ -21,11 +23,11 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.hamcrest.Matchers.comparesEqualTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 
@@ -43,7 +45,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
-import static java.util.Arrays.asList;
+import static java.math.BigDecimal.ONE;
+import static java.math.BigDecimal.TEN;
+
 import static java.util.Collections.singletonList;
 
 
@@ -86,8 +90,8 @@ public class StaticAddressApiControllerMvcUnitTest {
         addressMap.put("suburb", null);
 
         Address address = new Address();
-        address.setLatitude(BigDecimal.ONE);
-        address.setLongitude(BigDecimal.ONE);
+        address.setLatitude(ONE);
+        address.setLongitude(ONE);
         address.setAddress(addressMap);
 
         AddressDto dto = new AddressDto(address);
@@ -109,7 +113,7 @@ public class StaticAddressApiControllerMvcUnitTest {
     public void staticAddressesByBoundingBox() throws Exception {
 
         when(staticAddressDtoServiceMock.getStaticAddressByBoundingBox(any(GeoLocation.class), eq(20d))).thenReturn(
-            asList(BigInteger.ONE, BigInteger.TEN));
+            singletonList(new StaticAddressDto("unique-id", new GeoLocationDto(new GeoLocation(ONE, TEN)))));
 
         ResultActions resultActions = mockMvc.perform(get("/staticaddresses").param("lat", "10")
                 .param("lon", "1")
@@ -117,8 +121,10 @@ public class StaticAddressApiControllerMvcUnitTest {
                 .accept(APPLICATION_JSON));
 
         resultActions.andExpect(status().isOk()).andExpect(content().contentType("application/json;charset=UTF-8"));
-        resultActions.andExpect(jsonPath("$.uids", hasSize(2)));
-        resultActions.andExpect(jsonPath("$.uids[0]", is(1)));
-        resultActions.andExpect(jsonPath("$.uids[1]", is(10)));
+        resultActions.andExpect(jsonPath("$", hasSize(1)));
+        resultActions.andExpect(jsonPath("$[0].geoLocation.latitude",
+                comparesEqualTo(new BigDecimal("1.0").doubleValue())));
+        resultActions.andExpect(jsonPath("$[0].geoLocation.longitude",
+                comparesEqualTo(new BigDecimal("10.0").doubleValue())));
     }
 }

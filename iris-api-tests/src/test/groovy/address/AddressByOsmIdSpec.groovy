@@ -42,8 +42,8 @@ class AddressByOsmIdSpec extends Specification {
         address.osmId == 90085697
 
         and: "that address's actual address has certain attributes"
-        address["address"].keySet().size() == 10
+        address["address"].keySet().size() == 9
         address["address"].keySet().containsAll("country", "country_code", "road", "city", "state_district", 
-                "postcode", "suburb", "house_number", "address29", "state")
+                "postcode", "suburb", "house_number", "state")
     }
 }

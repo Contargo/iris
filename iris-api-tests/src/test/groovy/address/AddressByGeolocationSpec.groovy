@@ -33,7 +33,7 @@ class AddressByGeolocationSpec extends Specification {
         and: "the address's actual address has certain attributes"
         address.address.keySet().size() == 7
         println address.address.keySet()
-        address.address.keySet().containsAll("country", "country_code", "farmyard", "county", "postcode", 
+        address.address.keySet().containsAll("country", "country_code", "road", "county", "postcode",
                 "state", "village")
     }
 }

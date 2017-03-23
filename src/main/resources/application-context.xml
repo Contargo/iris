@@ -401,4 +401,8 @@
     <bean class="net.contargo.iris.startup.RouteRevisionStartupService">
         <constructor-arg name="service" ref="routeDataRevisionService"/>
     </bean>
+    <bean class="net.contargo.iris.address.service.BestMatchServiceImpl" name="addressBestMatchService">
+        <constructor-arg name="addressService" ref="addressService"/>
+        <constructor-arg name="staticAddressService" ref="staticAddressService"/>
+    </bean>
 </beans>

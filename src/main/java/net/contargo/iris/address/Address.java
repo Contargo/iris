@@ -179,7 +179,6 @@ public class Address extends GeoLocation {
 
         String village = this.address.get("village");
         String town = this.address.get("town");
-        String suburb = this.address.get(SUBURB);
         String city = this.address.get(CITY);
 
         return Stream.of(city, town, village).filter(value -> !StringUtils.isEmpty(value)).findFirst().orElse(null);

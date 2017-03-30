@@ -4,34 +4,28 @@ import net.contargo.iris.address.Address;
 import net.contargo.iris.address.AddressList;
 import net.contargo.iris.address.nominatim.service.AddressDetailKey;
 import net.contargo.iris.address.staticsearch.StaticAddress;
-
 import org.junit.Test;
 
 import java.math.BigInteger;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
+import static java.math.BigDecimal.ONE;
+import static java.math.BigDecimal.TEN;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 
 /**
  * @author  David Schilling - schilling@synyx.de
  * @author  Oliver Messner - messner@synyx.de
+ * @author Ben Antony - antony@synyx.de
  */
 public class BestMatchServiceImplUnitTest {
 
@@ -46,6 +40,9 @@ public class BestMatchServiceImplUnitTest {
         staticAddress.setCity("GOMARINGEN");
         staticAddress.setCountry("DE");
         staticAddress.setUniqueId(new BigInteger("1301000000063529"));
+        staticAddress.setSuburb("suburbName");
+        staticAddress.setLatitude(ONE);
+        staticAddress.setLongitude(TEN);
 
         AddressList addressList = new AddressList("parent", singletonList(staticAddress.toAddress()));
         List<AddressList> list = singletonList(addressList);
@@ -60,6 +57,7 @@ public class BestMatchServiceImplUnitTest {
         assertThat(result.get().getPostalCode(), is("72810"));
         assertThat(result.get().getCity(), is("GOMARINGEN"));
         assertThat(result.get().getCountryCode(), is("DE"));
+        assertThat(result.get().getSuburb(), is("suburbName"));
 
         verify(addressServiceWrapper).getAddressesBasedOnStaticAddressResolution("72810", "Gomaringen", "DE");
     }
@@ -86,6 +84,7 @@ public class BestMatchServiceImplUnitTest {
         assertThat(result.get().getPostalCode(), is("72810"));
         assertThat(result.get().getCity(), is("GOMARINGEN"));
         assertThat(result.get().getCountryCode(), is("DE"));
+        assertThat(result.get().getSuburb(), is("suburbName"));
 
         verify(addressServiceWrapper).getAddressesBasedOnNominatimResolution(addressDetails);
     }
@@ -128,6 +127,12 @@ public class BestMatchServiceImplUnitTest {
         public String getCity() {
 
             return "GOMARINGEN";
+        }
+
+        @Override
+        public String getSuburb() {
+
+            return "suburbName";
         }
     }
 }

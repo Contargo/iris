@@ -88,7 +88,7 @@ public class BestMatchApiControllerMvcUnitTest {
 
         private BestMatchDummy() {
 
-            super("3948756", ONE, TEN, "72810", "Gomaringen", "DE");
+            super("3948756", ONE, TEN, "72810", "Gomaringen", "DE", "suburbName");
         }
     }
 }

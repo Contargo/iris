@@ -1,6 +1,8 @@
 package net.contargo.iris.address.service;
 
+import net.contargo.iris.GeoLocation;
 import net.contargo.iris.address.Address;
+import net.contargo.iris.address.dto.GeoLocationDto;
 
 import java.math.BigDecimal;
 
@@ -8,25 +10,29 @@ import java.math.BigDecimal;
 /**
  * @author  David Schilling - schilling@synyx.de
  * @author  Oliver Messner - messner@synyx.de
+ * @author Ben Antony - antony@synyx.de
  */
 public class BestMatch {
 
     private final String hashKey;
-    private BigDecimal latitude;
-    private BigDecimal longitude;
+    private final GeoLocationDto geoLocation;
     private final String postalCode;
     private final String city;
     private final String countryCode;
+    private final String suburb;
 
     protected BestMatch(String hashKey, BigDecimal latitude, BigDecimal longitude, String postalCode, String city,
-                        String countryCode) {
+                        String countryCode, String suburb) {
 
         this.hashKey = hashKey;
-        this.latitude = latitude;
-        this.longitude = longitude;
+        GeoLocationDto geoLocationDto = new GeoLocationDto();
+        geoLocationDto.setLatitude(latitude);
+        geoLocationDto.setLongitude(longitude);
+        this.geoLocation = geoLocationDto;
         this.postalCode = postalCode;
         this.city = city;
         this.countryCode = countryCode;
+        this.suburb = suburb;
     }
 
     static BestMatch of(Address address) {
@@ -34,7 +40,7 @@ public class BestMatch {
         String hashKey = address.getHashKey().orElse(null);
 
         return new BestMatch(hashKey, address.getLatitude(), address.getLongitude(), address.getPostcode(),
-                address.getCity(), address.getCountryCode());
+                address.getCity(), address.getCountryCode(), address.getSuburb());
     }
 
 
@@ -44,17 +50,10 @@ public class BestMatch {
     }
 
 
-    public BigDecimal getLatitude() {
+    public GeoLocationDto getGeoLocation() {
 
-        return latitude;
+        return geoLocation;
     }
-
-
-    public BigDecimal getLongitude() {
-
-        return longitude;
-    }
-
 
     public String getPostalCode() {
 
@@ -71,5 +70,9 @@ public class BestMatch {
     public String getCountryCode() {
 
         return countryCode;
+    }
+
+    public String getSuburb() {
+        return suburb;
     }
 }

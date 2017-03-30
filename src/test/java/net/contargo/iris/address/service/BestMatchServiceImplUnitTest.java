@@ -57,7 +57,7 @@ public class BestMatchServiceImplUnitTest {
 
         assertTrue(result.isPresent());
         assertThat(result.get().getHashKey(), is("D5BU1"));
-        assertThat(result.get().getPostalcode(), is("72810"));
+        assertThat(result.get().getPostalCode(), is("72810"));
         assertThat(result.get().getCity(), is("GOMARINGEN"));
         assertThat(result.get().getCountryCode(), is("DE"));
 
@@ -83,7 +83,7 @@ public class BestMatchServiceImplUnitTest {
 
         assertTrue(result.isPresent());
         assertThat(result.get().getHashKey(), nullValue());
-        assertThat(result.get().getPostalcode(), is("72810"));
+        assertThat(result.get().getPostalCode(), is("72810"));
         assertThat(result.get().getCity(), is("GOMARINGEN"));
         assertThat(result.get().getCountryCode(), is("DE"));
 

@@ -14,17 +14,17 @@ public class BestMatch {
     private final String hashKey;
     private BigDecimal latitude;
     private BigDecimal longitude;
-    private final String postalcode;
+    private final String postalCode;
     private final String city;
     private final String countryCode;
 
-    protected BestMatch(String hashKey, BigDecimal latitude, BigDecimal longitude, String postalcode, String city,
-        String countryCode) {
+    protected BestMatch(String hashKey, BigDecimal latitude, BigDecimal longitude, String postalCode, String city,
+                        String countryCode) {
 
         this.hashKey = hashKey;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.postalcode = postalcode;
+        this.postalCode = postalCode;
         this.city = city;
         this.countryCode = countryCode;
     }
@@ -56,9 +56,9 @@ public class BestMatch {
     }
 
 
-    public String getPostalcode() {
+    public String getPostalCode() {
 
-        return postalcode;
+        return postalCode;
     }
 
 

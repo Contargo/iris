@@ -1,16 +1,16 @@
 package net.contargo.iris.address.service;
 
 import net.contargo.iris.address.Address;
+import net.contargo.iris.address.AddressList;
 import net.contargo.iris.address.nominatim.service.AddressDetailKey;
-import net.contargo.iris.address.nominatim.service.AddressService;
 import net.contargo.iris.address.staticsearch.StaticAddress;
-import net.contargo.iris.address.staticsearch.service.StaticAddressService;
 
 import org.junit.Test;
 
 import java.math.BigInteger;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -19,10 +19,10 @@ import static org.hamcrest.Matchers.nullValue;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import static java.util.Collections.emptyList;
@@ -31,12 +31,12 @@ import static java.util.Collections.singletonList;
 
 /**
  * @author  David Schilling - schilling@synyx.de
+ * @author  Oliver Messner - messner@synyx.de
  */
-public class BestMatchServiceImplTest {
+public class BestMatchServiceImplUnitTest {
 
-    private StaticAddressService staticAddressService = mock(StaticAddressService.class);
-    private AddressService addressService = mock(AddressService.class);
-    private BestMatchServiceImpl sut = new BestMatchServiceImpl(staticAddressService, addressService);
+    private AddressServiceWrapper addressServiceWrapper = mock(AddressServiceWrapper.class);
+    private BestMatchServiceImpl sut = new BestMatchServiceImpl(addressServiceWrapper);
 
     @Test
     public void bestMatchIsStaticAddress() {
@@ -47,19 +47,21 @@ public class BestMatchServiceImplTest {
         staticAddress.setCountry("DE");
         staticAddress.setUniqueId(new BigInteger("1301000000063529"));
 
-        when(staticAddressService.getAddressesByDetails("72810", "Gomaringen", "DE")).thenReturn(singletonList(
-                staticAddress));
+        AddressList addressList = new AddressList("parent", singletonList(staticAddress.toAddress()));
+        List<AddressList> list = singletonList(addressList);
+
+        when(addressServiceWrapper.getAddressesBasedOnStaticAddressResolution("72810", "Gomaringen", "DE")).thenReturn(
+            list);
 
         Optional<BestMatch> result = sut.bestMatch("72810", "Gomaringen", "DE");
-        BestMatch bestMatch = result.get();
 
-        assertThat(bestMatch.getHashKey(), is("D5BU1"));
-        assertThat(bestMatch.getPostalcode(), is("72810"));
-        assertThat(bestMatch.getCity(), is("GOMARINGEN"));
-        assertThat(bestMatch.getCountryCode(), is("DE"));
+        assertTrue(result.isPresent());
+        assertThat(result.get().getHashKey(), is("D5BU1"));
+        assertThat(result.get().getPostalcode(), is("72810"));
+        assertThat(result.get().getCity(), is("GOMARINGEN"));
+        assertThat(result.get().getCountryCode(), is("DE"));
 
-        verify(staticAddressService).getAddressesByDetails("72810", "Gomaringen", "DE");
-        verifyZeroInteractions(addressService);
+        verify(addressServiceWrapper).getAddressesBasedOnStaticAddressResolution("72810", "Gomaringen", "DE");
     }
 
 
@@ -72,20 +74,20 @@ public class BestMatchServiceImplTest {
         addressDetails.put(AddressDetailKey.COUNTRY.getKey(), "DE");
 
         Address address = new DummyAddress();
+        AddressList addressList = new AddressList("parent", singletonList(address));
+        List<AddressList> list = singletonList(addressList);
 
-        when(staticAddressService.getAddressesByDetails("72810", "Gomaringen", "DE")).thenReturn(emptyList());
-        when(addressService.getAddressesByDetails(addressDetails)).thenReturn(singletonList(address));
+        when(addressServiceWrapper.getAddressesBasedOnNominatimResolution(addressDetails)).thenReturn(list);
 
         Optional<BestMatch> result = sut.bestMatch("72810", "Gomaringen", "DE");
-        BestMatch bestMatch = result.get();
 
-        assertThat(bestMatch.getHashKey(), nullValue());
-        assertThat(bestMatch.getPostalcode(), is("72810"));
-        assertThat(bestMatch.getCity(), is("GOMARINGEN"));
-        assertThat(bestMatch.getCountryCode(), is("DE"));
+        assertTrue(result.isPresent());
+        assertThat(result.get().getHashKey(), nullValue());
+        assertThat(result.get().getPostalcode(), is("72810"));
+        assertThat(result.get().getCity(), is("GOMARINGEN"));
+        assertThat(result.get().getCountryCode(), is("DE"));
 
-        verify(staticAddressService).getAddressesByDetails("72810", "Gomaringen", "DE");
-        verify(addressService).getAddressesByDetails(addressDetails);
+        verify(addressServiceWrapper).getAddressesBasedOnNominatimResolution(addressDetails);
     }
 
 
@@ -97,8 +99,9 @@ public class BestMatchServiceImplTest {
         addressDetails.put(AddressDetailKey.CITY.getKey(), "Gomaringen");
         addressDetails.put(AddressDetailKey.COUNTRY.getKey(), "DE");
 
-        when(staticAddressService.getAddressesByDetails("72810", "Gomaringen", "DE")).thenReturn(emptyList());
-        when(addressService.getAddressesByDetails(addressDetails)).thenReturn(emptyList());
+        when(addressServiceWrapper.getAddressesBasedOnNominatimResolution(addressDetails)).thenReturn(emptyList());
+        when(addressServiceWrapper.getAddressesBasedOnStaticAddressResolution("72810", "Gomaringen", "DE")).thenReturn(
+            emptyList());
 
         Optional<BestMatch> bestMatch = sut.bestMatch("72180", "Gomaringen", "DE");
 

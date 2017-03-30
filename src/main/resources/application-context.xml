@@ -119,7 +119,6 @@
             </bean>
         </constructor-arg>
         <constructor-arg name="normalizerService" ref="normalizerService"/>
-        <constructor-arg name="addressListFilter" ref="addressListFilter"/>
     </bean>
     
     <bean id="addressListFilter" class="net.contargo.iris.address.service.AddressListFilterImpl"/>
@@ -402,7 +401,6 @@
         <constructor-arg name="service" ref="routeDataRevisionService"/>
     </bean>
     <bean class="net.contargo.iris.address.service.BestMatchServiceImpl" name="addressBestMatchService">
-        <constructor-arg name="addressService" ref="addressService"/>
-        <constructor-arg name="staticAddressService" ref="staticAddressService"/>
+        <constructor-arg name="addressServiceWrapper" ref="addressServiceWrapper"/>
     </bean>
 </beans>

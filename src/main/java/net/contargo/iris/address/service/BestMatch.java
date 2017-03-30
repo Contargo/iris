@@ -1,18 +1,19 @@
 package net.contargo.iris.address.service;
 
-import net.contargo.iris.GeoLocation;
 import net.contargo.iris.address.Address;
-import net.contargo.iris.address.staticsearch.StaticAddress;
 
 import java.math.BigDecimal;
 
 
 /**
  * @author  David Schilling - schilling@synyx.de
+ * @author  Oliver Messner - messner@synyx.de
  */
-public class BestMatch extends GeoLocation {
+public class BestMatch {
 
     private final String hashKey;
+    private BigDecimal latitude;
+    private BigDecimal longitude;
     private final String postalcode;
     private final String city;
     private final String countryCode;
@@ -20,24 +21,19 @@ public class BestMatch extends GeoLocation {
     protected BestMatch(String hashKey, BigDecimal latitude, BigDecimal longitude, String postalcode, String city,
         String countryCode) {
 
-        super(latitude, longitude);
-
         this.hashKey = hashKey;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.postalcode = postalcode;
         this.city = city;
         this.countryCode = countryCode;
     }
 
-    static BestMatch of(StaticAddress staticAddress) {
-
-        return new BestMatch(staticAddress.getHashKey(), staticAddress.getLatitude(), staticAddress.getLongitude(),
-                staticAddress.getPostalcode(), staticAddress.getCity(), staticAddress.getCountry());
-    }
-
-
     static BestMatch of(Address address) {
 
-        return new BestMatch(null, address.getLatitude(), address.getLongitude(), address.getPostcode(),
+        String hashKey = address.getHashKey().orElse(null);
+
+        return new BestMatch(hashKey, address.getLatitude(), address.getLongitude(), address.getPostcode(),
                 address.getCity(), address.getCountryCode());
     }
 
@@ -45,6 +41,18 @@ public class BestMatch extends GeoLocation {
     public String getHashKey() {
 
         return hashKey;
+    }
+
+
+    public BigDecimal getLatitude() {
+
+        return latitude;
+    }
+
+
+    public BigDecimal getLongitude() {
+
+        return longitude;
     }
 
 

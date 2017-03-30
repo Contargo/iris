@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -251,6 +252,12 @@ public class Address extends GeoLocation {
     public boolean isStatic() {
 
         return address.get(StaticAddress.STATIC_ID) != null;
+    }
+
+
+    public Optional<String> getHashKey() {
+
+        return Optional.ofNullable(address.get(StaticAddress.HASH_KEY));
     }
 
 

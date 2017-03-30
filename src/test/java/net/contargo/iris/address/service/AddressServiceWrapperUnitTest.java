@@ -93,8 +93,8 @@ public class AddressServiceWrapperUnitTest {
 
         when(normalizerServiceMock.normalize(CITYNAME_KARLSRUHE)).thenReturn(CITYNAME_KARLSRUHE_NORMALIZED);
 
-        sut = new AddressServiceWrapper(addressServiceMock, staticAddressServiceMock, cacheMock, normalizerServiceMock,
-                addressListFilterMock);
+        sut = new AddressServiceWrapper(addressServiceMock, staticAddressServiceMock, cacheMock,
+                normalizerServiceMock);
     }
 
 

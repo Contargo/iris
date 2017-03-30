@@ -4,6 +4,7 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -40,6 +41,12 @@ public class AddressList {
     }
 
 
+    public Optional<Address> firstAddress() {
+
+        return addresses.stream().findFirst();
+    }
+
+
     public Address getParentAddress() {
 
         return parentAddress;
@@ -72,7 +79,9 @@ public class AddressList {
 
         final AddressList other = (AddressList) obj;
 
-        return new EqualsBuilder().append(this.hashCode(), other.hashCode()).append(this.addresses, other.addresses)
-            .append(this.parentAddress, other.parentAddress).isEquals();
+        return new EqualsBuilder().append(this.hashCode(), other.hashCode())
+            .append(this.addresses, other.addresses)
+            .append(this.parentAddress, other.parentAddress)
+            .isEquals();
     }
 }

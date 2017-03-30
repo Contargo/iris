@@ -1,9 +1,8 @@
 package net.contargo.iris.address.service;
 
+import net.contargo.iris.address.Address;
+import net.contargo.iris.address.AddressList;
 import net.contargo.iris.address.nominatim.NominatimUtil;
-import net.contargo.iris.address.nominatim.service.AddressService;
-import net.contargo.iris.address.staticsearch.StaticAddress;
-import net.contargo.iris.address.staticsearch.service.StaticAddressService;
 
 import java.util.List;
 import java.util.Map;
@@ -12,31 +11,44 @@ import java.util.Optional;
 
 /**
  * @author  David Schilling - schilling@synyx.de
+ * @author  Oliver Messner - messner@synyx.de
  */
 public class BestMatchServiceImpl implements BestMatchService {
 
-    private final StaticAddressService staticAddressService;
-    private final AddressService addressService;
+    private final AddressServiceWrapper addressServiceWrapper;
 
-    public BestMatchServiceImpl(StaticAddressService staticAddressService, AddressService addressService) {
+    public BestMatchServiceImpl(AddressServiceWrapper addressServiceWrapper) {
 
-        this.staticAddressService = staticAddressService;
-        this.addressService = addressService;
+        this.addressServiceWrapper = addressServiceWrapper;
     }
 
     @Override
     public Optional<BestMatch> bestMatch(String postalCode, String city, String countryCode) {
 
-        List<StaticAddress> addresses = staticAddressService.getAddressesByDetails(postalCode, city, countryCode);
+        List<AddressList> addressLists;
+        addressLists = addressServiceWrapper.getAddressesBasedOnStaticAddressResolution(postalCode, city, countryCode);
 
-        Optional<BestMatch> bestMatch = addresses.stream().map(BestMatch::of).findFirst();
+        Optional<BestMatch> bestMatch = bestMatch(addressLists);
 
         if (bestMatch.isPresent()) {
             return bestMatch;
         }
 
-        Map<String, String> parameterMap = NominatimUtil.parameterMap(postalCode, city, countryCode);
+        Map<String, String> parameters = NominatimUtil.parameterMap(postalCode, city, countryCode);
+        addressLists = addressServiceWrapper.getAddressesBasedOnNominatimResolution(parameters);
 
-        return addressService.getAddressesByDetails(parameterMap).stream().map(BestMatch::of).findFirst();
+        return bestMatch(addressLists);
+    }
+
+
+    private Optional<BestMatch> bestMatch(List<AddressList> addressLists) {
+
+        if (addressLists.isEmpty()) {
+            return Optional.empty();
+        }
+
+        Optional<Address> address = addressLists.get(0).firstAddress();
+
+        return address.map(BestMatch::of);
     }
 }

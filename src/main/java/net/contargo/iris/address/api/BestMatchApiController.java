@@ -22,6 +22,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 /**
  * @author  David Schilling - schilling@synyx.de
+ * @author  Oliver Messner - messner@synyx.de
  */
 @Controller
 public class BestMatchApiController {
@@ -39,12 +40,9 @@ public class BestMatchApiController {
         @RequestParam(value = "city") String city,
         @RequestParam(value = "countrycode") String countryCode) {
 
-        Optional<BestMatch> bestMatch = bestMatchService.bestMatch(postalCode, city, countryCode);
+        Optional<BestMatch> optional = bestMatchService.bestMatch(postalCode, city, countryCode);
 
-        if (bestMatch.isPresent()) {
-            return new ResponseEntity<>(bestMatch.get(), OK);
-        }
-
-        return new ResponseEntity<>(NOT_FOUND);
+        return optional.map(bestMatch -> new ResponseEntity<>(bestMatch, OK)).orElseGet(() ->
+                    new ResponseEntity<>(NOT_FOUND));
     }
 }

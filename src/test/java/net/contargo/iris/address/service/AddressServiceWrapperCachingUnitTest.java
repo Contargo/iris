@@ -10,8 +10,11 @@ import net.contargo.iris.normalizer.NormalizerService;
 
 import org.junit.Before;
 import org.junit.Test;
+
 import org.junit.runner.RunWith;
+
 import org.mockito.Mock;
+
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
@@ -28,19 +31,21 @@ import static net.contargo.iris.address.nominatim.service.AddressDetailKey.POSTA
 import static net.contargo.iris.address.nominatim.service.AddressDetailKey.STREET;
 
 import static org.hamcrest.CoreMatchers.is;
+
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
+
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import static java.util.Collections.singletonList;
 
+
 /**
  * Tests Caching-Aspects of {@link AddressServiceWrapper}.
  *
- * @author Sven Mueller - mueller@synyx.de
- * @author Tobias Schneider - schneider@synyx.de
+ * @author  Sven Mueller - mueller@synyx.de
+ * @author  Tobias Schneider - schneider@synyx.de
  */
 @RunWith(MockitoJUnitRunner.class)
 public class AddressServiceWrapperCachingUnitTest {
@@ -56,8 +61,6 @@ public class AddressServiceWrapperCachingUnitTest {
     private StaticAddressService staticAddressServiceMock;
     @Mock
     private AddressCache addressCacheMock;
-    @Mock
-    private AddressListFilter addressListFilterMock;
 
     @Before
     public void setup() {
@@ -65,8 +68,8 @@ public class AddressServiceWrapperCachingUnitTest {
         NormalizerService normalizerServiceMock = mock(NormalizerService.class);
         when(normalizerServiceMock.normalize(CITY_NAME)).thenReturn(CITY_NAME_NORMALIZED);
 
-        sut = new AddressServiceWrapper(addressServiceMock, staticAddressServiceMock, addressCacheMock, normalizerServiceMock,
-                addressListFilterMock);
+        sut = new AddressServiceWrapper(addressServiceMock, staticAddressServiceMock, addressCacheMock,
+                normalizerServiceMock);
     }
 
 
@@ -86,7 +89,6 @@ public class AddressServiceWrapperCachingUnitTest {
 
         List<Address> addresses = singletonList(a);
         when(addressServiceMock.getAddressesByDetails(addressDetails)).thenReturn(addresses);
-        when(addressListFilterMock.filterOutByCountryCode(any(), eq("CH"))).thenAnswer(invocation -> invocation.getArguments()[0]);
 
         List<AddressList> expectedList = new ArrayList<>();
         AddressList expectedAddressList = new AddressList(a, addresses);
@@ -109,7 +111,6 @@ public class AddressServiceWrapperCachingUnitTest {
 
         GeoLocation loc = new GeoLocation(expectedAddress.getLatitude(), expectedAddress.getLongitude());
         when(addressCacheMock.getForLocation(loc)).thenReturn(expectedAddress);
-        when(addressListFilterMock.filterOutByCountryCode(any(), eq("CH"))).thenAnswer(invocation -> invocation.getArguments()[0]);
 
         Map<String, String> addressDetails = new HashMap<>();
         addressDetails.put(CITY.getKey(), CITY_NAME);

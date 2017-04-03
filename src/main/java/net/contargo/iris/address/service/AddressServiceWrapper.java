@@ -41,16 +41,14 @@ public class AddressServiceWrapper {
     private final StaticAddressService staticAddressService;
     private final AddressCache addressCache;
     private final NormalizerService normalizerService;
-    private final AddressListFilter addressListFilter;
 
     public AddressServiceWrapper(AddressService addressService, StaticAddressService staticAddressService,
-        AddressCache cache, NormalizerService normalizerService, AddressListFilter addressListFilter) {
+        AddressCache cache, NormalizerService normalizerService) {
 
         this.addressService = addressService;
         this.staticAddressService = staticAddressService;
         this.addressCache = cache;
         this.normalizerService = normalizerService;
-        this.addressListFilter = addressListFilter;
     }
 
     /**
@@ -94,9 +92,9 @@ public class AddressServiceWrapper {
 
     /**
      * Searches with the given parameters from the addressDetails map like street, postalcode and city the
-     * geocoordinates and returns a list of {@link AddressList} with their geocoordinates. To improve the result quality
-     * of geocoding services, it's sometimes better to make the search not with all the given parameters. (e.g. try to
-     * get address using only street and city)
+     * geocoordinates and returns a list of {@link AddressList} with their geocoordinates. To improve the result
+     * quality of geocoding services, it's sometimes better to make the search not with all the given parameters. (e.g.
+     * try to get address using only street and city)
      *
      * @param  addressDetails  keeps the search information
      *
@@ -132,9 +130,32 @@ public class AddressServiceWrapper {
     }
 
 
+    List<AddressList> getAddressesBasedOnStaticAddressResolution(String postalCode, String city, String countryCode) {
+
+        List<AddressList> result = new ArrayList<>();
+
+        if (StringUtils.isNotEmpty(postalCode) || StringUtils.isNotEmpty(city)) {
+            result.add(resolveByStaticAddressService(postalCode, city, countryCode));
+        }
+
+        addressCache.cache(result);
+
+        return result;
+    }
+
+
     private AddressList resolveByStaticAddressService(String postalCode, String city, String country) {
 
         return staticAddressService.findAddresses(postalCode, city, country);
+    }
+
+
+    List<AddressList> getAddressesBasedOnNominatimResolution(Map<String, String> parameters) {
+
+        List<AddressList> result = resolveByNominatim(parameters);
+        addressCache.cache(result);
+
+        return result;
     }
 
 

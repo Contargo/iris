@@ -8,6 +8,7 @@ import net.contargo.iris.GeoLocation;
 import net.contargo.iris.address.dto.AddressDto;
 import net.contargo.iris.address.dto.AddressDtoService;
 import net.contargo.iris.address.dto.AddressListDto;
+import net.contargo.iris.address.nominatim.NominatimUtil;
 import net.contargo.iris.address.staticsearch.service.StaticAddressNotFoundException;
 import net.contargo.iris.address.staticsearch.validator.HashKeyValidator;
 
@@ -29,17 +30,10 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-
-import static net.contargo.iris.address.nominatim.service.AddressDetailKey.CITY;
-import static net.contargo.iris.address.nominatim.service.AddressDetailKey.COUNTRY;
-import static net.contargo.iris.address.nominatim.service.AddressDetailKey.NAME;
-import static net.contargo.iris.address.nominatim.service.AddressDetailKey.POSTAL_CODE;
-import static net.contargo.iris.address.nominatim.service.AddressDetailKey.STREET;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -85,8 +79,8 @@ public class AddressApiController {
 
         AddressDto address = addressDtoService.getAddressByOsmId(osmId);
 
-        ListOfAddressListsResponse response = new ListOfAddressListsResponse(addressDtoService.wrapInListOfAddressLists(
-                    address));
+        ListOfAddressListsResponse response = new ListOfAddressListsResponse(
+                addressDtoService.wrapInListOfAddressLists(address));
 
         LOG.info("API: Responding to geocode-request for OSM ID {}  with {} Blocks", osmId,
             response.getAddresses().size());
@@ -141,7 +135,7 @@ public class AddressApiController {
             }
         }
 
-        Map<String, String> addressDetails = putRequestParamsToMap(street, postalCode, city, country, name);
+        Map<String, String> addressDetails = NominatimUtil.parameterMap(street, postalCode, city, country, name);
 
         if (addressListDtos.isEmpty()) {
             addressListDtos = addressDtoService.getAddressesByDetails(addressDetails);
@@ -165,7 +159,7 @@ public class AddressApiController {
         @RequestParam(required = false, value = "country") String country,
         @RequestParam(required = false, value = "name") String name, HttpServletRequest request) {
 
-        Map<String, String> addressDetails = putRequestParamsToMap(street, postalCode, city, country, name);
+        Map<String, String> addressDetails = NominatimUtil.parameterMap(street, postalCode, city, country, name);
 
         List<AddressDto> addressList = addressDtoService.getAddressesByDetailsPlain(addressDetails);
 
@@ -193,34 +187,5 @@ public class AddressApiController {
         LOG.info("API: Responding to request for addresses by place id {}", placeId);
 
         return addressDtoService.getAddressesWherePlaceIsIn(placeId);
-    }
-
-
-    private Map<String, String> putRequestParamsToMap(String street, String postalCode, String city, String country,
-        String name) {
-
-        Map<String, String> addressDetails = new HashMap<>();
-
-        if (city != null) {
-            addressDetails.put(CITY.getKey(), city);
-        }
-
-        if (country != null) {
-            addressDetails.put(COUNTRY.getKey(), country);
-        }
-
-        if (postalCode != null) {
-            addressDetails.put(POSTAL_CODE.getKey(), postalCode);
-        }
-
-        if (street != null) {
-            addressDetails.put(STREET.getKey(), street);
-        }
-
-        if (name != null) {
-            addressDetails.put(NAME.getKey(), name);
-        }
-
-        return addressDetails;
     }
 }

@@ -51,8 +51,8 @@ public class NominatimAddressService implements AddressService {
     private final AddressValidator addressValidator;
 
     public NominatimAddressService(NominatimUrlBuilder nominatimUrlBuilder,
-        NominatimJsonResponseParser nominatimResponder, AddressSorter addressSorter, AddressServiceHelper addressHelper,
-        AddressValidator addressValidator) {
+        NominatimJsonResponseParser nominatimResponder, AddressSorter addressSorter,
+        AddressServiceHelper addressHelper, AddressValidator addressValidator) {
 
         this.nominatimUrlBuilder = nominatimUrlBuilder;
         this.nominatimResponder = nominatimResponder;

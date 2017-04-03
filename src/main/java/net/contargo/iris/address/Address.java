@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -179,7 +180,6 @@ public class Address extends GeoLocation {
 
         String village = this.address.get("village");
         String town = this.address.get("town");
-        String suburb = this.address.get(SUBURB);
         String city = this.address.get(CITY);
 
         return Stream.of(city, town, village).filter(value -> !StringUtils.isEmpty(value)).findFirst().orElse(null);
@@ -252,6 +252,12 @@ public class Address extends GeoLocation {
     public boolean isStatic() {
 
         return address.get(StaticAddress.STATIC_ID) != null;
+    }
+
+
+    public Optional<String> getHashKey() {
+
+        return Optional.ofNullable(address.get(StaticAddress.HASH_KEY));
     }
 
 

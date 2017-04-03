@@ -34,6 +34,7 @@ import javax.validation.constraints.Size;
 public class StaticAddress extends GeoLocation {
 
     public static final String STATIC_ID = "static_id";
+    public static final String HASH_KEY = "hashkey";
 
     private static final int POSTAL_CODE_MAX_SIZE = 10;
     private static final int COUNTRY_MAX_SIZE = 5;
@@ -99,7 +100,7 @@ public class StaticAddress extends GeoLocation {
             address.getAddress().put("suburb", suburb);
         }
 
-        address.getAddress().put("hashkey", getHashKey());
+        address.getAddress().put(HASH_KEY, getHashKey());
         address.getAddress().put(STATIC_ID, uniqueId == null ? null : uniqueId.toString());
         address.setLongitude(getLongitude());
         address.setLatitude(getLatitude());
@@ -220,9 +221,9 @@ public class StaticAddress extends GeoLocation {
 
 
     /**
-     * Generates a quasi unique "hashKey" from this {@link StaticAddress}'s uniqueId. The Hash Key is no real hash but a
-     * mapping. The Hash Key consists of a 5 digit Base36 number. 5 digit Base36 fits into 26 bit binary. The Hash Key
-     * is assembled in binary by Java bitwise operators and then converted to Base36.
+     * Generates a quasi unique "hashKey" from this {@link StaticAddress}'s uniqueId. The Hash Key is no real hash but
+     * a mapping. The Hash Key consists of a 5 digit Base36 number. 5 digit Base36 fits into 26 bit binary. The Hash
+     * Key is assembled in binary by Java bitwise operators and then converted to Base36.
      *
      * <p>Assembly of the 26 bit binary HashKey:</p>
      *
@@ -332,7 +333,8 @@ public class StaticAddress extends GeoLocation {
         return "StaticAddress [id=" + id + ", country=" + country
             + ", postalCode=" + postalcode + ", city=" + city
             + ", cityNormalized=" + cityNormalized + ", suburb=" + suburb
-            + ", suburbNormalized=" + suburbNormalized + ", latitude=" + getLatitude() + ", longitude=" + getLongitude()
+            + ", suburbNormalized=" + suburbNormalized + ", latitude=" + getLatitude() + ", longitude="
+            + getLongitude()
             + "]";
     }
 

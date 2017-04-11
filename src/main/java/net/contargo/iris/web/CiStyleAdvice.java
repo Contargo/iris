@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
  * @author  Ben Antony - antony@synyx.de
  */
 @ControllerAdvice
-public class CiStyleController {
+public class CiStyleAdvice {
 
     @Value("${style.CI}")
     private String ciCssFileName;

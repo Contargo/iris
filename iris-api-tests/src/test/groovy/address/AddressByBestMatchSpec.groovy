@@ -74,12 +74,8 @@ class AddressByBestMatchSpec extends Specification {
         and: "resulting address is Trier (from nominatim)"
         bestMatchAddressKarlsruhe.hashKey == null
         bestMatchAddressKarlsruhe.city == "Trier"
-        bestMatchAddressKarlsruhe.geoLocation.latitude == 49.7596208000
-        bestMatchAddressKarlsruhe.geoLocation.longitude == 6.6441878000
         bestMatchAddressKarlsruhe.geoLocation.type == "GEOLOCATION"
         bestMatchAddressKarlsruhe.countryCode == "de"
-        bestMatchAddressKarlsruhe.postalCode == "54290"
-        bestMatchAddressKarlsruhe.suburb == null
 
     }
 

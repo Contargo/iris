@@ -1,5 +1,8 @@
 package net.contargo.iris.address.api;
 
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+
 import net.contargo.iris.address.service.BestMatch;
 import net.contargo.iris.address.service.BestMatchService;
 
@@ -23,8 +26,10 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 /**
  * @author  David Schilling - schilling@synyx.de
  * @author  Oliver Messner - messner@synyx.de
+ * @author  Ben Antony - antony@synyx.de
  */
 @Controller
+@Api(description = "API for querying one best matched address.", value = "")
 public class BestMatchApiController {
 
     private final BestMatchService bestMatchService;
@@ -35,6 +40,10 @@ public class BestMatchApiController {
         this.bestMatchService = bestMatchService;
     }
 
+    @ApiOperation(
+        value = "Returns a single best matched address according to the query.",
+        notes = "When no static address is found, a nominatim resolved address will be returned."
+    )
     @RequestMapping(value = "/addresses/bestmatch", method = GET)
     public ResponseEntity<BestMatch> bestMatch(@RequestParam(value = "postalcode") String postalCode,
         @RequestParam(value = "city") String city,
@@ -42,7 +51,6 @@ public class BestMatchApiController {
 
         Optional<BestMatch> optional = bestMatchService.bestMatch(postalCode, city, countryCode);
 
-        return optional.map(bestMatch -> new ResponseEntity<>(bestMatch, OK)).orElseGet(() ->
-                    new ResponseEntity<>(NOT_FOUND));
+        return optional.map(bestMatch -> new ResponseEntity<>(bestMatch, OK)).orElse(new ResponseEntity<>(NOT_FOUND));
     }
 }

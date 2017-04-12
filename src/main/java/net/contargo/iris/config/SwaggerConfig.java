@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 /**
  * @author  Sandra Thieme - thieme@synyx.de
  * @author  David Schilling - schilling@synyx.de
+ * @author  Ben Antony - antony@synyx.de
  */
 @Configuration
 @EnableSwagger
@@ -24,7 +25,7 @@ public class SwaggerConfig {
     private final String[] includePattern = new String[] {
         "\\/geocodes.*", "\\/osmaddresses.*", "\\/places.*", "\\/reversegeocode.*", "\\/airlineDistance.*",
         "\\/countries.*", "\\/connections.*", "\\/routedetails.*", "\\/routerevisions.*", "\\/routes.*",
-        "\\/seaports.*", "\\/staticaddresses.*", "\\/terminals.*", "\\/simplegeocodes.*"
+        "\\/seaports.*", "\\/staticaddresses.*", "\\/terminals.*", "\\/simplegeocodes.*", "\\/addresses.*"
     };
 
     private SpringSwaggerConfig springSwaggerConfig;

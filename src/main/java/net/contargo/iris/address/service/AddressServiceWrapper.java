@@ -150,7 +150,7 @@ public class AddressServiceWrapper {
     }
 
 
-    List<AddressList> getAddressesBasedOnNominatimResolution(Map<String, String> parameters) {
+    public List<AddressList> getAddressesBasedOnNominatimResolution(Map<String, String> parameters) {
 
         List<AddressList> result = resolveByNominatim(parameters);
         addressCache.cache(result);

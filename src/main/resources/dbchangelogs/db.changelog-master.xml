@@ -50,4 +50,6 @@
 
     <include file="dbchangelogs/db.changelog-1.12-add-route-revision-meta-information.xml"/>
 
+    <include file="dbchangelogs/db.changelog-1.15-add-static-address-import.xml"/>
+
 </databaseChangeLog>

@@ -403,4 +403,8 @@
     <bean class="net.contargo.iris.address.service.BestMatchServiceImpl" name="addressBestMatchService">
         <constructor-arg name="addressServiceWrapper" ref="addressServiceWrapper"/>
     </bean>
+
+    <bean id="staticAddressCsvService" class="net.contargo.iris.address.staticsearch.upload.csv.StaticAddressCsvService">
+        <constructor-arg name="csvDirectory" value="${addresses.csvdir}"/>
+    </bean>
 </beans>

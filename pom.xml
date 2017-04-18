@@ -415,6 +415,16 @@
         </dependency>
 
         <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+            <version>2.3.26-incubating</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.4.5</version>
+        </dependency>
+        <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.5</version>
@@ -431,6 +441,7 @@
                     <include>**/*.xml</include>
                     <include>**/*.properties</include>
                     <include>**/*.json</include>
+                    <include>**/*.ftl</include>
                 </includes>
                 <excludes>
                     <exclude>logback-prod.xml</exclude>

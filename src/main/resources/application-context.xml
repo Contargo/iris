@@ -407,4 +407,12 @@
     <bean id="staticAddressCsvService" class="net.contargo.iris.address.staticsearch.upload.csv.StaticAddressCsvService">
         <constructor-arg name="csvDirectory" value="${addresses.csvdir}"/>
     </bean>
+
+    <bean id="freemarkerConfiguration" class="org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean">
+        <property name="templateLoaderPath" value="${mail.templatepath}"/>
+    </bean>
+    <bean id="templateService" class="net.contargo.iris.mail.service.TemplateServiceImpl">
+        <constructor-arg name="configuration" ref="freemarkerConfiguration"/>
+    </bean>
+    <bean name="emailConfig" class="net.contargo.iris.config.EmailConfig"/>
 </beans>

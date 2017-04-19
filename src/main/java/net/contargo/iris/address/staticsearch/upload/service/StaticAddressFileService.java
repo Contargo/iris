@@ -1,8 +1,13 @@
 package net.contargo.iris.address.staticsearch.upload.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+
+import java.lang.invoke.MethodHandles;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -15,6 +20,8 @@ import static java.nio.file.Files.notExists;
  * @author  Sandra Thieme - thieme@synyx.de
  */
 public class StaticAddressFileService {
+
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final Path location;
 
@@ -37,6 +44,16 @@ public class StaticAddressFileService {
             Files.copy(file.getInputStream(), this.location.resolve(file.getOriginalFilename()));
         } catch (IOException e) {
             throw new StaticAddressFileStorageException("Failed to store file " + file.getOriginalFilename(), e);
+        }
+    }
+
+
+    public void delete(String file) {
+
+        try {
+            Files.delete(this.location.resolve(file));
+        } catch (IOException e) {
+            LOG.error("Failed to delete file", e);
         }
     }
 }

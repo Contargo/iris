@@ -421,6 +421,7 @@
     </bean>
     <bean id="staticAddressJobService" class="net.contargo.iris.address.staticsearch.upload.service.StaticAddressImportJobServiceImpl">
         <constructor-arg name="repository" ref="staticAddressImportJobRepository"/>
+        <constructor-arg name="fileService" ref="staticAddressFileService"/>
     </bean>
     <bean id="staticAddressImportTask" class="net.contargo.iris.address.staticsearch.upload.StaticAddressImportTask">
         <constructor-arg name="importService" ref="staticAddressImportService"/>

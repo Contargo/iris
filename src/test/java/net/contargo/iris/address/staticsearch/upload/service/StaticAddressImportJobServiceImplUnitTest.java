@@ -32,15 +32,17 @@ public class StaticAddressImportJobServiceImplUnitTest {
 
     @Mock
     private StaticAddressImportJobRepository repositoryMock;
+    @Mock
+    private StaticAddressFileService fileServiceMock;
 
     private StaticAddressImportJob job;
 
     @Before
     public void setUp() {
 
-        sut = new StaticAddressImportJobServiceImpl(repositoryMock);
+        sut = new StaticAddressImportJobServiceImpl(repositoryMock, fileServiceMock);
 
-        job = new StaticAddressImportJob("user@example.com", "foo/bar.csv");
+        job = new StaticAddressImportJob("user@example.com", "bar.csv");
     }
 
 
@@ -68,5 +70,6 @@ public class StaticAddressImportJobServiceImplUnitTest {
         sut.deleteJob(job);
 
         verify(repositoryMock).delete(job);
+        verify(fileServiceMock).delete("bar.csv");
     }
 }

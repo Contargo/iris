@@ -15,10 +15,13 @@ import java.util.Optional;
 public class StaticAddressImportJobServiceImpl implements StaticAddressImportJobService {
 
     private final StaticAddressImportJobRepository repository;
+    private final StaticAddressFileService fileService;
 
-    public StaticAddressImportJobServiceImpl(StaticAddressImportJobRepository repository) {
+    public StaticAddressImportJobServiceImpl(StaticAddressImportJobRepository repository,
+        StaticAddressFileService fileService) {
 
         this.repository = repository;
+        this.fileService = fileService;
     }
 
     @Override
@@ -40,5 +43,6 @@ public class StaticAddressImportJobServiceImpl implements StaticAddressImportJob
     public void deleteJob(StaticAddressImportJob job) {
 
         repository.delete(job);
+        fileService.delete(job.getCsvPath());
     }
 }

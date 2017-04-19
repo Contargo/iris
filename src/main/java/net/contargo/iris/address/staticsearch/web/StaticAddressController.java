@@ -5,6 +5,10 @@ import net.contargo.iris.address.staticsearch.StaticAddress;
 import net.contargo.iris.address.staticsearch.service.StaticAddressCoordinatesDuplicationException;
 import net.contargo.iris.address.staticsearch.service.StaticAddressDuplicationException;
 import net.contargo.iris.address.staticsearch.service.StaticAddressService;
+import net.contargo.iris.address.staticsearch.upload.StaticAddressImportJob;
+import net.contargo.iris.address.staticsearch.upload.service.StaticAddressFileService;
+import net.contargo.iris.address.staticsearch.upload.service.StaticAddressFileStorageException;
+import net.contargo.iris.address.staticsearch.upload.service.StaticAddressImportJobService;
 import net.contargo.iris.api.ControllerConstants;
 import net.contargo.iris.sequence.service.UniqueIdSequenceServiceException;
 
@@ -22,6 +26,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.lang.invoke.MethodHandles;
 
@@ -32,6 +39,8 @@ import javax.validation.Valid;
 import static net.contargo.iris.Message.error;
 import static net.contargo.iris.Message.success;
 
+import static org.apache.commons.lang.StringUtils.isBlank;
+
 import static org.slf4j.LoggerFactory.getLogger;
 
 
@@ -41,6 +50,7 @@ import static org.slf4j.LoggerFactory.getLogger;
  * @author  Michael Herbold - herbold@synyx.de
  * @author  Arnold Franke - franke@synyx.de
  * @author  Jörg Alberto Hoffmann - hoffmann@synyx.de
+ * @author  Sandra Thieme - thieme@synyx.de
  */
 @Controller
 @RequestMapping("/staticaddresses")
@@ -64,11 +74,16 @@ public class StaticAddressController {
             "staticaddress.error.coordinates.duplicate");
 
     private final StaticAddressService staticAddressService;
+    private final StaticAddressFileService staticAddressFileService;
+    private final StaticAddressImportJobService jobService;
 
     @Autowired
-    public StaticAddressController(StaticAddressService staticAddressService) {
+    public StaticAddressController(StaticAddressService staticAddressService,
+        StaticAddressFileService staticAddressFileService, StaticAddressImportJobService jobService) {
 
         this.staticAddressService = staticAddressService;
+        this.staticAddressFileService = staticAddressFileService;
+        this.jobService = jobService;
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -125,6 +140,43 @@ public class StaticAddressController {
         Model model) {
 
         return saveOrUpdateStaticAddress(staticAddress, result, model, UPDATE_SUCCESS_MESSAGE);
+    }
+
+
+    @RequestMapping(value = "/import", method = RequestMethod.GET)
+    public String getImportForm() {
+
+        return CONTROLLER_CONTEXT + "importForm";
+    }
+
+
+    @RequestMapping(value = "/import", method = RequestMethod.POST)
+    public String uploadImportCsv(@RequestParam("file") MultipartFile file,
+        @RequestParam("email") String email, Model model, RedirectAttributes redirectAttributes) {
+
+        if (isBlank(email)) {
+            model.addAttribute("message", error("An email address is necessary."));
+
+            return CONTROLLER_CONTEXT + "importForm";
+        }
+
+        try {
+            staticAddressFileService.saveFile(file);
+
+            jobService.addJob(new StaticAddressImportJob(email, file.getOriginalFilename()));
+        } catch (StaticAddressFileStorageException e) {
+            LOG.error("StaticAddress file upload failed", e);
+            redirectAttributes.addFlashAttribute("message",
+                error("There was an error uploading " + file.getOriginalFilename() + "; please try again later."));
+
+            return "redirect:" + "/web/staticaddresses/";
+        }
+
+        redirectAttributes.addFlashAttribute("message",
+            Message.success(
+                "Successfully uploaded " + file.getOriginalFilename() + "; it will be processed shortly."));
+
+        return "redirect:" + "/web/staticaddresses/";
     }
 
 

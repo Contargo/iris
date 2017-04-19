@@ -100,4 +100,9 @@
     <bean class="org.springframework.web.servlet.i18n.FixedLocaleResolver">
         <property name="defaultLocale" value="en_EN"/>
     </bean>
+
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- one of the properties available; the maximum file size in bytes -->
+        <property name="maxUploadSize" value="20000000"/>
+    </bean>
 </beans>

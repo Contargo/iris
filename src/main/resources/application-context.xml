@@ -435,7 +435,7 @@
         <property name="jobDetail" ref="staticAddressImportJob"/>
         <property name="cronExpression" value="${addresses.cron}"/>
     </bean>
-    
+
     <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="triggers">
             <list>
@@ -451,4 +451,8 @@
         <constructor-arg name="configuration" ref="freemarkerConfiguration"/>
     </bean>
     <bean name="emailConfig" class="net.contargo.iris.config.EmailConfig"/>
+
+    <bean id="staticAddressFileService" class="net.contargo.iris.address.staticsearch.upload.service.StaticAddressFileService">
+        <constructor-arg name="directory" value="${addresses.csvdir}"/>
+    </bean>
 </beans>

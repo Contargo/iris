@@ -4,19 +4,30 @@ import net.contargo.iris.address.staticsearch.StaticAddress;
 import net.contargo.iris.address.staticsearch.service.StaticAddressCoordinatesDuplicationException;
 import net.contargo.iris.address.staticsearch.service.StaticAddressDuplicationException;
 import net.contargo.iris.address.staticsearch.service.StaticAddressService;
+import net.contargo.iris.address.staticsearch.upload.StaticAddressImportJob;
+import net.contargo.iris.address.staticsearch.upload.service.StaticAddressFileService;
+import net.contargo.iris.address.staticsearch.upload.service.StaticAddressFileStorageException;
+import net.contargo.iris.address.staticsearch.upload.service.StaticAddressImportJobService;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import org.junit.runner.RunWith;
 
+import org.mockito.ArgumentCaptor;
+
 import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.http.MediaType;
+
+import org.springframework.mock.web.MockMultipartFile;
 
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 
 import org.springframework.web.context.WebApplicationContext;
 
@@ -25,21 +36,31 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import static net.contargo.iris.Message.MessageType.ERROR;
+import static net.contargo.iris.Message.MessageType.SUCCESS;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+
 import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 
@@ -64,11 +85,15 @@ public class StaticAddressControllerMvcUnitTest {
 
     @Autowired
     private StaticAddressService staticAddressServiceMock;
+    @Autowired
+    private StaticAddressFileService staticAddressFileServiceMock;
+    @Autowired
+    private StaticAddressImportJobService importJobServiceMock;
 
     @Before
     public void setUp() {
 
-        reset(staticAddressServiceMock);
+        reset(staticAddressServiceMock, staticAddressFileServiceMock, importJobServiceMock);
     }
 
 
@@ -146,7 +171,8 @@ public class StaticAddressControllerMvcUnitTest {
         ResultActions resultActions = perform(builder);
         resultActions.andExpect(status().isOk());
         resultActions.andExpect(model().attribute("staticAddress", savedStaticAddress));
-        resultActions.andExpect(model().attribute("message", hasProperty("message", is("staticaddress.save.success"))));
+        resultActions.andExpect(model().attribute("message",
+                hasProperty("message", is("staticaddress.save.success"))));
 
         verify(staticAddressServiceMock).saveStaticAddress(staticAddress);
     }
@@ -246,6 +272,71 @@ public class StaticAddressControllerMvcUnitTest {
                 hasProperty("message", is("staticaddress.update.success"))));
 
         verify(staticAddressServiceMock).saveStaticAddress(staticAddress);
+    }
+
+
+    @Test
+    public void getImportForm() throws Exception {
+
+        ResultActions resultActions = perform(get("/staticaddresses/import"));
+        resultActions.andExpect(status().isOk());
+        resultActions.andExpect(view().name("staticAddressManagement/importForm"));
+    }
+
+
+    @Test
+    public void importSuccess() throws Exception {
+
+        MockMultipartFile addressList = new MockMultipartFile("file", "addresses.csv", MediaType.TEXT_PLAIN_VALUE,
+                "postalcode;city;".getBytes());
+        MockMultipartHttpServletRequestBuilder builder = fileUpload("/staticaddresses/import");
+        builder.file(addressList);
+        builder.param("email", "a@b.de");
+
+        ResultActions resultActions = perform(builder);
+        resultActions.andExpect(status().is3xxRedirection());
+        resultActions.andExpect(flash().attribute("message", hasProperty("type", is(SUCCESS))));
+
+        verify(staticAddressFileServiceMock).saveFile(addressList);
+
+        ArgumentCaptor<StaticAddressImportJob> captor = ArgumentCaptor.forClass(StaticAddressImportJob.class);
+        verify(importJobServiceMock).addJob(captor.capture());
+
+        StaticAddressImportJob job = captor.getValue();
+        assertThat(job.getEmail(), is("a@b.de"));
+        assertThat(job.getCsvPath(), is("addresses.csv"));
+    }
+
+
+    @Test
+    public void importFail() throws Exception {
+
+        MockMultipartFile addressList = new MockMultipartFile("file", "postalcode;city;".getBytes());
+        MockMultipartHttpServletRequestBuilder builder = fileUpload("/staticaddresses/import");
+        builder.file(addressList);
+        builder.param("email", "a@b.de");
+
+        doThrow(StaticAddressFileStorageException.class).when(staticAddressFileServiceMock).saveFile(addressList);
+
+        ResultActions resultActions = perform(builder);
+        resultActions.andExpect(status().is3xxRedirection());
+        resultActions.andExpect(flash().attribute("message", hasProperty("type", is(ERROR))));
+    }
+
+
+    @Test
+    public void importWithoutEmail() throws Exception {
+
+        MockMultipartFile addressList = new MockMultipartFile("file", "postalcode;city;".getBytes());
+        MockMultipartHttpServletRequestBuilder builder = fileUpload("/staticaddresses/import");
+        builder.file(addressList);
+        builder.param("email", "");
+
+        ResultActions resultActions = perform(builder);
+        resultActions.andExpect(status().is2xxSuccessful());
+        resultActions.andExpect(model().attribute("message", hasProperty("type", is(ERROR))));
+
+        verifyZeroInteractions(staticAddressFileServiceMock);
     }
 
 

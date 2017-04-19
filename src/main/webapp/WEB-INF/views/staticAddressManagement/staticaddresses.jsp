@@ -17,6 +17,7 @@
 <c:set var="METHOD" value="GET"/>
 <c:url var="BASE_URL" value="/web/staticaddresses/"/>
 <c:url var="CREATE_URL" value="/web/staticaddresses/new"/>
+<c:url var="IMPORT_URL" value="/web/staticaddresses/import"/>
 
 <div class="container-fluid">
     <div class="row-fluid">
@@ -42,6 +43,10 @@
                             <a href="${CREATE_URL}" id="new" class="btn btn-primary">
                                 <i class="icon-plus-sign icon-white"></i>
                                 <spring:message code="table.newLabel"/>
+                            </a>
+                            <a href="${IMPORT_URL}" id="import" class="btn btn-primary">
+                                <i class="icon-plus-sign icon-white"></i>
+                                <spring:message code="staticaddress.label.import"/>
                             </a>
                         </div>
                     </fieldset>

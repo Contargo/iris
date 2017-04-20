@@ -6,6 +6,8 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
 
+import org.slf4j.Logger;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -14,12 +16,16 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
+import java.lang.invoke.MethodHandles;
+
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import java.util.List;
+
+import static org.slf4j.LoggerFactory.getLogger;
 
 import static java.util.stream.Collectors.toList;
 
@@ -28,6 +34,8 @@ import static java.util.stream.Collectors.toList;
  * @author  Sandra Thieme - thieme@synyx.de
  */
 public class StaticAddressCsvService {
+
+    private static final Logger LOG = getLogger(MethodHandles.lookup().lookupClass());
 
     private static final String POSTAL_CODE = "postalcode";
     private static final String CITY = "city";
@@ -44,6 +52,8 @@ public class StaticAddressCsvService {
 
         Path path = csvDirectory.resolve(csvFileName);
 
+        LOG.debug("Parsing csv file {}", path);
+
         try(InputStream s = Files.newInputStream(path);
                 CSVParser csvReader = createCsvReader(s)) {
             return csvReader.getRecords().stream().map(r ->
@@ -56,6 +66,8 @@ public class StaticAddressCsvService {
 
 
     public InputStream generateCsvReport(List<StaticAddressErrorRecord> records) {
+
+        LOG.debug("Generating csv report with {} error records", records.size());
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
 

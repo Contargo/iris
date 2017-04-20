@@ -40,8 +40,12 @@ public class StaticAddressFileService {
 
     public void saveFile(MultipartFile file) {
 
+        Path destination = location.resolve(file.getOriginalFilename());
+
+        LOG.debug("Saving file {} to {}", file.getOriginalFilename(), destination);
+
         try {
-            Files.copy(file.getInputStream(), this.location.resolve(file.getOriginalFilename()));
+            Files.copy(file.getInputStream(), destination);
         } catch (IOException e) {
             throw new StaticAddressFileStorageException("Failed to store file " + file.getOriginalFilename(), e);
         }
@@ -50,8 +54,12 @@ public class StaticAddressFileService {
 
     public void delete(String file) {
 
+        Path destination = location.resolve(file);
+
+        LOG.debug("Deleting file {}", destination);
+
         try {
-            Files.delete(this.location.resolve(file));
+            Files.delete(destination);
         } catch (IOException e) {
             LOG.error("Failed to delete file", e);
         }

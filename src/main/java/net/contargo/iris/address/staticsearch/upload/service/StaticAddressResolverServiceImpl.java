@@ -9,16 +9,21 @@ import net.contargo.iris.address.staticsearch.service.StaticAddressService;
 import net.contargo.iris.address.staticsearch.upload.csv.StaticAddressErrorRecord;
 import net.contargo.iris.address.staticsearch.upload.csv.StaticAddressImportRecord;
 
+import org.slf4j.Logger;
+
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * @author  Sandra Thieme - thieme@synyx.de
  */
 public class StaticAddressResolverServiceImpl implements StaticAddressResolverService {
 
+    private static final Logger LOG = getLogger(MethodHandles.lookup().lookupClass());
     private final StaticAddressService staticAddressService;
     private final NominatimAddressService nominatimAddressService;
 
@@ -32,6 +37,7 @@ public class StaticAddressResolverServiceImpl implements StaticAddressResolverSe
     @Override
     public List<StaticAddressErrorRecord> resolveAddresses(List<StaticAddressImportRecord> importRecords) {
 
+        LOG.debug("Trying to resolve {} addresses", importRecords.size());
         List<StaticAddressErrorRecord> errors = new ArrayList<>();
 
         importRecords.forEach(r -> {
@@ -41,6 +47,7 @@ public class StaticAddressResolverServiceImpl implements StaticAddressResolverSe
                 errors.add(new StaticAddressErrorRecord(r.getPostalCode(), r.getCity(), "unresolvable address"));
             } else {
                 StaticAddress staticAddress = toStaticAddress(resolvedAddresses.get(0));
+                LOG.debug("Resolved {} to {}", r.toAddressDetails(), staticAddress);
                 persistAddress(staticAddress, r).ifPresent(errors::add);
             }
         });

@@ -3,9 +3,15 @@ package net.contargo.iris.address.staticsearch.upload.service;
 import net.contargo.iris.address.staticsearch.upload.StaticAddressImportJob;
 import net.contargo.iris.address.staticsearch.upload.persistence.StaticAddressImportJobRepository;
 
+import org.slf4j.Logger;
+
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.invoke.MethodHandles;
+
 import java.util.Optional;
+
+import static org.slf4j.LoggerFactory.getLogger;
 
 
 /**
@@ -13,6 +19,8 @@ import java.util.Optional;
  */
 @Transactional
 public class StaticAddressImportJobServiceImpl implements StaticAddressImportJobService {
+
+    private static final Logger LOG = getLogger(MethodHandles.lookup().lookupClass());
 
     private final StaticAddressImportJobRepository repository;
     private final StaticAddressFileService fileService;
@@ -26,6 +34,8 @@ public class StaticAddressImportJobServiceImpl implements StaticAddressImportJob
 
     @Override
     public void addJob(StaticAddressImportJob job) {
+
+        LOG.debug("Adding new static address import job for {} ({})", job.getEmail(), job.getCsvPath());
 
         repository.save(job);
     }
@@ -41,6 +51,8 @@ public class StaticAddressImportJobServiceImpl implements StaticAddressImportJob
 
     @Override
     public void deleteJob(StaticAddressImportJob job) {
+
+        LOG.debug("Deleting static address import job for {} ({})", job.getEmail(), job.getCsvPath());
 
         repository.delete(job);
         fileService.delete(job.getCsvPath());

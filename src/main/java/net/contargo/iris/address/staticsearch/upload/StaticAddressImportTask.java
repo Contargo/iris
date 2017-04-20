@@ -34,12 +34,12 @@ public class StaticAddressImportTask {
 
     public void processNextJob() {
 
-        LOG.info("Checking for static address import jobs");
+        LOG.debug("Checking for static address import jobs");
 
         Optional<StaticAddressImportJob> job = jobService.getTopmostJob();
 
         job.ifPresent(j -> {
-            LOG.info("Submitting new job for file '{}'", j.getCsvPath());
+            LOG.info("Submitting new import job for file '{}'", j.getCsvPath());
 
             try {
                 importService.importAddresses(j);

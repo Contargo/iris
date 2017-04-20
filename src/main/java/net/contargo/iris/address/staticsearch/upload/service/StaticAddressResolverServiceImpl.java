@@ -12,11 +12,13 @@ import net.contargo.iris.address.staticsearch.upload.csv.StaticAddressImportReco
 import org.slf4j.Logger;
 
 import java.lang.invoke.MethodHandles;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.slf4j.LoggerFactory.getLogger;
+
 
 /**
  * @author  Sandra Thieme - thieme@synyx.de
@@ -24,6 +26,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class StaticAddressResolverServiceImpl implements StaticAddressResolverService {
 
     private static final Logger LOG = getLogger(MethodHandles.lookup().lookupClass());
+
     private final StaticAddressService staticAddressService;
     private final NominatimAddressService nominatimAddressService;
 
@@ -38,6 +41,7 @@ public class StaticAddressResolverServiceImpl implements StaticAddressResolverSe
     public List<StaticAddressErrorRecord> resolveAddresses(List<StaticAddressImportRecord> importRecords) {
 
         LOG.debug("Trying to resolve {} addresses", importRecords.size());
+
         List<StaticAddressErrorRecord> errors = new ArrayList<>();
 
         importRecords.forEach(r -> {
@@ -59,15 +63,27 @@ public class StaticAddressResolverServiceImpl implements StaticAddressResolverSe
     private Optional<StaticAddressErrorRecord> persistAddress(StaticAddress staticAddress,
         StaticAddressImportRecord importRecord) {
 
+        if (staticAddress.getPostalcode() == null) {
+            staticAddress.setPostalcode(importRecord.getPostalCode());
+        }
+
+        if (staticAddress.getCity() == null) {
+            staticAddress.setCity(importRecord.getCity());
+        }
+
         try {
-            System.out.println("Trying to persist static address " + staticAddress);
             staticAddressService.saveStaticAddress(staticAddress);
         } catch (StaticAddressDuplicationException e) {
+            String cityAndPostalcode = "(" + staticAddress.getPostalcode() + " " + staticAddress.getCity() + ")";
+
             return Optional.of(new StaticAddressErrorRecord(importRecord.getPostalCode(), importRecord.getCity(),
-                        "address with same city and postalcode already exists"));
+                        "address with same city and postalcode already exists " + cityAndPostalcode));
         } catch (StaticAddressCoordinatesDuplicationException e) {
+            String coordinates = "(" + staticAddress.getLatitude() + ", " + staticAddress.getLongitude() + " ["
+                + staticAddress.getPostalcode() + " " + staticAddress.getCity() + "])";
+
             return Optional.of(new StaticAddressErrorRecord(importRecord.getPostalCode(), importRecord.getCity(),
-                        "address with same coordinates already exists"));
+                        "address with same coordinates already exists " + coordinates));
         }
 
         return Optional.empty();

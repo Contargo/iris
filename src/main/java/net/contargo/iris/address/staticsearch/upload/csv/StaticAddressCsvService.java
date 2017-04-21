@@ -39,6 +39,7 @@ public class StaticAddressCsvService {
 
     private static final String POSTAL_CODE = "postalcode";
     private static final String CITY = "city";
+    private static final String COUNTRY = "country";
     private static final String ERROR = "error";
 
     private final Path csvDirectory;
@@ -56,8 +57,10 @@ public class StaticAddressCsvService {
 
         try(InputStream s = Files.newInputStream(path);
                 CSVParser csvReader = createCsvReader(s)) {
-            return csvReader.getRecords().stream().map(r ->
-                        new StaticAddressImportRecord(r.get(POSTAL_CODE), r.get(CITY))).collect(toList());
+            return csvReader.getRecords()
+                .stream()
+                .map(r -> new StaticAddressImportRecord(r.get(POSTAL_CODE), r.get(CITY), r.get(COUNTRY)))
+                .collect(toList());
         } catch (IOException e) {
             throw new StaticAddressImportException("Error while attempting to read "
                 + path.toAbsolutePath().toString(), e);
@@ -72,10 +75,10 @@ public class StaticAddressCsvService {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
 
         try(CSVPrinter csvPrinter = createCsvPrinter(stream)) {
-            csvPrinter.printRecord(POSTAL_CODE, CITY, ERROR);
+            csvPrinter.printRecord(POSTAL_CODE, CITY, COUNTRY, ERROR);
 
             for (StaticAddressErrorRecord r : records) {
-                csvPrinter.printRecord(r.getPostalCode(), r.getCity(), r.getError());
+                csvPrinter.printRecord(r.getPostalCode(), r.getCity(), r.getCountry(), r.getError());
             }
         } catch (IOException e) {
             throw new StaticAddressImportException("Error while attempting to generate csv report", e);

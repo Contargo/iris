@@ -52,8 +52,8 @@ public class StaticAddressImportServiceImplUnitTest {
         StaticAddressImportJob job = new StaticAddressImportJob("user@example.com", "addresses.csv");
 
         List<StaticAddressImportRecord> importRecords = singletonList(new StaticAddressImportRecord("76135",
-                    "Karlsruhe"));
-        List<StaticAddressErrorRecord> errors = singletonList(new StaticAddressErrorRecord("76135", "Karlsruhe",
+                    "Karlsruhe", "de"));
+        List<StaticAddressErrorRecord> errors = singletonList(new StaticAddressErrorRecord("76135", "Karlsruhe", "de",
                     "error"));
         ByteArrayInputStream csvReport = new ByteArrayInputStream("example".getBytes());
 

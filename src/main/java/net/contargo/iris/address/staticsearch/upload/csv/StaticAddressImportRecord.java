@@ -13,11 +13,13 @@ public final class StaticAddressImportRecord {
 
     private final String postalCode;
     private final String city;
+    private final String country;
 
-    public StaticAddressImportRecord(String postalCode, String city) {
+    public StaticAddressImportRecord(String postalCode, String city, String country) {
 
         this.postalCode = postalCode;
         this.city = city;
+        this.country = country;
     }
 
     public String getPostalCode() {
@@ -32,12 +34,18 @@ public final class StaticAddressImportRecord {
     }
 
 
+    public String getCountry() {
+
+        return country;
+    }
+
+
     public Map<String, String> toAddressDetails() {
 
         Map<String, String> details = new HashMap<>();
         details.put(AddressDetailKey.POSTAL_CODE.getKey(), postalCode);
         details.put(AddressDetailKey.CITY.getKey(), city);
-        details.put(AddressDetailKey.COUNTRY.getKey(), "de");
+        details.put(AddressDetailKey.COUNTRY.getKey(), country);
 
         return details;
     }

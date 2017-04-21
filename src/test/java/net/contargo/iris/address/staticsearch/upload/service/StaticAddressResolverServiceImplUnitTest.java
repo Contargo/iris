@@ -63,11 +63,12 @@ public class StaticAddressResolverServiceImplUnitTest {
 
         sut = new StaticAddressResolverServiceImpl(staticAddressServiceMock, nominatimAddressServiceMock);
 
-        karlsruhe = new StaticAddressImportRecord("76135", "Karlsruhe");
+        karlsruhe = new StaticAddressImportRecord("76135", "Karlsruhe", "de");
 
         nominatimAddress = new Address(BigDecimal.ONE, BigDecimal.TEN);
         nominatimAddress.getAddress().put("city", "Karlsruhe-Resolved");
         nominatimAddress.getAddress().put("postcode", "76135-Resolved");
+        nominatimAddress.getAddress().put("country_code", "de-Resolved");
     }
 
 
@@ -89,6 +90,7 @@ public class StaticAddressResolverServiceImplUnitTest {
         assertThat(persistedStaticAddress.getLongitude(), comparesEqualTo(BigDecimal.TEN));
         assertThat(persistedStaticAddress.getCity(), is("Karlsruhe-Resolved"));
         assertThat(persistedStaticAddress.getPostalcode(), is("76135-Resolved"));
+        assertThat(persistedStaticAddress.getCountry(), is("de-Resolved"));
     }
 
 
@@ -103,6 +105,7 @@ public class StaticAddressResolverServiceImplUnitTest {
 
         assertThat(errors.get(0).getCity(), is("Karlsruhe"));
         assertThat(errors.get(0).getPostalCode(), is("76135"));
+        assertThat(errors.get(0).getCountry(), is("de"));
         assertThat(errors.get(0).getError(), is("unresolvable address"));
 
         verifyZeroInteractions(staticAddressServiceMock);
@@ -123,14 +126,16 @@ public class StaticAddressResolverServiceImplUnitTest {
 
         assertThat(errors.get(0).getCity(), is("Karlsruhe"));
         assertThat(errors.get(0).getPostalCode(), is("76135"));
+        assertThat(errors.get(0).getCountry(), is("de"));
         assertThat(errors.get(0).getError(),
-            is("address with same city and postalcode already exists (76135-Resolved Karlsruhe-Resolved)"));
+            is("address with same city and postalcode already exists (de-Resolved-76135-Resolved Karlsruhe-Resolved)"));
 
         StaticAddress staticAddress = staticAddressArgumentCaptor.getValue();
         assertThat(staticAddress.getLatitude(), comparesEqualTo(BigDecimal.ONE));
         assertThat(staticAddress.getLongitude(), comparesEqualTo(BigDecimal.TEN));
         assertThat(staticAddress.getCity(), is("Karlsruhe-Resolved"));
         assertThat(staticAddress.getPostalcode(), is("76135-Resolved"));
+        assertThat(staticAddress.getCountry(), is("de-Resolved"));
     }
 
 
@@ -148,6 +153,7 @@ public class StaticAddressResolverServiceImplUnitTest {
 
         assertThat(errors.get(0).getCity(), is("Karlsruhe"));
         assertThat(errors.get(0).getPostalCode(), is("76135"));
+        assertThat(errors.get(0).getCountry(), is("de"));
         assertThat(errors.get(0).getError(),
             is("address with same coordinates already exists (1.0000000000, 10.0000000000 [76135-Resolved Karlsruhe-Resolved])"));
 
@@ -156,6 +162,7 @@ public class StaticAddressResolverServiceImplUnitTest {
         assertThat(staticAddress.getLongitude(), comparesEqualTo(BigDecimal.TEN));
         assertThat(staticAddress.getCity(), is("Karlsruhe-Resolved"));
         assertThat(staticAddress.getPostalcode(), is("76135-Resolved"));
+        assertThat(staticAddress.getCountry(), is("de-Resolved"));
     }
 
 
@@ -164,6 +171,7 @@ public class StaticAddressResolverServiceImplUnitTest {
 
         nominatimAddress.getAddress().remove("city");
         nominatimAddress.getAddress().remove("postcode");
+        nominatimAddress.getAddress().remove("country_code");
 
         when(nominatimAddressServiceMock.getAddressesByDetails(karlsruhe.toAddressDetails())).thenReturn(singletonList(
                 nominatimAddress));
@@ -180,5 +188,6 @@ public class StaticAddressResolverServiceImplUnitTest {
         assertThat(persistedStaticAddress.getLongitude(), comparesEqualTo(BigDecimal.TEN));
         assertThat(persistedStaticAddress.getCity(), is("Karlsruhe"));
         assertThat(persistedStaticAddress.getPostalcode(), is("76135"));
+        assertThat(persistedStaticAddress.getCountry(), is("de"));
     }
 }

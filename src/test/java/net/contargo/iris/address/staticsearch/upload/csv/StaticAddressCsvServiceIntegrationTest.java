@@ -55,7 +55,7 @@ public class StaticAddressCsvServiceIntegrationTest {
 
     private String createCsv() throws IOException {
 
-        String csv = "postalcode;city;\n76135;Karlsruhe;";
+        String csv = "postalcode;city;country\n76135;Karlsruhe;de";
         Path csvFilePath = Files.createTempFile("addresses", ".csv");
         IOUtils.write(csv, Files.newOutputStream(csvFilePath), Charset.forName("ISO-8859-1"));
 
@@ -67,10 +67,10 @@ public class StaticAddressCsvServiceIntegrationTest {
     public void generateCsvReport() throws IOException {
 
         List<StaticAddressErrorRecord> errorRecords = singletonList(new StaticAddressErrorRecord("76135", "Karlsruhe",
-                    "error"));
+                    "de", "error"));
         InputStream inputStream = sut.generateCsvReport(errorRecords);
         String csv = IOUtils.toString(inputStream, Charset.forName("ISO-8859-1"));
-        assertThat(csv, containsString("postalcode;city;error"));
-        assertThat(csv, containsString("76135;Karlsruhe;error"));
+        assertThat(csv, containsString("postalcode;city;country;error"));
+        assertThat(csv, containsString("76135;Karlsruhe;de;error"));
     }
 }

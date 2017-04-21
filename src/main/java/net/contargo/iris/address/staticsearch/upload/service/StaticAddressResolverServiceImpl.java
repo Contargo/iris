@@ -48,7 +48,9 @@ public class StaticAddressResolverServiceImpl implements StaticAddressResolverSe
             List<Address> resolvedAddresses = nominatimAddressService.getAddressesByDetails(r.toAddressDetails());
 
             if (resolvedAddresses.isEmpty()) {
-                errors.add(new StaticAddressErrorRecord(r.getPostalCode(), r.getCity(), "unresolvable address"));
+                errors.add(
+                    new StaticAddressErrorRecord(r.getPostalCode(), r.getCity(), r.getCountry(),
+                        "unresolvable address"));
             } else {
                 StaticAddress staticAddress = toStaticAddress(resolvedAddresses.get(0));
                 LOG.debug("Resolved {} to {}", r.toAddressDetails(), staticAddress);
@@ -71,19 +73,25 @@ public class StaticAddressResolverServiceImpl implements StaticAddressResolverSe
             staticAddress.setCity(importRecord.getCity());
         }
 
+        if (staticAddress.getCountry() == null) {
+            staticAddress.setCountry(importRecord.getCountry());
+        }
+
         try {
             staticAddressService.saveStaticAddress(staticAddress);
         } catch (StaticAddressDuplicationException e) {
-            String cityAndPostalcode = "(" + staticAddress.getPostalcode() + " " + staticAddress.getCity() + ")";
+            String cityAndPostalcode = "(" + staticAddress.getCountry() + "-" + staticAddress.getPostalcode() + " "
+                + staticAddress.getCity() + ")";
 
             return Optional.of(new StaticAddressErrorRecord(importRecord.getPostalCode(), importRecord.getCity(),
+                        importRecord.getCountry(),
                         "address with same city and postalcode already exists " + cityAndPostalcode));
         } catch (StaticAddressCoordinatesDuplicationException e) {
             String coordinates = "(" + staticAddress.getLatitude() + ", " + staticAddress.getLongitude() + " ["
                 + staticAddress.getPostalcode() + " " + staticAddress.getCity() + "])";
 
             return Optional.of(new StaticAddressErrorRecord(importRecord.getPostalCode(), importRecord.getCity(),
-                        "address with same coordinates already exists " + coordinates));
+                        importRecord.getCountry(), "address with same coordinates already exists " + coordinates));
         }
 
         return Optional.empty();

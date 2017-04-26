@@ -88,9 +88,9 @@ public class StaticAddressResolverServiceImplUnitTest {
 
         assertThat(persistedStaticAddress.getLatitude(), comparesEqualTo(BigDecimal.ONE));
         assertThat(persistedStaticAddress.getLongitude(), comparesEqualTo(BigDecimal.TEN));
-        assertThat(persistedStaticAddress.getCity(), is("Karlsruhe-Resolved"));
-        assertThat(persistedStaticAddress.getPostalcode(), is("76135-Resolved"));
-        assertThat(persistedStaticAddress.getCountry(), is("de-Resolved"));
+        assertThat(persistedStaticAddress.getCity(), is("Karlsruhe"));
+        assertThat(persistedStaticAddress.getPostalcode(), is("76135"));
+        assertThat(persistedStaticAddress.getCountry(), is("DE"));
     }
 
 
@@ -105,7 +105,7 @@ public class StaticAddressResolverServiceImplUnitTest {
 
         assertThat(errors.get(0).getCity(), is("Karlsruhe"));
         assertThat(errors.get(0).getPostalCode(), is("76135"));
-        assertThat(errors.get(0).getCountry(), is("de"));
+        assertThat(errors.get(0).getCountry(), is("DE"));
         assertThat(errors.get(0).getError(), is("unresolvable address"));
 
         verifyZeroInteractions(staticAddressServiceMock);
@@ -126,16 +126,16 @@ public class StaticAddressResolverServiceImplUnitTest {
 
         assertThat(errors.get(0).getCity(), is("Karlsruhe"));
         assertThat(errors.get(0).getPostalCode(), is("76135"));
-        assertThat(errors.get(0).getCountry(), is("de"));
+        assertThat(errors.get(0).getCountry(), is("DE"));
         assertThat(errors.get(0).getError(),
-            is("address with same city and postalcode already exists (de-Resolved-76135-Resolved Karlsruhe-Resolved)"));
+            is("address with same city and postalcode already exists (DE-76135 Karlsruhe)"));
 
         StaticAddress staticAddress = staticAddressArgumentCaptor.getValue();
         assertThat(staticAddress.getLatitude(), comparesEqualTo(BigDecimal.ONE));
         assertThat(staticAddress.getLongitude(), comparesEqualTo(BigDecimal.TEN));
-        assertThat(staticAddress.getCity(), is("Karlsruhe-Resolved"));
-        assertThat(staticAddress.getPostalcode(), is("76135-Resolved"));
-        assertThat(staticAddress.getCountry(), is("de-Resolved"));
+        assertThat(staticAddress.getCity(), is("Karlsruhe"));
+        assertThat(staticAddress.getPostalcode(), is("76135"));
+        assertThat(staticAddress.getCountry(), is("DE"));
     }
 
 
@@ -153,16 +153,16 @@ public class StaticAddressResolverServiceImplUnitTest {
 
         assertThat(errors.get(0).getCity(), is("Karlsruhe"));
         assertThat(errors.get(0).getPostalCode(), is("76135"));
-        assertThat(errors.get(0).getCountry(), is("de"));
+        assertThat(errors.get(0).getCountry(), is("DE"));
         assertThat(errors.get(0).getError(),
-            is("address with same coordinates already exists (1.0000000000, 10.0000000000 [76135-Resolved Karlsruhe-Resolved])"));
+            is("address with same coordinates already exists (1.0000000000, 10.0000000000 [76135 Karlsruhe])"));
 
         StaticAddress staticAddress = staticAddressArgumentCaptor.getValue();
         assertThat(staticAddress.getLatitude(), comparesEqualTo(BigDecimal.ONE));
         assertThat(staticAddress.getLongitude(), comparesEqualTo(BigDecimal.TEN));
-        assertThat(staticAddress.getCity(), is("Karlsruhe-Resolved"));
-        assertThat(staticAddress.getPostalcode(), is("76135-Resolved"));
-        assertThat(staticAddress.getCountry(), is("de-Resolved"));
+        assertThat(staticAddress.getCity(), is("Karlsruhe"));
+        assertThat(staticAddress.getPostalcode(), is("76135"));
+        assertThat(staticAddress.getCountry(), is("DE"));
     }
 
 
@@ -188,6 +188,6 @@ public class StaticAddressResolverServiceImplUnitTest {
         assertThat(persistedStaticAddress.getLongitude(), comparesEqualTo(BigDecimal.TEN));
         assertThat(persistedStaticAddress.getCity(), is("Karlsruhe"));
         assertThat(persistedStaticAddress.getPostalcode(), is("76135"));
-        assertThat(persistedStaticAddress.getCountry(), is("de"));
+        assertThat(persistedStaticAddress.getCountry(), is("DE"));
     }
 }

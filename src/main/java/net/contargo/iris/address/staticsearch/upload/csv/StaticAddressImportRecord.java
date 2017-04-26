@@ -19,7 +19,7 @@ public final class StaticAddressImportRecord {
 
         this.postalCode = postalCode;
         this.city = city;
-        this.country = country;
+        this.country = country.toUpperCase();
     }
 
     public String getPostalCode() {

@@ -52,7 +52,7 @@ public class StaticAddressResolverServiceImpl implements StaticAddressResolverSe
                     new StaticAddressErrorRecord(r.getPostalCode(), r.getCity(), r.getCountry(),
                         "unresolvable address"));
             } else {
-                StaticAddress staticAddress = toStaticAddress(resolvedAddresses.get(0));
+                StaticAddress staticAddress = toStaticAddress(resolvedAddresses.get(0), r);
                 LOG.debug("Resolved {} to {}", r.toAddressDetails(), staticAddress);
                 persistAddress(staticAddress, r).ifPresent(errors::add);
             }
@@ -64,18 +64,6 @@ public class StaticAddressResolverServiceImpl implements StaticAddressResolverSe
 
     private Optional<StaticAddressErrorRecord> persistAddress(StaticAddress staticAddress,
         StaticAddressImportRecord importRecord) {
-
-        if (staticAddress.getPostalcode() == null) {
-            staticAddress.setPostalcode(importRecord.getPostalCode());
-        }
-
-        if (staticAddress.getCity() == null) {
-            staticAddress.setCity(importRecord.getCity());
-        }
-
-        if (staticAddress.getCountry() == null) {
-            staticAddress.setCountry(importRecord.getCountry());
-        }
 
         try {
             staticAddressService.saveStaticAddress(staticAddress);
@@ -98,13 +86,12 @@ public class StaticAddressResolverServiceImpl implements StaticAddressResolverSe
     }
 
 
-    private static StaticAddress toStaticAddress(Address address) {
+    private static StaticAddress toStaticAddress(Address address, StaticAddressImportRecord record) {
 
         StaticAddress staticAddress = new StaticAddress();
-        staticAddress.setCity(address.getCity());
-        staticAddress.setCountry(address.getCountryCode());
-        staticAddress.setPostalcode(address.getPostcode());
-        staticAddress.setSuburb(address.getSuburb());
+        staticAddress.setCity(record.getCity());
+        staticAddress.setCountry(record.getCountry());
+        staticAddress.setPostalcode(record.getPostalCode());
         staticAddress.setLatitude(address.getLatitude());
         staticAddress.setLongitude(address.getLongitude());
 

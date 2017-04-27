@@ -1,6 +1,7 @@
 package net.contargo.iris.address.staticsearch.upload.service;
 
 import net.contargo.iris.address.staticsearch.upload.StaticAddressImportJob;
+import net.contargo.iris.address.staticsearch.upload.csv.StaticAddressCsvException;
 import net.contargo.iris.address.staticsearch.upload.csv.StaticAddressCsvService;
 import net.contargo.iris.address.staticsearch.upload.csv.StaticAddressErrorRecord;
 import net.contargo.iris.address.staticsearch.upload.csv.StaticAddressImportRecord;
@@ -12,30 +13,31 @@ import java.util.List;
 
 /**
  * @author  Sandra Thieme - thieme@synyx.de
+ * @author  Oliver Messner - messner@synyx.de
  */
 public class StaticAddressImportServiceImpl implements StaticAddressImportService {
 
     private final StaticAddressCsvService csvService;
     private final StaticAddressResolverService resolverService;
-    private final AddressMailService addressMailService;
 
     public StaticAddressImportServiceImpl(StaticAddressCsvService csvService,
-        StaticAddressResolverService resolverService, AddressMailService addressMailService) {
+        StaticAddressResolverService resolverService) {
 
         this.csvService = csvService;
         this.resolverService = resolverService;
-        this.addressMailService = addressMailService;
     }
 
     @Override
-    public void importAddresses(StaticAddressImportJob job) {
+    public StaticAddressImportReport importAddresses(StaticAddressImportJob job) {
 
-        List<StaticAddressImportRecord> importRecords = csvService.parseStaticAddressImportFile(job.getCsvPath());
+        try {
+            List<StaticAddressImportRecord> importRecords = csvService.parseStaticAddressImportFile(job.getCsvPath());
+            List<StaticAddressErrorRecord> errors = resolverService.resolveAddresses(importRecords);
+            InputStream data = csvService.generateCsvReport(errors);
 
-        List<StaticAddressErrorRecord> errors = resolverService.resolveAddresses(importRecords);
-
-        InputStream csv = csvService.generateCsvReport(errors);
-
-        addressMailService.send(job.getEmail(), job.getCsvPath(), csv);
+            return new StaticAddressImportReport(data);
+        } catch (StaticAddressCsvException e) {
+            throw new StaticAddressImportException(e.getMessage(), e);
+        }
     }
 }

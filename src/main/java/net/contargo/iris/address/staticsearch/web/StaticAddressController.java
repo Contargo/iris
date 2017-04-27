@@ -6,8 +6,8 @@ import net.contargo.iris.address.staticsearch.service.StaticAddressCoordinatesDu
 import net.contargo.iris.address.staticsearch.service.StaticAddressDuplicationException;
 import net.contargo.iris.address.staticsearch.service.StaticAddressService;
 import net.contargo.iris.address.staticsearch.upload.StaticAddressImportJob;
-import net.contargo.iris.address.staticsearch.upload.service.StaticAddressFileService;
-import net.contargo.iris.address.staticsearch.upload.service.StaticAddressFileStorageException;
+import net.contargo.iris.address.staticsearch.upload.file.StaticAddressFileService;
+import net.contargo.iris.address.staticsearch.upload.file.StaticAddressFileStorageException;
 import net.contargo.iris.address.staticsearch.upload.service.StaticAddressImportJobService;
 import net.contargo.iris.api.ControllerConstants;
 import net.contargo.iris.sequence.service.UniqueIdSequenceServiceException;
@@ -160,21 +160,22 @@ public class StaticAddressController {
             return CONTROLLER_CONTEXT + "importForm";
         }
 
+        String filename = file.getOriginalFilename();
+
         try {
             staticAddressFileService.saveFile(file);
-
-            jobService.addJob(new StaticAddressImportJob(email, file.getOriginalFilename()));
         } catch (StaticAddressFileStorageException e) {
             LOG.error("StaticAddress file upload failed", e);
             redirectAttributes.addFlashAttribute("message",
-                error("There was an error uploading " + file.getOriginalFilename() + "; please try again later."));
+                Message.error("There was an error uploading " + filename + "; please try again later."));
 
             return "redirect:" + "/web/staticaddresses/";
         }
 
+        jobService.addJob(new StaticAddressImportJob(email, filename));
+
         redirectAttributes.addFlashAttribute("message",
-            Message.success(
-                "Successfully uploaded " + file.getOriginalFilename() + "; it will be processed shortly."));
+            Message.success("Successfully uploaded " + filename + "; it will be processed shortly."));
 
         return "redirect:" + "/web/staticaddresses/";
     }

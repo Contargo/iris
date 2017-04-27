@@ -16,6 +16,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * @author  Sandra Thieme - thieme@synyx.de
+ * @author  Oliver Messner - messner@synyx.de
  */
 @Transactional
 public class StaticAddressImportJobServiceImpl implements StaticAddressImportJobService {
@@ -23,13 +24,10 @@ public class StaticAddressImportJobServiceImpl implements StaticAddressImportJob
     private static final Logger LOG = getLogger(MethodHandles.lookup().lookupClass());
 
     private final StaticAddressImportJobRepository repository;
-    private final StaticAddressFileService fileService;
 
-    public StaticAddressImportJobServiceImpl(StaticAddressImportJobRepository repository,
-        StaticAddressFileService fileService) {
+    public StaticAddressImportJobServiceImpl(StaticAddressImportJobRepository repository) {
 
         this.repository = repository;
-        this.fileService = fileService;
     }
 
     @Override
@@ -55,6 +53,5 @@ public class StaticAddressImportJobServiceImpl implements StaticAddressImportJob
         LOG.debug("Deleting static address import job for {} ({})", job.getEmail(), job.getCsvPath());
 
         repository.delete(job);
-        fileService.delete(job.getCsvPath());
     }
 }

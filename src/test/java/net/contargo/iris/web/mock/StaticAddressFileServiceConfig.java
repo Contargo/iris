@@ -1,6 +1,6 @@
 package net.contargo.iris.web.mock;
 
-import net.contargo.iris.address.staticsearch.upload.service.StaticAddressFileService;
+import net.contargo.iris.address.staticsearch.upload.file.StaticAddressFileService;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -5,8 +5,8 @@ import net.contargo.iris.address.staticsearch.service.StaticAddressCoordinatesDu
 import net.contargo.iris.address.staticsearch.service.StaticAddressDuplicationException;
 import net.contargo.iris.address.staticsearch.service.StaticAddressService;
 import net.contargo.iris.address.staticsearch.upload.StaticAddressImportJob;
-import net.contargo.iris.address.staticsearch.upload.service.StaticAddressFileService;
-import net.contargo.iris.address.staticsearch.upload.service.StaticAddressFileStorageException;
+import net.contargo.iris.address.staticsearch.upload.file.StaticAddressFileService;
+import net.contargo.iris.address.staticsearch.upload.file.StaticAddressFileStorageException;
 import net.contargo.iris.address.staticsearch.upload.service.StaticAddressImportJobService;
 
 import org.junit.Before;

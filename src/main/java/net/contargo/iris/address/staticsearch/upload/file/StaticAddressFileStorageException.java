@@ -1,4 +1,4 @@
-package net.contargo.iris.address.staticsearch.upload.service;
+package net.contargo.iris.address.staticsearch.upload.file;
 
 /**
  * @author  Sandra Thieme - thieme@synyx.de

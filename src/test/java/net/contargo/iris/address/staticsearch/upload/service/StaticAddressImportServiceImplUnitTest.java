@@ -18,7 +18,6 @@ import java.io.ByteArrayInputStream;
 
 import java.util.List;
 
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import static java.util.Collections.singletonList;
@@ -26,6 +25,7 @@ import static java.util.Collections.singletonList;
 
 /**
  * @author  Sandra Thieme - thieme@synyx.de
+ * @author  Oliver Messner - messner@synyx.de
  */
 @RunWith(MockitoJUnitRunner.class)
 public class StaticAddressImportServiceImplUnitTest {
@@ -42,7 +42,7 @@ public class StaticAddressImportServiceImplUnitTest {
     @Before
     public void setUp() {
 
-        sut = new StaticAddressImportServiceImpl(csvServiceMock, matchServiceMock, mailServiceMock);
+        sut = new StaticAddressImportServiceImpl(csvServiceMock, matchServiceMock);
     }
 
 
@@ -62,7 +62,5 @@ public class StaticAddressImportServiceImplUnitTest {
         when(csvServiceMock.generateCsvReport(errors)).thenReturn(csvReport);
 
         sut.importAddresses(job);
-
-        verify(mailServiceMock).send("user@example.com", "addresses.csv", csvReport);
     }
 }

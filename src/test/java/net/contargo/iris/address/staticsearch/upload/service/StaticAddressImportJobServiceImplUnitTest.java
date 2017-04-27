@@ -24,6 +24,7 @@ import static org.mockito.Mockito.when;
 
 /**
  * @author  Sandra Thieme - thieme@synyx.de
+ * @author  Oliver Messner - messner@synyx.de
  */
 @RunWith(MockitoJUnitRunner.class)
 public class StaticAddressImportJobServiceImplUnitTest {
@@ -32,15 +33,13 @@ public class StaticAddressImportJobServiceImplUnitTest {
 
     @Mock
     private StaticAddressImportJobRepository repositoryMock;
-    @Mock
-    private StaticAddressFileService fileServiceMock;
 
     private StaticAddressImportJob job;
 
     @Before
     public void setUp() {
 
-        sut = new StaticAddressImportJobServiceImpl(repositoryMock, fileServiceMock);
+        sut = new StaticAddressImportJobServiceImpl(repositoryMock);
 
         job = new StaticAddressImportJob("user@example.com", "bar.csv");
     }
@@ -70,6 +69,5 @@ public class StaticAddressImportJobServiceImplUnitTest {
         sut.deleteJob(job);
 
         verify(repositoryMock).delete(job);
-        verify(fileServiceMock).delete("bar.csv");
     }
 }

@@ -17,6 +17,7 @@ import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 
 /**
  * @author  Sandra Thieme - thieme@synyx.de
+ * @author  Oliver Messner - messner@synyx.de
  */
 public class AddressMailService {
 
@@ -29,18 +30,30 @@ public class AddressMailService {
         this.emailService = emailService;
     }
 
-    void send(String recipient, String originalFileName, InputStream csv) {
+    public void sendSuccessMail(String recipient, String filename, InputStream csv) {
 
-        LOG.info("Generating static address import report for {} (sending to {})", originalFileName, recipient);
+        LOG.info("Generating static address import success report for {} (sending to {})", filename, recipient);
 
-        HashMap<String, Object> data = new HashMap<>();
+        HashMap<String, String> data = new HashMap<>();
         data.put("username", recipient);
-        data.put("csvfilename", originalFileName);
+        data.put("csvfilename", filename);
 
         String attachmentName = "address-import-" + recipient.replace("@", "-at-").replaceAll("\\.", "-") + "-"
             + now().format(ISO_LOCAL_DATE) + ".csv";
 
         emailService.sendWithAttachment(recipient, "Static Address Import - Report", "address-upload.ftl", data, csv,
             attachmentName);
+    }
+
+
+    public void sendErrorMail(String recipient, String filename) {
+
+        LOG.info("Generating static address import error report for {} (sending to {})", filename, recipient);
+
+        HashMap<String, String> data = new HashMap<>();
+        data.put("username", recipient);
+        data.put("csvfilename", filename);
+
+        emailService.send(recipient, "Static Address Import - ERROR", "address-upload-failed.ftl", data);
     }
 }

@@ -404,8 +404,9 @@
         <constructor-arg name="addressServiceWrapper" ref="addressServiceWrapper"/>
     </bean>
 
-    <bean id="staticAddressCsvService" class="net.contargo.iris.address.staticsearch.upload.csv.StaticAddressCsvService">
-        <constructor-arg name="csvDirectory" value="${addresses.csvdir}"/>
+    <bean id="staticAddressCsvService"
+          class="net.contargo.iris.address.staticsearch.upload.csv.StaticAddressCsvService">
+        <constructor-arg name="fileService" ref="staticAddressFileService"/>
     </bean>
     <bean id="staticAddressResolverService" class="net.contargo.iris.address.staticsearch.upload.service.StaticAddressResolverServiceImpl">
         <constructor-arg name="nominatimAddressService" ref="addressService"/>
@@ -414,18 +415,20 @@
     <bean id="addressMailService" class="net.contargo.iris.address.staticsearch.upload.service.AddressMailService">
         <constructor-arg name="emailService" ref="mailService"/>
     </bean>
-    <bean id="staticAddressImportService" class="net.contargo.iris.address.staticsearch.upload.service.StaticAddressImportServiceImpl">
+    <bean id="staticAddressImportService"
+          class="net.contargo.iris.address.staticsearch.upload.service.StaticAddressImportServiceImpl">
         <constructor-arg name="csvService" ref="staticAddressCsvService"/>
         <constructor-arg name="resolverService" ref="staticAddressResolverService"/>
-        <constructor-arg name="addressMailService" ref="addressMailService"/>
     </bean>
-    <bean id="staticAddressJobService" class="net.contargo.iris.address.staticsearch.upload.service.StaticAddressImportJobServiceImpl">
+    <bean id="staticAddressJobService"
+          class="net.contargo.iris.address.staticsearch.upload.service.StaticAddressImportJobServiceImpl">
         <constructor-arg name="repository" ref="staticAddressImportJobRepository"/>
-        <constructor-arg name="fileService" ref="staticAddressFileService"/>
     </bean>
     <bean id="staticAddressImportTask" class="net.contargo.iris.address.staticsearch.upload.StaticAddressImportTask">
-        <constructor-arg name="importService" ref="staticAddressImportService"/>
         <constructor-arg name="jobService" ref="staticAddressJobService"/>
+        <constructor-arg name="importService" ref="staticAddressImportService"/>
+        <constructor-arg name="fileService" ref="staticAddressFileService"/>
+        <constructor-arg name="addressMailService" ref="addressMailService"/>
     </bean>
     <bean id="staticAddressImportJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject" ref="staticAddressImportTask"/>
@@ -453,7 +456,8 @@
     </bean>
     <bean name="emailConfig" class="net.contargo.iris.config.EmailConfig"/>
 
-    <bean id="staticAddressFileService" class="net.contargo.iris.address.staticsearch.upload.service.StaticAddressFileService">
+    <bean id="staticAddressFileService"
+          class="net.contargo.iris.address.staticsearch.upload.file.StaticAddressFileService">
         <constructor-arg name="directory" value="${addresses.csvdir}"/>
     </bean>
 </beans>

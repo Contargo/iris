@@ -21,6 +21,7 @@ import java.util.Map;
 
 /**
  * @author  Sandra Thieme - thieme@synyx.de
+ * @author  Oliver Messner - messner@synyx.de
  */
 public class DummyEmailService implements EmailService {
 
@@ -36,7 +37,16 @@ public class DummyEmailService implements EmailService {
     }
 
     @Override
-    public void sendWithAttachment(String to, String subject, String templateName, Map<String, ?> data,
+    public void send(String to, String subject, String templateName, Map<String, String> data) {
+
+        String content = templateService.createTemplate(templateName, data);
+
+        sendMail(to, from, subject, content);
+    }
+
+
+    @Override
+    public void sendWithAttachment(String to, String subject, String templateName, Map<String, String> data,
         InputStream attachment, String attachmentName) {
 
         try {
@@ -55,7 +65,7 @@ public class DummyEmailService implements EmailService {
     }
 
 
-    private void sendMail(String to, String from, String subject, String content) {
+    private static void sendMail(String to, String from, String subject, String content) {
 
         LOG.info("Sending e-mail:");
         LOG.info("\tto = {}", to);

@@ -39,7 +39,7 @@ public class AddressMailServiceUnitTest {
     @Mock
     private EmailService emailServiceMock;
     @Captor
-    private ArgumentCaptor<Map<String, ?>> dataCaptor;
+    private ArgumentCaptor<Map<String, String>> dataCaptor;
     @Captor
     private ArgumentCaptor<String> attachmentNameCaptor;
 
@@ -55,7 +55,7 @@ public class AddressMailServiceUnitTest {
 
         ByteArrayInputStream inputStream = new ByteArrayInputStream("example".getBytes());
 
-        sut.send("user@example.com", "addresses.csv", inputStream);
+        sut.sendSuccessMail("user@example.com", "addresses.csv", inputStream);
 
         verify(emailServiceMock).sendWithAttachment(eq("user@example.com"), eq("Static Address Import - Report"),
             eq("address-upload.ftl"), dataCaptor.capture(), eq(inputStream), attachmentNameCaptor.capture());

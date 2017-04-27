@@ -1,4 +1,4 @@
-package net.contargo.iris.address.staticsearch.upload.service;
+package net.contargo.iris.address.staticsearch.upload.file;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 import java.lang.invoke.MethodHandles;
 
@@ -18,6 +19,7 @@ import static java.nio.file.Files.notExists;
 
 /**
  * @author  Sandra Thieme - thieme@synyx.de
+ * @author  Oliver Messner - messner@synyx.de
  */
 public class StaticAddressFileService {
 
@@ -38,16 +40,31 @@ public class StaticAddressFileService {
         }
     }
 
+    public InputStream read(String filename) {
+
+        Path path = location.resolve(filename);
+
+        LOG.debug("Reading file {}", path);
+
+        try {
+            return Files.newInputStream(path);
+        } catch (IOException e) {
+            throw new StaticAddressFileStorageException("Failed to read file " + path, e);
+        }
+    }
+
+
     public void saveFile(MultipartFile file) {
 
-        Path destination = location.resolve(file.getOriginalFilename());
+        String filename = file.getOriginalFilename();
+        Path destination = location.resolve(filename);
 
-        LOG.debug("Saving file {} to {}", file.getOriginalFilename(), destination);
+        LOG.debug("Saving file {} to {}", filename, destination);
 
         try {
             Files.copy(file.getInputStream(), destination);
         } catch (IOException e) {
-            throw new StaticAddressFileStorageException("Failed to store file " + file.getOriginalFilename(), e);
+            throw new StaticAddressFileStorageException("Failed to store file " + filename, e);
         }
     }
 

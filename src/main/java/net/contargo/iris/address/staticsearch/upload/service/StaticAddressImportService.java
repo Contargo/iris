@@ -5,8 +5,9 @@ import net.contargo.iris.address.staticsearch.upload.StaticAddressImportJob;
 
 /**
  * @author  Sandra Thieme - thieme@synyx.de
+ * @author  Oliver Messner - messner@synyx.de
  */
 public interface StaticAddressImportService {
 
-    void importAddresses(StaticAddressImportJob job);
+    StaticAddressImportReport importAddresses(StaticAddressImportJob job);
 }

@@ -1,6 +1,6 @@
 package net.contargo.iris.address.staticsearch.upload.csv;
 
-import net.contargo.iris.address.staticsearch.upload.service.StaticAddressImportException;
+import net.contargo.iris.address.staticsearch.upload.file.StaticAddressFileService;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -19,9 +19,6 @@ import java.io.OutputStreamWriter;
 import java.lang.invoke.MethodHandles;
 
 import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import java.util.List;
 
@@ -32,6 +29,7 @@ import static java.util.stream.Collectors.toList;
 
 /**
  * @author  Sandra Thieme - thieme@synyx.de
+ * @author  Oliver Messner - messner@synyx.de
  */
 public class StaticAddressCsvService {
 
@@ -42,28 +40,24 @@ public class StaticAddressCsvService {
     private static final String COUNTRY = "country";
     private static final String ERROR = "error";
 
-    private final Path csvDirectory;
+    private final StaticAddressFileService fileService;
 
-    public StaticAddressCsvService(String csvDirectory) {
+    public StaticAddressCsvService(StaticAddressFileService fileService) {
 
-        this.csvDirectory = Paths.get(csvDirectory);
+        this.fileService = fileService;
     }
 
     public List<StaticAddressImportRecord> parseStaticAddressImportFile(String csvFileName) {
 
-        Path path = csvDirectory.resolve(csvFileName);
+        LOG.debug("Parsing import CSV");
 
-        LOG.debug("Parsing csv file {}", path);
-
-        try(InputStream s = Files.newInputStream(path);
-                CSVParser csvReader = createCsvReader(s)) {
+        try(CSVParser csvReader = createCsvReader(fileService.read(csvFileName))) {
             return csvReader.getRecords()
                 .stream()
                 .map(r -> new StaticAddressImportRecord(r.get(POSTAL_CODE), r.get(CITY), r.get(COUNTRY)))
                 .collect(toList());
-        } catch (IOException e) {
-            throw new StaticAddressImportException("Error while attempting to read "
-                + path.toAbsolutePath().toString(), e);
+        } catch (IOException | IllegalArgumentException e) {
+            throw new StaticAddressCsvException("Error while attempting to read from import CSV", e);
         }
     }
 
@@ -81,21 +75,21 @@ public class StaticAddressCsvService {
                 csvPrinter.printRecord(r.getPostalCode(), r.getCity(), r.getCountry(), r.getError());
             }
         } catch (IOException e) {
-            throw new StaticAddressImportException("Error while attempting to generate csv report", e);
+            throw new StaticAddressCsvException("Error while attempting to generate csv report", e);
         }
 
         return new ByteArrayInputStream(stream.toByteArray());
     }
 
 
-    private CSVParser createCsvReader(InputStream csvInputStream) throws IOException {
+    private static CSVParser createCsvReader(InputStream csvInputStream) throws IOException {
 
         return new CSVParser(new InputStreamReader(csvInputStream, Charset.forName("ISO-8859-1")),
                 CSVFormat.DEFAULT.withEscape('\\').withDelimiter(';').withSkipHeaderRecord().withHeader());
     }
 
 
-    private CSVPrinter createCsvPrinter(OutputStream outputStream) throws IOException {
+    private static CSVPrinter createCsvPrinter(OutputStream outputStream) throws IOException {
 
         CSVFormat csvFormat = CSVFormat.DEFAULT.withDelimiter(';').withEscape('\\').withRecordSeparator('\r');
 

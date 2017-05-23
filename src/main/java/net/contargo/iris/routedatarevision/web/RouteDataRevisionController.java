@@ -5,7 +5,7 @@ import net.contargo.iris.routedatarevision.RouteRevisionRequest;
 import net.contargo.iris.routedatarevision.ValidityRange;
 import net.contargo.iris.routedatarevision.dto.RouteDataRevisionDto;
 import net.contargo.iris.routedatarevision.dto.RouteDataRevisionDtoService;
-import net.contargo.iris.routedatarevision.service.cleanup.RouteDataRevisionCleanupService;
+import net.contargo.iris.routedatarevision.service.cleanup.RouteDataRevisionCleanupTask;
 import net.contargo.iris.terminal.service.TerminalService;
 
 import org.slf4j.Logger;
@@ -33,8 +33,6 @@ import java.text.SimpleDateFormat;
 
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.validation.Valid;
 
@@ -72,17 +70,15 @@ public class RouteDataRevisionController {
 
     private final RouteDataRevisionDtoService routeDataRevisionDtoService;
     private final TerminalService terminalService;
-    private final RouteDataRevisionCleanupService cleanupService;
-
-    private AtomicBoolean cleanupRunning = new AtomicBoolean(false);
+    private final RouteDataRevisionCleanupTask cleanupTask;
 
     @Autowired
     public RouteDataRevisionController(RouteDataRevisionDtoService routeDataRevisionDtoService,
-        TerminalService terminalService, RouteDataRevisionCleanupService cleanupService) {
+        TerminalService terminalService, RouteDataRevisionCleanupTask cleanupTask) {
 
         this.routeDataRevisionDtoService = routeDataRevisionDtoService;
         this.terminalService = terminalService;
-        this.cleanupService = cleanupService;
+        this.cleanupTask = cleanupTask;
     }
 
     @InitBinder
@@ -143,18 +139,13 @@ public class RouteDataRevisionController {
             return CONTROLLER_CONTEXT + CLEANUP;
         }
 
-        if (cleanupRunning.compareAndSet(false, true)) {
-            model.addAttribute("message",
-                success("Cleanup is running, report will be sent to " + cleanupRequest.getEmail()));
-            Executors.newSingleThreadExecutor().submit(() -> {
-                LOG.info("Starting route data revision cleanup");
-                cleanupService.cleanup(cleanupRequest);
-                cleanupRunning.set(false);
-                LOG.info("Route data revision cleanup finished");
-            });
-        } else {
+        if (cleanupTask.isRunning()) {
             model.addAttribute("message", Message.error("A cleanup is already running"));
             model.addAttribute(CLEANUP_REQUEST, cleanupRequest);
+        } else {
+            model.addAttribute("message",
+                success("Cleanup is running, report will be sent to " + cleanupRequest.getEmail()));
+            cleanupTask.submit(cleanupRequest);
         }
 
         return CONTROLLER_CONTEXT + CLEANUP;

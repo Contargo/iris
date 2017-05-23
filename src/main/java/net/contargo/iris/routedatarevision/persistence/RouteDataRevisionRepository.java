@@ -3,11 +3,10 @@ package net.contargo.iris.routedatarevision.persistence;
 import net.contargo.iris.routedatarevision.RouteDataRevision;
 import net.contargo.iris.terminal.Terminal;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.query.Param;
 
 import java.math.BigDecimal;
@@ -15,6 +14,11 @@ import java.math.BigInteger;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Stream;
+
+import javax.persistence.QueryHint;
+
+import static org.hibernate.jpa.QueryHints.HINT_FETCH_SIZE;
 
 
 /**
@@ -23,6 +27,7 @@ import java.util.List;
  * @author  Tobias Schneider - schneider@synyx.de
  * @author  David Schilling - schilling@synyx.de
  */
+
 public interface RouteDataRevisionRepository extends JpaRepository<RouteDataRevision, Long>,
     JpaSpecificationExecutor<RouteDataRevision> {
 
@@ -65,6 +70,7 @@ public interface RouteDataRevisionRepository extends JpaRepository<RouteDataRevi
     List<RouteDataRevision> findByCityIsNullAndPostalCodeIsNull();
 
 
+    @QueryHints(value = @QueryHint(name = HINT_FETCH_SIZE, value = "1"))
     @Query("SELECT r FROM RouteDataRevision r WHERE validFrom <= :date AND (validTo >= :date OR validTo IS NULL)")
-    Page<RouteDataRevision> findByValidNow(@Param("date") Date date, Pageable pageable);
+    Stream<RouteDataRevision> findValid(@Param("date") Date date);
 }

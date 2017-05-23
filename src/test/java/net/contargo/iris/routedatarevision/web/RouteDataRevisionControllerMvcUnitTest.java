@@ -4,7 +4,7 @@ import net.contargo.iris.routedatarevision.RouteRevisionRequest;
 import net.contargo.iris.routedatarevision.ValidityRange;
 import net.contargo.iris.routedatarevision.dto.RouteDataRevisionDto;
 import net.contargo.iris.routedatarevision.dto.RouteDataRevisionDtoService;
-import net.contargo.iris.routedatarevision.service.cleanup.RouteDataRevisionCleanupService;
+import net.contargo.iris.routedatarevision.service.cleanup.RouteDataRevisionCleanupTask;
 import net.contargo.iris.terminal.Terminal;
 import net.contargo.iris.terminal.dto.TerminalDto;
 import net.contargo.iris.terminal.service.TerminalService;
@@ -33,6 +33,7 @@ import java.math.BigDecimal;
 
 import java.util.List;
 
+import static net.contargo.iris.Message.MessageType.ERROR;
 import static net.contargo.iris.Message.MessageType.SUCCESS;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -49,6 +50,7 @@ import static org.mockito.Matchers.eq;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
@@ -82,7 +84,7 @@ public class RouteDataRevisionControllerMvcUnitTest {
     @Autowired
     private TerminalService terminalServiceMock;
     @Autowired
-    private RouteDataRevisionCleanupService cleanupServiceMock;
+    private RouteDataRevisionCleanupTask cleanupTaskMock;
 
     private List<RouteDataRevisionDto> routeDataRevisions;
     private RouteDataRevisionDto routeDataRevision;
@@ -261,11 +263,27 @@ public class RouteDataRevisionControllerMvcUnitTest {
     @Test
     public void cleanup() throws Exception {
 
+        when(cleanupTaskMock.isRunning()).thenReturn(false);
+
         ResultActions resultActions = perform(post("/routerevisions/cleanup").param("email", "user@example.com"));
         resultActions.andExpect(status().is2xxSuccessful());
         resultActions.andExpect(model().attribute("message", hasProperty("type", is(SUCCESS))));
 
-        verify(cleanupServiceMock).cleanup(Mockito.any(RouteDataRevisionCleanupRequest.class));
+        verify(cleanupTaskMock).submit(Mockito.any(RouteDataRevisionCleanupRequest.class));
+    }
+
+
+    @Test
+    public void cleanupAlreadyRunning() throws Exception {
+
+        when(cleanupTaskMock.isRunning()).thenReturn(true);
+
+        ResultActions resultActions = perform(post("/routerevisions/cleanup").param("email", "user@example.com"));
+        resultActions.andExpect(status().is2xxSuccessful());
+        resultActions.andExpect(model().attribute("message", hasProperty("type", is(ERROR))));
+
+        verify(cleanupTaskMock).isRunning();
+        verifyNoMoreInteractions(cleanupTaskMock);
     }
 
 

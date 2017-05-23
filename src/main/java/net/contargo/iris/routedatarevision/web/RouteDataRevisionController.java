@@ -5,7 +5,11 @@ import net.contargo.iris.routedatarevision.RouteRevisionRequest;
 import net.contargo.iris.routedatarevision.ValidityRange;
 import net.contargo.iris.routedatarevision.dto.RouteDataRevisionDto;
 import net.contargo.iris.routedatarevision.dto.RouteDataRevisionDtoService;
+import net.contargo.iris.routedatarevision.service.cleanup.RouteDataRevisionCleanupService;
 import net.contargo.iris.terminal.service.TerminalService;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -23,13 +27,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.lang.invoke.MethodHandles;
+
 import java.text.SimpleDateFormat;
 
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.validation.Valid;
 
+import static net.contargo.iris.Message.success;
 import static net.contargo.iris.util.DateUtil.asLocalDate;
 
 import static org.springframework.context.i18n.LocaleContextHolder.getLocale;
@@ -49,23 +58,31 @@ import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 @RequestMapping("/routerevisions")
 public class RouteDataRevisionController {
 
-    private static final Message SAVE_SUCCESS_MESSAGE = Message.success("routerevision.success.save.message");
-    private static final Message UPDATE_SUCCESS_MESSAGE = Message.success("routerevision.success.update.message");
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
+    private static final Message SAVE_SUCCESS_MESSAGE = success("routerevision.success.save.message");
+    private static final Message UPDATE_SUCCESS_MESSAGE = success("routerevision.success.update.message");
 
     private static final String CONTROLLER_CONTEXT = "routeRevisionManagement/";
     private static final String ROUTE_REVISION = "routeRevision";
+    private static final String CLEANUP = "cleanup";
     private static final String ROUTEREVISION_EXISTS = "routerevision.exists";
     private static final String ROUTEREVISION_VALIDITYRANGE = "routerevision.validityrange";
+    private static final String CLEANUP_REQUEST = "cleanupRequest";
 
     private final RouteDataRevisionDtoService routeDataRevisionDtoService;
     private final TerminalService terminalService;
+    private final RouteDataRevisionCleanupService cleanupService;
+
+    private AtomicBoolean cleanupRunning = new AtomicBoolean(false);
 
     @Autowired
     public RouteDataRevisionController(RouteDataRevisionDtoService routeDataRevisionDtoService,
-        TerminalService terminalService) {
+        TerminalService terminalService, RouteDataRevisionCleanupService cleanupService) {
 
         this.routeDataRevisionDtoService = routeDataRevisionDtoService;
         this.terminalService = terminalService;
+        this.cleanupService = cleanupService;
     }
 
     @InitBinder
@@ -103,6 +120,44 @@ public class RouteDataRevisionController {
         addCollectionsToModel(model);
 
         return CONTROLLER_CONTEXT + ROUTE_REVISION;
+    }
+
+
+    @RequestMapping(value = "/cleanup", method = GET)
+    public String cleanupForm(Model model) {
+
+        model.addAttribute(CLEANUP_REQUEST, new RouteDataRevisionCleanupRequest());
+
+        return CONTROLLER_CONTEXT + CLEANUP;
+    }
+
+
+    @RequestMapping(value = "/cleanup", method = POST)
+    public String cleanup(@Valid
+        @ModelAttribute(CLEANUP_REQUEST)
+        RouteDataRevisionCleanupRequest cleanupRequest, BindingResult result, Model model) {
+
+        if (result.hasErrors()) {
+            model.addAttribute(CLEANUP_REQUEST, cleanupRequest);
+
+            return CONTROLLER_CONTEXT + CLEANUP;
+        }
+
+        if (cleanupRunning.compareAndSet(false, true)) {
+            model.addAttribute("message",
+                success("Cleanup is running, report will be sent to " + cleanupRequest.getEmail()));
+            Executors.newSingleThreadExecutor().submit(() -> {
+                LOG.info("Starting route data revision cleanup");
+                cleanupService.cleanup(cleanupRequest);
+                cleanupRunning.set(false);
+                LOG.info("Route data revision cleanup finished");
+            });
+        } else {
+            model.addAttribute("message", Message.error("A cleanup is already running"));
+            model.addAttribute(CLEANUP_REQUEST, cleanupRequest);
+        }
+
+        return CONTROLLER_CONTEXT + CLEANUP;
     }
 
 

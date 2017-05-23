@@ -4,9 +4,12 @@ import net.contargo.iris.routedatarevision.RouteRevisionRequest;
 import net.contargo.iris.routedatarevision.ValidityRange;
 import net.contargo.iris.routedatarevision.dto.RouteDataRevisionDto;
 import net.contargo.iris.routedatarevision.dto.RouteDataRevisionDtoService;
+import net.contargo.iris.routedatarevision.service.cleanup.RouteDataRevisionCleanupService;
 import net.contargo.iris.terminal.Terminal;
 import net.contargo.iris.terminal.dto.TerminalDto;
 import net.contargo.iris.terminal.service.TerminalService;
+
+import org.hamcrest.Matchers;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,6 +17,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import org.mockito.ArgumentCaptor;
+import org.mockito.Mockito;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -28,6 +32,8 @@ import org.springframework.web.context.WebApplicationContext;
 import java.math.BigDecimal;
 
 import java.util.List;
+
+import static net.contargo.iris.Message.MessageType.SUCCESS;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -53,6 +59,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 import static java.util.Arrays.asList;
@@ -74,6 +81,8 @@ public class RouteDataRevisionControllerMvcUnitTest {
     private RouteDataRevisionDtoService routeDataRevisionDtoServiceMock;
     @Autowired
     private TerminalService terminalServiceMock;
+    @Autowired
+    private RouteDataRevisionCleanupService cleanupServiceMock;
 
     private List<RouteDataRevisionDto> routeDataRevisions;
     private RouteDataRevisionDto routeDataRevision;
@@ -226,6 +235,37 @@ public class RouteDataRevisionControllerMvcUnitTest {
                 .contentType(APPLICATION_JSON));
 
         resultActions.andExpect(status().is3xxRedirection());
+    }
+
+
+    @Test
+    public void getCleanupForm() throws Exception {
+
+        ResultActions resultActions = perform(get("/routerevisions/cleanup"));
+        resultActions.andExpect(status().is2xxSuccessful());
+        resultActions.andExpect(view().name("routeRevisionManagement/cleanup"));
+        resultActions.andExpect(model().attribute("cleanupRequest",
+                Matchers.any(RouteDataRevisionCleanupRequest.class)));
+    }
+
+
+    @Test
+    public void cleanupWithInvalidEmail() throws Exception {
+
+        ResultActions resultActions = perform(post("/routerevisions/cleanup").param("email", "foo"));
+        resultActions.andExpect(status().is2xxSuccessful());
+        resultActions.andExpect(model().attributeHasFieldErrors("cleanupRequest", "email"));
+    }
+
+
+    @Test
+    public void cleanup() throws Exception {
+
+        ResultActions resultActions = perform(post("/routerevisions/cleanup").param("email", "user@example.com"));
+        resultActions.andExpect(status().is2xxSuccessful());
+        resultActions.andExpect(model().attribute("message", hasProperty("type", is(SUCCESS))));
+
+        verify(cleanupServiceMock).cleanup(Mockito.any(RouteDataRevisionCleanupRequest.class));
     }
 
 

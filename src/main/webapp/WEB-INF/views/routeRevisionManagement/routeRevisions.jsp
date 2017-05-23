@@ -59,6 +59,11 @@
                                 <i class="icon-plus-sign icon-white"></i>
                                 <spring:message code="table.newLabel"/>
                             </a>
+
+                            <a href="${BASE_URL}/cleanup" class="btn btn-primary">
+                                <i class="icon-trash icon-white"></i>
+                                <spring:message code="routerevision.cleanup"/>
+                            </a>
                         </div>
                     </fieldset>
                 </form:form>

@@ -3,6 +3,8 @@ package net.contargo.iris.routedatarevision.persistence;
 import net.contargo.iris.routedatarevision.RouteDataRevision;
 import net.contargo.iris.terminal.Terminal;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -61,4 +63,8 @@ public interface RouteDataRevisionRepository extends JpaRepository<RouteDataRevi
 
 
     List<RouteDataRevision> findByCityIsNullAndPostalCodeIsNull();
+
+
+    @Query("SELECT r FROM RouteDataRevision r WHERE validFrom <= :date AND (validTo >= :date OR validTo IS NULL)")
+    Page<RouteDataRevision> findByValidNow(@Param("date") Date date, Pageable pageable);
 }

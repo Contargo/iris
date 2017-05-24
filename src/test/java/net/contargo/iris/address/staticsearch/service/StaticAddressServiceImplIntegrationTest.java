@@ -4,7 +4,7 @@ import net.contargo.iris.address.staticsearch.StaticAddress;
 import net.contargo.iris.address.staticsearch.persistence.StaticAddressRepository;
 import net.contargo.iris.normalizer.NormalizerServiceImpl;
 import net.contargo.iris.sequence.UniqueIdSequence;
-import net.contargo.iris.sequence.service.UniqueIdSequenceServiceImpl;
+import net.contargo.iris.sequence.service.SequenceService;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -48,7 +48,7 @@ public class StaticAddressServiceImplIntegrationTest {
     @Autowired
     private StaticAddressRepository staticAddressRepository;
     @Autowired
-    private UniqueIdSequenceServiceImpl uniqueIdSequenceService;
+    private SequenceService uniqueIdSequenceService;
     @Autowired
     private NormalizerServiceImpl normalizerService;
 

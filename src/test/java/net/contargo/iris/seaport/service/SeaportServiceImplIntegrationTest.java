@@ -3,7 +3,7 @@ package net.contargo.iris.seaport.service;
 import net.contargo.iris.seaport.Seaport;
 import net.contargo.iris.seaport.persistence.SeaportRepository;
 import net.contargo.iris.sequence.UniqueIdSequence;
-import net.contargo.iris.sequence.service.UniqueIdSequenceServiceImpl;
+import net.contargo.iris.sequence.service.SequenceService;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -43,7 +43,7 @@ public class SeaportServiceImplIntegrationTest {
     @Autowired
     private SeaportRepository seaportRepository;
     @Autowired
-    private UniqueIdSequenceServiceImpl uniqueIdSequenceService;
+    private SequenceService uniqueIdSequenceService;
 
     private SeaportServiceImpl sut;
 

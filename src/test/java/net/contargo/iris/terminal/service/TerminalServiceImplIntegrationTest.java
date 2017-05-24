@@ -1,7 +1,7 @@
 package net.contargo.iris.terminal.service;
 
 import net.contargo.iris.sequence.UniqueIdSequence;
-import net.contargo.iris.sequence.service.UniqueIdSequenceServiceImpl;
+import net.contargo.iris.sequence.service.SequenceService;
 import net.contargo.iris.terminal.Terminal;
 import net.contargo.iris.terminal.persistence.TerminalRepository;
 
@@ -43,7 +43,7 @@ public class TerminalServiceImplIntegrationTest {
     @Autowired
     private TerminalRepository terminalRepository;
     @Autowired
-    private UniqueIdSequenceServiceImpl uniqueIdSequenceService;
+    private SequenceService uniqueIdSequenceService;
 
     private TerminalServiceImpl sut;
 

@@ -9,29 +9,21 @@ import net.contargo.iris.routedatarevision.web.RouteDataRevisionCleanupRequest;
 import net.contargo.iris.truck.TruckRoute;
 import net.contargo.iris.truck.service.TruckRouteService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.InputStream;
 
-import java.lang.invoke.MethodHandles;
-
 import java.math.BigDecimal;
-import java.math.MathContext;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static java.math.BigDecimal.ONE;
+import static java.math.BigDecimal.TEN;
 import static java.math.BigDecimal.ZERO;
 
 import static java.util.stream.Collectors.toList;
@@ -40,11 +32,8 @@ import static java.util.stream.Collectors.toList;
 /**
  * @author  Sandra Thieme - thieme@synyx.de
  */
-@Transactional
+@Transactional(readOnly = true)
 public class RouteDataRevisionCleanupService {
-
-    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private static final MathContext MATH_CONTEXT = new MathContext(0);
 
     private final RouteDataRevisionRepository routeDataRevisionRepository;
     private final TruckRouteService truckRouteService;
@@ -71,39 +60,20 @@ public class RouteDataRevisionCleanupService {
         data.put("username", cleanupRequest.getEmail());
         data.put("numberOfRevisions", String.valueOf(obsoleteRevisions.size()));
 
-        try {
-            InputStream csvReport = csvService.generateCsvReport(obsoleteRevisions);
-            emailService.sendWithAttachment(cleanupRequest.getEmail(), "Route revision - Cleanup report",
-                "routerevision-cleanup.ftl", data, csvReport, "routerevision-cleanup.csv");
-        } catch (RouteDataRevisionCsvException e) {
-            emailService.send(cleanupRequest.getEmail(), "Route revision - Cleanup report - Error",
-                "routerevision-cleanup-error.ftl", data);
-        }
+        generateReport(cleanupRequest, obsoleteRevisions, data);
     }
 
 
     private List<RouteDataRevisionCleanupRecord> findObsoleteRevisions() {
 
-        int i = 0;
-
         Date today = new Date();
 
-        List<RouteDataRevisionCleanupRecord> obsoleteRevisions = new ArrayList<>();
-
-        Page<RouteDataRevision> page;
-
-        while ((page = routeDataRevisionRepository.findByValidNow(today, new PageRequest(i, 100))).hasContent()) {
-            obsoleteRevisions.addAll(page.getContent()
-                .stream()
-                .map(this::identifyObsoleteRevision)
+        try(Stream<RouteDataRevision> stream = routeDataRevisionRepository.findValid(today)) {
+            return stream.map(this::identifyObsoleteRevision)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .collect(toList()));
-
-            i++;
+                .collect(toList());
         }
-
-        return obsoleteRevisions;
     }
 
 
@@ -136,9 +106,24 @@ public class RouteDataRevisionCleanupService {
 
         BigDecimal currentDistance = routeDistance.compareTo(ZERO) != 0 ? routeDistance.subtract(ONE) : routeDistance;
 
-        BigDecimal revisionDivider = revisionDistance.divideToIntegralValue(BigDecimal.valueOf(10L), MATH_CONTEXT);
-        BigDecimal currentDivider = currentDistance.divideToIntegralValue(BigDecimal.valueOf(10L), MATH_CONTEXT);
+        BigDecimal revisionDivider = revisionDistance.divideToIntegralValue(TEN);
+        BigDecimal currentDivider = currentDistance.divideToIntegralValue(TEN);
 
         return revisionDivider.compareTo(currentDivider) != 0;
+    }
+
+
+    @SuppressWarnings("squid:S1166")
+    private void generateReport(RouteDataRevisionCleanupRequest cleanupRequest,
+        List<RouteDataRevisionCleanupRecord> obsoleteRevisions, Map<String, String> data) {
+
+        try {
+            InputStream csvReport = csvService.generateCsvReport(obsoleteRevisions);
+            emailService.sendWithAttachment(cleanupRequest.getEmail(), "Route revision - Cleanup report",
+                "routerevision-cleanup.ftl", data, csvReport, "routerevision-cleanup.csv");
+        } catch (RouteDataRevisionCsvException e) {
+            emailService.send(cleanupRequest.getEmail(), "Route revision - Cleanup report - Error",
+                "routerevision-cleanup-error.ftl", data);
+        }
     }
 }

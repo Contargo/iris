@@ -21,9 +21,6 @@ import org.mockito.Mock;
 
 import org.mockito.runners.MockitoJUnitRunner;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
@@ -32,6 +29,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import static com.github.npathai.hamcrestopt.OptionalMatchers.isEmpty;
 import static com.github.npathai.hamcrestopt.OptionalMatchers.isPresent;
@@ -53,8 +51,6 @@ import static java.math.BigDecimal.ONE;
 import static java.math.BigDecimal.TEN;
 import static java.math.BigDecimal.ZERO;
 
-import static java.util.Collections.singletonList;
-
 
 /**
  * @author  Sandra Thieme - thieme@synyx.de
@@ -74,8 +70,6 @@ public class RouteDataRevisionCleanupServiceUnitTest {
     private EmailService emailServiceMock;
     @Mock
     private RouteDataRevisionCsvService csvServiceMock;
-    @Mock
-    private Page<RouteDataRevision> pageMock;
     @Captor
     private ArgumentCaptor<List<RouteDataRevisionCleanupRecord>> csvCaptor;
     @Captor
@@ -98,9 +92,7 @@ public class RouteDataRevisionCleanupServiceUnitTest {
         revision.setTerminal(new Terminal(new GeoLocation(ONE, TEN)));
         revision.setTruckDistanceOneWayInKilometer(TEN);
 
-        when(repoMock.findByValidNow(any(Date.class), any(Pageable.class))).thenReturn(pageMock);
-        when(pageMock.hasContent()).thenReturn(true, false);
-        when(pageMock.getContent()).thenReturn(singletonList(revision));
+        when(repoMock.findValid(any(Date.class))).thenReturn(Stream.of(revision));
         when(routeServiceMock.route(any(GeoLocation.class), any(GeoLocation.class))).thenReturn(new TruckRoute(TEN,
                 TEN, ZERO));
         when(roundingServiceMock.roundDistance(TEN)).thenReturn(TEN);
@@ -131,9 +123,7 @@ public class RouteDataRevisionCleanupServiceUnitTest {
         revision.setTerminal(new Terminal(new GeoLocation(ONE, TEN)));
         revision.setTruckDistanceOneWayInKilometer(TEN);
 
-        when(repoMock.findByValidNow(any(Date.class), any(Pageable.class))).thenReturn(pageMock);
-        when(pageMock.hasContent()).thenReturn(true, false);
-        when(pageMock.getContent()).thenReturn(singletonList(revision));
+        when(repoMock.findValid(any(Date.class))).thenReturn(Stream.of(revision));
         when(routeServiceMock.route(any(GeoLocation.class), any(GeoLocation.class))).thenReturn(new TruckRoute(TEN,
                 TEN, ZERO));
         when(roundingServiceMock.roundDistance(TEN)).thenReturn(TEN);

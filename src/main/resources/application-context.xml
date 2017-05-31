@@ -321,6 +321,11 @@
         <constructor-arg name="normalizerService" ref="normalizerService"/>
     </bean>
 
+    <bean id="routeDataRevisionCleanupTask"
+          class="net.contargo.iris.routedatarevision.service.cleanup.RouteDataRevisionCleanupTask">
+        <constructor-arg name="cleanupService" ref="routeDataRevisionCleanupService"/>
+    </bean>
+
     <bean id="routeDataRevisionCleanupService"
           class="net.contargo.iris.routedatarevision.service.cleanup.RouteDataRevisionCleanupService">
         <constructor-arg name="routeDataRevisionRepository" ref="routeDataRevisionRepository"/>

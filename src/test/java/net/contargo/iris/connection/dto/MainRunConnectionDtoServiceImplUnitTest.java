@@ -18,7 +18,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigInteger;
 
-import java.util.Collections;
 import java.util.List;
 
 import static net.contargo.iris.route.RouteType.BARGE;
@@ -38,6 +37,7 @@ import static java.math.BigDecimal.TEN;
 import static java.math.BigDecimal.ZERO;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 
 
 /**
@@ -110,8 +110,8 @@ public class MainRunConnectionDtoServiceImplUnitTest {
     @Test
     public void save() {
 
-        MainRunConnectionDto dto = new MainRunConnectionDto(42L, BigInteger.ONE.toString(), BigInteger.TEN.toString(),
-                ONE, TEN, ZERO, BARGE, true, Collections.<AbstractSubConnectionDto>emptyList());
+        MainRunConnectionDto dto = new MainRunConnectionDto(42L, ONE.toString(), TEN.toString(), ONE, TEN, ZERO, ONE,
+                BARGE, true, emptyList());
 
         MainRunConnection connection = newConnection(seaportOne, terminal, BARGE);
         connection.setId(42L);
@@ -142,7 +142,8 @@ public class MainRunConnectionDtoServiceImplUnitTest {
     }
 
 
-    private void assertConnections(List<SimpleMainRunConnectionDto> actual, List<SimpleMainRunConnectionDto> expected) {
+    private void assertConnections(List<SimpleMainRunConnectionDto> actual,
+        List<SimpleMainRunConnectionDto> expected) {
 
         assertThat(actual, hasSize(expected.size()));
 

@@ -11,6 +11,7 @@ import java.math.BigDecimal;
  * Default implementation of {@link ConnectionDistanceService}.
  *
  * @author  Sandra Thieme - thieme@synyx.de
+ * @author  Ben Antony - antony@synyx.de
  */
 public class ConnectionDistanceServiceImpl implements ConnectionDistanceService {
 
@@ -63,6 +64,13 @@ public class ConnectionDistanceServiceImpl implements ConnectionDistanceService 
     public BigDecimal getBargeDieselDistance(MainRunConnection mainrunConnection) {
 
         return roundingService.roundDistance(mainrunConnection.getBargeDieselDistance());
+    }
+
+
+    @Override
+    public BigDecimal getDtruckDistance(MainRunConnection mainrunConnection) {
+
+        return roundingService.roundDistance(mainrunConnection.getRoadDistance());
     }
 
 

@@ -70,7 +70,11 @@ var ConnectionView = Backbone.View.extend({
                 model: this.model.get('distances'),
                 el: this.$('#distances'),
                 isBarge: this.model.get('routeType').get('value') === 'BARGE',
-                isRail: this.model.get('routeType').get('value') === 'RAIL'
+                isRail: this.model.get('routeType').get('value') === 'RAIL',
+                isDtruck: this.model.get('routeType').get('value') === 'DTRUCK',
+                isDtruckAvailable:  this.routeTypes.find(function (rt) {
+                    return rt.get('value') === 'DTRUCK';
+                }) !== undefined
             });
         }
     },

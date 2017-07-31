@@ -1,7 +1,7 @@
 function ConnectionValidationMessageService() {
     'use strict';
     this.validationMessage = {
-        'mainrunconnection.duplicate': 'Mainrun connection with given seaport, terminal und route type exists'
+        'mainrunconnection.duplicate': 'Mainrun connection with given seaport, terminal and route type exists'
     };
     this.defaultMessage = 'unspecified error';
 }

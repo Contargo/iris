@@ -37,6 +37,8 @@ import static org.mockito.Mockito.when;
  * Unit test of {@link net.contargo.iris.route.service.TruckRoutingPartEnricher}.
  *
  * @author  Tobias Schneider - schneider@synyx.de
+ * @author  Ben Antony - antony@synyx.de
+ * @author  Sandra Thieme - thieme@synyx.de
  */
 @RunWith(MockitoJUnitRunner.class)
 public class TruckRoutingPartEnricherUnitTest {
@@ -90,6 +92,7 @@ public class TruckRoutingPartEnricherUnitTest {
 
         assertThat(routePart.getData().getDieselDistance(), is(distance));
         assertThat(routePart.getData().getElectricDistance(), is(BigDecimal.ZERO));
+        assertThat(routePart.getData().getDtruckDistance(), is(BigDecimal.ZERO));
 
         assertThat(routePart.getData().getDuration(), is(duration));
         verify(durationServiceMock).getDuration(truckRoute);
@@ -111,6 +114,7 @@ public class TruckRoutingPartEnricherUnitTest {
 
         assertThat(routePart.getData().getDieselDistance(), nullValue());
         assertThat(routePart.getData().getElectricDistance(), nullValue());
+        assertThat(routePart.getData().getDtruckDistance(), nullValue());
 
         assertThat(routePart.getData().getDuration(), nullValue());
         verify(durationServiceMock, never()).getDuration(truckRoute);

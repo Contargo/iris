@@ -9,6 +9,7 @@ var ConnectionServer = function (contextpath) {
     var connectionUrl = api + 'connections/{connectionId}';
     var seaportsUrl = api + 'seaports?activeOnly=false';
     var terminalsUrl = api + 'terminals?activeOnly=false';
+    var typesUrl = api + 'connections/types';
 
     return {
         getConnection: function (connectionId, callback, errorCallback) {
@@ -36,6 +37,13 @@ var ConnectionServer = function (contextpath) {
                     errorCallback('Error retrieving terminals');
                 }
             );
+        },
+        getTypes: function (callback, errorCallback) {
+            get(typesUrl, function (response) {
+                callback(response);
+            }, function () {
+                errorCallback('Error retrieving types');
+            })
         },
         updateConnection: function (connection, callback, errorCallback) {
             put(connectionUrl.replace('{connectionId}', connection.id), connection,

@@ -3,7 +3,13 @@ package net.contargo.iris.connection;
 import net.contargo.iris.route.RouteType;
 import net.contargo.iris.seaport.Seaport;
 import net.contargo.iris.terminal.Terminal;
+
 import net.contargo.validation.bigdecimal.BigDecimalValidate;
+
+import java.math.BigDecimal;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -16,10 +22,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+
 import javax.validation.constraints.NotNull;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 import static net.contargo.iris.route.RouteType.BARGE_RAIL;
 
@@ -30,6 +34,8 @@ import static net.contargo.iris.route.RouteType.BARGE_RAIL;
  * @author  Aljona Murygina - murygina@synyx.de
  * @author  Vincent Potucek - potucek@synyx.de
  * @author  Oliver Messner - messner@synyx.de
+ * @author  Ben Antony - antony@synyx.de
+ * @author  Sandra Thieme - thieme@synyx.de
  */
 @Entity
 @Table(
@@ -63,6 +69,10 @@ public class MainRunConnection {
     @NotNull
     @BigDecimalValidate(minValue = 0, minDecimalPlaces = 1L, maxDecimalPlaces = TEN, maxFractionalPlaces = TEN)
     private BigDecimal railElectricDistance;
+
+    @NotNull
+    @BigDecimalValidate(minValue = 0, minDecimalPlaces = 1L, maxDecimalPlaces = TEN, maxFractionalPlaces = TEN)
+    private BigDecimal roadDistance;
 
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -238,6 +248,18 @@ public class MainRunConnection {
     }
 
 
+    public BigDecimal getRoadDistance() {
+
+        return roadDistance;
+    }
+
+
+    public void setRoadDistance(BigDecimal roadDistance) {
+
+        this.roadDistance = roadDistance;
+    }
+
+
     /**
      * Checks whether this {@link MainRunConnection} is enabled along with its {@link Seaport} and {@link Terminal} and
      * all its {@link AbstractSubConnection}s.
@@ -277,6 +299,7 @@ public class MainRunConnection {
             + ", location=" + terminal + ", bargeDieselDistance=" + bargeDieselDistance + ", railDieselDistance="
             + railDieselDistance
             + ", railElectricDistance=" + railElectricDistance
+            + ", roadDistance=" + roadDistance
             + ", routeType=" + routeType + "]";
     }
 }

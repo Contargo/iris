@@ -52,4 +52,6 @@
 
     <include file="dbchangelogs/db.changelog-1.15-add-static-address-import.xml"/>
 
+    <include file="dbchangelogs/db.changelog-1.15-add-road-distance-to-connection.xml"/>
+
 </databaseChangeLog>

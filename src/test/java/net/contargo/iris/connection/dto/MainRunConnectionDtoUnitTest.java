@@ -87,7 +87,7 @@ public class MainRunConnectionDtoUnitTest {
 
         List<AbstractSubConnectionDto> subConnections = asList(subConnectionDto1, subConnectionDto2);
 
-        return new MainRunConnectionDto(CONNECTION_ID, SEAPORT_UID, TERMINAL_UID, ZERO, ZERO, ZERO, BARGE_RAIL, true,
-                subConnections);
+        return new MainRunConnectionDto(CONNECTION_ID, SEAPORT_UID, TERMINAL_UID, ZERO, ZERO, ZERO, ONE, BARGE_RAIL,
+                true, subConnections);
     }
 }

@@ -30,7 +30,7 @@ class GeoLocationPartEnricher implements RoutePartEnricher {
             part.setDestination(geoLocationService.getDetailedGeoLocation(part.getDestination()));
 
             if (part.getRouteType() == RouteType.BARGE_RAIL) {
-                part.getSubRouteParts().stream().forEach(this::enrichSubRoutePart);
+                part.getSubRouteParts().forEach(this::enrichSubRoutePart);
             }
         } catch (AddressResolutionException e) {
             throw new CriticalEnricherException("Not possible to enrich geolocation", e);

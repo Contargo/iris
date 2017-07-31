@@ -7,10 +7,12 @@ import net.contargo.iris.connection.dto.MainRunConnectionDto;
 import net.contargo.iris.connection.dto.MainRunConnectionDtoService;
 import net.contargo.iris.connection.dto.SimpleMainRunConnectionDto;
 import net.contargo.iris.connection.service.DuplicateMainRunConnectionException;
+import net.contargo.iris.route.RouteType;
 
 import org.slf4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -34,8 +36,15 @@ import java.math.BigInteger;
 import java.net.URI;
 
 import java.util.Collection;
+import java.util.Map;
+import java.util.TreeMap;
 
 import javax.validation.Valid;
+
+import static net.contargo.iris.route.RouteType.BARGE;
+import static net.contargo.iris.route.RouteType.BARGE_RAIL;
+import static net.contargo.iris.route.RouteType.DTRUCK;
+import static net.contargo.iris.route.RouteType.RAIL;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -54,6 +63,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.PUT;
  * @author  Sandra Thieme - thieme@synyx.de
  * @author  Oliver Messner - messner@synyx.de
  * @author  Tobias Schneider - schneider@synyx.de
+ * @author  Ben Antony - antony@synyx.de
  */
 @Controller
 @RequestMapping(value = "/connections")
@@ -63,10 +73,14 @@ public class MainRunConnectionApiController {
 
     private final MainRunConnectionDtoService connectionApiDtoService;
 
+    private final boolean isDtruckFeatureActive;
+
     @Autowired
-    public MainRunConnectionApiController(MainRunConnectionDtoService connectionApiDtoService) {
+    public MainRunConnectionApiController(MainRunConnectionDtoService connectionApiDtoService,
+        @Value("${feature.dtruck}") boolean isDtruckFeatureActive) {
 
         this.connectionApiDtoService = connectionApiDtoService;
+        this.isDtruckFeatureActive = isDtruckFeatureActive;
     }
 
     @ApiOperation(
@@ -108,10 +122,10 @@ public class MainRunConnectionApiController {
         MainRunConnectionDto savedDto = connectionApiDtoService.save(dto);
 
         URI location = ServletUriComponentsBuilder.fromCurrentServletMapping()
-            .path("/../web/connections/{id}")
-            .build()
-            .expand(savedDto.getId())
-            .toUri();
+                .path("/../web/connections/{id}")
+                .build()
+                .expand(savedDto.getId())
+                .toUri();
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(location);
@@ -135,6 +149,23 @@ public class MainRunConnectionApiController {
         MainRunConnectionDto updatedDto = connectionApiDtoService.save(dto);
 
         return new ResponseEntity<>(updatedDto, OK);
+    }
+
+
+    @RequestMapping(value = "/types", method = GET)
+    public ResponseEntity<Map<RouteType, String>> getTypes() {
+
+        Map<RouteType, String> types = new TreeMap<>();
+
+        types.put(BARGE, "Barge");
+        types.put(RAIL, "Rail");
+        types.put(BARGE_RAIL, "Barge-Rail");
+
+        if (isDtruckFeatureActive) {
+            types.put(DTRUCK, "Direct Truck");
+        }
+
+        return new ResponseEntity<>(types, OK);
     }
 
 

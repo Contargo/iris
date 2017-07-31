@@ -26,6 +26,7 @@ import static java.util.stream.Collectors.toList;
 
 /**
  * @author  Sandra Thieme - thieme@synyx.de
+ * @author  Ben Antony - antony@synyx.de
  */
 public final class MainRunConnectionDto {
 
@@ -50,6 +51,10 @@ public final class MainRunConnectionDto {
     @NotNull
     private final BigDecimal railElectricDistance;
 
+    @BigDecimalValidate(minValue = 0, minDecimalPlaces = 1L, maxDecimalPlaces = TEN, maxFractionalPlaces = TEN)
+    @NotNull
+    private final BigDecimal roadDistance;
+
     @NotNull
     private final RouteType routeType;
 
@@ -64,6 +69,7 @@ public final class MainRunConnectionDto {
         @JsonProperty("bargeDieselDistance") BigDecimal bargeDieselDistance,
         @JsonProperty("railDieselDistance") BigDecimal railDieselDistance,
         @JsonProperty("railElectricDistance") BigDecimal railElectricDistance,
+        @JsonProperty("roadDistance") BigDecimal roadDistance,
         @JsonProperty("routeType") RouteType routeType,
         @JsonProperty("enabled") Boolean enabled,
         @JsonProperty("subConnections") List<AbstractSubConnectionDto> subConnections) {
@@ -74,6 +80,7 @@ public final class MainRunConnectionDto {
         this.bargeDieselDistance = bargeDieselDistance;
         this.railDieselDistance = railDieselDistance;
         this.railElectricDistance = railElectricDistance;
+        this.roadDistance = roadDistance;
         this.routeType = routeType;
         this.enabled = enabled;
         this.subConnections = subConnections;
@@ -88,6 +95,7 @@ public final class MainRunConnectionDto {
         this.bargeDieselDistance = mainRunConnection.getBargeDieselDistance();
         this.railDieselDistance = mainRunConnection.getRailDieselDistance();
         this.railElectricDistance = mainRunConnection.getRailElectricDistance();
+        this.roadDistance = mainRunConnection.getRoadDistance();
         this.routeType = mainRunConnection.getRouteType();
         this.enabled = mainRunConnection.getEnabled();
         this.subConnections = mainRunConnection.getSubConnections().stream().map(toDto()).collect(toList());
@@ -142,6 +150,12 @@ public final class MainRunConnectionDto {
     }
 
 
+    public BigDecimal getRoadDistance() {
+
+        return roadDistance;
+    }
+
+
     public RouteType getRouteType() {
 
         return routeType;
@@ -176,6 +190,7 @@ public final class MainRunConnectionDto {
         connection.setBargeDieselDistance(this.bargeDieselDistance);
         connection.setRailDieselDistance(this.railDieselDistance);
         connection.setRailElectricDistance(this.railElectricDistance);
+        connection.setRoadDistance(this.roadDistance);
         connection.setEnabled(this.enabled);
         connection.setId(this.id);
 

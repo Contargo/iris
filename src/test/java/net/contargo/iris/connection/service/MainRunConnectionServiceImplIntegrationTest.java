@@ -21,15 +21,19 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import static java.math.BigDecimal.ONE;
+import static java.math.BigDecimal.TEN;
+import static java.math.BigDecimal.ZERO;
+
 
 /**
  * @author  Sandra Thieme - thieme@synyx.de
+ * @author  Ben Antony - antony@synyx.de
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:application-context.xml")
@@ -56,17 +60,17 @@ public class MainRunConnectionServiceImplIntegrationTest {
         em.createQuery("DELETE FROM Terminal t").executeUpdate();
         em.createQuery("DELETE FROM Seaport s").executeUpdate();
 
-        seaport = new Seaport(new GeoLocation(BigDecimal.ONE, BigDecimal.TEN));
+        seaport = new Seaport(new GeoLocation(ONE, TEN));
         seaport.setName("Groß-Schonach");
         seaport.setUniqueId(BigInteger.ONE);
         em.persist(seaport);
 
-        terminal = new Terminal(new GeoLocation(BigDecimal.TEN, BigDecimal.ONE));
+        terminal = new Terminal(new GeoLocation(TEN, ONE));
         terminal.setName("Hornberg");
         terminal.setUniqueId(BigInteger.TEN);
         em.persist(terminal);
 
-        hubTerminal = new Terminal(new GeoLocation(BigDecimal.TEN, BigDecimal.TEN));
+        hubTerminal = new Terminal(new GeoLocation(TEN, TEN));
         hubTerminal.setName("Lüttchendorf");
         hubTerminal.setUniqueId(BigInteger.ZERO);
         em.persist(hubTerminal);
@@ -79,24 +83,25 @@ public class MainRunConnectionServiceImplIntegrationTest {
         MainRunConnection connection = new MainRunConnection(seaport);
         connection.setTerminal(terminal);
         connection.setRouteType(RouteType.BARGE_RAIL);
-        connection.setBargeDieselDistance(BigDecimal.ZERO);
-        connection.setRailDieselDistance(BigDecimal.ZERO);
-        connection.setRailElectricDistance(BigDecimal.ZERO);
+        connection.setBargeDieselDistance(ZERO);
+        connection.setRailDieselDistance(ZERO);
+        connection.setRailElectricDistance(ZERO);
+        connection.setRoadDistance(ZERO);
 
         SeaportSubConnection seaportSubConnection = new SeaportSubConnection();
         seaportSubConnection.setSeaport(seaport);
         seaportSubConnection.setTerminal(hubTerminal);
-        seaportSubConnection.setBargeDieselDistance(BigDecimal.ZERO);
-        seaportSubConnection.setRailDieselDistance(BigDecimal.ZERO);
-        seaportSubConnection.setRailElectricDistance(BigDecimal.ZERO);
+        seaportSubConnection.setBargeDieselDistance(ZERO);
+        seaportSubConnection.setRailDieselDistance(ZERO);
+        seaportSubConnection.setRailElectricDistance(ZERO);
         seaportSubConnection.setParentConnection(connection);
 
         TerminalSubConnection terminalSubConnection = new TerminalSubConnection();
         terminalSubConnection.setTerminal(hubTerminal);
         terminalSubConnection.setTerminal2(terminal);
-        terminalSubConnection.setBargeDieselDistance(BigDecimal.ZERO);
-        terminalSubConnection.setRailDieselDistance(BigDecimal.ZERO);
-        terminalSubConnection.setRailElectricDistance(BigDecimal.ZERO);
+        terminalSubConnection.setBargeDieselDistance(ZERO);
+        terminalSubConnection.setRailDieselDistance(ZERO);
+        terminalSubConnection.setRailElectricDistance(ZERO);
         terminalSubConnection.setParentConnection(connection);
 
         connection.getSubConnections().add(seaportSubConnection);

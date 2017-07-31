@@ -5,13 +5,16 @@ package net.contargo.iris.route;
  *
  * @author  Michael Herbold - herbold@synyx.de
  * @author  Aljona Murygina - murygina@synyx.de
+ * @author  Ben Antony - antony@synyx.de
+ * @author  Sandra Thieme - thieme@synyx.de
  */
 public enum RouteType {
 
     BARGE("route.type.barge"),
     RAIL("route.type.rail"),
     TRUCK("route.type.truck"),
-    BARGE_RAIL("route.type.bargerail");
+    BARGE_RAIL("route.type.bargerail"),
+    DTRUCK("route.type.dtruck");
 
     private String messageKey;
 

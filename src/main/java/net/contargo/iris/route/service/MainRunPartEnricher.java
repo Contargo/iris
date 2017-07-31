@@ -9,10 +9,14 @@ import net.contargo.iris.distance.service.ConnectionDistanceService;
 import net.contargo.iris.mainrun.service.MainRunDurationService;
 import net.contargo.iris.route.RoutePart;
 import net.contargo.iris.route.RoutePartData;
-import net.contargo.iris.route.RouteType;
 import net.contargo.iris.route.SubRoutePart;
 
 import java.util.List;
+
+import static net.contargo.iris.route.RouteType.BARGE;
+import static net.contargo.iris.route.RouteType.BARGE_RAIL;
+import static net.contargo.iris.route.RouteType.DTRUCK;
+import static net.contargo.iris.route.RouteType.RAIL;
 
 
 /**
@@ -21,6 +25,7 @@ import java.util.List;
  * @author  Aljona Murygina - murygina@synyx.de
  * @author  Vincent Potucek - potucek@synyx.de
  * @author  Tobias Schneider - schneider@synyx.de
+ * @author  Ben Antony - antony@synyx.de
  */
 class MainRunPartEnricher implements RoutePartEnricher {
 
@@ -42,8 +47,8 @@ class MainRunPartEnricher implements RoutePartEnricher {
     @Override
     public void enrich(RoutePart routePart, EnricherContext context) throws CriticalEnricherException {
 
-        if (routePart.isOfType(RouteType.BARGE) || routePart.isOfType(RouteType.RAIL)
-                || routePart.isOfType(RouteType.BARGE_RAIL)) {
+        if (routePart.isOfType(BARGE) || routePart.isOfType(RAIL) || routePart.isOfType(BARGE_RAIL)
+                || routePart.isOfType(DTRUCK)) {
             RoutePartData routePartData = routePart.getData();
 
             MainRunConnection mainRunConnection;
@@ -61,7 +66,7 @@ class MainRunPartEnricher implements RoutePartEnricher {
                     "Enriching not possible: missing terminal or seaport to determine main run connection", e);
             }
 
-            if (routePart.getRouteType() == RouteType.BARGE_RAIL) {
+            if (routePart.getRouteType() == BARGE_RAIL) {
                 prepareSubRouteParts(routePart, mainRunConnection);
             }
 
@@ -70,7 +75,9 @@ class MainRunPartEnricher implements RoutePartEnricher {
             routePartData.setElectricDistance(connectionDistanceService.getElectricDistance(mainRunConnection));
             routePartData.setRailDieselDistance(connectionDistanceService.getRailDieselDistance(mainRunConnection));
             routePartData.setBargeDieselDistance(connectionDistanceService.getBargeDieselDistance(mainRunConnection));
-            routePartData.setDuration(mainRunDurationService.getMainRunRoutePartDuration(mainRunConnection, routePart));
+            routePartData.setDtruckDistance(connectionDistanceService.getDtruckDistance(mainRunConnection));
+            routePartData.setDuration(mainRunDurationService.getMainRunRoutePartDuration(mainRunConnection,
+                    routePart));
         }
     }
 

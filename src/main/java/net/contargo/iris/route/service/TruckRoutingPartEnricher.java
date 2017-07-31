@@ -12,11 +12,16 @@ import net.contargo.iris.truck.service.TruckRouteService;
 
 import java.math.BigDecimal;
 
+import static java.math.BigDecimal.ZERO;
+
 
 /**
  * Enricher to set information about distance and duration on a Truck {@link RoutePart}.
  *
  * @author  Tobias Schneider - schneider@synyx.de
+ * @author  Ben Antony - antony@synyx.de
+ * @author  Sandra Thieme - thieme@synyx.de
+ * @author  Ben Antony - antony@synyx.de
  */
 class TruckRoutingPartEnricher implements RoutePartEnricher {
 
@@ -51,9 +56,10 @@ class TruckRoutingPartEnricher implements RoutePartEnricher {
             routePartData.setTollDistance(distanceService.getTollDistance(truckRoute));
             routePartData.setDistance(partDistance);
             routePartData.setDieselDistance(partDistance);
-            routePartData.setElectricDistance(BigDecimal.ZERO);
-            routePartData.setBargeDieselDistance(BigDecimal.ZERO);
-            routePartData.setRailDieselDistance(BigDecimal.ZERO);
+            routePartData.setElectricDistance(ZERO);
+            routePartData.setBargeDieselDistance(ZERO);
+            routePartData.setRailDieselDistance(ZERO);
+            routePartData.setDtruckDistance(ZERO);
             routePartData.setDuration(durationService.getDuration(truckRoute));
         }
     }

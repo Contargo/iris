@@ -5,7 +5,8 @@ var DistancesView = Backbone.View.extend({
     events: {
         'change #bargeDieselDistance': 'updateBarge',
         'change #railDieselDistance': 'updateRailDiesel',
-        'change #railElectricDistance': 'updateRailElectric'
+        'change #railElectricDistance': 'updateRailElectric',
+        'change #roadDistance': 'updateRoad'
     },
 
     initialize: function (options) {
@@ -14,6 +15,8 @@ var DistancesView = Backbone.View.extend({
 
         this.isBarge = options.isBarge;
         this.isRail = options.isRail;
+        this.isDtruck = options.isDtruck;
+        this.isDtruckAvailable = options.isDtruckAvailable;
         this.template = getTemplate(this.templateName);
         this.render();
     },
@@ -28,6 +31,8 @@ var DistancesView = Backbone.View.extend({
         var model = this.model.toJSON();
         model.isRail = this.isRail;
         model.isBarge = this.isBarge;
+        model.isDtruck = this.isDtruck;
+        model.isDtruckAvailable = this.isDtruckAvailable;
         this.$el.html(this.template(model));
     },
 
@@ -44,6 +49,11 @@ var DistancesView = Backbone.View.extend({
     updateRailElectric: function(event) {
         'use strict';
         this.update('railelectric', event.target.value);
+    },
+
+    updateRoad: function(event) {
+        'use strict';
+        this.update('road', event.target.value);
     },
 
     update: function(field, value) {

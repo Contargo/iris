@@ -42,3 +42,20 @@
         <span class="help-inline error"></span>
     </div>
 </div>
+
+{{#if isDtruckAvailable}}
+<div class="control-group">
+    <label for="roadDistance" class="control-label">Road km</label>
+
+    <div class="controls">
+        {{#if isDtruck}}
+        <input id="roadDistance" name="roadDistance" class="comma-replacement-aware number"
+               title="Road km" type="text" value="{{road}}">
+        {{ else }}
+        <input id="roadDistance" name="roadDistance" class="comma-replacement-aware number"
+               title="Road km" type="text" value="{{road}}" readonly="readonly">
+        {{/if}}
+        <span class="help-inline error"></span>
+    </div>
+</div>
+{{/if}}

@@ -16,7 +16,7 @@ describe('ConnectionApp', function () {
 
     beforeEach(function() {
 
-        serverMock = jasmine.createSpyObj('serverMock', ['getConnection', 'getSeaports', 'getTerminals', 'createConnection', 'updateConnection']);
+        serverMock = jasmine.createSpyObj('serverMock', ['getConnection', 'getSeaports', 'getTerminals', 'createConnection', 'updateConnection', 'getTypes']);
         sut = new ConnectionApp(serverMock, 2);
 
         serverMock.getConnection.and.callFake(function (id, callback) {
@@ -27,6 +27,9 @@ describe('ConnectionApp', function () {
         });
         serverMock.getTerminals.and.callFake(function (callback) {
             callback([3, 4]);
+        });
+        serverMock.getTypes.and.callFake(function (callback) {
+            callback({'BARGE': 'Barge', 'RAIL': 'Rail', 'BARGE_RAIL': 'Barge-Rail'});
         });
 
         spyOn(MessageView.prototype, 'create');
@@ -131,6 +134,19 @@ describe('ConnectionApp', function () {
         expect(sut.handleCriticalError).toHaveBeenCalledWith('errorCallback');
         expect(callback).not.toHaveBeenCalled();
     });
+
+    it('loadModels with types loading error', function () {
+
+        serverMock.getTypes.and.callFake(function (callback, errorCallback) {
+            errorCallback('errorCallback');
+        });
+
+        sut.loadModels();
+
+        expect(sut.handleCriticalError).toHaveBeenCalledWith('errorCallback');
+        expect(callback).not.toHaveBeenCalled();
+    });
+
 
     it('loadModels without connectionId', function () {
         sut.connectionId = undefined;

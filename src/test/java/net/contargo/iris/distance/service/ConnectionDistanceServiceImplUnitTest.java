@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import org.junit.runner.RunWith;
 
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import org.mockito.runners.MockitoJUnitRunner;
@@ -31,23 +32,23 @@ import static java.math.BigDecimal.TEN;
 
 /**
  * @author  Sandra Thieme - thieme@synyx.de
+ * @author  Ben Antony - antony@synyx.de
  */
 @RunWith(MockitoJUnitRunner.class)
 public class ConnectionDistanceServiceImplUnitTest {
+
+    @InjectMocks
+    private ConnectionDistanceServiceImpl sut;
 
     @Mock
     private MainRunConnection mainrunConnectionMock;
     @Mock
     private RoundingService roundingServiceMock;
 
-    private ConnectionDistanceServiceImpl sut;
-
     private AbstractSubConnection subConnection;
 
     @Before
     public void setUp() {
-
-        sut = new ConnectionDistanceServiceImpl(roundingServiceMock);
 
         subConnection = new TerminalSubConnection();
     }
@@ -101,6 +102,17 @@ public class ConnectionDistanceServiceImplUnitTest {
         when(roundingServiceMock.roundDistance(TEN)).thenReturn(ONE);
 
         assertThat(sut.getElectricDistance(mainrunConnectionMock), is(ONE));
+    }
+
+
+    @Test
+    public void getDtruckDistance() {
+
+        BigDecimal roadDistance = new BigDecimal("466.2");
+        when(mainrunConnectionMock.getRoadDistance()).thenReturn(roadDistance);
+        when(roundingServiceMock.roundDistance(roadDistance)).thenReturn(new BigDecimal("467"));
+
+        assertThat(sut.getDtruckDistance(mainrunConnectionMock), comparesEqualTo(new BigDecimal("467")));
     }
 
 

@@ -34,6 +34,7 @@ import static org.hamcrest.Matchers.is;
 
 /**
  * @author  Oliver Messner - messner@synyx.de
+ * @author  Ben Antony - antony@synyx.de
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:application-context.xml")
@@ -150,6 +151,7 @@ public class MainRunConnectionRepositoryIntegrationTest {
         connection.setRailElectricDistance(new BigDecimal("300"));
         connection.setRailDieselDistance(new BigDecimal("200"));
         connection.setBargeDieselDistance(new BigDecimal("400"));
+        connection.setRoadDistance(new BigDecimal("30"));
 
         return connection;
     }

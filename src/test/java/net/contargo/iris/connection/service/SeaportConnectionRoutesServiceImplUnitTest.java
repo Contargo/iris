@@ -37,6 +37,7 @@ import static net.contargo.iris.route.RouteProduct.ONEWAY;
 import static net.contargo.iris.route.RouteProduct.ROUNDTRIP;
 import static net.contargo.iris.route.RouteType.BARGE;
 import static net.contargo.iris.route.RouteType.BARGE_RAIL;
+import static net.contargo.iris.route.RouteType.DTRUCK;
 import static net.contargo.iris.route.RouteType.RAIL;
 import static net.contargo.iris.route.RouteType.TRUCK;
 
@@ -98,7 +99,7 @@ public class SeaportConnectionRoutesServiceImplUnitTest {
         when(seaportTerminalConnectionService.getConnectionsToSeaPortByRouteType(any(Seaport.class),
                     any(RouteType.class))).thenReturn(singletonList(connectionMock));
 
-        sut = new SeaportConnectionRoutesServiceImpl(seaportTerminalConnectionService, mainRunAdvisorMock);
+        sut = new SeaportConnectionRoutesServiceImpl(seaportTerminalConnectionService, mainRunAdvisorMock, false);
     }
 
 
@@ -261,17 +262,20 @@ public class SeaportConnectionRoutesServiceImplUnitTest {
 
         MainRunStrategy mainRunStrategy = mock(MainRunStrategy.class);
         when(mainRunAdvisorMock.advice(eq(ONEWAY), eq(IMPORT))).thenReturn(mainRunStrategy);
+
         when(seaportTerminalConnectionService.getConnectionsToSeaPortByRouteType(seaport, BARGE)).thenReturn(asList(
                 firstConnection, disabledConnection));
         when(seaportTerminalConnectionService.getConnectionsToSeaPortByRouteType(seaport, RAIL)).thenReturn(
             singletonList(secondConnection));
         when(seaportTerminalConnectionService.getConnectionsToSeaPortByRouteType(seaport, BARGE_RAIL)).thenReturn(
             singletonList(thirdConnection));
+
         when(mainRunStrategy.getRoute(firstConnection, destination, TWENTY_LIGHT)).thenReturn(expectedFirstRoute);
         when(mainRunStrategy.getRoute(secondConnection, destination, TWENTY_LIGHT)).thenReturn(expectedSecondRoute);
         when(mainRunStrategy.getRoute(thirdConnection, destination, TWENTY_LIGHT)).thenReturn(expectedThirdRoute);
 
-        RouteInformation information = new RouteInformation(destination, ONEWAY, containerType, IMPORT, RouteCombo.ALL);
+        RouteInformation information = new RouteInformation(destination, ONEWAY, containerType, IMPORT,
+                RouteCombo.ALL);
 
         // run test
         List<Route> routes = sut.getAvailableSeaportConnectionRoutes(seaport, information);
@@ -293,6 +297,112 @@ public class SeaportConnectionRoutesServiceImplUnitTest {
         assertThat(routes.get(2).getData().getParts().get(0).getRouteType(), is(BARGE_RAIL));
         assertThat(routes.get(2).getData().getParts().get(1).getRouteType(), is(TRUCK));
         assertThat(routes.get(2).getData().getParts().get(2).getRouteType(), is(TRUCK));
+    }
+
+
+    @Test
+    public void testComboAllDtruckActive() {
+
+        sut = new SeaportConnectionRoutesServiceImpl(seaportTerminalConnectionService, mainRunAdvisorMock, true);
+
+        List<RouteType> expectedFirstRouteTypes = new ArrayList<>();
+        expectedFirstRouteTypes.add(BARGE);
+        expectedFirstRouteTypes.add(TRUCK);
+        expectedFirstRouteTypes.add(TRUCK);
+
+        Route expectedFirstRoute = getExpectedRoute(expectedFirstRouteTypes);
+
+        MainRunConnection firstConnection = mock(MainRunConnection.class);
+        when(firstConnection.getSeaport()).thenReturn(seaport);
+        when(firstConnection.getEverythingEnabled()).thenReturn(true);
+        when(firstConnection.getRouteType()).thenReturn(BARGE);
+
+        MainRunConnection disabledConnection = mock(MainRunConnection.class);
+        when(disabledConnection.getSeaport()).thenReturn(seaport);
+        when(disabledConnection.getEverythingEnabled()).thenReturn(false);
+        when(disabledConnection.getRouteType()).thenReturn(BARGE);
+
+        List<RouteType> expectedSecondRouteTypes = new ArrayList<>();
+        expectedSecondRouteTypes.add(RAIL);
+        expectedSecondRouteTypes.add(TRUCK);
+        expectedSecondRouteTypes.add(TRUCK);
+
+        Route expectedSecondRoute = getExpectedRoute(expectedSecondRouteTypes);
+
+        MainRunConnection secondConnection = mock(MainRunConnection.class);
+        when(secondConnection.getSeaport()).thenReturn(seaport);
+        when(secondConnection.getEverythingEnabled()).thenReturn(true);
+        when(secondConnection.getRouteType()).thenReturn(RAIL);
+
+        List<RouteType> expectedThirdRouteTypes = new ArrayList<>();
+        expectedThirdRouteTypes.add(BARGE_RAIL);
+        expectedThirdRouteTypes.add(TRUCK);
+        expectedThirdRouteTypes.add(TRUCK);
+
+        Route expectedThirdRoute = getExpectedRoute(expectedThirdRouteTypes);
+
+        MainRunConnection thirdConnection = mock(MainRunConnection.class);
+        when(thirdConnection.getSeaport()).thenReturn(seaport);
+        when(thirdConnection.getEverythingEnabled()).thenReturn(true);
+        when(thirdConnection.getRouteType()).thenReturn(RAIL);
+
+        List<RouteType> expectedFourthRouteTypes = new ArrayList<>();
+        expectedFourthRouteTypes.add(DTRUCK);
+        expectedFourthRouteTypes.add(TRUCK);
+        expectedFourthRouteTypes.add(TRUCK);
+
+        Route expectedFourthRoute = getExpectedRoute(expectedFourthRouteTypes);
+
+        MainRunConnection fourthConnection = mock(MainRunConnection.class, "fourthConnection");
+        when(fourthConnection.getSeaport()).thenReturn(seaport);
+        when(fourthConnection.getEverythingEnabled()).thenReturn(true);
+        when(fourthConnection.getRouteType()).thenReturn(DTRUCK);
+
+        MainRunStrategy mainRunStrategy = mock(MainRunStrategy.class);
+        when(mainRunAdvisorMock.advice(eq(ONEWAY), eq(IMPORT))).thenReturn(mainRunStrategy);
+
+        when(seaportTerminalConnectionService.getConnectionsToSeaPortByRouteType(seaport, BARGE)).thenReturn(asList(
+                firstConnection, disabledConnection));
+        when(seaportTerminalConnectionService.getConnectionsToSeaPortByRouteType(seaport, RAIL)).thenReturn(
+            singletonList(secondConnection));
+        when(seaportTerminalConnectionService.getConnectionsToSeaPortByRouteType(seaport, BARGE_RAIL)).thenReturn(
+            singletonList(thirdConnection));
+        when(seaportTerminalConnectionService.getConnectionsToSeaPortByRouteType(seaport, DTRUCK)).thenReturn(
+            singletonList(fourthConnection));
+
+        when(mainRunStrategy.getRoute(firstConnection, destination, TWENTY_LIGHT)).thenReturn(expectedFirstRoute);
+        when(mainRunStrategy.getRoute(secondConnection, destination, TWENTY_LIGHT)).thenReturn(expectedSecondRoute);
+        when(mainRunStrategy.getRoute(thirdConnection, destination, TWENTY_LIGHT)).thenReturn(expectedThirdRoute);
+        when(mainRunStrategy.getRoute(fourthConnection, destination, TWENTY_LIGHT)).thenReturn(expectedFourthRoute);
+
+        RouteInformation information = new RouteInformation(destination, ONEWAY, containerType, IMPORT,
+                RouteCombo.ALL);
+
+        // run test
+        List<Route> routes = sut.getAvailableSeaportConnectionRoutes(seaport, information);
+
+        // assert stuff
+        assertThat(routes.size(), is(4));
+
+        assertThat(routes.get(0).getData().getParts().size(), is(3));
+        assertThat(routes.get(0).getData().getParts().get(0).getRouteType(), is(BARGE));
+        assertThat(routes.get(0).getData().getParts().get(1).getRouteType(), is(TRUCK));
+        assertThat(routes.get(0).getData().getParts().get(2).getRouteType(), is(TRUCK));
+
+        assertThat(routes.get(1).getData().getParts().size(), is(3));
+        assertThat(routes.get(1).getData().getParts().get(0).getRouteType(), is(RAIL));
+        assertThat(routes.get(1).getData().getParts().get(1).getRouteType(), is(TRUCK));
+        assertThat(routes.get(1).getData().getParts().get(2).getRouteType(), is(TRUCK));
+
+        assertThat(routes.get(2).getData().getParts().size(), is(3));
+        assertThat(routes.get(2).getData().getParts().get(0).getRouteType(), is(BARGE_RAIL));
+        assertThat(routes.get(2).getData().getParts().get(1).getRouteType(), is(TRUCK));
+        assertThat(routes.get(2).getData().getParts().get(2).getRouteType(), is(TRUCK));
+
+        assertThat(routes.get(3).getData().getParts().size(), is(3));
+        assertThat(routes.get(3).getData().getParts().get(0).getRouteType(), is(DTRUCK));
+        assertThat(routes.get(3).getData().getParts().get(1).getRouteType(), is(TRUCK));
+        assertThat(routes.get(3).getData().getParts().get(2).getRouteType(), is(TRUCK));
     }
 
 

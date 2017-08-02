@@ -9,6 +9,8 @@ import java.math.BigDecimal;
  *
  * @author  Tobias Schneider - schneider@synyx.de
  * @author  Arnold Franke - franke@synyx.de
+ * @author  Ben Antony - antony@synyx.de
+ * @author  Sandra Thieme - thieme@synyx.de
  * @see  RoutePart
  */
 public class RoutePartData {
@@ -21,6 +23,7 @@ public class RoutePartData {
     private BigDecimal railDieselDistance;
     private BigDecimal tollDistance;
     private BigDecimal duration;
+    private BigDecimal dtruckDistance;
 
     private BigDecimal co2;
 
@@ -129,5 +132,17 @@ public class RoutePartData {
     public void setRailDieselDistance(BigDecimal railDieselDistance) {
 
         this.railDieselDistance = railDieselDistance;
+    }
+
+
+    public BigDecimal getDtruckDistance() {
+
+        return dtruckDistance;
+    }
+
+
+    public void setDtruckDistance(BigDecimal dtruckDistance) {
+
+        this.dtruckDistance = dtruckDistance;
     }
 }

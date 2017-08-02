@@ -12,25 +12,37 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static net.contargo.iris.route.RouteCombo.ALL;
+import static net.contargo.iris.route.RouteType.BARGE;
+import static net.contargo.iris.route.RouteType.BARGE_RAIL;
+import static net.contargo.iris.route.RouteType.DTRUCK;
+import static net.contargo.iris.route.RouteType.RAIL;
+
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+
 
 /**
  * @author  Sandra Thieme - thieme@synyx.de
+ * @author  Ben Antony - antony@synyx.de
  */
 public class SeaportConnectionRoutesServiceImpl implements SeaportConnectionRoutesService {
 
     private final SeaportTerminalConnectionService seaportTerminalConnectionService;
     private final MainRunAdvisor mainRunAdvisor;
+    private final boolean dtruckActive;
 
     public SeaportConnectionRoutesServiceImpl(SeaportTerminalConnectionService seaportTerminalConnectionService,
-        MainRunAdvisor mainRunAdvisor) {
+        MainRunAdvisor mainRunAdvisor, boolean dtruckActive) {
 
         this.seaportTerminalConnectionService = seaportTerminalConnectionService;
         this.mainRunAdvisor = mainRunAdvisor;
+        this.dtruckActive = dtruckActive;
     }
 
     Route getMainRunRoute(MainRunConnection connection, RouteInformation routeInformation, RouteType routeType) {
 
-        if (routeType != RouteType.BARGE && routeType != RouteType.RAIL && routeType != RouteType.BARGE_RAIL) {
+        if (routeType != BARGE && routeType != RAIL && routeType != BARGE_RAIL && routeType != DTRUCK) {
             throw new IllegalArgumentException();
         }
 
@@ -48,12 +60,28 @@ public class SeaportConnectionRoutesServiceImpl implements SeaportConnectionRout
         List<Route> routes = new ArrayList<>();
 
         // a RouteCombo has one ore more (in case RouteCombo.ALL) RouteTypes
-        for (RouteType routeType : routeInformation.getRouteCombo().getRouteTypes()) {
-            List<MainRunConnection> connections = seaportTerminalConnectionService.getConnectionsToSeaPortByRouteType(
-                    origin, routeType);
+        List<RouteType> routeTypes = new ArrayList<>(asList(routeInformation.getRouteCombo().getRouteTypes()));
 
-            routes.addAll(connections.stream().filter(MainRunConnection::getEverythingEnabled).map(connection ->
-                        getMainRunRoute(connection, routeInformation, routeType)).collect(Collectors.toList()));
+        if (routeInformation.getRouteCombo() == ALL) {
+            routeTypes.add(DTRUCK);
+        }
+
+        for (RouteType routeType : routeTypes) {
+            List<MainRunConnection> connections = emptyList();
+
+            if (routeType == DTRUCK) {
+                if (dtruckActive) {
+                    connections = seaportTerminalConnectionService.getConnectionsToSeaPortByRouteType(origin,
+                            routeType);
+                }
+            } else {
+                connections = seaportTerminalConnectionService.getConnectionsToSeaPortByRouteType(origin, routeType);
+            }
+
+            routes.addAll(connections.stream()
+                .filter(MainRunConnection::getEverythingEnabled)
+                .map(connection -> getMainRunRoute(connection, routeInformation, routeType))
+                .collect(Collectors.toList()));
         }
 
         return routes;

@@ -51,29 +51,28 @@ ConnectionApp.prototype.loadModels = function (callback) {
                 that.handleCriticalError('No terminals available');
                 return;
             }
+            that.server.getTypes(function (types) {
+                that.seaports = new ConnectionSeaports(_.map(seaports, function (seaport) {
+                    return new ConnectionSeaport(seaport);
+                }));
 
-            that.seaports = new ConnectionSeaports(_.map(seaports, function (seaport) {
-                return new ConnectionSeaport(seaport);
-            }));
-            that.terminals = new ConnectionTerminals(_.map(terminals, function (terminal) {
-                return new ConnectionTerminal(terminal);
-            }));
-            that.routeTypes = new RouteTypes([new RouteType({
-                value: 'BARGE',
-                name: 'Barge'
-            }), new RouteType({value: 'RAIL', name: 'Rail'}),
-                new RouteType({value: 'BARGE_RAIL', name: 'Barge-Rail'})]);
+                that.terminals = new ConnectionTerminals(_.map(terminals, function (terminal) {
+                    return new ConnectionTerminal(terminal);
+                }));
+                that.routeTypes = new RouteTypes(_.map(types, function (name, value) {
+                    return new RouteType({value: value, name: name});
+                }));
 
-            if (that.connectionId) {
-                that.server.getConnection(that.connectionId, function (connection) {
-                    that.connection = that.mapper.connectionFromJson(connection, that.seaports, that.terminals);
+                if (that.connectionId) {
+                    that.server.getConnection(that.connectionId, function (connection) {
+                        that.connection = that.mapper.connectionFromJson(connection, that.seaports, that.terminals);
+                        callback();
+                    }, that.handleCriticalError);
+                } else {
+                    that.connection = new Connection();
                     callback();
-                }, that.handleCriticalError);
-            } else {
-                that.connection = new Connection();
-                callback();
-            }
-
+                }
+            }, that.handleCriticalError);
         }, that.handleCriticalError);
     }, this.handleCriticalError);
 };

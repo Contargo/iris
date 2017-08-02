@@ -10,6 +10,7 @@ import net.contargo.iris.seaport.dto.SeaportDto;
 import org.slf4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import org.springframework.stereotype.Controller;
 
@@ -19,8 +20,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.lang.invoke.MethodHandles;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+
+import static net.contargo.iris.route.RouteCombo.ALL;
+import static net.contargo.iris.route.RouteType.DTRUCK;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -29,9 +35,12 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
+import static java.util.Arrays.asList;
+
 
 /**
  * @author  Sandra Thieme - thieme@synyx.de
+ * @author  Ben Antony - antony@synyx.de
  */
 @Controller
 @RequestMapping(value = "/connections")
@@ -41,10 +50,14 @@ public class SeaportConnectionApiController {
 
     private final SeaportTerminalConnectionDtoService seaportTerminalConnectionDtoService;
 
+    private final boolean dtruckActive;
+
     @Autowired
-    public SeaportConnectionApiController(SeaportTerminalConnectionDtoService seaportTerminalConnectionDtoService) {
+    public SeaportConnectionApiController(SeaportTerminalConnectionDtoService seaportTerminalConnectionDtoService,
+        @Value("${feature.dtruck}") boolean dtruckActive) {
 
         this.seaportTerminalConnectionDtoService = seaportTerminalConnectionDtoService;
+        this.dtruckActive = dtruckActive;
     }
 
     @ApiOperation(
@@ -62,8 +75,20 @@ public class SeaportConnectionApiController {
 
         Set<SeaportDto> ports = new HashSet<>();
 
-        for (RouteType t : routeCombo.getRouteTypes()) {
-            ports.addAll(seaportTerminalConnectionDtoService.findSeaportsConnectedByRouteType(t));
+        List<RouteType> routeTypes = new ArrayList<>(asList(routeCombo.getRouteTypes()));
+
+        if (routeCombo == ALL) {
+            routeTypes.add(DTRUCK);
+        }
+
+        for (RouteType t : routeTypes) {
+            if (t == DTRUCK) {
+                if (dtruckActive) {
+                    ports.addAll(seaportTerminalConnectionDtoService.findSeaportsConnectedByRouteType(t));
+                }
+            } else {
+                ports.addAll(seaportTerminalConnectionDtoService.findSeaportsConnectedByRouteType(t));
+            }
         }
 
         response.setSeaports(ports);

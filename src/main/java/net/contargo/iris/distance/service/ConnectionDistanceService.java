@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 
 /**
  * @author  Sandra Thieme - thieme@synyx.de
+ * @author  Ben Antony - antony@synyx.de
  */
 public interface ConnectionDistanceService {
 
@@ -59,6 +60,9 @@ public interface ConnectionDistanceService {
      * @return  BigDecimal
      */
     BigDecimal getBargeDieselDistance(MainRunConnection mainrunConnection);
+
+
+    BigDecimal getDtruckDistance(MainRunConnection mainRunConnection);
 
 
     BigDecimal getBargeDieselDistance(AbstractSubConnection subConnection);

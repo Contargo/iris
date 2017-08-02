@@ -225,6 +225,7 @@
           class="net.contargo.iris.connection.service.SeaportConnectionRoutesServiceImpl">
         <constructor-arg name="seaportTerminalConnectionService" ref="seaportTerminalConnectionService"/>
         <constructor-arg name="mainRunAdvisor" ref="mainRunAdvisor"/>
+        <constructor-arg name="dtruckActive" value="${feature.dtruck}"/>
     </bean>
 
     <bean id="mainRunDurationService" class="net.contargo.iris.mainrun.service.MainRunDurationServiceImpl">
@@ -374,6 +375,9 @@
             <bean class="net.contargo.iris.co2.advice.Co2PartBargeRailStrategy">
                 <constructor-arg name="co2BargeRegionMap" ref="co2BargeRegionMap"/>
             </bean>
+        </constructor-arg>
+        <constructor-arg name="dtruckStrategy">
+            <bean class="net.contargo.iris.co2.advice.Co2PartDtruckStrategy"/>
         </constructor-arg>
     </bean>
 

@@ -66,6 +66,7 @@ describe('ConnectionMapper', function () {
             bargeDieselDistance: 9,
             railDieselDistance: 0,
             railElectricDistance: 0,
+            roadDistance: 3,
             routeType: 'BARGE_RAIL',
             enabled: true,
             subConnections:[{id: 3}],
@@ -82,6 +83,7 @@ describe('ConnectionMapper', function () {
         expect(connection.get('distances').get('barge')).toBe(9);
         expect(connection.get('distances').get('raildiesel')).toBe(0);
         expect(connection.get('distances').get('railelectric')).toBe(0);
+        expect(connection.get('distances').get('road')).toBe(3);
         expect(connection.get('seaport').get('uniqueId')).toBe('1301000000000002');
         expect(connection.get('terminal').get('uniqueId')).toBe('1301000000000001');
         expect(sut.subconnectionFromJson).toHaveBeenCalledWith({id: 3}, seaports, terminals);
@@ -157,6 +159,7 @@ describe('ConnectionMapper', function () {
             bargeDieselDistance: 0,
             railDieselDistance: 0,
             railElectricDistance: 0,
+            roadDistance: 0,
             routeType: 'BARGE',
             subConnections: 'subconnections'
         });

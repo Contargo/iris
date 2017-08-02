@@ -6,14 +6,15 @@ describe('Connection View', function () {
     var seaports;
     var terminal;
     var terminals;
-    var barge, rail, barge_rail;
+    var barge, rail, barge_rail, dtruck;
     var routeTypes;
 
     beforeEach(function () {
         barge = new RouteType({value: 'BARGE'});
         rail = new RouteType({value: 'RAIL'});
         barge_rail = new RouteType({value: 'BARGE_RAIL'});
-        routeTypes = new RouteTypes([barge, rail, barge_rail]);
+        dtruck = new RouteType({value: 'DTRUCK'});
+        routeTypes = new RouteTypes([barge, rail, barge_rail, dtruck]);
         seaport = new ConnectionSeaport({
             uniqueId: '42',
             name: 'seaport'

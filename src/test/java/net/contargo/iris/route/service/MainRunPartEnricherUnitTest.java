@@ -20,6 +20,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import org.mockito.InOrder;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import org.mockito.runners.MockitoJUnitRunner;
@@ -64,6 +65,7 @@ public class MainRunPartEnricherUnitTest {
     private static final BigDecimal DISTANCE = BigDecimal.ZERO;
     private static final BigDecimal DURATION = TEN;
 
+    @InjectMocks
     private MainRunPartEnricher sut;
 
     @Mock
@@ -100,16 +102,14 @@ public class MainRunPartEnricherUnitTest {
         routePart.setRouteType(routeType);
 
         when(mainRunConnectionServiceMock.findRoutingConnectionBetweenTerminalAndSeaportByType(terminal, seaport,
-                    routeType, Collections.<SubRoutePart>emptyList())).thenReturn(mainrunConnection);
+                    routeType, Collections.emptyList())).thenReturn(mainrunConnection);
         when(connectionDistanceServiceMock.getElectricDistance(mainrunConnection)).thenReturn(ELECTRICAL_DISTANCE);
         when(connectionDistanceServiceMock.getDistance(mainrunConnection)).thenReturn(DISTANCE);
         when(connectionDistanceServiceMock.getDieselDistance(mainrunConnection)).thenReturn(DIESEL_DISTANCE);
-        when(mainRunDurationServiceMock.getMainRunRoutePartDuration(mainrunConnection, routePart)).thenReturn(DURATION);
+        when(mainRunDurationServiceMock.getMainRunRoutePartDuration(mainrunConnection, routePart)).thenReturn(
+            DURATION);
 
         enricherContext = new EnricherContext.Builder().build();
-
-        sut = new MainRunPartEnricher(mainRunConnectionServiceMock, mainRunDurationServiceMock,
-                connectionDistanceServiceMock);
 
         seaportSubConnection = new SeaportSubConnection();
         seaportSubConnection.setBargeDieselDistance(TEN);
@@ -245,8 +245,7 @@ public class MainRunPartEnricherUnitTest {
     public void enrichWithoutMainRunConnection() throws CriticalEnricherException {
 
         when(mainRunConnectionServiceMock.findRoutingConnectionBetweenTerminalAndSeaportByType(any(Terminal.class),
-                    any(Seaport.class), any(RouteType.class), eq(Collections.<SubRoutePart>emptyList()))).thenReturn(
-            null);
+                    any(Seaport.class), any(RouteType.class), eq(Collections.emptyList()))).thenReturn(null);
 
         sut.enrich(routePart, enricherContext);
     }

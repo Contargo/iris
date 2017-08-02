@@ -17,7 +17,8 @@ ConnectionMapper.prototype.connectionFromJson = function (connection, seaports, 
         distances: new Distances({
             barge: connection.bargeDieselDistance,
             raildiesel: connection.railDieselDistance,
-            railelectric: connection.railElectricDistance
+            railelectric: connection.railElectricDistance,
+            road: connection.roadDistance
         }),
         routeType: new RouteType({value: connection.routeType}),
         enabled: connection.enabled,
@@ -51,6 +52,7 @@ ConnectionMapper.prototype.connectionToJson = function (connection) {
         bargeDieselDistance: connection.get('distances').get('barge'),
         railDieselDistance: connection.get('distances').get('raildiesel'),
         railElectricDistance: connection.get('distances').get('railelectric'),
+        roadDistance: connection.get('distances').get('road'),
         routeType: connection.get('routeType').get('value'),
         enabled: connection.get('enabled'),
         subConnections: this.subconnectionsToJson(connection.get('subconnections'))

@@ -174,4 +174,10 @@ class NominatimUrlBuilder {
 
         return url;
     }
+
+
+    public String buildSearchUrl(String query) {
+
+        return baseUrl + "search/" + query + "?format=json&addressdetails=1";
+    }
 }

@@ -175,7 +175,7 @@ public class AddressServiceWrapper {
     }
 
 
-    private List<AddressList> getSimpleAddressList(List<Address> addresses) {
+    private static List<AddressList> getSimpleAddressList(List<Address> addresses) {
 
         List<AddressList> addressListList = new ArrayList<>();
 
@@ -188,5 +188,11 @@ public class AddressServiceWrapper {
         }
 
         return addressListList;
+    }
+
+
+    public List<Address> getAddressesByQuery(String query) {
+
+        return addressService.getAddressesByQuery(query);
     }
 }

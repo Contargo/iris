@@ -57,14 +57,14 @@ public class AddressServiceWrapperUnitTest {
 
     private static final double LATITUDE = 11.0;
     private static final double LONGITUDE = 12.0;
-    public static final String CITYNAME_NEUSTADT = "Neustadt";
-    public static final String CITYNAME_NEUSTADT_NORMALIZED = "NEUSTADT";
-    public static final String CITYNAME_KARLSRUHE = "Karlsruhe";
-    public static final String CITYNAME_KARLSRUHE_NORMALIZED = "KARLSRUHE";
-    public static final String CITYNAME_NOT_NORMALIZED_AT_ALL = "%4/()&32";
-    public static final String STREETNAME_KARLSTRASSE = "Karlstrasse";
-    public static final String POSTAL_CODE_76133 = "76133";
-    public static final String POSTAL_CODE_76137 = "76137";
+    private static final String CITYNAME_NEUSTADT = "Neustadt";
+    private static final String CITYNAME_NEUSTADT_NORMALIZED = "NEUSTADT";
+    private static final String CITYNAME_KARLSRUHE = "Karlsruhe";
+    private static final String CITYNAME_KARLSRUHE_NORMALIZED = "KARLSRUHE";
+    private static final String CITYNAME_NOT_NORMALIZED_AT_ALL = "%4/()&32";
+    private static final String STREETNAME_KARLSTRASSE = "Karlstrasse";
+    private static final String POSTAL_CODE_76133 = "76133";
+    private static final String POSTAL_CODE_76137 = "76137";
 
     private AddressServiceWrapper sut;
 
@@ -412,5 +412,20 @@ public class AddressServiceWrapperUnitTest {
 
         Address address = sut.getByHashKey(hashkey);
         assertThat(address.getCountryCode(), is("DE"));
+    }
+
+
+    @Test
+    public void getAddressesByQuery() {
+
+        Address address = new Address();
+        address.setDisplayName("Gartenstr. 67, Karlsruhe (Südweststadt)");
+
+        when(addressServiceMock.getAddressesByQuery("Gartenstraße 67, Karlsruhe")).thenReturn(singletonList(address));
+
+        List<Address> addresses = sut.getAddressesByQuery("Gartenstraße 67, Karlsruhe");
+
+        assertThat(addresses, hasSize(1));
+        assertThat(addresses.get(0), is(address));
     }
 }

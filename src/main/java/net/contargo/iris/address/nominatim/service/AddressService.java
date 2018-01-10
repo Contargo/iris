@@ -14,13 +14,15 @@ import java.util.Map;
  * @author  Sven Mueller - mueller@synyx.de
  * @author  Aljona Murygina - murygina@synyx.de
  * @author  Arnold Franke - franke@synyx.de
+ * @author  Sandra Thieme - thieme@synyx.de
+ * @author  Ben Antony - antony@synyx.de
  */
 public interface AddressService {
 
     /**
      * Resolves an address (described by the given parameters) to a {@link java.util.List} of
-     * {@link net.contargo.iris.address.Address} objects with the attributes name, latitude and longitude. Uses multiple
-     * fallback strategies to find addresses if not all parameters are provided
+     * {@link net.contargo.iris.address.Address} objects with the attributes name, latitude and longitude. Uses
+     * multiple fallback strategies to find addresses if not all parameters are provided
      *
      * @param  addressDetails  @return
      */
@@ -51,4 +53,14 @@ public interface AddressService {
      * @return  The address for the given geolocation.
      */
     Address getAddressByGeolocation(GeoLocation location);
+
+
+    /**
+     * Returns a list of addresses matching the query.
+     *
+     * @param  query  the address query
+     *
+     * @return  a list of matching addresses
+     */
+    List<Address> getAddressesByQuery(String query);
 }

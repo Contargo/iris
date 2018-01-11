@@ -39,6 +39,8 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+
 import static java.util.Collections.singletonList;
 
 
@@ -49,12 +51,14 @@ import static java.util.Collections.singletonList;
  * @author  Aljona Murygina - murygina@synyx.de
  * @author  Arnold Franke - franke@synyx.de
  * @author  Tobias Schneider - schneider@synyx.de
+ * @author  Sandra Thieme - thieme@synyx.de
+ * @author  Ben Antony - antony@synyx.de
  */
 @Controller
 @Api(description = "API for querying addresses.", value = "")
 public class AddressApiController {
 
-    public static final String METHOD_ADDRESS_BY_GEOLOCATION = "addressByGeolocation";
+    private static final String METHOD_ADDRESS_BY_GEOLOCATION = "addressByGeolocation";
     private static final Logger LOG = getLogger(MethodHandles.lookup().lookupClass());
 
     private final AddressDtoService addressDtoService;
@@ -187,5 +191,17 @@ public class AddressApiController {
         LOG.info("API: Responding to request for addresses by place id {}", placeId);
 
         return addressDtoService.getAddressesWherePlaceIsIn(placeId);
+    }
+
+
+    @ApiOperation(
+        value = "Returns a list of matching addresses.",
+        notes = "Can be static addresses or nominatim resolved addresses."
+    )
+    @ModelAttribute("addresses")
+    @RequestMapping(value = "/addresses", method = GET, params = { "query" })
+    public List<AddressDto> getAddresses(@RequestParam("query") String query) {
+
+        return addressDtoService.getAddressesByQuery(query);
     }
 }

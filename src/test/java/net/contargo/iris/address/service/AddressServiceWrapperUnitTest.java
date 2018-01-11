@@ -420,15 +420,31 @@ public class AddressServiceWrapperUnitTest {
 
         Address address = new Address();
         address.setDisplayName("Gartenstr. 67, Karlsruhe (Südweststadt)");
+        address.getAddress().put("city", "Karlsruhe");
+        address.getAddress().put("postcode", "76135");
+        address.getAddress().put("country_code", "de");
+        address.getAddress().put("street", "Gartenstr.");
 
         when(addressServiceMock.getAddressesByQuery("Gartenstraße 67, Karlsruhe")).thenReturn(singletonList(address));
 
+        StaticAddress staticAddress1 = new StaticAddress();
+        staticAddress1.setCity("Karlsruhe");
+        staticAddress1.setPostalcode("76135");
+
+        StaticAddress staticAddress2 = new StaticAddress();
+        staticAddress2.setCity("Karlsruhe");
+        staticAddress2.setPostalcode("76135");
+        staticAddress2.setSuburb("Südweststadt");
+
+        when(staticAddressServiceMock.findAddresses("76135", "Karlsruhe", "de")).thenReturn(new AddressList("",
+                asList(staticAddress1.toAddress(), staticAddress2.toAddress())));
+
         List<Address> addresses = sut.getAddressesByQuery("Gartenstraße 67, Karlsruhe");
 
-        assertThat(addresses, hasSize(1));
-        assertThat(addresses.get(0), is(address));
-
-        verifyZeroInteractions(staticAddressServiceMock);
+        assertThat(addresses, hasSize(3));
+        assertThat(addresses.get(0).getDisplayName(), is("Gartenstr. 67, Karlsruhe (Südweststadt)"));
+        assertThat(addresses.get(1).getDisplayName(), is("76135 Karlsruhe"));
+        assertThat(addresses.get(2).getDisplayName(), is("76135 Karlsruhe (Südweststadt)"));
     }
 
 

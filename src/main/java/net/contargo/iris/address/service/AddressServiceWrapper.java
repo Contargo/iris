@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,7 @@ import static net.contargo.iris.address.nominatim.service.AddressDetailKey.POSTA
 import static net.contargo.iris.address.nominatim.service.AddressDetailKey.STREET;
 
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 
 
 /**
@@ -203,6 +205,16 @@ public class AddressServiceWrapper {
 
         if (addresses.isEmpty()) {
             addresses.addAll(addressService.getAddressesByQuery(query));
+
+            List<Address> matchingStaticAddresses = addresses.stream()
+                    .map(a ->
+                                staticAddressService.findAddresses(a.getPostcode(), a.getCity(), a.getCountryCode())
+                                .getAddresses())
+                    .flatMap(Collection::stream)
+                    .distinct()
+                    .collect(toList());
+
+            addresses.addAll(matchingStaticAddresses);
         }
 
         return addresses;

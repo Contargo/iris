@@ -427,5 +427,26 @@ public class AddressServiceWrapperUnitTest {
 
         assertThat(addresses, hasSize(1));
         assertThat(addresses.get(0), is(address));
+
+        verifyZeroInteractions(staticAddressServiceMock);
+    }
+
+
+    @Test
+    public void getAddressesByQueryWithHashkey() {
+
+        StaticAddress address = new StaticAddress();
+        address.setCity("Karlsruhe");
+        address.setPostalcode("76135");
+
+        when(staticAddressServiceMock.findByHashKey("D5EHW")).thenReturn(address);
+
+        List<Address> addresses = sut.getAddressesByQuery("D5EHW");
+
+        assertThat(addresses, hasSize(1));
+        assertThat(addresses.get(0).getCity(), is("Karlsruhe"));
+        assertThat(addresses.get(0).getPostcode(), is("76135"));
+
+        verifyZeroInteractions(addressServiceMock);
     }
 }

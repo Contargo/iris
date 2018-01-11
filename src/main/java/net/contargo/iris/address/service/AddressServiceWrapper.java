@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import static net.contargo.iris.address.nominatim.service.AddressDetailKey.CITY;
 import static net.contargo.iris.address.nominatim.service.AddressDetailKey.COUNTRY;
@@ -36,6 +37,7 @@ import static java.util.Collections.singletonList;
 public class AddressServiceWrapper {
 
     private static final Logger LOG = LoggerFactory.getLogger(AddressServiceWrapper.class);
+    private static final Pattern HASHKEY_MATCHER = Pattern.compile("^[A-Z0-9]{5}$");
 
     private final AddressService addressService;
     private final StaticAddressService staticAddressService;
@@ -193,6 +195,16 @@ public class AddressServiceWrapper {
 
     public List<Address> getAddressesByQuery(String query) {
 
-        return addressService.getAddressesByQuery(query);
+        List<Address> addresses = new ArrayList<>();
+
+        if (HASHKEY_MATCHER.matcher(query).matches()) {
+            addresses.add(getByHashKey(query));
+        }
+
+        if (addresses.isEmpty()) {
+            addresses.addAll(addressService.getAddressesByQuery(query));
+        }
+
+        return addresses;
     }
 }

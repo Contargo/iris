@@ -5,6 +5,7 @@ import net.contargo.iris.address.Address;
 import net.contargo.iris.address.AddressList;
 import net.contargo.iris.address.nominatim.service.AddressService;
 import net.contargo.iris.address.staticsearch.StaticAddress;
+import net.contargo.iris.address.staticsearch.service.StaticAddressNotFoundException;
 import net.contargo.iris.address.staticsearch.service.StaticAddressService;
 import net.contargo.iris.normalizer.NormalizerService;
 
@@ -195,12 +196,17 @@ public class AddressServiceWrapper {
     }
 
 
+    @SuppressWarnings("squid:S1166")
     public List<Address> getAddressesByQuery(String query) {
 
         List<Address> addresses = new ArrayList<>();
 
         if (HASHKEY_MATCHER.matcher(query).matches()) {
-            addresses.add(getByHashKey(query));
+            try {
+                addresses.add(getByHashKey(query));
+            } catch (StaticAddressNotFoundException e) {
+                // ignoring the exception as the query could be resolved by nominatim
+            }
         }
 
         if (addresses.isEmpty()) {

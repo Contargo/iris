@@ -5,6 +5,7 @@ import net.contargo.iris.address.Address;
 import net.contargo.iris.address.AddressList;
 import net.contargo.iris.address.nominatim.service.AddressService;
 import net.contargo.iris.address.staticsearch.StaticAddress;
+import net.contargo.iris.address.staticsearch.service.StaticAddressNotFoundException;
 import net.contargo.iris.address.staticsearch.service.StaticAddressService;
 import net.contargo.iris.normalizer.NormalizerService;
 
@@ -38,11 +39,13 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
 
@@ -464,5 +467,30 @@ public class AddressServiceWrapperUnitTest {
         assertThat(addresses.get(0).getPostcode(), is("76135"));
 
         verifyZeroInteractions(addressServiceMock);
+    }
+
+
+    @Test
+    public void getAddressesByQueryWithHashkeyNotFound() {
+
+        doThrow(StaticAddressNotFoundException.class).when(staticAddressServiceMock).findByHashKey("76135");
+
+        Address address = new Address();
+        address.setDisplayName("Gartenstr. 67, Karlsruhe (Südweststadt)");
+        address.getAddress().put("city", "Karlsruhe");
+        address.getAddress().put("postcode", "76135");
+        address.getAddress().put("country_code", "de");
+        address.getAddress().put("street", "Gartenstr.");
+
+        when(addressServiceMock.getAddressesByQuery("76135")).thenReturn(singletonList(address));
+
+        when(staticAddressServiceMock.findAddresses("76135", "Karlsruhe", "de")).thenReturn(new AddressList("",
+                emptyList()));
+
+        List<Address> addresses = sut.getAddressesByQuery("76135");
+
+        assertThat(addresses, hasSize(1));
+        assertThat(addresses.get(0).getCity(), is("Karlsruhe"));
+        assertThat(addresses.get(0).getPostcode(), is("76135"));
     }
 }

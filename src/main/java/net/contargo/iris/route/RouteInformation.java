@@ -3,6 +3,8 @@ package net.contargo.iris.route;
 import net.contargo.iris.GeoLocation;
 import net.contargo.iris.container.ContainerType;
 
+import java.util.Objects;
+
 
 /**
  * Encapsulates detail information that are needed to compute a {@link net.contargo.iris.route.Route}.
@@ -95,5 +97,29 @@ public class RouteInformation {
     public void setRouteCombo(RouteCombo routeCombo) {
 
         this.routeCombo = routeCombo;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+
+        if (this == o)
+            return true;
+
+        if (o == null || getClass() != o.getClass())
+            return false;
+
+        RouteInformation that = (RouteInformation) o;
+
+        return Objects.equals(destination, that.destination) && product == that.product
+            && containerType == that.containerType && routeDirection == that.routeDirection
+            && routeCombo == that.routeCombo;
+    }
+
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(destination, product, containerType, routeDirection, routeCombo);
     }
 }

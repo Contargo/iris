@@ -2,12 +2,18 @@ package net.contargo.iris.route.api;
 
 import com.wordnik.swagger.annotations.ApiOperation;
 
+import net.contargo.iris.GeoLocation;
+import net.contargo.iris.address.dto.GeoLocationDto;
 import net.contargo.iris.api.ControllerConstants;
+import net.contargo.iris.connection.dto.RouteDataDto;
 import net.contargo.iris.connection.dto.RouteDto;
+import net.contargo.iris.connection.dto.RoutePartDto;
 import net.contargo.iris.connection.dto.SeaportConnectionRoutesDtoService;
 import net.contargo.iris.container.ContainerType;
 import net.contargo.iris.route.RouteCombo;
 import net.contargo.iris.route.RouteInformation;
+import net.contargo.iris.route.dto.EnricherDtoService;
+import net.contargo.iris.route.dto.RoutingResultDto;
 import net.contargo.iris.route.service.RouteUrlSerializationService;
 import net.contargo.iris.seaport.dto.SeaportDto;
 import net.contargo.iris.seaport.dto.SeaportDtoService;
@@ -22,12 +28,22 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.lang.invoke.MethodHandles;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+
+import static net.contargo.iris.container.ContainerType.TWENTY_LIGHT;
+import static net.contargo.iris.route.RouteCombo.WATERWAY;
+import static net.contargo.iris.route.RouteDirection.EXPORT;
+import static net.contargo.iris.route.RouteProduct.ONEWAY;
+import static net.contargo.iris.route.RouteType.BARGE;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -36,9 +52,15 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
+import static java.math.BigDecimal.ZERO;
+
+import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.toList;
+
 
 /**
  * @author  Sandra Thieme - thieme@synyx.de
+ * @author  Ben Antony - antony@synyx.de
  */
 @Controller
 public class RoutesApiController {
@@ -50,15 +72,17 @@ public class RoutesApiController {
     private final SeaportDtoService seaportDtoService;
     private final SeaportConnectionRoutesDtoService seaportConnectionRoutesDtoService;
     private final RouteUrlSerializationService routeUrlSerializationService;
+    private final EnricherDtoService enricherDtoService;
 
     @Autowired
     public RoutesApiController(SeaportDtoService seaportDtoService,
         SeaportConnectionRoutesDtoService seaportConnectionRoutesDtoService,
-        RouteUrlSerializationService routeUrlSerializationService) {
+        RouteUrlSerializationService routeUrlSerializationService, EnricherDtoService enricherDtoService) {
 
         this.seaportDtoService = seaportDtoService;
         this.seaportConnectionRoutesDtoService = seaportConnectionRoutesDtoService;
         this.routeUrlSerializationService = routeUrlSerializationService;
+        this.enricherDtoService = enricherDtoService;
     }
 
     /**
@@ -123,5 +147,49 @@ public class RoutesApiController {
             isRoundTrip, containerType, isImport);
 
         return response;
+    }
+
+
+    @ApiOperation(value = "Returns a list of all possible routes to a location.")
+    @RequestMapping(value = "/routes", method = GET)
+    @ResponseBody
+    public List<RoutingResultDto> getRoutesWithCoordinates(@RequestParam(value = "lat") double latitude,
+        @RequestParam(value = "lon") double longitude) {
+
+        RouteInformation routeInformation = new RouteInformation(new GeoLocation(BigDecimal.valueOf(latitude),
+                    BigDecimal.valueOf(longitude)), ONEWAY, TWENTY_LIGHT, EXPORT, WATERWAY);
+
+        return seaportDtoService.getAllActive()
+            .stream()
+            .map(s -> seaportConnectionRoutesDtoService.getAvailableSeaportConnectionRoutes(s, routeInformation))
+            .flatMap(Collection::stream)
+            .map(enricherDtoService::enrich)
+            .map(this::toRoutingResultDto)
+            .sorted(comparing(RoutingResultDto::getDistance))
+            .collect(toList());
+    }
+
+
+    private RoutingResultDto toRoutingResultDto(RouteDto routeDto) {
+
+        RouteDataDto data = routeDto.getData();
+        BigDecimal bargeDistance = data.getParts().stream().filter(p -> p.getRouteType() == BARGE)
+                .map(p -> p.getData().getBargeDieselDistance())
+                .reduce(ZERO, BigDecimal::add);
+
+        List<GeoLocationDto> stops = new ArrayList<>();
+        stops.add(data.getParts().get(0).getOrigin());
+        stops.addAll(data.getParts().stream().map(RoutePartDto::getDestination).collect(toList()));
+
+        return new RoutingResultDto.Builder().withCo2(data.getCo2())
+            .withCo2DirectTruck(data.getCo2DirectTruck())
+            .withDistance(data.getTotalDistance())
+            .withDuration(data.getTotalDuration())
+            .withOnewayTruckDistance(data.getTotalOnewayTruckDistance())
+            .withRealTollDistance(data.getTotalRealTollDistance())
+            .withTollDistance(data.getTotalTollDistance())
+            .withBargeDistance(bargeDistance)
+            .withStops(stops)
+            .build();
     }
 }

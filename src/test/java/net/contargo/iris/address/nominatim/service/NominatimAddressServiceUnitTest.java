@@ -215,7 +215,8 @@ public class NominatimAddressServiceUnitTest {
 
         when(nominatimUrlBuilderMock.buildOsmUrl(OSM_ID, OsmType.WAY)).thenReturn(null);
         when(nominatimUrlBuilderMock.buildOsmUrl(OSM_ID, OsmType.NODE)).thenReturn(DUMMY_URL);
-        when(nominatimResponderMock.getAddressesFromOSMId(null)).thenReturn(singletonList(addressWithoutExpectedOsmId));
+        when(nominatimResponderMock.getAddressesFromOSMId(null)).thenReturn(singletonList(
+                addressWithoutExpectedOsmId));
         when(nominatimResponderMock.getAddressesFromOSMId(DUMMY_URL)).thenReturn(singletonList(expectedAddress));
 
         assertThat(sut.getAddressByOsmId(OSM_ID), is(expectedAddress));
@@ -287,5 +288,21 @@ public class NominatimAddressServiceUnitTest {
 
         when(nominatimUrlBuilderMock.buildUrl(a1)).thenThrow(new IllegalArgumentException());
         sut.getAddressByGeolocation(a1);
+    }
+
+
+    @Test
+    public void getAddressesByQuery() {
+
+        List<Address> addresses = singletonList(new Address());
+
+        when(nominatimResponderMock.getAddresses("http://nominatim/search/Streetname 43, cityName")).thenReturn(
+            addresses);
+        when(nominatimUrlBuilderMock.buildSearchUrl("Streetname 43, cityName")).thenReturn(
+            "http://nominatim/search/Streetname 43, cityName");
+
+        List<Address> result = sut.getAddressesByQuery("Streetname 43, cityName");
+
+        assertThat(result, is(addresses));
     }
 }

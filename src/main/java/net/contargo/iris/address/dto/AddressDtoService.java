@@ -46,8 +46,8 @@ public interface AddressDtoService {
 
     /**
      * Resolves an address (described by the given parameters) to a {@link java.util.List} of
-     * {@link net.contargo.iris.address.Address} objects with the attributes name, latitude and longitude. Uses multiple
-     * fallback strategies to find addresses if not all parameters are provided
+     * {@link net.contargo.iris.address.Address} objects with the attributes name, latitude and longitude. Uses
+     * multiple fallback strategies to find addresses if not all parameters are provided
      *
      * @param  addressDetails  The parameters describing the addresses we are looking for
      *
@@ -58,8 +58,8 @@ public interface AddressDtoService {
 
     /**
      * Resolves an address (described by the given parameters) to a {@link java.util.List} of
-     * {@link net.contargo.iris.address.Address} objects with the attributes name, latitude and longitude. Uses multiple
-     * fallback strategies to find addresses if not all parameters are provided
+     * {@link net.contargo.iris.address.Address} objects with the attributes name, latitude and longitude. Uses
+     * multiple fallback strategies to find addresses if not all parameters are provided
      *
      * @param  addressDetails  The parameters describing the addresses we are looking for
      *
@@ -86,4 +86,14 @@ public interface AddressDtoService {
      * @return  the {@link AddressDto} with the given hashKey
      */
     AddressDto getAddressesByHashKey(String hashKey);
+
+
+    /**
+     * Returns a list of addresses matching the query.
+     *
+     * @param  query  the address query
+     *
+     * @return  a list of matching addresses
+     */
+    List<AddressDto> getAddressesByQuery(String query);
 }

@@ -23,6 +23,7 @@ import static net.contargo.iris.address.nominatim.service.AddressDetailKey.STREE
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
@@ -45,16 +46,17 @@ public class AddressDtoServiceImplUnitTest {
     private static final int OSM_ID = 1;
     private static final GeoLocation GEOLOCATION = new GeoLocation(BigDecimal.ONE, BigDecimal.ONE);
     private static final Long PLACE_ID = 1L;
+
     private final AddressService addressServiceMock = mock(AddressService.class);
     private final AddressServiceWrapper addressServiceWrapperMock = mock(AddressServiceWrapper.class);
     private final AddressDtoServiceImpl sut = new AddressDtoServiceImpl(addressServiceMock, addressServiceWrapperMock);
-    Address address = new Address(BigDecimal.ONE, BigDecimal.ONE);
-    private Map<String, String> addressDetails;
+
+    private final Address address = new Address(BigDecimal.ONE, BigDecimal.ONE);
+    private final Map<String, String> addressDetails = new HashMap<>();
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
 
-        addressDetails = new HashMap<>();
         addressDetails.put(CITY.getKey(), "city");
         addressDetails.put(STREET.getKey(), "street");
         addressDetails.put(POSTAL_CODE.getKey(), "postalcode");
@@ -174,5 +176,20 @@ public class AddressDtoServiceImplUnitTest {
 
         AddressDto addressDto = sut.getAddressesByHashKey(hashKey);
         assertThat(addressDto.getDisplayName(), is(displayName));
+    }
+
+
+    @Test
+    public void getAddressesByQuery() {
+
+        address.setDisplayName("Gartenstr. 67, Karlsruhe (Südweststadt)");
+
+        when(addressServiceWrapperMock.getAddressesByQuery("Gartenstraße 67, Karlsruhe")).thenReturn(singletonList(
+                address));
+
+        List<AddressDto> addresses = sut.getAddressesByQuery("Gartenstraße 67, Karlsruhe");
+
+        assertThat(addresses, hasSize(1));
+        assertThat(addresses.get(0).getDisplayName(), is("Gartenstr. 67, Karlsruhe (Südweststadt)"));
     }
 }

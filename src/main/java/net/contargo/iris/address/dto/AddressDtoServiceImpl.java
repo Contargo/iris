@@ -8,9 +8,9 @@ import net.contargo.iris.address.service.AddressServiceWrapper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 
 
 /**
@@ -64,7 +64,7 @@ public class AddressDtoServiceImpl implements AddressDtoService {
         return addressServiceWrapper.getAddressesByDetails(addressDetails)
             .stream()
             .map(AddressListDto::new)
-            .collect(Collectors.toList());
+            .collect(toList());
     }
 
 
@@ -85,10 +85,7 @@ public class AddressDtoServiceImpl implements AddressDtoService {
     @Override
     public List<AddressDto> getAddressesWherePlaceIsIn(Long placeId) {
 
-        return addressService.getAddressesWherePlaceIsIn(placeId)
-            .stream()
-            .map(AddressDto::new)
-            .collect(Collectors.toList());
+        return addressService.getAddressesWherePlaceIsIn(placeId).stream().map(AddressDto::new).collect(toList());
     }
 
 
@@ -96,5 +93,12 @@ public class AddressDtoServiceImpl implements AddressDtoService {
     public AddressDto getAddressesByHashKey(String hashKey) {
 
         return new AddressDto(addressServiceWrapper.getByHashKey(hashKey));
+    }
+
+
+    @Override
+    public List<AddressDto> getAddressesByQuery(String query) {
+
+        return addressServiceWrapper.getAddressesByQuery(query).stream().map(AddressDto::new).collect(toList());
     }
 }

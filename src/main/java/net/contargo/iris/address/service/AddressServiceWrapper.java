@@ -5,6 +5,7 @@ import net.contargo.iris.address.Address;
 import net.contargo.iris.address.AddressList;
 import net.contargo.iris.address.nominatim.service.AddressService;
 import net.contargo.iris.address.staticsearch.StaticAddress;
+import net.contargo.iris.address.staticsearch.service.StaticAddressNotFoundException;
 import net.contargo.iris.address.staticsearch.service.StaticAddressService;
 import net.contargo.iris.normalizer.NormalizerService;
 
@@ -14,9 +15,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import static net.contargo.iris.address.nominatim.service.AddressDetailKey.CITY;
 import static net.contargo.iris.address.nominatim.service.AddressDetailKey.COUNTRY;
@@ -24,6 +27,7 @@ import static net.contargo.iris.address.nominatim.service.AddressDetailKey.POSTA
 import static net.contargo.iris.address.nominatim.service.AddressDetailKey.STREET;
 
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 
 
 /**
@@ -36,6 +40,7 @@ import static java.util.Collections.singletonList;
 public class AddressServiceWrapper {
 
     private static final Logger LOG = LoggerFactory.getLogger(AddressServiceWrapper.class);
+    private static final Pattern HASHKEY_MATCHER = Pattern.compile("^[A-Z0-9]{5}$");
 
     private final AddressService addressService;
     private final StaticAddressService staticAddressService;
@@ -175,7 +180,7 @@ public class AddressServiceWrapper {
     }
 
 
-    private List<AddressList> getSimpleAddressList(List<Address> addresses) {
+    private static List<AddressList> getSimpleAddressList(List<Address> addresses) {
 
         List<AddressList> addressListList = new ArrayList<>();
 
@@ -188,5 +193,36 @@ public class AddressServiceWrapper {
         }
 
         return addressListList;
+    }
+
+
+    @SuppressWarnings("squid:S1166")
+    public List<Address> getAddressesByQuery(String query) {
+
+        List<Address> addresses = new ArrayList<>();
+
+        if (HASHKEY_MATCHER.matcher(query).matches()) {
+            try {
+                addresses.add(getByHashKey(query));
+            } catch (StaticAddressNotFoundException e) {
+                // ignoring the exception as the query could be resolved by nominatim
+            }
+        }
+
+        if (addresses.isEmpty()) {
+            addresses.addAll(addressService.getAddressesByQuery(query));
+
+            List<Address> matchingStaticAddresses = addresses.stream()
+                    .map(a ->
+                                staticAddressService.findAddresses(a.getPostcode(), a.getCity(), a.getCountryCode())
+                                .getAddresses())
+                    .flatMap(Collection::stream)
+                    .distinct()
+                    .collect(toList());
+
+            addresses.addAll(matchingStaticAddresses);
+        }
+
+        return addresses;
     }
 }

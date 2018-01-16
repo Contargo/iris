@@ -205,4 +205,14 @@ public class NominatimUrlBuilderUnitTest {
         locationWithoutLongitude.setLatitude(BigDecimal.ONE);
         sut.buildUrl(locationWithoutLongitude);
     }
+
+
+    @Test
+    public void buildSearchUrl() {
+
+        assertThat(sut.buildSearchUrl("streetName"),
+            is("http://maps.contargo.net/nominatim/search/streetName?format=json&addressdetails=1"));
+        assertThat(sut.buildSearchUrl("streetName cityname"),
+            is("http://maps.contargo.net/nominatim/search/streetName cityname?format=json&addressdetails=1"));
+    }
 }

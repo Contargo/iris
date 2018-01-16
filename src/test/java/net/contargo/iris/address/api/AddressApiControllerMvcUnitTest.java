@@ -58,6 +58,8 @@ import static java.util.Collections.singletonList;
  * MVC Unit test of {@link AddressApiController}.
  *
  * @author  Arnold Franke - franke@synyx.de
+ * @author  Sandra Thieme - thieme@synyx.de
+ * @author  Ben Antony - antony@synyx.de
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:public-api-context.xml" })
@@ -208,5 +210,21 @@ public class AddressApiControllerMvcUnitTest {
         resultActions.andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
             .andExpect(jsonPath("$.addresses[0].displayName", is("76137 Karlsruhe")));
+    }
+
+
+    @Test
+    public void getAddresses() throws Exception {
+
+        Address address = new Address();
+        address.setDisplayName("Gartenstr. 67, Karlsruhe (Südweststadt)");
+
+        when(addressDtoServiceMock.getAddressesByQuery("Gartenstraße 67, Karlsruhe")).thenReturn(singletonList(
+                new AddressDto(address)));
+
+        mockMvc.perform(get("/addresses").param("query", "Gartenstraße 67, Karlsruhe"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.addresses", hasSize(1)))
+            .andExpect(jsonPath("$.addresses[0].displayName", is("Gartenstr. 67, Karlsruhe (Südweststadt)")));
     }
 }

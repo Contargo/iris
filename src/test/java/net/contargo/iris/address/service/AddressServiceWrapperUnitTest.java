@@ -5,6 +5,7 @@ import net.contargo.iris.address.Address;
 import net.contargo.iris.address.AddressList;
 import net.contargo.iris.address.nominatim.service.AddressService;
 import net.contargo.iris.address.staticsearch.StaticAddress;
+import net.contargo.iris.address.staticsearch.service.StaticAddressNotFoundException;
 import net.contargo.iris.address.staticsearch.service.StaticAddressService;
 import net.contargo.iris.normalizer.NormalizerService;
 
@@ -38,11 +39,13 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
 
@@ -57,14 +60,14 @@ public class AddressServiceWrapperUnitTest {
 
     private static final double LATITUDE = 11.0;
     private static final double LONGITUDE = 12.0;
-    public static final String CITYNAME_NEUSTADT = "Neustadt";
-    public static final String CITYNAME_NEUSTADT_NORMALIZED = "NEUSTADT";
-    public static final String CITYNAME_KARLSRUHE = "Karlsruhe";
-    public static final String CITYNAME_KARLSRUHE_NORMALIZED = "KARLSRUHE";
-    public static final String CITYNAME_NOT_NORMALIZED_AT_ALL = "%4/()&32";
-    public static final String STREETNAME_KARLSTRASSE = "Karlstrasse";
-    public static final String POSTAL_CODE_76133 = "76133";
-    public static final String POSTAL_CODE_76137 = "76137";
+    private static final String CITYNAME_NEUSTADT = "Neustadt";
+    private static final String CITYNAME_NEUSTADT_NORMALIZED = "NEUSTADT";
+    private static final String CITYNAME_KARLSRUHE = "Karlsruhe";
+    private static final String CITYNAME_KARLSRUHE_NORMALIZED = "KARLSRUHE";
+    private static final String CITYNAME_NOT_NORMALIZED_AT_ALL = "%4/()&32";
+    private static final String STREETNAME_KARLSTRASSE = "Karlstrasse";
+    private static final String POSTAL_CODE_76133 = "76133";
+    private static final String POSTAL_CODE_76137 = "76137";
 
     private AddressServiceWrapper sut;
 
@@ -412,5 +415,82 @@ public class AddressServiceWrapperUnitTest {
 
         Address address = sut.getByHashKey(hashkey);
         assertThat(address.getCountryCode(), is("DE"));
+    }
+
+
+    @Test
+    public void getAddressesByQuery() {
+
+        Address address = new Address();
+        address.setDisplayName("Gartenstr. 67, Karlsruhe (Südweststadt)");
+        address.getAddress().put("city", "Karlsruhe");
+        address.getAddress().put("postcode", "76135");
+        address.getAddress().put("country_code", "de");
+        address.getAddress().put("street", "Gartenstr.");
+
+        when(addressServiceMock.getAddressesByQuery("Gartenstraße 67, Karlsruhe")).thenReturn(singletonList(address));
+
+        StaticAddress staticAddress1 = new StaticAddress();
+        staticAddress1.setCity("Karlsruhe");
+        staticAddress1.setPostalcode("76135");
+
+        StaticAddress staticAddress2 = new StaticAddress();
+        staticAddress2.setCity("Karlsruhe");
+        staticAddress2.setPostalcode("76135");
+        staticAddress2.setSuburb("Südweststadt");
+
+        when(staticAddressServiceMock.findAddresses("76135", "Karlsruhe", "de")).thenReturn(new AddressList("",
+                asList(staticAddress1.toAddress(), staticAddress2.toAddress())));
+
+        List<Address> addresses = sut.getAddressesByQuery("Gartenstraße 67, Karlsruhe");
+
+        assertThat(addresses, hasSize(3));
+        assertThat(addresses.get(0).getDisplayName(), is("Gartenstr. 67, Karlsruhe (Südweststadt)"));
+        assertThat(addresses.get(1).getDisplayName(), is("76135 Karlsruhe"));
+        assertThat(addresses.get(2).getDisplayName(), is("76135 Karlsruhe (Südweststadt)"));
+    }
+
+
+    @Test
+    public void getAddressesByQueryWithHashkey() {
+
+        StaticAddress address = new StaticAddress();
+        address.setCity("Karlsruhe");
+        address.setPostalcode("76135");
+
+        when(staticAddressServiceMock.findByHashKey("D5EHW")).thenReturn(address);
+
+        List<Address> addresses = sut.getAddressesByQuery("D5EHW");
+
+        assertThat(addresses, hasSize(1));
+        assertThat(addresses.get(0).getCity(), is("Karlsruhe"));
+        assertThat(addresses.get(0).getPostcode(), is("76135"));
+
+        verifyZeroInteractions(addressServiceMock);
+    }
+
+
+    @Test
+    public void getAddressesByQueryWithHashkeyNotFound() {
+
+        doThrow(StaticAddressNotFoundException.class).when(staticAddressServiceMock).findByHashKey("76135");
+
+        Address address = new Address();
+        address.setDisplayName("Gartenstr. 67, Karlsruhe (Südweststadt)");
+        address.getAddress().put("city", "Karlsruhe");
+        address.getAddress().put("postcode", "76135");
+        address.getAddress().put("country_code", "de");
+        address.getAddress().put("street", "Gartenstr.");
+
+        when(addressServiceMock.getAddressesByQuery("76135")).thenReturn(singletonList(address));
+
+        when(staticAddressServiceMock.findAddresses("76135", "Karlsruhe", "de")).thenReturn(new AddressList("",
+                emptyList()));
+
+        List<Address> addresses = sut.getAddressesByQuery("76135");
+
+        assertThat(addresses, hasSize(1));
+        assertThat(addresses.get(0).getCity(), is("Karlsruhe"));
+        assertThat(addresses.get(0).getPostcode(), is("76135"));
     }
 }

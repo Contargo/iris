@@ -120,6 +120,15 @@ public class NominatimAddressService implements AddressService {
     }
 
 
+    @Override
+    public List<Address> getAddressesByQuery(String query) {
+
+        String url = nominatimUrlBuilder.buildSearchUrl(query);
+
+        return nominatimResponder.getAddresses(url);
+    }
+
+
     private List<Address> searchSuburbsViaNominatimsDetailPage(Long osmPlaceId, SuburbType suburbType,
         Set<String> suburbGlobalDisplayNames) {
 
@@ -190,7 +199,7 @@ public class NominatimAddressService implements AddressService {
     }
 
 
-    private String[][] createResolvingStrategies(String postalCode, String city, String country, String name,
+    private static String[][] createResolvingStrategies(String postalCode, String city, String country, String name,
         String internStreet) {
 
         return new String[][] {

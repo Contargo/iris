@@ -5,6 +5,7 @@ import net.contargo.iris.address.nominatim.service.OsmType;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 
 /**
@@ -116,4 +117,14 @@ public interface AddressDtoService {
      * @return  a list of matching addresses
      */
     List<AddressDto> getAddressesByQuery(String query);
+
+
+    /**
+     * Returns an optional {@link AddressDto} matching the given three word address.
+     *
+     * @param  threeWords  a three word address
+     *
+     * @return  an optional address
+     */
+    Optional<AddressDto> getAddressesByThreeWords(String threeWords);
 }

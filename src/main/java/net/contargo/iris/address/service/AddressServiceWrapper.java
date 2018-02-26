@@ -7,6 +7,8 @@ import net.contargo.iris.address.nominatim.service.AddressService;
 import net.contargo.iris.address.staticsearch.StaticAddress;
 import net.contargo.iris.address.staticsearch.service.StaticAddressNotFoundException;
 import net.contargo.iris.address.staticsearch.service.StaticAddressService;
+import net.contargo.iris.address.w3w.ThreeWordClient;
+import net.contargo.iris.address.w3w.ThreeWordClientException;
 import net.contargo.iris.normalizer.NormalizerService;
 
 import org.apache.commons.lang.StringUtils;
@@ -19,6 +21,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 import static net.contargo.iris.address.nominatim.service.AddressDetailKey.CITY;
@@ -46,14 +49,16 @@ public class AddressServiceWrapper {
     private final StaticAddressService staticAddressService;
     private final AddressCache addressCache;
     private final NormalizerService normalizerService;
+    private final ThreeWordClient threeWordClient;
 
     public AddressServiceWrapper(AddressService addressService, StaticAddressService staticAddressService,
-        AddressCache cache, NormalizerService normalizerService) {
+        AddressCache cache, NormalizerService normalizerService, ThreeWordClient threeWordClient) {
 
         this.addressService = addressService;
         this.staticAddressService = staticAddressService;
         this.addressCache = cache;
         this.normalizerService = normalizerService;
+        this.threeWordClient = threeWordClient;
     }
 
     /**
@@ -224,5 +229,20 @@ public class AddressServiceWrapper {
         }
 
         return addresses;
+    }
+
+
+    @SuppressWarnings("squid:S1166")
+    public Optional<Address> getAddressByThreeWords(String threeWords) {
+
+        try {
+            GeoLocation resolvedLocation = threeWordClient.resolve(threeWords);
+
+            return Optional.of(getAddressForGeoLocation(resolvedLocation));
+        } catch (ThreeWordClientException e) {
+            LOG.info("Cannot resolve three word address {}: {}", threeWords, e.getMessage());
+
+            return Optional.empty();
+        }
     }
 }

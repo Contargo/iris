@@ -34,8 +34,11 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
+
+import static net.contargo.iris.address.w3w.ThreeWordMatcher.isThreeWordAddress;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -141,6 +144,15 @@ public class AddressApiController {
             } catch (StaticAddressNotFoundException e) {
                 street = "";
                 LOG.info("IRIS could not provide a static address with the hash key {}", street);
+            }
+        }
+
+        if (isThreeWordAddress(street)) {
+            Optional<AddressDto> addressDto = addressDtoService.getAddressesByThreeWords(street.trim());
+
+            if (addressDto.isPresent()) {
+                addressListDtos = singletonList(new AddressListDto("Result for three words " + street,
+                            singletonList(addressDto.get())));
             }
         }
 

@@ -7,6 +7,8 @@ import java.math.BigDecimal;
 
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
+
 
 /**
  * @author  David Schilling - schilling@synyx.de
@@ -48,6 +50,12 @@ public class Osrm5Route {
         return tollDistance.divide(METERS_PER_KILOMETER);
     }
 
+
+    List<String> getGeometries() {
+
+        return this.legs.stream().map(Osrm5Leg::getGeometries).flatMap(List::stream).collect(toList());
+    }
+
     private static final class Osrm5Leg {
 
         private final List<Osrm5Step> steps;
@@ -62,6 +70,12 @@ public class Osrm5Route {
 
             return steps.stream().map(Osrm5Step::getToll).reduce(BigDecimal.ZERO, BigDecimal::add);
         }
+
+
+        List<String> getGeometries() {
+
+            return this.steps.stream().map(a -> a.geometry).collect(toList());
+        }
     }
 
     private static final class Osrm5Step {
@@ -71,13 +85,16 @@ public class Osrm5Route {
         private static final int COUNTRY_INDEX = 3;
         private final String name;
         private final BigDecimal distance;
+        private final String geometry;
 
         @JsonCreator
         public Osrm5Step(@JsonProperty("name") String name,
-            @JsonProperty("distance") BigDecimal distance) {
+            @JsonProperty("distance") BigDecimal distance,
+            @JsonProperty("geometry") String geometry) {
 
             this.name = name;
             this.distance = distance;
+            this.geometry = geometry;
         }
 
         BigDecimal getToll() {

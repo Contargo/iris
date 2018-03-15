@@ -19,6 +19,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 
+import static net.contargo.iris.route2.ModeOfTransport.ROAD;
+
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 
@@ -70,7 +72,7 @@ public class OSRMTruckRouteServiceUnitTest {
     @Test(expected = OSRMNonRoutableRouteException.class)
     public void routeIsNotRoutable() {
 
-        when(queryServiceMock.route(start, destination)).thenReturn(new RoutingQueryResult(207, 1.1, 2.2, TEN));
+        when(queryServiceMock.route(start, destination, ROAD)).thenReturn(new RoutingQueryResult(207, 1.1, 2.2, TEN));
 
         sut.route(start, destination);
     }
@@ -83,7 +85,7 @@ public class OSRMTruckRouteServiceUnitTest {
 
         TruckRoute route = sut.route(start, destination);
         assertThat(route, notNullValue());
-        verify(queryServiceMock).route(start, destination);
+        verify(queryServiceMock).route(start, destination, ROAD);
     }
 
 
@@ -117,6 +119,6 @@ public class OSRMTruckRouteServiceUnitTest {
 
         RoutingQueryResult response = new RoutingQueryResult(0, totalDistance, totalTime, toll);
 
-        when(queryServiceMock.route(start, destination)).thenReturn(response);
+        when(queryServiceMock.route(start, destination, ROAD)).thenReturn(response);
     }
 }

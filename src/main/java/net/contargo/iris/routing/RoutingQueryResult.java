@@ -2,6 +2,8 @@ package net.contargo.iris.routing;
 
 import java.math.BigDecimal;
 
+import java.util.List;
+
 
 /**
  * Represents the result of a OSRM Query to the application. So we dont have to use the OSRM Response returned by the
@@ -19,6 +21,7 @@ public final class RoutingQueryResult {
     private final double totalDistance;
     private final double totalTime;
     private final BigDecimal toll;
+    private final List<String> geometries;
 
     public RoutingQueryResult(int status, double totalDistance, double totalTime, BigDecimal toll) {
 
@@ -26,6 +29,18 @@ public final class RoutingQueryResult {
         this.totalDistance = totalDistance;
         this.totalTime = totalTime;
         this.toll = toll;
+        geometries = null;
+    }
+
+
+    public RoutingQueryResult(int status, double totalDistance, double totalTime, BigDecimal toll,
+        List<String> geometries) {
+
+        this.status = status;
+        this.totalDistance = totalDistance;
+        this.totalTime = totalTime;
+        this.toll = toll;
+        this.geometries = geometries;
     }
 
     public int getStatus() {
@@ -55,5 +70,11 @@ public final class RoutingQueryResult {
     public boolean noRoute() {
 
         return status == STATUS_NO_ROUTE;
+    }
+
+
+    public List<String> getGeometries() {
+
+        return geometries;
     }
 }

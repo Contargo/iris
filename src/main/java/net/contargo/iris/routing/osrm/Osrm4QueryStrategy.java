@@ -1,6 +1,7 @@
 package net.contargo.iris.routing.osrm;
 
 import net.contargo.iris.GeoLocation;
+import net.contargo.iris.route2.ModeOfTransport;
 import net.contargo.iris.routing.RoutingException;
 import net.contargo.iris.routing.RoutingQueryResult;
 import net.contargo.iris.routing.RoutingQueryStrategy;
@@ -49,6 +50,13 @@ public class Osrm4QueryStrategy implements RoutingQueryStrategy {
         } catch (RestClientException e) {
             throw new RoutingException("Error querying OSRM service: ", e);
         }
+    }
+
+
+    @Override
+    public RoutingQueryResult route(GeoLocation start, GeoLocation destination, ModeOfTransport modeOfTransport) {
+
+        throw new IllegalStateException("Osrm4QueryStrategy does not support different mode of transports");
     }
 
 

@@ -15,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 
+import static net.contargo.iris.route2.ModeOfTransport.RAIL;
 import static net.contargo.iris.routing.osrm.OsrmResponseProvider.osrm5Response;
 
 import static org.hamcrest.Matchers.is;
@@ -57,6 +58,28 @@ public class Osrm5QueryStrategyIntegrationTest {
         GeoLocation end = new GeoLocation(new BigDecimal("53.082857"), new BigDecimal("8.733542"));
 
         RoutingQueryResult result = sut.route(start, end);
+
+        assertThat(result.noRoute(), is(false));
+        assertThat(result.getTotalTime(), is(503.6));
+        assertThat(result.getTotalDistance(), is(8249.1));
+        assertThat(result.getToll(), is(new BigDecimal("5.2908")));
+    }
+
+
+    @Test
+    public void routeSuccessWithModeOfTransport() {
+
+        MockRestServiceServer mockServer = MockRestServiceServer.createServer(restTemplate);
+        String uri =
+            "http://maps/osrm/route/v1/rail/8.6916010000,53.0929840000;8.7335420000,53.0828570000?overview=false&alternatives=false&steps=true";
+        mockServer.expect(requestTo(uri))
+            .andExpect(method(HttpMethod.GET))
+            .andRespond(withSuccess(osrm5Response(), APPLICATION_JSON));
+
+        GeoLocation start = new GeoLocation(new BigDecimal("53.092984"), new BigDecimal("8.691601"));
+        GeoLocation end = new GeoLocation(new BigDecimal("53.082857"), new BigDecimal("8.733542"));
+
+        RoutingQueryResult result = sut.route(start, end, RAIL);
 
         assertThat(result.noRoute(), is(false));
         assertThat(result.getTotalTime(), is(503.6));

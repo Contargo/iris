@@ -25,7 +25,8 @@ public class SwaggerConfig {
     private final String[] includePattern = new String[] {
         "\\/geocodes.*", "\\/osmaddresses.*", "\\/places.*", "\\/reversegeocode.*", "\\/airlineDistance.*",
         "\\/countries.*", "\\/connections.*", "\\/routedetails.*", "\\/routerevisions.*", "\\/routes.*",
-        "\\/seaports.*", "\\/staticaddresses.*", "\\/terminals.*", "\\/simplegeocodes.*", "\\/addresses.*"
+        "\\/seaports.*", "\\/staticaddresses.*", "\\/terminals.*", "\\/simplegeocodes.*", "\\/addresses.*",
+        "\\/route.*"
     };
 
     private SpringSwaggerConfig springSwaggerConfig;

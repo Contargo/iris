@@ -6,19 +6,29 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import net.contargo.iris.GeoLocation;
+import net.contargo.iris.route2.ModeOfTransport;
 import net.contargo.iris.routing.RoutingQueryResult;
 import net.contargo.iris.routing.RoutingQueryStrategy;
 
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
+import org.slf4j.Logger;
 
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 
+import java.lang.invoke.MethodHandles;
+
+import java.util.List;
+
+import static net.contargo.iris.route2.ModeOfTransport.ROAD;
 import static net.contargo.iris.routing.RoutingQueryResult.STATUS_NO_ROUTE;
 import static net.contargo.iris.routing.RoutingQueryResult.STATUS_OK;
+
+import static org.slf4j.LoggerFactory.getLogger;
+
+import static org.springframework.http.HttpEntity.EMPTY;
+import static org.springframework.http.HttpMethod.GET;
 
 
 /**
@@ -26,8 +36,11 @@ import static net.contargo.iris.routing.RoutingQueryResult.STATUS_OK;
  * routing service.
  *
  * @author  David Schilling - schilling@synyx.de
+ * @author  Ben Antony - antony@synyx.de
  */
 public class Osrm5QueryStrategy implements RoutingQueryStrategy {
+
+    private static final Logger LOG = getLogger(MethodHandles.lookup().lookupClass());
 
     private final String baseUrl;
     private final RestTemplate restTemplate;
@@ -41,24 +54,33 @@ public class Osrm5QueryStrategy implements RoutingQueryStrategy {
     @Override
     public RoutingQueryResult route(GeoLocation start, GeoLocation destination) {
 
+        return route(start, destination, ROAD);
+    }
+
+
+    @Override
+    public RoutingQueryResult route(GeoLocation start, GeoLocation destination, ModeOfTransport modeOfTransport) {
+
         try {
-            Osrm5Response osrm5Response = sendQuery(start, destination);
+            Osrm5Response osrm5Response = sendQuery(start, destination, modeOfTransport);
+
+            List<String> geometries = osrm5Response.getGeometries();
 
             return new RoutingQueryResult(STATUS_OK, osrm5Response.getDistance().doubleValue(),
-                    osrm5Response.getDuration().doubleValue(), osrm5Response.getToll());
+                    osrm5Response.getDuration().doubleValue(), osrm5Response.getToll(), geometries);
         } catch (HttpClientErrorException e) {
             return handleClientError(e);
         }
     }
 
 
-    private Osrm5Response sendQuery(GeoLocation start, GeoLocation destination) {
+    private Osrm5Response sendQuery(GeoLocation start, GeoLocation destination, ModeOfTransport modeOfTransport) {
 
-        String uriPattern = baseUrl + "/v1/driving/%s,%s;%s,%s?overview=false&alternatives=false&steps=true";
-        String uri = String.format(uriPattern, start.getLongitude(), start.getLatitude(), destination.getLongitude(),
-                destination.getLatitude());
+        String uriPattern = baseUrl + "/v1/%s/%s,%s;%s,%s?overview=false&alternatives=false&steps=true";
+        String uri = String.format(uriPattern, modeOfTransport.getOsrmProfile(), start.getLongitude(),
+                start.getLatitude(), destination.getLongitude(), destination.getLatitude());
 
-        return restTemplate.exchange(uri, HttpMethod.GET, HttpEntity.EMPTY, Osrm5Response.class).getBody();
+        return restTemplate.exchange(uri, GET, EMPTY, Osrm5Response.class).getBody();
     }
 
 

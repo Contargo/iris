@@ -481,4 +481,21 @@
           class="net.contargo.iris.address.staticsearch.upload.file.StaticAddressFileService">
         <constructor-arg name="directory" value="${addresses.csvdir}"/>
     </bean>
+
+    <bean class="net.contargo.iris.route2.service.RouteService" id="routeService">
+        <constructor-arg ref="routingQueryStrategyProvider"/>
+    </bean>
+
+    <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
+        <property name="converters">
+            <set>
+                <bean class="net.contargo.iris.route2.api.NodeDtoToGeoLocationConverter">
+                    <constructor-arg ref="seaportService"/>
+                    <constructor-arg ref="terminalService"/>
+                    <constructor-arg ref="addressServiceWrapper"/>
+                </bean>
+            </set>
+        </property>
+    </bean>
+
 </beans>

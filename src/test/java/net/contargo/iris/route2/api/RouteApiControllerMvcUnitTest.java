@@ -1,5 +1,6 @@
 package net.contargo.iris.route2.api;
 
+import net.contargo.iris.route2.ModeOfTransport;
 import net.contargo.iris.route2.service.RoutePartEdgeResult;
 import net.contargo.iris.route2.service.RouteService;
 
@@ -7,9 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.junit.runner.RunWith;
-
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -23,15 +21,12 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 
 import org.springframework.web.context.WebApplicationContext;
 
-import java.math.BigInteger;
-
-import static net.contargo.iris.route2.ModeOfTransport.WATER;
 import static net.contargo.iris.route2.RoutePartEdgeResultStatus.OK;
-import static net.contargo.iris.route2.api.RoutePartNodeDtoType.TERMINAL;
 
 import static org.hamcrest.Matchers.is;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -61,9 +56,6 @@ public class RouteApiControllerMvcUnitTest {
 
     private MockMvc mockMvc;
 
-    @Captor
-    private ArgumentCaptor<RoutePartEdgeDto> captor;
-
     @Before
     public void setUp() {
 
@@ -74,23 +66,13 @@ public class RouteApiControllerMvcUnitTest {
     @Test
     public void getRoutes() throws Exception {
 
-        RoutePartNodeDto terminal1 = new RoutePartNodeDto(TERMINAL, new BigInteger("1300000000000025"), null, null,
-                null);
-
-        RoutePartNodeDto terminal2 = new RoutePartNodeDto(TERMINAL, new BigInteger("1300000000000023"), null, null,
-                null);
-
-        RoutePartEdgeDto edge1 = new RoutePartEdgeDto(terminal1, terminal2, WATER);
-
-        RoutePartEdgeDto edge2 = new RoutePartEdgeDto(terminal2, terminal1, WATER);
-
         MockHttpServletRequestBuilder request = post("/route").content(getContent())
                 .contentType(MediaType.APPLICATION_JSON);
 
         RoutePartEdgeResult result1 = new RoutePartEdgeResult(61299.3, 12259.5, asList("geometry1", "geometry2"), OK);
         RoutePartEdgeResult result2 = new RoutePartEdgeResult(61299.3, 22068, asList("geometry3", "geometry4"), OK);
 
-        when(routeServiceMock.route(any())).thenReturn(result1, result2);
+        when(routeServiceMock.route(any(), any(), eq(ModeOfTransport.WATER))).thenReturn(result1, result2);
 
         mockMvc.perform(request)
             .andExpect(status().isOk())
@@ -105,7 +87,7 @@ public class RouteApiControllerMvcUnitTest {
             .andExpect(jsonPath("$[1].geometries[1]", is("geometry4")))
             .andExpect(jsonPath("$[1].status", is("OK")));
 
-        verify(routeServiceMock, times(2)).route(any());
+        verify(routeServiceMock, times(2)).route(any(), any(), eq(ModeOfTransport.WATER));
     }
 
 

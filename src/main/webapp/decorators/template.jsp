@@ -4,6 +4,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib uri="http://www.opensymphony.com/sitemesh/decorator" prefix="decorator" %>
+<%@ taglib prefix="iris" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <%@ page session="false" %>
@@ -27,6 +28,7 @@
     <link href="<c:url value="/client/css/bootstrap-notify.css"/>" rel="stylesheet">
     <link href="<c:url value="/client/css/datepicker.css" />" rel="stylesheet"/>
     <link href="<c:url value="/client/js/lib/select2.css" />" rel="stylesheet"/>
+    <link href="<c:url value="/client/js/lib/cookieconsent.min.css" />" rel="stylesheet"/>
 
     <script src="<c:url value="/client/js/lib/jquery-1.10.2.min.js" />"></script>
     <script src="<c:url value="/client/js/lib/jquery-migrate-1.2.1.min.js" />"></script>
@@ -35,6 +37,9 @@
     <script src="<c:url value="/client/js/lib/bootstrap-datepicker.js" />"></script>
     <script src="<c:url value="/client/js/lib/select2.js" />"></script>
     <script src="<c:url value="/client/js/logoutHandling.js" />"></script>
+    <script src="<c:url value="/client/js/lib/cookieconsent.min.js" />"></script>
+
+    <iris:cookieNotification/>
 
     <decorator:head/>
 </head>

@@ -3,6 +3,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib uri="http://www.opensymphony.com/sitemesh/decorator" prefix="decorator" %>
+<%@ taglib prefix="iris" tagdir="/WEB-INF/tags" %>
 <%@ page session="false" %>
 
 <!DOCTYPE html>
@@ -23,12 +24,16 @@
     <link href="<c:url value="/client/css/${ciCssFileName}.css"/>" rel="stylesheet">
     <link href="<c:url value="/client/css/bootstrap-notify.css"/>" rel="stylesheet">
     <link href="<c:url value="/client/js/lib/select2.css" />" rel="stylesheet"/>
+    <link href="<c:url value="/client/js/lib/cookieconsent.min.css" />" rel="stylesheet"/>
 
     <script src="<c:url value="/client/js/lib/jquery-1.10.2.min.js" />"></script>
     <script src="<c:url value="/client/js/lib/jquery-migrate-1.2.1.min.js" />"></script>
     <script src="<c:url value="/client/js/lib/bootstrap.min.js" />"></script>
     <script src="<c:url value="/client/js/lib/bootstrap-notify.js" />"></script>
     <script src="<c:url value="/client/js/lib/select2.js" />"></script>
+    <script src="<c:url value="/client/js/lib/cookieconsent.min.js" />"></script>
+
+    <iris:cookieNotification/>
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>

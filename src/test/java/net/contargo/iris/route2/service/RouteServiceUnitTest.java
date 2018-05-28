@@ -14,12 +14,15 @@ import org.mockito.Mock;
 
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.math.BigDecimal;
+
 import static net.contargo.iris.route2.ModeOfTransport.ROAD;
 import static net.contargo.iris.route2.RoutePartEdgeResultStatus.NO_ROUTE;
 import static net.contargo.iris.route2.RoutePartEdgeResultStatus.OK;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import static org.hamcrest.Matchers.comparesEqualTo;
 import static org.hamcrest.Matchers.is;
 
 import static org.mockito.Mockito.mock;
@@ -58,8 +61,8 @@ public class RouteServiceUnitTest {
 
         RoutePartEdgeResult result = sut.route(start, end, ROAD);
 
-        assertThat(result.getDistance(), is(61299.3));
-        assertThat(result.getDuration(), is(22068.0));
+        assertThat(result.getDistance(), comparesEqualTo(new BigDecimal("61.30")));
+        assertThat(result.getDuration(), comparesEqualTo(new BigDecimal("22068.0")));
         assertThat(result.getGeometries().get(0), is("geometry1"));
         assertThat(result.getGeometries().get(1), is("geometry2"));
         assertThat(result.getStatus(), is(OK));

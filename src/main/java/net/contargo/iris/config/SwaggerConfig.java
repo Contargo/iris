@@ -26,7 +26,7 @@ public class SwaggerConfig {
         "\\/geocodes.*", "\\/osmaddresses.*", "\\/places.*", "\\/reversegeocode.*", "\\/airlineDistance.*",
         "\\/countries.*", "\\/connections.*", "\\/routedetails.*", "\\/routerevisions.*", "\\/routes.*",
         "\\/seaports.*", "\\/staticaddresses.*", "\\/terminals.*", "\\/simplegeocodes.*", "\\/addresses.*",
-        "\\/route.*"
+        "\\/route.*", "\\/transports.*"
     };
 
     private SpringSwaggerConfig springSwaggerConfig;

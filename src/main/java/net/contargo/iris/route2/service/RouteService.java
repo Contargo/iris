@@ -9,10 +9,16 @@ import net.contargo.iris.routing.RoutingQueryStrategyProvider;
 
 import org.springframework.cache.annotation.Cacheable;
 
+import org.springframework.http.HttpStatus;
+
+import java.math.BigDecimal;
+
 import java.util.List;
 
 import static net.contargo.iris.route2.RoutePartEdgeResultStatus.NO_ROUTE;
 import static net.contargo.iris.route2.RoutePartEdgeResultStatus.OK;
+
+import static java.math.RoundingMode.UP;
 
 
 /**
@@ -21,6 +27,8 @@ import static net.contargo.iris.route2.RoutePartEdgeResultStatus.OK;
  */
 public class RouteService {
 
+    private static final BigDecimal METER_PER_KILOMETER = new BigDecimal("1000");
+    private static final int SCALE = 2;
     private final RoutingQueryStrategyProvider routingQueryStrategyProvider;
 
     public RouteService(RoutingQueryStrategyProvider routingQueryStrategyProvider) {
@@ -38,20 +46,25 @@ public class RouteService {
     }
 
 
-    private RoutePartEdgeResult toRouteResult(RoutingQueryResult queryResult) {
+    private static RoutePartEdgeResult toRouteResult(RoutingQueryResult queryResult) {
 
         List<String> geometries = queryResult.getGeometries();
-        double totalDistance = queryResult.getTotalDistance();
-        double duration = queryResult.getTotalTime();
+        BigDecimal distanceInMeter = BigDecimal.valueOf(queryResult.getTotalDistance());
+
+        BigDecimal totalDistance = distanceInMeter.divide(METER_PER_KILOMETER, SCALE, UP);
+
+        BigDecimal toll = queryResult.getToll();
+
+        BigDecimal duration = BigDecimal.valueOf(queryResult.getTotalTime());
 
         RoutePartEdgeResultStatus status = null;
 
-        if (queryResult.getStatus() == 200) {
+        if (queryResult.getStatus() == HttpStatus.OK.value()) {
             status = OK;
-        } else if (queryResult.getStatus() == 207) {
+        } else if (queryResult.getStatus() == HttpStatus.MULTI_STATUS.value()) {
             status = NO_ROUTE;
         }
 
-        return new RoutePartEdgeResult(totalDistance, duration, geometries, status);
+        return new RoutePartEdgeResult(totalDistance, toll, duration, geometries, status);
     }
 }

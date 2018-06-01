@@ -482,7 +482,7 @@
         <constructor-arg name="directory" value="${addresses.csvdir}"/>
     </bean>
 
-    <bean class="net.contargo.iris.route2.service.RouteService" id="routeService">
+    <bean class="net.contargo.iris.transport.service.RouteService" id="routeService">
         <constructor-arg ref="routingQueryStrategyProvider"/>
     </bean>
 

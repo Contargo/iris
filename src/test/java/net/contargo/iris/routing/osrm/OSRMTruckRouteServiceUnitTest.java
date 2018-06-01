@@ -19,7 +19,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 
-import static net.contargo.iris.route2.ModeOfTransport.ROAD;
+import static net.contargo.iris.routing.osrm.OSRMProfile.DRIVING;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -72,7 +72,8 @@ public class OSRMTruckRouteServiceUnitTest {
     @Test(expected = OSRMNonRoutableRouteException.class)
     public void routeIsNotRoutable() {
 
-        when(queryServiceMock.route(start, destination, ROAD)).thenReturn(new RoutingQueryResult(207, 1.1, 2.2, TEN));
+        when(queryServiceMock.route(start, destination, DRIVING)).thenReturn(new RoutingQueryResult(207, 1.1, 2.2,
+                TEN));
 
         sut.route(start, destination);
     }
@@ -81,11 +82,11 @@ public class OSRMTruckRouteServiceUnitTest {
     @Test
     public void delegatesCallToQueryService() {
 
-        makeMockReturn(ZERO, DEFAULT_TOTAL_DISTANCE, DEFAULT_TOTAL_TIME);
+        makeMockReturn(DEFAULT_TOTAL_DISTANCE, DEFAULT_TOTAL_TIME);
 
         TruckRoute route = sut.route(start, destination);
         assertThat(route, notNullValue());
-        verify(queryServiceMock).route(start, destination, ROAD);
+        verify(queryServiceMock).route(start, destination, DRIVING);
     }
 
 
@@ -94,7 +95,7 @@ public class OSRMTruckRouteServiceUnitTest {
 
         OSRM4ResponseRouteSummary summary = new OSRM4ResponseRouteSummary();
         summary.setTotalDistance(12000);
-        makeMockReturn(ZERO, 12000, DEFAULT_TOTAL_TIME);
+        makeMockReturn(12000, DEFAULT_TOTAL_TIME);
 
         TruckRoute route = sut.route(start, destination);
         assertThat(route, notNullValue());
@@ -107,7 +108,7 @@ public class OSRMTruckRouteServiceUnitTest {
 
         OSRM4ResponseRouteSummary summary = new OSRM4ResponseRouteSummary();
         summary.setTotalTime(120);
-        makeMockReturn(ZERO, DEFAULT_TOTAL_DISTANCE, 120);
+        makeMockReturn(DEFAULT_TOTAL_DISTANCE, 120);
 
         TruckRoute route = sut.route(start, destination);
         assertThat(route, notNullValue());
@@ -115,10 +116,10 @@ public class OSRMTruckRouteServiceUnitTest {
     }
 
 
-    private void makeMockReturn(BigDecimal toll, double totalDistance, double totalTime) {
+    private void makeMockReturn(double totalDistance, double totalTime) {
 
-        RoutingQueryResult response = new RoutingQueryResult(0, totalDistance, totalTime, toll);
+        RoutingQueryResult response = new RoutingQueryResult(0, totalDistance, totalTime, ZERO);
 
-        when(queryServiceMock.route(start, destination, ROAD)).thenReturn(response);
+        when(queryServiceMock.route(start, destination, DRIVING)).thenReturn(response);
     }
 }

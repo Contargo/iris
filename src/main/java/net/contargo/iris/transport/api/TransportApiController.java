@@ -23,7 +23,7 @@ import static java.util.stream.Collectors.toList;
  * @author  Oliver Messner - messner@synyx.de
  * @author  Sandra Thieme - thieme@synyx.de
  */
-@Api(value = "/transports", description = "UNDER TEST FOO")
+@Api(value = "/transports")
 @RestController
 @RequestMapping("/transports")
 public class TransportApiController {

@@ -3,10 +3,19 @@ package net.contargo.iris.transport.api;
 import net.contargo.iris.transport.service.DescriptionGenerator;
 import net.contargo.iris.transport.service.TransportDescriptionExtender;
 
+import static org.junit.Assert.*;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import org.junit.runner.RunWith;
+
+import static org.mockito.Matchers.any;
+
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -18,20 +27,11 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
-import org.springframework.web.context.WebApplicationContext;
-
-import static org.junit.Assert.*;
-
-import static org.mockito.Matchers.any;
-
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
+
+import org.springframework.web.context.WebApplicationContext;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -44,7 +44,7 @@ import static java.util.Collections.emptyList;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:public-api-context.xml" })
 @WebAppConfiguration
-public class TransportApiControllerTest {
+public class TransportApiControllerUnitTest {
 
     @Autowired
     private WebApplicationContext webApplicationContext;

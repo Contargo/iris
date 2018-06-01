@@ -1,8 +1,6 @@
 package net.contargo.iris.transport.service;
 
 import net.contargo.iris.GeoLocation;
-import net.contargo.iris.route2.service.RoutePartEdgeResult;
-import net.contargo.iris.route2.service.RouteService;
 import net.contargo.iris.transport.api.SiteType;
 import net.contargo.iris.transport.api.TransportDescriptionDto;
 import net.contargo.iris.transport.api.TransportResponseDto;
@@ -25,12 +23,12 @@ import java.util.List;
 
 import static net.contargo.iris.container.ContainerState.EMPTY;
 import static net.contargo.iris.container.ContainerState.FULL;
-import static net.contargo.iris.route2.ModeOfTransport.ROAD;
-import static net.contargo.iris.route2.RoutePartEdgeResultStatus.OK;
 import static net.contargo.iris.transport.api.ModeOfTransport.RAIL;
+import static net.contargo.iris.transport.api.ModeOfTransport.ROAD;
 import static net.contargo.iris.transport.api.SiteType.ADDRESS;
 import static net.contargo.iris.transport.api.SiteType.SEAPORT;
 import static net.contargo.iris.transport.api.SiteType.TERMINAL;
+import static net.contargo.iris.transport.service.RouteStatus.OK;
 
 import static org.hamcrest.Matchers.comparesEqualTo;
 import static org.hamcrest.Matchers.nullValue;
@@ -50,7 +48,7 @@ import static java.util.Collections.emptyList;
  * @author  Ben Antony - antony@synyx.de
  */
 @RunWith(MockitoJUnitRunner.class)
-public class TransportDescriptionExtenderTest {
+public class TransportDescriptionExtenderUnitTest {
 
     @InjectMocks
     private TransportDescriptionExtender sut;
@@ -79,9 +77,9 @@ public class TransportDescriptionExtenderTest {
         TransportDescriptionDto.TransportSegment seaportTerminal = new TransportDescriptionDto.TransportSegment(
                 seaport, terminal, FULL, true, RAIL);
         TransportDescriptionDto.TransportSegment terminalAddress = new TransportDescriptionDto.TransportSegment(
-                terminal, address, FULL, true, net.contargo.iris.transport.api.ModeOfTransport.ROAD);
+                terminal, address, FULL, true, ROAD);
         TransportDescriptionDto.TransportSegment AddressTerminal = new TransportDescriptionDto.TransportSegment(
-                address, terminal, EMPTY, true, net.contargo.iris.transport.api.ModeOfTransport.ROAD);
+                address, terminal, EMPTY, true, ROAD);
 
         List<TransportDescriptionDto.TransportSegment> descriptions = asList(seaportTerminal, terminalAddress,
                 AddressTerminal);
@@ -91,13 +89,13 @@ public class TransportDescriptionExtenderTest {
         when(conversionServiceMock.convert(matchesSiteType(TERMINAL), any())).thenReturn(terminalGeoLocation);
         when(conversionServiceMock.convert(matchesSiteType(ADDRESS), any())).thenReturn(addressGeoLocation);
 
-        RoutePartEdgeResult terminalAddressDistances = new RoutePartEdgeResult(new BigDecimal("40"),
-                new BigDecimal("20"), new BigDecimal("300"), emptyList(), OK);
+        RouteResult terminalAddressDistances = new RouteResult(new BigDecimal("40"), new BigDecimal("20"),
+                new BigDecimal("300"), emptyList(), OK);
         when(routeServiceMock.route(terminalGeoLocation, addressGeoLocation, ROAD)).thenReturn(
             terminalAddressDistances);
 
-        RoutePartEdgeResult addressTerminalDistances = new RoutePartEdgeResult(new BigDecimal("45"),
-                new BigDecimal("25"), new BigDecimal("400"), emptyList(), OK);
+        RouteResult addressTerminalDistances = new RouteResult(new BigDecimal("45"), new BigDecimal("25"),
+                new BigDecimal("400"), emptyList(), OK);
         when(routeServiceMock.route(addressGeoLocation, terminalGeoLocation, ROAD)).thenReturn(
             addressTerminalDistances);
 

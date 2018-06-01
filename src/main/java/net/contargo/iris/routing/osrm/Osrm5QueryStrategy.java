@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import net.contargo.iris.GeoLocation;
-import net.contargo.iris.route2.ModeOfTransport;
 import net.contargo.iris.routing.RoutingQueryResult;
 import net.contargo.iris.routing.RoutingQueryStrategy;
 
@@ -21,9 +20,9 @@ import java.lang.invoke.MethodHandles;
 
 import java.util.List;
 
-import static net.contargo.iris.route2.ModeOfTransport.ROAD;
 import static net.contargo.iris.routing.RoutingQueryResult.STATUS_NO_ROUTE;
 import static net.contargo.iris.routing.RoutingQueryResult.STATUS_OK;
+import static net.contargo.iris.routing.osrm.OSRMProfile.DRIVING;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -54,15 +53,15 @@ public class Osrm5QueryStrategy implements RoutingQueryStrategy {
     @Override
     public RoutingQueryResult route(GeoLocation start, GeoLocation destination) {
 
-        return route(start, destination, ROAD);
+        return route(start, destination, DRIVING);
     }
 
 
     @Override
-    public RoutingQueryResult route(GeoLocation start, GeoLocation destination, ModeOfTransport modeOfTransport) {
+    public RoutingQueryResult route(GeoLocation start, GeoLocation destination, OSRMProfile profile) {
 
         try {
-            Osrm5Response osrm5Response = sendQuery(start, destination, modeOfTransport);
+            Osrm5Response osrm5Response = sendQuery(start, destination, profile);
 
             List<String> geometries = osrm5Response.getGeometries();
 
@@ -74,10 +73,10 @@ public class Osrm5QueryStrategy implements RoutingQueryStrategy {
     }
 
 
-    private Osrm5Response sendQuery(GeoLocation start, GeoLocation destination, ModeOfTransport modeOfTransport) {
+    private Osrm5Response sendQuery(GeoLocation start, GeoLocation destination, OSRMProfile profile) {
 
         String uriPattern = baseUrl + "/v1/%s/%s,%s;%s,%s?overview=false&alternatives=false&steps=true";
-        String uri = String.format(uriPattern, modeOfTransport.getOsrmProfile(), start.getLongitude(),
+        String uri = String.format(uriPattern, profile.toString().toLowerCase(), start.getLongitude(),
                 start.getLatitude(), destination.getLongitude(), destination.getLatitude());
 
         return restTemplate.exchange(uri, GET, EMPTY, Osrm5Response.class).getBody();

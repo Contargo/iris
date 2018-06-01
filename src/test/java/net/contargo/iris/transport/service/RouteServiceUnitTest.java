@@ -1,4 +1,4 @@
-package net.contargo.iris.route2.service;
+package net.contargo.iris.transport.service;
 
 import net.contargo.iris.GeoLocation;
 import net.contargo.iris.routing.RoutingQueryResult;
@@ -16,9 +16,10 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 
-import static net.contargo.iris.route2.ModeOfTransport.ROAD;
-import static net.contargo.iris.route2.RoutePartEdgeResultStatus.NO_ROUTE;
-import static net.contargo.iris.route2.RoutePartEdgeResultStatus.OK;
+import static net.contargo.iris.routing.osrm.OSRMProfile.DRIVING;
+import static net.contargo.iris.transport.api.ModeOfTransport.ROAD;
+import static net.contargo.iris.transport.service.RouteStatus.NO_ROUTE;
+import static net.contargo.iris.transport.service.RouteStatus.OK;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -57,9 +58,9 @@ public class RouteServiceUnitTest {
 
         RoutingQueryStrategy strategyMock = mock(RoutingQueryStrategy.class);
         when(routingQueryStrategyProviderMock.strategy()).thenReturn(strategyMock);
-        when(strategyMock.route(start, end, ROAD)).thenReturn(routingResult);
+        when(strategyMock.route(start, end, DRIVING)).thenReturn(routingResult);
 
-        RoutePartEdgeResult result = sut.route(start, end, ROAD);
+        RouteResult result = sut.route(start, end, ROAD);
 
         assertThat(result.getDistance(), comparesEqualTo(new BigDecimal("61.30")));
         assertThat(result.getDuration(), comparesEqualTo(new BigDecimal("22068.0")));
@@ -79,9 +80,9 @@ public class RouteServiceUnitTest {
 
         RoutingQueryStrategy strategyMock = mock(RoutingQueryStrategy.class);
         when(routingQueryStrategyProviderMock.strategy()).thenReturn(strategyMock);
-        when(strategyMock.route(start, end, ROAD)).thenReturn(routingResult);
+        when(strategyMock.route(start, end, DRIVING)).thenReturn(routingResult);
 
-        RoutePartEdgeResult result = sut.route(start, end, ROAD);
+        RouteResult result = sut.route(start, end, ROAD);
 
         assertThat(result.getStatus(), is(NO_ROUTE));
     }

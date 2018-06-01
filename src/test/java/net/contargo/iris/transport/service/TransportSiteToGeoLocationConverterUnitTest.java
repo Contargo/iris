@@ -30,7 +30,7 @@ import static org.mockito.Mockito.when;
 /**
  * @author  Ben Antony antony@synyx.de
  */
-public class TransportSiteToGeoLocationConverterTest {
+public class TransportSiteToGeoLocationConverterUnitTest {
 
     private SeaportService seaportService = mock(SeaportService.class);
     private TerminalService terminalService = mock(TerminalService.class);

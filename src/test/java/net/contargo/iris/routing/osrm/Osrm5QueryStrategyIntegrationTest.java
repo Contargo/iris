@@ -15,7 +15,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 
-import static net.contargo.iris.route2.ModeOfTransport.RAIL;
+import static net.contargo.iris.routing.osrm.OSRMProfile.RAIL;
 import static net.contargo.iris.routing.osrm.OsrmResponseProvider.osrm5Response;
 
 import static org.hamcrest.Matchers.is;

@@ -1,6 +1,4 @@
-package net.contargo.iris.route2.service;
-
-import net.contargo.iris.route2.RoutePartEdgeResultStatus;
+package net.contargo.iris.transport.service;
 
 import java.math.BigDecimal;
 
@@ -10,16 +8,16 @@ import java.util.List;
 /**
  * @author  Ben Antony - antony@synyx.de
  */
-public class RoutePartEdgeResult {
+class RouteResult {
 
     private final BigDecimal distance;
     private final BigDecimal toll;
     private final BigDecimal duration;
     private final List<String> geometries;
-    private final RoutePartEdgeResultStatus status;
+    private final RouteStatus status;
 
-    public RoutePartEdgeResult(BigDecimal distance, BigDecimal toll, BigDecimal duration, List<String> geometries,
-        RoutePartEdgeResultStatus status) {
+    RouteResult(BigDecimal distance, BigDecimal toll, BigDecimal duration, List<String> geometries,
+        RouteStatus status) {
 
         this.distance = distance;
         this.toll = toll;
@@ -28,31 +26,31 @@ public class RoutePartEdgeResult {
         this.status = status;
     }
 
-    public BigDecimal getDistance() {
+    BigDecimal getDistance() {
 
         return distance;
     }
 
 
-    public BigDecimal getToll() {
+    BigDecimal getToll() {
 
         return toll;
     }
 
 
-    public BigDecimal getDuration() {
+    BigDecimal getDuration() {
 
         return duration;
     }
 
 
-    public List<String> getGeometries() {
+    List<String> getGeometries() {
 
         return geometries;
     }
 
 
-    public RoutePartEdgeResultStatus getStatus() {
+    RouteStatus getStatus() {
 
         return status;
     }

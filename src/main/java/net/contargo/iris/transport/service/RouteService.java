@@ -1,11 +1,10 @@
-package net.contargo.iris.route2.service;
+package net.contargo.iris.transport.service;
 
 import net.contargo.iris.GeoLocation;
-import net.contargo.iris.route2.ModeOfTransport;
-import net.contargo.iris.route2.RoutePartEdgeResultStatus;
 import net.contargo.iris.routing.RoutingQueryResult;
 import net.contargo.iris.routing.RoutingQueryStrategy;
 import net.contargo.iris.routing.RoutingQueryStrategyProvider;
+import net.contargo.iris.transport.api.ModeOfTransport;
 
 import org.springframework.cache.annotation.Cacheable;
 
@@ -15,8 +14,8 @@ import java.math.BigDecimal;
 
 import java.util.List;
 
-import static net.contargo.iris.route2.RoutePartEdgeResultStatus.NO_ROUTE;
-import static net.contargo.iris.route2.RoutePartEdgeResultStatus.OK;
+import static net.contargo.iris.transport.service.RouteStatus.NO_ROUTE;
+import static net.contargo.iris.transport.service.RouteStatus.OK;
 
 import static java.math.RoundingMode.UP;
 
@@ -37,16 +36,16 @@ public class RouteService {
     }
 
     @Cacheable("RouteServiceRoute")
-    public RoutePartEdgeResult route(GeoLocation start, GeoLocation end, ModeOfTransport mot) {
+    public RouteResult route(GeoLocation start, GeoLocation end, ModeOfTransport mot) {
 
         RoutingQueryStrategy strategy = routingQueryStrategyProvider.strategy();
-        RoutingQueryResult queryResult = strategy.route(start, end, mot);
+        RoutingQueryResult queryResult = strategy.route(start, end, mot.getOsrmProfile());
 
         return toRouteResult(queryResult);
     }
 
 
-    private static RoutePartEdgeResult toRouteResult(RoutingQueryResult queryResult) {
+    private static RouteResult toRouteResult(RoutingQueryResult queryResult) {
 
         List<String> geometries = queryResult.getGeometries();
         BigDecimal distanceInMeter = BigDecimal.valueOf(queryResult.getTotalDistance());
@@ -57,7 +56,7 @@ public class RouteService {
 
         BigDecimal duration = BigDecimal.valueOf(queryResult.getTotalTime());
 
-        RoutePartEdgeResultStatus status = null;
+        RouteStatus status = null;
 
         if (queryResult.getStatus() == HttpStatus.OK.value()) {
             status = OK;
@@ -65,6 +64,6 @@ public class RouteService {
             status = NO_ROUTE;
         }
 
-        return new RoutePartEdgeResult(totalDistance, toll, duration, geometries, status);
+        return new RouteResult(totalDistance, toll, duration, geometries, status);
     }
 }

@@ -1,9 +1,7 @@
 package net.contargo.iris.transport.service;
 
 import net.contargo.iris.GeoLocation;
-import net.contargo.iris.route2.ModeOfTransport;
-import net.contargo.iris.route2.service.RoutePartEdgeResult;
-import net.contargo.iris.route2.service.RouteService;
+import net.contargo.iris.transport.api.ModeOfTransport;
 import net.contargo.iris.transport.api.TransportDescriptionDto;
 import net.contargo.iris.transport.api.TransportResponseDto;
 
@@ -44,12 +42,12 @@ public class TransportDescriptionExtender {
             .forEach(s -> {
                 GeoLocation start = conversionService.convert(s.fromSite, GeoLocation.class);
                 GeoLocation end = conversionService.convert(s.toSite, GeoLocation.class);
-                ModeOfTransport mot = s.modeOfTransport.getMot();
-                RoutePartEdgeResult routePartEdgeResult = routeService.route(start, end, mot);
+                ModeOfTransport mot = s.modeOfTransport;
+                RouteResult routeResult = routeService.route(start, end, mot);
 
-                s.distance = routePartEdgeResult.getDistance();
-                s.tollDistance = routePartEdgeResult.getToll();
-                s.duration = routePartEdgeResult.getDuration();
+                s.distance = routeResult.getDistance();
+                s.tollDistance = routeResult.getToll();
+                s.duration = routeResult.getDuration();
             });
 
         return result;

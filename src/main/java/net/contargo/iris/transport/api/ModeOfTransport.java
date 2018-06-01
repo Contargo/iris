@@ -1,6 +1,10 @@
 package net.contargo.iris.transport.api;
 
 import net.contargo.iris.route.RouteType;
+import net.contargo.iris.routing.osrm.OSRMProfile;
+
+import static net.contargo.iris.route.RouteType.TRUCK;
+import static net.contargo.iris.routing.osrm.OSRMProfile.DRIVING;
 
 
 /**
@@ -10,28 +14,28 @@ import net.contargo.iris.route.RouteType;
  */
 public enum ModeOfTransport {
 
-    RAIL(net.contargo.iris.route2.ModeOfTransport.RAIL, RouteType.RAIL),
-    WATER(net.contargo.iris.route2.ModeOfTransport.WATER, RouteType.BARGE),
-    ROAD(net.contargo.iris.route2.ModeOfTransport.ROAD, RouteType.TRUCK);
+    RAIL(OSRMProfile.RAIL, RouteType.RAIL),
+    WATER(OSRMProfile.WATER, RouteType.BARGE),
+    ROAD(DRIVING, TRUCK);
 
     private final RouteType routeType;
-    private final net.contargo.iris.route2.ModeOfTransport mot;
+    private final OSRMProfile osrmProfile;
 
-    ModeOfTransport(net.contargo.iris.route2.ModeOfTransport mot, RouteType routeType) {
+    ModeOfTransport(OSRMProfile osrmProfile, RouteType routeType) {
 
-        this.mot = mot;
         this.routeType = routeType;
+        this.osrmProfile = osrmProfile;
     }
-
-    public net.contargo.iris.route2.ModeOfTransport getMot() {
-
-        return this.mot;
-    }
-
 
     public RouteType getRouteType() {
 
         return routeType;
+    }
+
+
+    public OSRMProfile getOsrmProfile() {
+
+        return osrmProfile;
     }
 
 

@@ -1,7 +1,5 @@
 package net.contargo.iris.transport.service;
 
-import java.math.BigDecimal;
-
 import java.util.List;
 
 
@@ -10,14 +8,13 @@ import java.util.List;
  */
 class RouteResult {
 
-    private final BigDecimal distance;
-    private final BigDecimal toll;
-    private final BigDecimal duration;
+    private final Integer distance;
+    private final Integer toll;
+    private final Integer duration;
     private final List<String> geometries;
     private final RouteStatus status;
 
-    RouteResult(BigDecimal distance, BigDecimal toll, BigDecimal duration, List<String> geometries,
-        RouteStatus status) {
+    RouteResult(Integer distance, Integer toll, Integer duration, List<String> geometries, RouteStatus status) {
 
         this.distance = distance;
         this.toll = toll;
@@ -26,19 +23,19 @@ class RouteResult {
         this.status = status;
     }
 
-    BigDecimal getDistance() {
+    Integer getDistance() {
 
         return distance;
     }
 
 
-    BigDecimal getToll() {
+    Integer getToll() {
 
         return toll;
     }
 
 
-    BigDecimal getDuration() {
+    Integer getDuration() {
 
         return duration;
     }

@@ -23,7 +23,6 @@ import static net.contargo.iris.transport.service.RouteStatus.OK;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
-import static org.hamcrest.Matchers.comparesEqualTo;
 import static org.hamcrest.Matchers.is;
 
 import static org.mockito.Mockito.mock;
@@ -53,7 +52,7 @@ public class RouteServiceUnitTest {
         GeoLocation start = new GeoLocation();
         GeoLocation end = new GeoLocation();
 
-        RoutingQueryResult routingResult = new RoutingQueryResult(200, 61299.3, 22068, ZERO,
+        RoutingQueryResult routingResult = new RoutingQueryResult(200, 61299.3, 22068, new BigDecimal("60.10"),
                 asList("geometry1", "geometry2"));
 
         RoutingQueryStrategy strategyMock = mock(RoutingQueryStrategy.class);
@@ -62,8 +61,9 @@ public class RouteServiceUnitTest {
 
         RouteResult result = sut.route(start, end, ROAD);
 
-        assertThat(result.getDistance(), comparesEqualTo(new BigDecimal("61.30")));
-        assertThat(result.getDuration(), comparesEqualTo(new BigDecimal("22068.0")));
+        assertThat(result.getDistance(), is(62));
+        assertThat(result.getDuration(), is(22068));
+        assertThat(result.getToll(), is(61));
         assertThat(result.getGeometries().get(0), is("geometry1"));
         assertThat(result.getGeometries().get(1), is("geometry2"));
         assertThat(result.getStatus(), is(OK));

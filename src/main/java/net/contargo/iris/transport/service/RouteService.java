@@ -50,11 +50,11 @@ public class RouteService {
         List<String> geometries = queryResult.getGeometries();
         BigDecimal distanceInMeter = BigDecimal.valueOf(queryResult.getTotalDistance());
 
-        BigDecimal totalDistance = distanceInMeter.divide(METER_PER_KILOMETER, SCALE, UP);
+        Integer totalDistance = distanceInMeter.divide(METER_PER_KILOMETER, 0, UP).intValue();
 
-        BigDecimal toll = queryResult.getToll();
+        Integer toll = queryResult.getToll().setScale(0, UP).intValue();
 
-        BigDecimal duration = BigDecimal.valueOf(queryResult.getTotalTime());
+        Integer duration = BigDecimal.valueOf(queryResult.getTotalTime()).setScale(0, UP).intValue();
 
         RouteStatus status = null;
 

@@ -36,9 +36,9 @@ public class TransportResponseDto {
         public final ContainerState loadingState;
         public final boolean unitAvailable;
         public final ModeOfTransport modeOfTransport;
-        public BigDecimal distance;
-        public BigDecimal tollDistance;
-        public BigDecimal duration;
+        public Integer distance;
+        public Integer tollDistance;
+        public Integer duration;
         public List<String> geometries;
 
         public TransportSegment(TransportDescriptionDto.TransportSegment transportSegment) {

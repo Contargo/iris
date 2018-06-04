@@ -30,7 +30,7 @@ import static net.contargo.iris.transport.api.SiteType.SEAPORT;
 import static net.contargo.iris.transport.api.SiteType.TERMINAL;
 import static net.contargo.iris.transport.service.RouteStatus.OK;
 
-import static org.hamcrest.Matchers.comparesEqualTo;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
 import static org.junit.Assert.assertThat;
@@ -89,13 +89,11 @@ public class TransportDescriptionExtenderUnitTest {
         when(conversionServiceMock.convert(matchesSiteType(TERMINAL), any())).thenReturn(terminalGeoLocation);
         when(conversionServiceMock.convert(matchesSiteType(ADDRESS), any())).thenReturn(addressGeoLocation);
 
-        RouteResult terminalAddressDistances = new RouteResult(new BigDecimal("40"), new BigDecimal("20"),
-                new BigDecimal("300"), emptyList(), OK);
+        RouteResult terminalAddressDistances = new RouteResult(40, 20, 300, emptyList(), OK);
         when(routeServiceMock.route(terminalGeoLocation, addressGeoLocation, ROAD)).thenReturn(
             terminalAddressDistances);
 
-        RouteResult addressTerminalDistances = new RouteResult(new BigDecimal("45"), new BigDecimal("25"),
-                new BigDecimal("400"), emptyList(), OK);
+        RouteResult addressTerminalDistances = new RouteResult(45, 25, 400, emptyList(), OK);
         when(routeServiceMock.route(addressGeoLocation, terminalGeoLocation, ROAD)).thenReturn(
             addressTerminalDistances);
 
@@ -105,13 +103,13 @@ public class TransportDescriptionExtenderUnitTest {
         assertThat(result.transportDescription.get(0).distance, nullValue());
         assertThat(result.transportDescription.get(0).tollDistance, nullValue());
 
-        assertThat(result.transportDescription.get(1).duration, comparesEqualTo(new BigDecimal("300")));
-        assertThat(result.transportDescription.get(1).distance, comparesEqualTo(new BigDecimal("40")));
-        assertThat(result.transportDescription.get(1).tollDistance, comparesEqualTo(new BigDecimal("20")));
+        assertThat(result.transportDescription.get(1).duration, is(300));
+        assertThat(result.transportDescription.get(1).distance, is(40));
+        assertThat(result.transportDescription.get(1).tollDistance, is(20));
 
-        assertThat(result.transportDescription.get(2).duration, comparesEqualTo(new BigDecimal("400")));
-        assertThat(result.transportDescription.get(2).distance, comparesEqualTo(new BigDecimal("45")));
-        assertThat(result.transportDescription.get(2).tollDistance, comparesEqualTo(new BigDecimal("25")));
+        assertThat(result.transportDescription.get(2).duration, is(400));
+        assertThat(result.transportDescription.get(2).distance, is(45));
+        assertThat(result.transportDescription.get(2).tollDistance, is(25));
     }
 
 

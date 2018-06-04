@@ -13,6 +13,7 @@ import java.math.BigInteger;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -80,6 +81,8 @@ public class DescriptionGenerator {
         Terminal terminal, List<MainRunConnection> connections) {
 
         TransportDescriptionDto initialDescription = new TransportDescriptionDto(template);
+        editNonMainRunSegments(initialDescription, terminal.getUniqueId().toString());
+
         IntermediateDescriptions descriptions = new IntermediateDescriptions(initialDescription);
 
         Map<BigInteger, List<ModeOfTransport>> seaportMots = extractSeaportsWithModeOfTransports(connections);
@@ -92,12 +95,30 @@ public class DescriptionGenerator {
                 List<ModeOfTransport> mots = seaportMots.getOrDefault(new BigInteger(seaportUuid), emptyList());
 
                 List<TransportDescriptionDto> updatedDescriptions = augmentDescriptionsForEachModeOfTransport(mots,
-                        terminal, seaportUuid, descriptions.get());
+                        terminal, descriptions.get(), s);
 
                 descriptions.updateWith(updatedDescriptions);
             });
 
         return descriptions.get();
+    }
+
+
+    private static void editNonMainRunSegments(TransportDescriptionDto description, String terminalUuid) {
+
+        description.transportDescription.stream()
+            .filter(s -> !isMainRunSegment(s.fromSite.type, s.toSite.type))
+            .forEach(s -> {
+                s.modeOfTransport = ROAD;
+
+                if (s.fromSite.type == TERMINAL) {
+                    s.fromSite.uuid = terminalUuid;
+                }
+
+                if (s.toSite.type == TERMINAL) {
+                    s.toSite.uuid = terminalUuid;
+                }
+            });
     }
 
 
@@ -113,11 +134,11 @@ public class DescriptionGenerator {
 
 
     private static List<TransportDescriptionDto> augmentDescriptionsForEachModeOfTransport(
-        List<ModeOfTransport> modeOfTransports, Terminal terminal, String seaportUuid,
-        List<TransportDescriptionDto> descriptions) {
+        List<ModeOfTransport> modeOfTransports, Terminal terminal, List<TransportDescriptionDto> descriptions,
+        TransportTemplateDto.TransportSegment segment) {
 
         return modeOfTransports.stream()
-            .map(m -> descriptions.stream().map(d -> generateResult(d, terminal, seaportUuid, m)).collect(toList()))
+            .map(m -> descriptions.stream().map(d -> editMainRunSegments(d, terminal, m, segment)).collect(toList()))
             .flatMap(List::stream)
             .collect(toList());
     }
@@ -135,11 +156,11 @@ public class DescriptionGenerator {
     }
 
 
-    private static TransportDescriptionDto generateResult(TransportDescriptionDto original, Terminal terminal,
-        String seaportUuid, ModeOfTransport mot) {
+    private static TransportDescriptionDto editMainRunSegments(TransportDescriptionDto original, Terminal terminal,
+        ModeOfTransport mot, TransportTemplateDto.TransportSegment segment) {
 
         TransportDescriptionDto descriptionDto = new TransportDescriptionDto(original);
-        descriptionDto.transportDescription.forEach(s -> {
+        descriptionDto.transportDescription.stream().filter(s -> isEqual(segment, s)).findFirst().ifPresent(s -> {
             if (s.fromSite.type == TERMINAL) {
                 s.fromSite.uuid = terminal.getUniqueId().toString();
             }
@@ -148,28 +169,28 @@ public class DescriptionGenerator {
                 s.toSite.uuid = terminal.getUniqueId().toString();
             }
 
-            if (isMainRunSegment(s.fromSite.type, s.toSite.type)) {
-                if (segmentWithSeaport(s, seaportUuid)) {
-                    s.modeOfTransport = mot;
-                }
-            } else {
-                s.modeOfTransport = ROAD;
-            }
+            s.modeOfTransport = mot;
         });
 
         return descriptionDto;
     }
 
 
-    private static boolean segmentWithSeaport(TransportDescriptionDto.TransportSegment s, String seaportUuid) {
+    private static boolean isEqual(TransportTemplateDto.TransportSegment templateSegment,
+        TransportDescriptionDto.TransportSegment descriptionSegment) {
 
-        if (s.fromSite.type == SEAPORT) {
-            return s.fromSite.uuid.equals(seaportUuid);
-        } else if (s.toSite.type == SEAPORT) {
-            return s.toSite.uuid.equals(seaportUuid);
-        } else {
-            return false;
-        }
+        boolean fromSiteType = templateSegment.fromSite.type == descriptionSegment.fromSite.type;
+        boolean fromSiteUuid = Objects.equals(templateSegment.fromSite.uuid, descriptionSegment.fromSite.uuid);
+        boolean equalFromSite = fromSiteType && fromSiteUuid;
+
+        boolean toSiteType = templateSegment.toSite.type == descriptionSegment.toSite.type;
+        boolean toSiteUuid = Objects.equals(templateSegment.toSite.uuid, descriptionSegment.toSite.uuid);
+        boolean equalToSite = toSiteType && toSiteUuid;
+
+        boolean loadingState = templateSegment.loadingState == descriptionSegment.loadingState;
+        boolean unitAvailable = templateSegment.unitAvailable.equals(descriptionSegment.unitAvailable);
+
+        return equalFromSite && equalToSite && loadingState && unitAvailable;
     }
 
 

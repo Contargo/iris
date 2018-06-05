@@ -37,4 +37,7 @@
     <cache name="RouteServiceRoute" maxElementsInMemory="20000" eternal="false"
            timeToIdleSeconds="172800" timeToLiveSeconds="172800" overflowToDisk="false"/>
 
+    <cache name="terminalMainRunConnections" maxElementsInMemory="20000" eternal="false"
+           timeToIdleSeconds="172800" timeToLiveSeconds="172800" overflowToDisk="false"/>
+
 </ehcache>

@@ -4,6 +4,7 @@ import net.contargo.iris.GeoLocation;
 import net.contargo.iris.transport.api.SiteType;
 import net.contargo.iris.transport.api.TransportDescriptionDto;
 import net.contargo.iris.transport.api.TransportResponseDto;
+import net.contargo.iris.transport.api.TransportSite;
 
 import org.junit.Test;
 
@@ -46,6 +47,7 @@ import static java.util.Collections.emptyList;
 
 /**
  * @author  Ben Antony - antony@synyx.de
+ * @author  Sandra Thieme - thieme@synyx.de
  */
 @RunWith(MockitoJUnitRunner.class)
 public class TransportDescriptionExtenderUnitTest {
@@ -55,23 +57,19 @@ public class TransportDescriptionExtenderUnitTest {
 
     @Mock
     private RouteService routeServiceMock;
-
     @Mock
     private ConversionService conversionServiceMock;
 
     @Test
     public void withRoutingInformation() {
 
-        TransportDescriptionDto.TransportSite terminal = new TransportDescriptionDto.TransportSite(TERMINAL, "42",
-                null, null);
+        TransportSite terminal = new TransportSite(TERMINAL, "42", null, null);
         GeoLocation terminalGeoLocation = new GeoLocation(new BigDecimal("42.42"), new BigDecimal("8.42"));
 
-        TransportDescriptionDto.TransportSite seaport = new TransportDescriptionDto.TransportSite(SEAPORT, "62", null,
-                null);
+        TransportSite seaport = new TransportSite(SEAPORT, "62", null, null);
         GeoLocation seaportGeoLocation = new GeoLocation(new BigDecimal("42.62"), new BigDecimal("8.62"));
 
-        TransportDescriptionDto.TransportSite address = new TransportDescriptionDto.TransportSite(ADDRESS, null,
-                new BigDecimal("8.0023"), new BigDecimal("42.34234"));
+        TransportSite address = new TransportSite(ADDRESS, null, new BigDecimal("42.34234"), new BigDecimal("8.0023"));
         GeoLocation addressGeoLocation = new GeoLocation(new BigDecimal("42.34234"), new BigDecimal("8.0023"));
 
         TransportDescriptionDto.TransportSegment seaportTerminal = new TransportDescriptionDto.TransportSegment(
@@ -113,14 +111,14 @@ public class TransportDescriptionExtenderUnitTest {
     }
 
 
-    private TransportResponseDto.TransportSite matchesSiteType(SiteType type) {
+    private TransportSite matchesSiteType(SiteType type) {
 
-        return argThat(new ArgumentMatcher<TransportResponseDto.TransportSite>() {
+        return argThat(new ArgumentMatcher<TransportSite>() {
 
                     @Override
                     public boolean matches(Object argument) {
 
-                        return argument != null && ((TransportResponseDto.TransportSite) argument).type == type;
+                        return argument != null && ((TransportSite) argument).type == type;
                     }
                 });
     }

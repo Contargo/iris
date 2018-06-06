@@ -1,16 +1,20 @@
 package net.contargo.iris.transport.service;
 
 import net.contargo.iris.GeoLocation;
-import net.contargo.iris.address.service.AddressServiceWrapper;
 import net.contargo.iris.seaport.Seaport;
 import net.contargo.iris.seaport.service.SeaportService;
 import net.contargo.iris.terminal.Terminal;
 import net.contargo.iris.terminal.service.TerminalService;
 import net.contargo.iris.transport.api.SiteType;
-import net.contargo.iris.transport.api.TransportDescriptionDto;
-import net.contargo.iris.transport.api.TransportResponseDto;
+import net.contargo.iris.transport.api.TransportSite;
 
 import org.junit.Test;
+
+import org.junit.runner.RunWith;
+
+import org.mockito.Mock;
+
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -29,12 +33,15 @@ import static org.mockito.Mockito.when;
 
 /**
  * @author  Ben Antony antony@synyx.de
+ * @author  Sandra Thieme - thieme@synyx.de
  */
+@RunWith(MockitoJUnitRunner.class)
 public class TransportSiteToGeoLocationConverterUnitTest {
 
+    @Mock
     private SeaportService seaportService = mock(SeaportService.class);
+    @Mock
     private TerminalService terminalService = mock(TerminalService.class);
-    private AddressServiceWrapper addressServiceWrapper = mock(AddressServiceWrapper.class);
 
     @Test
     public void convertToSeaport() {
@@ -43,7 +50,7 @@ public class TransportSiteToGeoLocationConverterUnitTest {
         Seaport seaport = new Seaport();
         when(seaportService.getByUniqueId(uid)).thenReturn(seaport);
 
-        TransportResponseDto.TransportSite node = createTransportSite(SEAPORT);
+        TransportSite node = createTransportSite(SEAPORT);
 
         TransportSiteToGeoLocationConverter sut = new TransportSiteToGeoLocationConverter(seaportService, null);
         GeoLocation geoLocation = sut.convert(node);
@@ -58,7 +65,7 @@ public class TransportSiteToGeoLocationConverterUnitTest {
         BigInteger uid = new BigInteger("42");
         when(seaportService.getByUniqueId(uid)).thenReturn(null);
 
-        TransportResponseDto.TransportSite node = createTransportSite(SEAPORT);
+        TransportSite node = createTransportSite(SEAPORT);
 
         TransportSiteToGeoLocationConverter sut = new TransportSiteToGeoLocationConverter(seaportService, null);
         sut.convert(node);
@@ -72,7 +79,7 @@ public class TransportSiteToGeoLocationConverterUnitTest {
         Terminal terminal = new Terminal();
         when(terminalService.getByUniqueId(uid)).thenReturn(terminal);
 
-        TransportResponseDto.TransportSite node = createTransportSite(TERMINAL);
+        TransportSite node = createTransportSite(TERMINAL);
 
         TransportSiteToGeoLocationConverter sut = new TransportSiteToGeoLocationConverter(null, terminalService);
         GeoLocation geoLocation = sut.convert(node);
@@ -87,7 +94,7 @@ public class TransportSiteToGeoLocationConverterUnitTest {
         BigInteger uid = new BigInteger("42");
         when(terminalService.getByUniqueId(uid)).thenReturn(null);
 
-        TransportResponseDto.TransportSite node = createTransportSite(TERMINAL);
+        TransportSite node = createTransportSite(TERMINAL);
 
         TransportSiteToGeoLocationConverter sut = new TransportSiteToGeoLocationConverter(null, terminalService);
         sut.convert(node);
@@ -100,10 +107,9 @@ public class TransportSiteToGeoLocationConverterUnitTest {
         BigDecimal lat = new BigDecimal("49.0");
         BigDecimal lon = new BigDecimal("8.60");
 
-        TransportDescriptionDto.TransportSite desc = new TransportDescriptionDto.TransportSite(ADDRESS, null, lon,
-                lat);
+        TransportSite desc = new TransportSite(ADDRESS, null, lat, lon);
 
-        TransportResponseDto.TransportSite node = new TransportResponseDto.TransportSite(desc);
+        TransportSite node = new TransportSite(desc.type, desc.uuid, desc.lat, desc.lon);
 
         TransportSiteToGeoLocationConverter sut = new TransportSiteToGeoLocationConverter(null, null);
         GeoLocation geoLocation = sut.convert(node);
@@ -112,10 +118,10 @@ public class TransportSiteToGeoLocationConverterUnitTest {
     }
 
 
-    private TransportResponseDto.TransportSite createTransportSite(SiteType type) {
+    private TransportSite createTransportSite(SiteType type) {
 
-        TransportDescriptionDto.TransportSite desc = new TransportDescriptionDto.TransportSite(type, "42", null, null);
+        TransportSite desc = new TransportSite(type, "42", null, null);
 
-        return new TransportResponseDto.TransportSite(desc);
+        return new TransportSite(desc.type, desc.uuid, desc.lat, desc.lon);
     }
 }

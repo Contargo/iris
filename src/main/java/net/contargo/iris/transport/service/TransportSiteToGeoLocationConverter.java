@@ -3,7 +3,7 @@ package net.contargo.iris.transport.service;
 import net.contargo.iris.GeoLocation;
 import net.contargo.iris.seaport.service.SeaportService;
 import net.contargo.iris.terminal.service.TerminalService;
-import net.contargo.iris.transport.api.TransportResponseDto;
+import net.contargo.iris.transport.api.TransportSite;
 
 import org.springframework.core.convert.converter.Converter;
 
@@ -13,8 +13,9 @@ import java.math.BigInteger;
 /**
  * @author  Oliver Messner - messner@synyx.de
  * @author  Ben Antony - antony@synyx.de
+ * @author  Sandra Thieme - thieme@synyx.de
  */
-class TransportSiteToGeoLocationConverter implements Converter<TransportResponseDto.TransportSite, GeoLocation> {
+class TransportSiteToGeoLocationConverter implements Converter<TransportSite, GeoLocation> {
 
     private final SeaportService seaportService;
     private final TerminalService terminalService;
@@ -26,7 +27,7 @@ class TransportSiteToGeoLocationConverter implements Converter<TransportResponse
     }
 
     @Override
-    public GeoLocation convert(TransportResponseDto.TransportSite site) {
+    public GeoLocation convert(TransportSite site) {
 
         GeoLocation geoLocation;
 

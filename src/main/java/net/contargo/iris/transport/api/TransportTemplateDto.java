@@ -5,14 +5,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import net.contargo.iris.container.ContainerState;
 
-import java.math.BigDecimal;
-
 import java.util.List;
 
 
 /**
  * @author  Ben Antony - antony@synyx.de
  * @author  Oliver Messner - messner@synyx.de
+ * @author  Sandra Thieme - thieme@synyx.de
  */
 public class TransportTemplateDto {
 
@@ -44,26 +43,6 @@ public class TransportTemplateDto {
             this.loadingState = loadingState;
             this.unitAvailable = unitAvailable == null ? true : unitAvailable;
             this.modeOfTransport = modeOfTransport;
-        }
-    }
-
-    public static class TransportSite {
-
-        public SiteType type;
-        public String uuid;
-        public BigDecimal lon;
-        public BigDecimal lat;
-
-        @JsonCreator
-        public TransportSite(@JsonProperty("type") SiteType type,
-            @JsonProperty("uuid") String uuid,
-            @JsonProperty("lon") BigDecimal lon,
-            @JsonProperty("lat") BigDecimal lat) {
-
-            this.type = type;
-            this.uuid = uuid;
-            this.lon = lon;
-            this.lat = lat;
         }
     }
 }

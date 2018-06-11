@@ -11,6 +11,7 @@ import java.math.BigInteger;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -19,6 +20,7 @@ import java.util.List;
  * @author  Tobias Schneider - schneider@synyx.de
  * @author  David Schilling - schilling@synyx.de
  * @author  Oliver Messner - messner@synyx.de
+ * @author  Sandra Thieme - thieme@synyx.de
  */
 public interface RouteDataRevisionService {
 
@@ -56,6 +58,19 @@ public interface RouteDataRevisionService {
      *          {@link net.contargo.iris.address.Address}
      */
     RouteDataRevision getRouteDataRevision(BigInteger terminalUid, GeoLocation destination, Date date);
+
+
+    /**
+     * Returns the {@link RouteDataRevision} with the shortest distance between the requested {@link Terminal} and
+     * {@link GeoLocation} , having a validity range that applies to the current date. If no such RouteDataRevision
+     * exists this method returns the empty Optional.
+     *
+     * @param  terminalUid  a terminal identifier
+     * @param  destination  a geolocation
+     *
+     * @return  an optional RouteDateRevision
+     */
+    Optional<RouteDataRevision> getRouteDataRevision(BigInteger terminalUid, GeoLocation destination);
 
 
     /**

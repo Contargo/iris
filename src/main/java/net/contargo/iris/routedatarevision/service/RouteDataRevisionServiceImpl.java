@@ -29,6 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import static net.contargo.iris.routedatarevision.service.RouteRevisionSpecifications.hasCity;
 import static net.contargo.iris.routedatarevision.service.RouteRevisionSpecifications.hasPostalCode;
@@ -93,6 +94,23 @@ public class RouteDataRevisionServiceImpl implements RouteDataRevisionService {
         }
 
         return nearest;
+    }
+
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<RouteDataRevision> getRouteDataRevision(BigInteger terminalUid, GeoLocation destination) {
+
+        Terminal terminal = terminalService.getByUniqueId(terminalUid);
+
+        if (terminal == null) {
+            return Optional.empty();
+        }
+
+        RouteDataRevision nearest = routeDataRevisionRepository.findNearest(terminal, destination.getLatitude(),
+                destination.getLongitude(), new Date());
+
+        return Optional.ofNullable(nearest);
     }
 
 

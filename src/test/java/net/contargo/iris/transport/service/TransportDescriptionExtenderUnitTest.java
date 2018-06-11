@@ -1,6 +1,8 @@
 package net.contargo.iris.transport.service;
 
 import net.contargo.iris.GeoLocation;
+import net.contargo.iris.routedatarevision.RouteDataRevision;
+import net.contargo.iris.routedatarevision.service.RouteDataRevisionService;
 import net.contargo.iris.transport.api.SiteType;
 import net.contargo.iris.transport.api.TransportDescriptionDto;
 import net.contargo.iris.transport.api.TransportResponseDto;
@@ -19,8 +21,10 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.core.convert.ConversionService;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import java.util.List;
+import java.util.Optional;
 
 import static net.contargo.iris.container.ContainerState.EMPTY;
 import static net.contargo.iris.container.ContainerState.FULL;
@@ -59,6 +63,8 @@ public class TransportDescriptionExtenderUnitTest {
     private RouteService routeServiceMock;
     @Mock
     private ConversionService conversionServiceMock;
+    @Mock
+    private RouteDataRevisionService routeDataRevisionServiceMock;
 
     @Test
     public void withRoutingInformation() {
@@ -67,7 +73,67 @@ public class TransportDescriptionExtenderUnitTest {
         GeoLocation terminalGeoLocation = new GeoLocation(new BigDecimal("42.42"), new BigDecimal("8.42"));
 
         TransportSite seaport = new TransportSite(SEAPORT, "62", null, null);
-        GeoLocation seaportGeoLocation = new GeoLocation(new BigDecimal("42.62"), new BigDecimal("8.62"));
+
+        TransportSite address = new TransportSite(ADDRESS, null, new BigDecimal("42.34234"), new BigDecimal("8.0023"));
+        GeoLocation addressGeoLocation = new GeoLocation(new BigDecimal("42.34234"), new BigDecimal("8.0023"));
+
+        TransportDescriptionDto.TransportDescriptionSegment seaportTerminal =
+            new TransportDescriptionDto.TransportDescriptionSegment(seaport, terminal, FULL, true, RAIL);
+        TransportDescriptionDto.TransportDescriptionSegment terminalAddress =
+            new TransportDescriptionDto.TransportDescriptionSegment(terminal, address, FULL, true, ROAD);
+        TransportDescriptionDto.TransportDescriptionSegment AddressTerminal =
+            new TransportDescriptionDto.TransportDescriptionSegment(address, terminal, EMPTY, true, ROAD);
+
+        List<TransportDescriptionDto.TransportDescriptionSegment> descriptions = asList(seaportTerminal,
+                terminalAddress, AddressTerminal);
+
+        TransportDescriptionDto description = new TransportDescriptionDto(descriptions);
+
+        when(conversionServiceMock.convert(matchesSiteType(TERMINAL), any())).thenReturn(terminalGeoLocation);
+        when(conversionServiceMock.convert(matchesSiteType(ADDRESS), any())).thenReturn(addressGeoLocation);
+
+        RouteResult terminalAddressDistances = new RouteResult(40, 20, 300, emptyList(), OK);
+        when(routeServiceMock.route(terminalGeoLocation, addressGeoLocation, ROAD)).thenReturn(
+            terminalAddressDistances);
+
+        RouteResult addressTerminalDistances = new RouteResult(45, 25, 400, emptyList(), OK);
+        when(routeServiceMock.route(addressGeoLocation, terminalGeoLocation, ROAD)).thenReturn(
+            addressTerminalDistances);
+
+        when(routeDataRevisionServiceMock.getRouteDataRevision(new BigInteger("42"), addressGeoLocation)).thenReturn(
+            Optional.empty());
+
+        TransportResponseDto result = sut.withRoutingInformation(description);
+
+        assertThat(result.transportDescription.get(0).duration, nullValue());
+        assertThat(result.transportDescription.get(0).distance, nullValue());
+        assertThat(result.transportDescription.get(0).tollDistance, nullValue());
+
+        assertThat(result.transportDescription.get(1).duration, is(300));
+        assertThat(result.transportDescription.get(1).distance, is(40));
+        assertThat(result.transportDescription.get(1).tollDistance, is(20));
+
+        assertThat(result.transportDescription.get(2).duration, is(400));
+        assertThat(result.transportDescription.get(2).distance, is(45));
+        assertThat(result.transportDescription.get(2).tollDistance, is(25));
+    }
+
+
+    @Test
+    public void withRoutingInformationWithRouteDataRevision() {
+
+        RouteDataRevision routeDataRevision = new RouteDataRevision();
+        routeDataRevision.setTruckDistanceOneWayInKilometer(new BigDecimal("50"));
+        routeDataRevision.setTollDistanceOneWayInKilometer(new BigDecimal("32"));
+
+        when(routeDataRevisionServiceMock.getRouteDataRevision(new BigInteger("42"),
+                    new GeoLocation(new BigDecimal("42.34234"), new BigDecimal("8.0023")))).thenReturn(Optional.of(
+                routeDataRevision));
+
+        TransportSite terminal = new TransportSite(TERMINAL, "42", null, null);
+        GeoLocation terminalGeoLocation = new GeoLocation(new BigDecimal("42.42"), new BigDecimal("8.42"));
+
+        TransportSite seaport = new TransportSite(SEAPORT, "62", null, null);
 
         TransportSite address = new TransportSite(ADDRESS, null, new BigDecimal("42.34234"), new BigDecimal("8.0023"));
         GeoLocation addressGeoLocation = new GeoLocation(new BigDecimal("42.34234"), new BigDecimal("8.0023"));
@@ -102,12 +168,12 @@ public class TransportDescriptionExtenderUnitTest {
         assertThat(result.transportDescription.get(0).tollDistance, nullValue());
 
         assertThat(result.transportDescription.get(1).duration, is(300));
-        assertThat(result.transportDescription.get(1).distance, is(40));
-        assertThat(result.transportDescription.get(1).tollDistance, is(20));
+        assertThat(result.transportDescription.get(1).distance, is(50));
+        assertThat(result.transportDescription.get(1).tollDistance, is(32));
 
         assertThat(result.transportDescription.get(2).duration, is(400));
-        assertThat(result.transportDescription.get(2).distance, is(45));
-        assertThat(result.transportDescription.get(2).tollDistance, is(25));
+        assertThat(result.transportDescription.get(2).distance, is(50));
+        assertThat(result.transportDescription.get(2).tollDistance, is(32));
     }
 
 

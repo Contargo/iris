@@ -105,6 +105,11 @@
 
     <bean class="net.contargo.iris.actuator.ActuatorConfig"/>
 
+    <bean id="threadExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean">
+        <property name="corePoolSize" value="${routing.threads}"/>
+        <property name="maxPoolSize" value="${routing.threads}"/>
+    </bean>
+
     <context:annotation-config/>
     <bean class="net.contargo.iris.config.SwaggerConfig"/>
     <mvc:resources location="/api-docs/" mapping="/**"/>

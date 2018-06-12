@@ -6,7 +6,6 @@ import net.contargo.iris.transport.service.DescriptionGenerator;
 import net.contargo.iris.transport.service.TransportDescriptionExtender;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -32,16 +30,15 @@ public class TransportApiController {
 
     private final TransportDescriptionExtender transportDescriptionExtender;
     private final DescriptionGenerator descriptionGenerator;
-    private int maxRoutingThreads;
+    private final ExecutorService executorService;
 
     @Autowired
     public TransportApiController(TransportDescriptionExtender transportDescriptionExtender,
-        DescriptionGenerator descriptionGenerator,
-        @Value("${routing.threads}") int maxRoutingThreads) {
+        DescriptionGenerator descriptionGenerator, ExecutorService executorService) {
 
         this.transportDescriptionExtender = transportDescriptionExtender;
         this.descriptionGenerator = descriptionGenerator;
-        this.maxRoutingThreads = maxRoutingThreads;
+        this.executorService = executorService;
     }
 
     @RequestMapping(value = "/transports", method = POST)
@@ -49,19 +46,10 @@ public class TransportApiController {
 
         List<TransportDescriptionDto> descriptions = descriptionGenerator.from(template);
 
-        ExecutorService executor = Executors.newFixedThreadPool(maxRoutingThreads);
-
-        List<TransportResponseDto> result = descriptions.stream()
-                .map(d ->
-                            CompletableFuture.supplyAsync(() ->
-                                    transportDescriptionExtender.withRoutingInformation(d),
-                                executor))
-                .map(CompletableFuture::join)
-                .collect(Collectors.toList());
-
-        executor.shutdown();
-
-        return result;
+        return descriptions.stream().map(description ->
+                        CompletableFuture.supplyAsync(() ->
+                                transportDescriptionExtender.withRoutingInformation(description),
+                            executorService)).map(CompletableFuture::join).collect(Collectors.toList());
     }
 
 

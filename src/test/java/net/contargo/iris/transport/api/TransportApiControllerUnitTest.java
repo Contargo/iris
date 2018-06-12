@@ -3,6 +3,8 @@ package net.contargo.iris.transport.api;
 import net.contargo.iris.transport.service.DescriptionGenerator;
 import net.contargo.iris.transport.service.TransportDescriptionExtender;
 
+import org.apache.commons.io.IOUtils;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -38,6 +40,7 @@ import static java.util.Collections.emptyList;
 /**
  * @author  Ben Antony - antony@synyx.de
  * @author  Sandra Thieme - thieme@synyx.de
+ * @author  Oliver Messner - messner@synyx.de
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:public-api-context.xml" })
@@ -49,6 +52,7 @@ public class TransportApiControllerUnitTest {
 
     @Autowired
     private TransportDescriptionExtender transportDescriptionExtenderMock;
+
     @Autowired
     private DescriptionGenerator descriptionGeneratorMock;
 
@@ -63,13 +67,16 @@ public class TransportApiControllerUnitTest {
 
 
     @Test
-    public void all() throws Exception {
+    public void transports() throws Exception {
 
         TransportDescriptionDto description = new TransportDescriptionDto(new TransportTemplateDto(emptyList()));
         when(descriptionGeneratorMock.from(any(TransportTemplateDto.class))).thenReturn(asList(description,
                 description));
 
-        MockHttpServletRequestBuilder request = post("/transports/all").content(getContent())
+        String json = IOUtils.toString(getClass().getResourceAsStream("/transport/request-transport-template.json"),
+                "UTF-8");
+
+        MockHttpServletRequestBuilder request = post("/transports").content(json)
                 .contentType(MediaType.APPLICATION_JSON);
 
         mockMvc.perform(request).andExpect(status().isOk());
@@ -79,56 +86,15 @@ public class TransportApiControllerUnitTest {
 
 
     @Test
-    public void single() throws Exception {
+    public void transport() throws Exception {
 
-        MockHttpServletRequestBuilder request = post("/transports/single").content(getContent())
+        String json = IOUtils.toString(getClass().getResourceAsStream("/transport/request-transport.json"), "UTF-8");
+
+        MockHttpServletRequestBuilder request = post("/transport").content(json)
                 .contentType(MediaType.APPLICATION_JSON);
 
         mockMvc.perform(request).andExpect(status().isOk());
 
         verify(transportDescriptionExtenderMock).withRoutingInformation(any(TransportDescriptionDto.class));
-    }
-
-
-    private String getContent() {
-
-        return "{"
-            + "  \"transportDescription\": ["
-            + "    {"
-            + "      \"fromSite\": {"
-            + "        \"type\": \"TERMINAL\""
-            + "      },"
-            + "      \"toSite\": {"
-            + "        \"type\": \"ADDRESS\","
-            + "        \"lat\": 49.004895,"
-            + "        \"lon\": 8.38487511865672"
-            + "      },"
-            + "      \"loadingState\": \"EMPTY\""
-            + "    },"
-            + "    {"
-            + "      \"fromSite\": {"
-            + "        \"type\": \"ADDRESS\","
-            + "        \"coordinates\": {"
-            + "          \"lat\": 49.004895,"
-            + "          \"lon\": 8.38487511865672"
-            + "        }"
-            + "      },"
-            + "      \"toSite\": {"
-            + "        \"type\": \"TERMINAL\""
-            + "      },"
-            + "      \"loadingState\": \"FULL\""
-            + "    },"
-            + "    {"
-            + "      \"fromSite\": {"
-            + "        \"type\": \"TERMINAL\""
-            + "      },"
-            + "      \"toSite\": {"
-            + "        \"type\": \"SEAPORT\","
-            + "        \"uuid\": \"1300000000000006\""
-            + "      },"
-            + "      \"loadingState\": \"FULL\""
-            + "    }"
-            + "  ]"
-            + "}";
     }
 }

@@ -473,7 +473,7 @@
         </resources>
         <testResources>
             <testResource>
-                <directory>../iris/src/test/resources</directory>
+                <directory>src/test/resources</directory>
                 <filtering>true</filtering>
                 <includes>
                     <include>**/*.xml</include>

@@ -28,7 +28,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
  */
 @Api(value = "/transports")
 @RestController
-@RequestMapping("/transports")
 public class TransportApiController {
 
     private final TransportDescriptionExtender transportDescriptionExtender;
@@ -45,9 +44,8 @@ public class TransportApiController {
         this.maxRoutingThreads = maxRoutingThreads;
     }
 
-    @RequestMapping(value = "/all", method = POST)
-    public List<TransportResponseDto> producePossibleTransportDescriptions(
-        @RequestBody TransportTemplateDto template) {
+    @RequestMapping(value = "/transports", method = POST)
+    public List<TransportResponseDto> transportDescriptionsFromTemplate(@RequestBody TransportTemplateDto template) {
 
         List<TransportDescriptionDto> descriptions = descriptionGenerator.from(template);
 
@@ -67,8 +65,8 @@ public class TransportApiController {
     }
 
 
-    @RequestMapping(value = "/single", method = POST)
-    public TransportResponseDto route(@RequestBody TransportDescriptionDto description) {
+    @RequestMapping(value = "/transport", method = POST)
+    public TransportResponseDto transportDescription(@RequestBody TransportDescriptionDto description) {
 
         return transportDescriptionExtender.withRoutingInformation(description);
     }

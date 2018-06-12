@@ -27,6 +27,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -61,7 +62,7 @@ public class TransportApiControllerUnitTest {
     @Before
     public void setUp() {
 
-        reset(transportDescriptionExtenderMock);
+        reset(transportDescriptionExtenderMock, descriptionGeneratorMock);
         mockMvc = webAppContextSetup(webApplicationContext).build();
     }
 
@@ -82,6 +83,22 @@ public class TransportApiControllerUnitTest {
         mockMvc.perform(request).andExpect(status().isOk());
 
         verify(transportDescriptionExtenderMock, times(2)).withRoutingInformation(any(TransportDescriptionDto.class));
+    }
+
+
+    @Test
+    public void transportsBadRequestInvalidTemplate() throws Exception {
+
+        String json = IOUtils.toString(getClass().getResourceAsStream(
+                    "/transport/invalid-request-transport-template.json"), "UTF-8");
+
+        MockHttpServletRequestBuilder request = post("/transports").content(json)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(request).andExpect(status().isBadRequest());
+
+        verifyZeroInteractions(descriptionGeneratorMock);
+        verifyZeroInteractions(transportDescriptionExtenderMock);
     }
 
 

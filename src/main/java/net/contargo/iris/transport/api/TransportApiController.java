@@ -44,6 +44,8 @@ public class TransportApiController {
     @RequestMapping(value = "/transports", method = POST)
     public List<TransportResponseDto> transportDescriptionsFromTemplate(@RequestBody TransportTemplateDto template) {
 
+        TransportTemplateDtoValidator.validate(template);
+
         List<TransportDescriptionDto> descriptions = descriptionGenerator.from(template);
 
         return descriptions.stream().map(description ->

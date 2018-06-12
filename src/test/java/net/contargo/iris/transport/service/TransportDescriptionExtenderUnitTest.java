@@ -72,15 +72,15 @@ public class TransportDescriptionExtenderUnitTest {
         TransportSite address = new TransportSite(ADDRESS, null, new BigDecimal("42.34234"), new BigDecimal("8.0023"));
         GeoLocation addressGeoLocation = new GeoLocation(new BigDecimal("42.34234"), new BigDecimal("8.0023"));
 
-        TransportDescriptionDto.TransportSegment seaportTerminal = new TransportDescriptionDto.TransportSegment(
-                seaport, terminal, FULL, true, RAIL);
-        TransportDescriptionDto.TransportSegment terminalAddress = new TransportDescriptionDto.TransportSegment(
-                terminal, address, FULL, true, ROAD);
-        TransportDescriptionDto.TransportSegment AddressTerminal = new TransportDescriptionDto.TransportSegment(
-                address, terminal, EMPTY, true, ROAD);
+        TransportDescriptionDto.TransportDescriptionSegment seaportTerminal =
+            new TransportDescriptionDto.TransportDescriptionSegment(seaport, terminal, FULL, true, RAIL);
+        TransportDescriptionDto.TransportDescriptionSegment terminalAddress =
+            new TransportDescriptionDto.TransportDescriptionSegment(terminal, address, FULL, true, ROAD);
+        TransportDescriptionDto.TransportDescriptionSegment AddressTerminal =
+            new TransportDescriptionDto.TransportDescriptionSegment(address, terminal, EMPTY, true, ROAD);
 
-        List<TransportDescriptionDto.TransportSegment> descriptions = asList(seaportTerminal, terminalAddress,
-                AddressTerminal);
+        List<TransportDescriptionDto.TransportDescriptionSegment> descriptions = asList(seaportTerminal,
+                terminalAddress, AddressTerminal);
 
         TransportDescriptionDto description = new TransportDescriptionDto(descriptions);
 

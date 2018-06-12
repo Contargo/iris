@@ -24,7 +24,7 @@ class TransportTemplateDtoValidator {
     }
 
 
-    private static void noTerminalSpecified(TransportTemplateDto.TransportSegment segment) {
+    private static void noTerminalSpecified(TransportTemplateDto.TransportTemplateSegment segment) {
 
         if (segment.fromSite.type == SiteType.TERMINAL && segment.fromSite.uuid != null) {
             throw new IllegalArgumentException("A transport template's terminal UUID must be null, but was: "
@@ -38,7 +38,7 @@ class TransportTemplateDtoValidator {
     }
 
 
-    private static void noMoTSpecified(TransportTemplateDto.TransportSegment segment) {
+    private static void noMoTSpecified(TransportTemplateDto.TransportTemplateSegment segment) {
 
         if (segment.modeOfTransport != null) {
             throw new IllegalArgumentException(

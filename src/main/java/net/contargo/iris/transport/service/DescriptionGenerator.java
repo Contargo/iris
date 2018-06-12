@@ -135,7 +135,7 @@ public class DescriptionGenerator {
 
     private static List<TransportDescriptionDto> augmentDescriptionsForEachModeOfTransport(
         List<ModeOfTransport> modeOfTransports, Terminal terminal, List<TransportDescriptionDto> descriptions,
-        TransportTemplateDto.TransportSegment segment) {
+        TransportTemplateDto.TransportTemplateSegment segment) {
 
         return modeOfTransports.stream()
             .map(m -> descriptions.stream().map(d -> editMainRunSegments(d, terminal, m, segment)).collect(toList()))
@@ -144,7 +144,7 @@ public class DescriptionGenerator {
     }
 
 
-    private static String getSeaportUuid(TransportTemplateDto.TransportSegment s) {
+    private static String getSeaportUuid(TransportTemplateDto.TransportTemplateSegment s) {
 
         if (s.fromSite.type == SEAPORT) {
             return s.fromSite.uuid;
@@ -157,7 +157,7 @@ public class DescriptionGenerator {
 
 
     private static TransportDescriptionDto editMainRunSegments(TransportDescriptionDto original, Terminal terminal,
-        ModeOfTransport mot, TransportTemplateDto.TransportSegment segment) {
+        ModeOfTransport mot, TransportTemplateDto.TransportTemplateSegment segment) {
 
         TransportDescriptionDto descriptionDto = new TransportDescriptionDto(original);
         descriptionDto.transportDescription.stream().filter(s -> isEqual(segment, s)).findFirst().ifPresent(s -> {
@@ -176,8 +176,8 @@ public class DescriptionGenerator {
     }
 
 
-    private static boolean isEqual(TransportTemplateDto.TransportSegment templateSegment,
-        TransportDescriptionDto.TransportSegment descriptionSegment) {
+    private static boolean isEqual(TransportTemplateDto.TransportTemplateSegment templateSegment,
+        TransportDescriptionDto.TransportDescriptionSegment descriptionSegment) {
 
         boolean fromSiteType = templateSegment.fromSite.type == descriptionSegment.fromSite.type;
         boolean fromSiteUuid = Objects.equals(templateSegment.fromSite.uuid, descriptionSegment.fromSite.uuid);
@@ -219,7 +219,7 @@ public class DescriptionGenerator {
     }
 
 
-    private static boolean containsSeaport(TransportTemplateDto.TransportSegment segment) {
+    private static boolean containsSeaport(TransportTemplateDto.TransportTemplateSegment segment) {
 
         return segment.fromSite.type == SEAPORT || segment.toSite.type == SEAPORT;
     }

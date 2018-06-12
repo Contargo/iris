@@ -17,32 +17,32 @@ import static java.util.stream.Collectors.toList;
  */
 public class TransportDescriptionDto {
 
-    public List<TransportSegment> transportDescription;
+    public List<TransportDescriptionSegment> transportDescription;
 
     public TransportDescriptionDto(TransportDescriptionDto template) {
 
         this.transportDescription = template.transportDescription.stream().map(s ->
-                        new TransportSegment(s.fromSite, s.toSite, s.loadingState, s.unitAvailable, s.modeOfTransport))
-                .collect(toList());
+                        new TransportDescriptionSegment(s.fromSite, s.toSite, s.loadingState, s.unitAvailable,
+                            s.modeOfTransport)).collect(toList());
     }
 
 
     public TransportDescriptionDto(TransportTemplateDto template) {
 
         this.transportDescription = template.transportDescription.stream().map(s ->
-                        new TransportSegment(s.fromSite, s.toSite, s.loadingState, s.unitAvailable, s.modeOfTransport))
-                .collect(toList());
+                        new TransportDescriptionSegment(s.fromSite, s.toSite, s.loadingState, s.unitAvailable,
+                            s.modeOfTransport)).collect(toList());
     }
 
 
     @JsonCreator
     public TransportDescriptionDto(
-        @JsonProperty("transportDescription") List<TransportDescriptionDto.TransportSegment> transportDescription) {
+        @JsonProperty("transportDescription") List<TransportDescriptionSegment> transportDescription) {
 
         this.transportDescription = transportDescription;
     }
 
-    public static class TransportSegment {
+    public static class TransportDescriptionSegment {
 
         public TransportSite fromSite;
         public TransportSite toSite;
@@ -51,7 +51,7 @@ public class TransportDescriptionDto {
         public ModeOfTransport modeOfTransport;
 
         @JsonCreator
-        public TransportSegment(@JsonProperty("fromSite") TransportSite fromSite,
+        public TransportDescriptionSegment(@JsonProperty("fromSite") TransportSite fromSite,
             @JsonProperty("toSite") TransportSite toSite,
             @JsonProperty("loadingState") ContainerState loadingState,
             @JsonProperty("unitAvailable") Boolean unitAvailable,

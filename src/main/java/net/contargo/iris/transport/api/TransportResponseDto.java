@@ -18,17 +18,17 @@ import static java.util.stream.Collectors.toList;
  */
 public class TransportResponseDto {
 
-    public final List<TransportSegment> transportDescription;
+    public final List<TransportResponseSegment> transportDescription;
 
     public TransportResponseDto(TransportDescriptionDto template) {
 
         this.transportDescription = template.transportDescription.stream()
-                .map(TransportSegment::new)
+                .map(TransportResponseSegment::new)
                 .collect(toList());
     }
 
     @JsonInclude(value = NON_NULL)
-    public static class TransportSegment {
+    public static class TransportResponseSegment {
 
         public final TransportSite fromSite;
         public final TransportSite toSite;
@@ -40,13 +40,13 @@ public class TransportResponseDto {
         public Integer duration;
         public List<String> geometries;
 
-        public TransportSegment(TransportDescriptionDto.TransportSegment transportSegment) {
+        public TransportResponseSegment(TransportDescriptionDto.TransportDescriptionSegment segment) {
 
-            this.fromSite = new TransportSite(transportSegment.fromSite);
-            this.toSite = new TransportSite(transportSegment.toSite);
-            this.loadingState = transportSegment.loadingState;
-            this.unitAvailable = transportSegment.unitAvailable;
-            this.modeOfTransport = transportSegment.modeOfTransport;
+            this.fromSite = new TransportSite(segment.fromSite);
+            this.toSite = new TransportSite(segment.toSite);
+            this.loadingState = segment.loadingState;
+            this.unitAvailable = segment.unitAvailable;
+            this.modeOfTransport = segment.modeOfTransport;
         }
     }
 }

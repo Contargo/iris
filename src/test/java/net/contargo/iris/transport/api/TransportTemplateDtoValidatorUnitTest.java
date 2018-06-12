@@ -1,6 +1,6 @@
 package net.contargo.iris.transport.api;
 
-import net.contargo.iris.transport.api.TransportTemplateDto.TransportSegment;
+import net.contargo.iris.transport.api.TransportTemplateDto.TransportTemplateSegment;
 
 import org.junit.Test;
 
@@ -24,7 +24,7 @@ public class TransportTemplateDtoValidatorUnitTest {
         TransportSite from = new TransportSite(TERMINAL, null, null, null);
         TransportSite to = new TransportSite(TERMINAL, null, null, null);
 
-        TransportSegment segment = new TransportSegment(from, to, null, null, null);
+        TransportTemplateSegment segment = new TransportTemplateSegment(from, to, null, null, null);
         TransportTemplateDtoValidator.validate(new TransportTemplateDto(singletonList(segment)));
     }
 
@@ -34,12 +34,12 @@ public class TransportTemplateDtoValidatorUnitTest {
 
         TransportSite siteWithoutTerminal = new TransportSite(TERMINAL, null, null, null);
         TransportSite siteWithTerminal = new TransportSite(TERMINAL, "uuid", null, null);
-        TransportSegment segment;
+        TransportTemplateSegment segment;
 
-        segment = new TransportSegment(siteWithoutTerminal, siteWithTerminal, null, null, null);
+        segment = new TransportTemplateSegment(siteWithoutTerminal, siteWithTerminal, null, null, null);
         assertIllegalArgumentExceptionThrown(segment);
 
-        segment = new TransportSegment(siteWithTerminal, siteWithoutTerminal, null, null, null);
+        segment = new TransportTemplateSegment(siteWithTerminal, siteWithoutTerminal, null, null, null);
         assertIllegalArgumentExceptionThrown(segment);
     }
 
@@ -50,12 +50,12 @@ public class TransportTemplateDtoValidatorUnitTest {
         TransportSite from = new TransportSite(TERMINAL, null, null, null);
         TransportSite to = new TransportSite(TERMINAL, null, null, null);
 
-        TransportSegment segment = new TransportSegment(from, to, null, null, ROAD);
+        TransportTemplateSegment segment = new TransportTemplateSegment(from, to, null, null, ROAD);
         assertIllegalArgumentExceptionThrown(segment);
     }
 
 
-    private static void assertIllegalArgumentExceptionThrown(TransportSegment segment) {
+    private static void assertIllegalArgumentExceptionThrown(TransportTemplateSegment segment) {
 
         TransportTemplateDto template = new TransportTemplateDto(singletonList(segment));
 

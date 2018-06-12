@@ -15,15 +15,16 @@ import java.util.List;
  */
 public class TransportTemplateDto {
 
-    public List<TransportSegment> transportDescription;
+    public List<TransportTemplateSegment> transportDescription;
 
     @JsonCreator
-    public TransportTemplateDto(@JsonProperty("transportDescription") List<TransportSegment> transportDescription) {
+    public TransportTemplateDto(
+        @JsonProperty("transportDescription") List<TransportTemplateSegment> transportDescription) {
 
         this.transportDescription = transportDescription;
     }
 
-    public static class TransportSegment {
+    public static class TransportTemplateSegment {
 
         public TransportSite fromSite;
         public TransportSite toSite;
@@ -32,7 +33,7 @@ public class TransportTemplateDto {
         public ModeOfTransport modeOfTransport;
 
         @JsonCreator
-        public TransportSegment(@JsonProperty("fromSite") TransportSite fromSite,
+        public TransportTemplateSegment(@JsonProperty("fromSite") TransportSite fromSite,
             @JsonProperty("toSite") TransportSite toSite,
             @JsonProperty("loadingState") ContainerState loadingState,
             @JsonProperty("unitAvailable") Boolean unitAvailable,

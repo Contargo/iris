@@ -11,6 +11,7 @@ import net.contargo.iris.transport.api.ModeOfTransport;
 import net.contargo.iris.transport.api.TransportDescriptionDto;
 import net.contargo.iris.transport.api.TransportSite;
 import net.contargo.iris.transport.api.TransportTemplateDto;
+import net.contargo.iris.transport.api.TransportTemplateDto.TransportTemplateSegment;
 
 import org.junit.Test;
 
@@ -85,15 +86,12 @@ public class DescriptionGeneratorUnitTest {
         when(connectionServiceMock.getConnectionsForTerminal(new BigInteger("987654321"))).thenReturn(singletonList(
                 antwerpMaluWater));
 
-        TransportTemplateDto.TransportSegment antwerpTerminal = new TransportTemplateDto.TransportSegment(
-                new TransportSite(SEAPORT, "111", null, null), new TransportSite(TERMINAL, null, null, null), FULL,
-                true, null);
-        TransportTemplateDto.TransportSegment terminalAddress = new TransportTemplateDto.TransportSegment(
-                new TransportSite(TERMINAL, null, null, null), new TransportSite(ADDRESS, null, TEN, ONE), FULL, true,
-                null);
-        TransportTemplateDto.TransportSegment addressTerminal = new TransportTemplateDto.TransportSegment(
-                new TransportSite(ADDRESS, null, TEN, ONE), new TransportSite(TERMINAL, null, null, null), EMPTY, true,
-                null);
+        TransportTemplateSegment antwerpTerminal = new TransportTemplateSegment(new TransportSite(SEAPORT, "111", null,
+                    null), new TransportSite(TERMINAL, null, null, null), FULL, true, null);
+        TransportTemplateSegment terminalAddress = new TransportTemplateSegment(new TransportSite(TERMINAL, null, null,
+                    null), new TransportSite(ADDRESS, null, TEN, ONE), FULL, true, null);
+        TransportTemplateSegment addressTerminal = new TransportTemplateSegment(new TransportSite(ADDRESS, null, TEN,
+                    ONE), new TransportSite(TERMINAL, null, null, null), EMPTY, true, null);
         TransportTemplateDto template = new TransportTemplateDto(asList(antwerpTerminal, terminalAddress,
                     addressTerminal));
 
@@ -145,16 +143,13 @@ public class DescriptionGeneratorUnitTest {
         when(connectionServiceMock.getConnectionsForTerminal(new BigInteger("987654321"))).thenReturn(singletonList(
                 antwerpMaluWater));
 
-        TransportTemplateDto.TransportSegment terminalAddress = new TransportTemplateDto.TransportSegment(
-                new TransportSite(TERMINAL, null, null, null), new TransportSite(ADDRESS, null, TEN, ONE), EMPTY, true,
-                null);
-        TransportTemplateDto.TransportSegment addressTerminal = new TransportTemplateDto.TransportSegment(
-                new TransportSite(ADDRESS, null, TEN, ONE), new TransportSite(TERMINAL, null, null, null), FULL, true,
-                null);
+        TransportTemplateSegment terminalAddress = new TransportTemplateSegment(new TransportSite(TERMINAL, null, null,
+                    null), new TransportSite(ADDRESS, null, TEN, ONE), EMPTY, true, null);
+        TransportTemplateSegment addressTerminal = new TransportTemplateSegment(new TransportSite(ADDRESS, null, TEN,
+                    ONE), new TransportSite(TERMINAL, null, null, null), FULL, true, null);
 
-        TransportTemplateDto.TransportSegment terminalAntwerp = new TransportTemplateDto.TransportSegment(
-                new TransportSite(TERMINAL, null, null, null), new TransportSite(SEAPORT, "111", null, null), FULL,
-                true, null);
+        TransportTemplateSegment terminalAntwerp = new TransportTemplateSegment(new TransportSite(TERMINAL, null, null,
+                    null), new TransportSite(SEAPORT, "111", null, null), FULL, true, null);
 
         TransportTemplateDto template = new TransportTemplateDto(asList(terminalAddress, addressTerminal,
                     terminalAntwerp));
@@ -204,18 +199,14 @@ public class DescriptionGeneratorUnitTest {
         when(connectionServiceMock.getConnectionsForTerminal(new BigInteger("1234565789"))).thenReturn(asList(
                 antwerpWoerthWater, antwerpWoerthRail, hamburgWoerthRail));
 
-        TransportTemplateDto.TransportSegment hamburgTerminal = new TransportTemplateDto.TransportSegment(
-                new TransportSite(SEAPORT, "112", null, null), new TransportSite(TERMINAL, null, null, null), EMPTY,
-                true, null);
-        TransportTemplateDto.TransportSegment terminalAddress = new TransportTemplateDto.TransportSegment(
-                new TransportSite(TERMINAL, null, null, null), new TransportSite(ADDRESS, null, TEN, ONE), EMPTY, true,
-                null);
-        TransportTemplateDto.TransportSegment addressTerminal = new TransportTemplateDto.TransportSegment(
-                new TransportSite(ADDRESS, null, TEN, ONE), new TransportSite(TERMINAL, null, null, null), FULL, true,
-                null);
-        TransportTemplateDto.TransportSegment terminalAntwerp = new TransportTemplateDto.TransportSegment(
-                new TransportSite(TERMINAL, null, null, null), new TransportSite(SEAPORT, "111", null, null), FULL,
-                true, null);
+        TransportTemplateSegment hamburgTerminal = new TransportTemplateSegment(new TransportSite(SEAPORT, "112", null,
+                    null), new TransportSite(TERMINAL, null, null, null), EMPTY, true, null);
+        TransportTemplateSegment terminalAddress = new TransportTemplateSegment(new TransportSite(TERMINAL, null, null,
+                    null), new TransportSite(ADDRESS, null, TEN, ONE), EMPTY, true, null);
+        TransportTemplateSegment addressTerminal = new TransportTemplateSegment(new TransportSite(ADDRESS, null, TEN,
+                    ONE), new TransportSite(TERMINAL, null, null, null), FULL, true, null);
+        TransportTemplateSegment terminalAntwerp = new TransportTemplateSegment(new TransportSite(TERMINAL, null, null,
+                    null), new TransportSite(SEAPORT, "111", null, null), FULL, true, null);
 
         TransportTemplateDto template = new TransportTemplateDto(asList(hamburgTerminal, terminalAddress,
                     addressTerminal, terminalAntwerp));
@@ -265,18 +256,14 @@ public class DescriptionGeneratorUnitTest {
         when(connectionServiceMock.getConnectionsForTerminal(new BigInteger("987654321"))).thenReturn(singletonList(
                 antwerpMaluWater));
 
-        TransportTemplateDto.TransportSegment antwerpTerminal = new TransportTemplateDto.TransportSegment(
-                new TransportSite(SEAPORT, "111", null, null), new TransportSite(TERMINAL, null, null, null), EMPTY,
-                true, null);
-        TransportTemplateDto.TransportSegment terminalAddress = new TransportTemplateDto.TransportSegment(
-                new TransportSite(TERMINAL, null, null, null), new TransportSite(ADDRESS, null, TEN, ONE), EMPTY, true,
-                null);
-        TransportTemplateDto.TransportSegment addressTerminal = new TransportTemplateDto.TransportSegment(
-                new TransportSite(ADDRESS, null, TEN, ONE), new TransportSite(TERMINAL, null, null, null), FULL, true,
-                null);
-        TransportTemplateDto.TransportSegment terminalAntwerp = new TransportTemplateDto.TransportSegment(
-                new TransportSite(TERMINAL, null, null, null), new TransportSite(SEAPORT, "111", null, null), FULL,
-                true, null);
+        TransportTemplateSegment antwerpTerminal = new TransportTemplateSegment(new TransportSite(SEAPORT, "111", null,
+                    null), new TransportSite(TERMINAL, null, null, null), EMPTY, true, null);
+        TransportTemplateSegment terminalAddress = new TransportTemplateSegment(new TransportSite(TERMINAL, null, null,
+                    null), new TransportSite(ADDRESS, null, TEN, ONE), EMPTY, true, null);
+        TransportTemplateSegment addressTerminal = new TransportTemplateSegment(new TransportSite(ADDRESS, null, TEN,
+                    ONE), new TransportSite(TERMINAL, null, null, null), FULL, true, null);
+        TransportTemplateSegment terminalAntwerp = new TransportTemplateSegment(new TransportSite(TERMINAL, null, null,
+                    null), new TransportSite(SEAPORT, "111", null, null), FULL, true, null);
 
         TransportTemplateDto template = new TransportTemplateDto(asList(antwerpTerminal, terminalAddress,
                     addressTerminal, terminalAntwerp));

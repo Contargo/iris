@@ -10,7 +10,7 @@ import org.springframework.cache.annotation.Cacheable;
 
 import java.math.BigDecimal;
 
-import static net.contargo.iris.route2.ModeOfTransport.ROAD;
+import static net.contargo.iris.routing.osrm.OSRMProfile.DRIVING;
 
 import static java.math.RoundingMode.HALF_UP;
 
@@ -41,7 +41,7 @@ public class OSRMTruckRouteService implements TruckRouteService {
 
         RoutingQueryStrategy strategy = routingQueryStrategyProvider.strategy();
 
-        RoutingQueryResult osrmResult = strategy.route(start, destination, ROAD);
+        RoutingQueryResult osrmResult = strategy.route(start, destination, DRIVING);
 
         if (osrmResult.noRoute()) {
             throw new OSRMNonRoutableRouteException("Start: "

@@ -35,8 +35,8 @@
     <context:component-scan base-package="net.contargo.iris.terminal.api"/>
     <context:component-scan base-package="net.contargo.iris.seaport.api"/>
     <context:component-scan base-package="net.contargo.iris.route.api"/>
-    <context:component-scan base-package="net.contargo.iris.route2.api"/>
     <context:component-scan base-package="net.contargo.iris.routedatarevision.api"/>
+    <context:component-scan base-package="net.contargo.iris.transport.api"/>
     <context:component-scan base-package="com.mangofactory"/>
 
 
@@ -104,6 +104,11 @@
     </bean>
 
     <bean class="net.contargo.iris.actuator.ActuatorConfig"/>
+
+    <bean id="threadExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean">
+        <property name="corePoolSize" value="${routing.threads}"/>
+        <property name="maxPoolSize" value="${routing.threads}"/>
+    </bean>
 
     <context:annotation-config/>
     <bean class="net.contargo.iris.config.SwaggerConfig"/>

@@ -482,20 +482,29 @@
         <constructor-arg name="directory" value="${addresses.csvdir}"/>
     </bean>
 
-    <bean class="net.contargo.iris.route2.service.RouteService" id="routeService">
+    <bean class="net.contargo.iris.transport.service.RouteService" id="routeService">
         <constructor-arg ref="routingQueryStrategyProvider"/>
     </bean>
 
     <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
         <property name="converters">
             <set>
-                <bean class="net.contargo.iris.route2.api.NodeDtoToGeoLocationConverter">
+                <bean class="net.contargo.iris.transport.service.TransportSiteToGeoLocationConverter">
                     <constructor-arg ref="seaportService"/>
                     <constructor-arg ref="terminalService"/>
-                    <constructor-arg ref="addressServiceWrapper"/>
                 </bean>
             </set>
         </property>
+    </bean>
+
+    <bean class="net.contargo.iris.transport.service.TransportDescriptionExtender">
+        <constructor-arg ref="routeService"/>
+        <constructor-arg ref="conversionService"/>
+    </bean>
+
+    <bean class="net.contargo.iris.transport.service.DescriptionGenerator" id="descriptionGenerator">
+        <constructor-arg ref="terminalService"/>
+        <constructor-arg ref="connectionService"/>
     </bean>
 
 </beans>

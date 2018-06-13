@@ -12,6 +12,8 @@ import net.contargo.iris.seaport.service.SeaportService;
 import net.contargo.iris.terminal.Terminal;
 import net.contargo.iris.terminal.service.TerminalService;
 
+import org.springframework.cache.annotation.Cacheable;
+
 import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.util.Assert;
@@ -120,6 +122,7 @@ public class MainRunConnectionServiceImpl implements MainRunConnectionService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("terminalMainRunConnections")
     public List<MainRunConnection> getConnectionsForTerminal(BigInteger terminalUID) {
 
         return mainRunConnectionRepository.findConnectionsByTerminalUniqueId(terminalUID);

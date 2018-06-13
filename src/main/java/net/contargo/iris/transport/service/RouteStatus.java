@@ -1,9 +1,9 @@
-package net.contargo.iris.route2;
+package net.contargo.iris.transport.service;
 
 /**
  * @author  Ben Antony - antony@synyx.de
  */
-public enum RoutePartEdgeResultStatus {
+public enum RouteStatus {
 
     OK,
     NO_ROUTE

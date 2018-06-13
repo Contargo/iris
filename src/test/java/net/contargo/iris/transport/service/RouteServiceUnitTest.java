@@ -1,4 +1,4 @@
-package net.contargo.iris.route2.service;
+package net.contargo.iris.transport.service;
 
 import net.contargo.iris.GeoLocation;
 import net.contargo.iris.routing.RoutingQueryResult;
@@ -14,9 +14,12 @@ import org.mockito.Mock;
 
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static net.contargo.iris.route2.ModeOfTransport.ROAD;
-import static net.contargo.iris.route2.RoutePartEdgeResultStatus.NO_ROUTE;
-import static net.contargo.iris.route2.RoutePartEdgeResultStatus.OK;
+import java.math.BigDecimal;
+
+import static net.contargo.iris.routing.osrm.OSRMProfile.DRIVING;
+import static net.contargo.iris.transport.api.ModeOfTransport.ROAD;
+import static net.contargo.iris.transport.service.RouteStatus.NO_ROUTE;
+import static net.contargo.iris.transport.service.RouteStatus.OK;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -49,17 +52,18 @@ public class RouteServiceUnitTest {
         GeoLocation start = new GeoLocation();
         GeoLocation end = new GeoLocation();
 
-        RoutingQueryResult routingResult = new RoutingQueryResult(200, 61299.3, 22068, ZERO,
+        RoutingQueryResult routingResult = new RoutingQueryResult(200, 61299.3, 22068, new BigDecimal("60.10"),
                 asList("geometry1", "geometry2"));
 
         RoutingQueryStrategy strategyMock = mock(RoutingQueryStrategy.class);
         when(routingQueryStrategyProviderMock.strategy()).thenReturn(strategyMock);
-        when(strategyMock.route(start, end, ROAD)).thenReturn(routingResult);
+        when(strategyMock.route(start, end, DRIVING)).thenReturn(routingResult);
 
-        RoutePartEdgeResult result = sut.route(start, end, ROAD);
+        RouteResult result = sut.route(start, end, ROAD);
 
-        assertThat(result.getDistance(), is(61299.3));
-        assertThat(result.getDuration(), is(22068.0));
+        assertThat(result.getDistance(), is(62));
+        assertThat(result.getDuration(), is(22068));
+        assertThat(result.getToll(), is(61));
         assertThat(result.getGeometries().get(0), is("geometry1"));
         assertThat(result.getGeometries().get(1), is("geometry2"));
         assertThat(result.getStatus(), is(OK));
@@ -76,9 +80,9 @@ public class RouteServiceUnitTest {
 
         RoutingQueryStrategy strategyMock = mock(RoutingQueryStrategy.class);
         when(routingQueryStrategyProviderMock.strategy()).thenReturn(strategyMock);
-        when(strategyMock.route(start, end, ROAD)).thenReturn(routingResult);
+        when(strategyMock.route(start, end, DRIVING)).thenReturn(routingResult);
 
-        RoutePartEdgeResult result = sut.route(start, end, ROAD);
+        RouteResult result = sut.route(start, end, ROAD);
 
         assertThat(result.getStatus(), is(NO_ROUTE));
     }

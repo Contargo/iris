@@ -1,7 +1,7 @@
 package net.contargo.iris.routing;
 
 import net.contargo.iris.GeoLocation;
-import net.contargo.iris.route2.ModeOfTransport;
+import net.contargo.iris.routing.osrm.OSRMProfile;
 
 
 /**
@@ -17,8 +17,8 @@ public interface RoutingQueryStrategy {
     /**
      * Returns the routing results of the route between the start and the destination.
      *
-     * @param  start  {@link GeoLocation }of the start point
-     * @param  destination  {@link GeoLocation } of the destination point
+     * @param  start  {@link GeoLocation} of the start point
+     * @param  destination  {@link GeoLocation} of the destination point
      *
      * @return  {@link RoutingQueryResult}
      */
@@ -27,11 +27,11 @@ public interface RoutingQueryStrategy {
 
 
     /**
-     * @param  start  {@link GeoLocation }of the start point
-     * @param  destination  {@link GeoLocation } of the destination point
-     * @param  modeOfTransport  The mode of transport to perform the routing
+     * @param  start  {@link GeoLocation} of the start point
+     * @param  destination  {@link GeoLocation} of the destination point
+     * @param  profile  The OSRM profile with which to perform the routing
      *
      * @return  {@link RoutingQueryResult}
      */
-    RoutingQueryResult route(GeoLocation start, GeoLocation destination, ModeOfTransport modeOfTransport);
+    RoutingQueryResult route(GeoLocation start, GeoLocation destination, OSRMProfile profile);
 }

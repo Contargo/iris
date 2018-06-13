@@ -1,0 +1,36 @@
+{
+  "transportDescription": [
+    {
+      "fromSite": {
+        "type": "TERMINAL"
+      },
+      "toSite": {
+        "type": "ADDRESS",
+        "lat": 49.004895,
+        "lon": 8.3848751
+      },
+      "loadingState": "EMPTY"
+    },
+    {
+      "fromSite": {
+        "type": "ADDRESS",
+        "lat": 49.004895,
+        "lon": 8.3848751
+      },
+      "toSite": {
+        "type": "TERMINAL"
+      },
+      "loadingState": "FULL"
+    },
+    {
+      "fromSite": {
+        "type": "TERMINAL"
+      },
+      "toSite": {
+        "type": "SEAPORT",
+        "uuid": "1300000000000006"
+      },
+      "loadingState": "FULL"
+    }
+  ]
+}

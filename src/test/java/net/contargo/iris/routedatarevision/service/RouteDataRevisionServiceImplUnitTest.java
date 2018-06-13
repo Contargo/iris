@@ -32,6 +32,7 @@ import java.time.LocalDate;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
 
@@ -339,8 +340,8 @@ public class RouteDataRevisionServiceImplUnitTest {
         routeDataRevision2.setLatitude(BigDecimal.TEN);
         routeDataRevision2.setLongitude(BigDecimal.TEN);
 
-        when(routeDataRevisionRepositoryMock.findByCityIsNullAndPostalCodeIsNull()).thenReturn(asList(routeDataRevision,
-                routeDataRevision2));
+        when(routeDataRevisionRepositoryMock.findByCityIsNullAndPostalCodeIsNull()).thenReturn(asList(
+                routeDataRevision, routeDataRevision2));
         when(addressServiceWrapperMock.getAddressForGeoLocation(new GeoLocation(BigDecimal.ONE, BigDecimal.ONE)))
             .thenReturn(new Address());
         when(addressServiceWrapperMock.getAddressForGeoLocation(new GeoLocation(BigDecimal.TEN, BigDecimal.TEN)))
@@ -351,5 +352,52 @@ public class RouteDataRevisionServiceImplUnitTest {
         sut.enrichWithAddressInformation();
 
         verify(routeDataRevisionRepositoryMock, times(2)).save(any(RouteDataRevision.class));
+    }
+
+
+    @Test
+    public void optionalRouteDataRevision() {
+
+        Address address = new Address(BigDecimal.ONE, BigDecimal.TEN);
+        RouteDataRevision routeDataRevisionDB = new RouteDataRevision();
+
+        when(terminalServiceMock.getByUniqueId(BigInteger.ONE)).thenReturn(terminal);
+
+        when(routeDataRevisionRepositoryMock.findNearest(eq(terminal), eq(address.getLatitude()),
+                    eq(address.getLongitude()), any(Date.class))).thenReturn(routeDataRevisionDB);
+
+        Optional<RouteDataRevision> routeDataRevision = sut.getRouteDataRevision(BigInteger.ONE, address);
+
+        assertThat(routeDataRevision.isPresent(), is(true));
+        assertThat(routeDataRevision.get(), is(routeDataRevisionDB));
+    }
+
+
+    @Test
+    public void optionalRouteDataRevisionNoTerminal() {
+
+        Address address = new Address(BigDecimal.ONE, BigDecimal.TEN);
+
+        when(terminalServiceMock.getByUniqueId(BigInteger.ONE)).thenReturn(null);
+
+        Optional<RouteDataRevision> routeDataRevision = sut.getRouteDataRevision(BigInteger.ONE, address);
+
+        assertThat(routeDataRevision.isPresent(), is(false));
+    }
+
+
+    @Test
+    public void optionalRouteDataRevisionNoRevision() {
+
+        Address address = new Address(BigDecimal.ONE, BigDecimal.TEN);
+
+        when(terminalServiceMock.getByUniqueId(BigInteger.ONE)).thenReturn(terminal);
+
+        when(routeDataRevisionRepositoryMock.findNearest(eq(terminal), eq(address.getLatitude()),
+                    eq(address.getLongitude()), any(Date.class))).thenReturn(null);
+
+        Optional<RouteDataRevision> routeDataRevision = sut.getRouteDataRevision(BigInteger.ONE, address);
+
+        assertThat(routeDataRevision.isPresent(), is(false));
     }
 }

@@ -121,7 +121,7 @@
         </constructor-arg>
         <constructor-arg name="normalizerService" ref="normalizerService"/>
     </bean>
-    
+
     <bean id="addressListFilter" class="net.contargo.iris.address.service.AddressListFilterImpl"/>
 
     <bean id="addressDtoService" class="net.contargo.iris.address.dto.AddressDtoServiceImpl">
@@ -401,7 +401,7 @@
             </bean>
         </constructor-arg>
     </bean>
-    
+
     <bean id="postcodeCitySuburbStaticAddressMappingProcessor" class="net.contargo.iris.address.staticsearch.service.PostcodeCitySuburbStaticAddressMappingProcessor">
         <constructor-arg name="next" ref="postcodeCityStaticAddressMappingProcessor"/>
         <constructor-arg name="normalizerService" ref="normalizerService"/>
@@ -500,6 +500,7 @@
     <bean class="net.contargo.iris.transport.service.TransportDescriptionExtender">
         <constructor-arg ref="routeService"/>
         <constructor-arg ref="conversionService"/>
+        <constructor-arg ref="routeDataRevisionService"/>
     </bean>
 
     <bean class="net.contargo.iris.transport.service.DescriptionGenerator" id="descriptionGenerator">

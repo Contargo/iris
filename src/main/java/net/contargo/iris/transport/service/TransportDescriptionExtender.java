@@ -49,7 +49,7 @@ public class TransportDescriptionExtender {
 
         TransportResponseDto result = new TransportResponseDto(description);
 
-        result.transportDescription.stream()
+        result.transportChain.stream()
             .filter(transportSegment -> transportSegment.modeOfTransport == ROAD)
             .forEach(s -> {
                 GeoLocation start = conversionService.convert(s.fromSite, GeoLocation.class);

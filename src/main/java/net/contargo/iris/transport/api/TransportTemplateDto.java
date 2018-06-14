@@ -15,13 +15,12 @@ import java.util.List;
  */
 public class TransportTemplateDto {
 
-    public List<TransportTemplateSegment> transportDescription;
+    public List<TransportTemplateSegment> transportChain;
 
     @JsonCreator
-    public TransportTemplateDto(
-        @JsonProperty("transportDescription") List<TransportTemplateSegment> transportDescription) {
+    public TransportTemplateDto(@JsonProperty("transportChain") List<TransportTemplateSegment> transportChain) {
 
-        this.transportDescription = transportDescription;
+        this.transportChain = transportChain;
     }
 
     public static class TransportTemplateSegment {

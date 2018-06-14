@@ -17,11 +17,11 @@ import static java.util.stream.Collectors.toList;
  */
 public class TransportDescriptionDto {
 
-    public List<TransportDescriptionSegment> transportDescription;
+    public List<TransportDescriptionSegment> transportChain;
 
     public TransportDescriptionDto(TransportDescriptionDto template) {
 
-        this.transportDescription = template.transportDescription.stream().map(s ->
+        this.transportChain = template.transportChain.stream().map(s ->
                         new TransportDescriptionSegment(s.fromSite, s.toSite, s.loadingState, s.unitAvailable,
                             s.modeOfTransport)).collect(toList());
     }
@@ -29,17 +29,16 @@ public class TransportDescriptionDto {
 
     public TransportDescriptionDto(TransportTemplateDto template) {
 
-        this.transportDescription = template.transportDescription.stream().map(s ->
+        this.transportChain = template.transportChain.stream().map(s ->
                         new TransportDescriptionSegment(s.fromSite, s.toSite, s.loadingState, s.unitAvailable,
                             s.modeOfTransport)).collect(toList());
     }
 
 
     @JsonCreator
-    public TransportDescriptionDto(
-        @JsonProperty("transportDescription") List<TransportDescriptionSegment> transportDescription) {
+    public TransportDescriptionDto(@JsonProperty("transportChain") List<TransportDescriptionSegment> transportChain) {
 
-        this.transportDescription = transportDescription;
+        this.transportChain = transportChain;
     }
 
     public static class TransportDescriptionSegment {

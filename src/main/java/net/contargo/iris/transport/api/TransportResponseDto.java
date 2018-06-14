@@ -18,13 +18,11 @@ import static java.util.stream.Collectors.toList;
  */
 public class TransportResponseDto {
 
-    public final List<TransportResponseSegment> transportDescription;
+    public final List<TransportResponseSegment> transportChain;
 
     public TransportResponseDto(TransportDescriptionDto template) {
 
-        this.transportDescription = template.transportDescription.stream()
-                .map(TransportResponseSegment::new)
-                .collect(toList());
+        this.transportChain = template.transportChain.stream().map(TransportResponseSegment::new).collect(toList());
     }
 
     @JsonInclude(value = NON_NULL)

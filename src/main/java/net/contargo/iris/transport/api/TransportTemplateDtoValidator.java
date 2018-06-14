@@ -17,7 +17,7 @@ class TransportTemplateDtoValidator {
      */
     static void validate(TransportTemplateDto template) {
 
-        template.transportDescription.forEach(s -> {
+        template.transportChain.forEach(s -> {
             noTerminalSpecified(s);
             noMoTSpecified(s);
         });

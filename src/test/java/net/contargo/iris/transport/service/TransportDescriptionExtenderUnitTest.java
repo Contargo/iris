@@ -12,7 +12,9 @@ import org.junit.Test;
 
 import org.junit.runner.RunWith;
 
+import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatcher;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
@@ -43,6 +45,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
 
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import static java.util.Arrays.asList;
@@ -66,6 +69,11 @@ public class TransportDescriptionExtenderUnitTest {
     private ConversionService conversionServiceMock;
     @Mock
     private RouteDataRevisionService routeDataRevisionServiceMock;
+    @Mock
+    private TransportDescriptionMainRunExtender mainRunExtenderMock;
+
+    @Captor
+    private ArgumentCaptor<TransportResponseDto.TransportResponseSegment> segmentCaptor;
 
     @Test
     public void withRoutingInformation() {
@@ -105,6 +113,10 @@ public class TransportDescriptionExtenderUnitTest {
             Optional.empty());
 
         TransportResponseDto result = sut.withRoutingInformation(description);
+
+        verify(mainRunExtenderMock).with(segmentCaptor.capture());
+
+        assertThat(segmentCaptor.getValue(), is(result.transportChain.get(0)));
 
         assertThat(result.transportChain.get(0).duration, nullValue());
         assertThat(result.transportChain.get(0).distance, nullValue());
@@ -166,6 +178,10 @@ public class TransportDescriptionExtenderUnitTest {
             addressTerminalDistances);
 
         TransportResponseDto result = sut.withRoutingInformation(description);
+
+        verify(mainRunExtenderMock).with(segmentCaptor.capture());
+
+        assertThat(segmentCaptor.getValue(), is(result.transportChain.get(0)));
 
         assertThat(result.transportChain.get(0).duration, nullValue());
         assertThat(result.transportChain.get(0).distance, nullValue());

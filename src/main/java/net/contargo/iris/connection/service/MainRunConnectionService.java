@@ -77,4 +77,18 @@ public interface MainRunConnectionService {
      * @return  a list of matching {@link MainRunConnection}s
      */
     List<MainRunConnection> getConnectionsForTerminal(BigInteger terminalUID);
+
+
+    /**
+     * Finds a {@link MainRunConnection} that is connected with a {@link Terminal} and {@link Seaport} by the given
+     * {@link RouteType}.
+     *
+     * @param  terminalUid  a {@link Terminal}'s uid
+     * @param  seaportUid  a {@link Seaport}'s uid
+     * @param  routeType  the {@link RouteType}
+     *
+     * @return  the matching {@link MainRunConnection}
+     */
+    MainRunConnection getConnectionByTerminalUidAndSeaportUidAndType(BigInteger terminalUid, BigInteger seaportUid,
+        RouteType routeType);
 }

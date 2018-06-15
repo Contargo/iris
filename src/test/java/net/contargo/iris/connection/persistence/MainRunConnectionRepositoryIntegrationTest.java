@@ -26,10 +26,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import static net.contargo.iris.route.RouteType.BARGE;
+import static net.contargo.iris.route.RouteType.RAIL;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 
 
 /**
@@ -139,6 +141,41 @@ public class MainRunConnectionRepositoryIntegrationTest {
                 connection.getId());
 
         assertThat(exists, is(true));
+    }
+
+
+    @Test
+    public void findConnectionByTerminalUidAndSeaportUidAndType() {
+
+        Seaport seaport = new Seaport(new GeoLocation(BigDecimal.TEN, BigDecimal.ONE));
+        seaport.setName("seaport");
+        seaport.setUniqueId(new BigInteger("111"));
+        em.persist(seaport);
+
+        Terminal terminal = new Terminal(new GeoLocation(BigDecimal.TEN, BigDecimal.TEN));
+        terminal.setName("terminal");
+        terminal.setUniqueId(new BigInteger("123456789"));
+        em.persist(terminal);
+
+        MainRunConnection connection = newConnection(seaport, terminal);
+        em.persist(connection);
+
+        em.flush();
+
+        MainRunConnection result = sut.findConnectionByTerminalUidAndSeaportUidAndType(new BigInteger("123456789"),
+                new BigInteger("111"), BARGE);
+
+        assertThat(result.getId(), is(connection.getId()));
+    }
+
+
+    @Test
+    public void findConnectionByTerminalUidAndSeaportUidAndTypeExpectNull() {
+
+        MainRunConnection result = sut.findConnectionByTerminalUidAndSeaportUidAndType(new BigInteger("123456789"),
+                new BigInteger("111"), RAIL);
+
+        assertThat(result, nullValue());
     }
 
 

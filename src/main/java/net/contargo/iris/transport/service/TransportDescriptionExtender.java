@@ -44,6 +44,8 @@ public class TransportDescriptionExtender {
             } else if (isMainRun(s)) {
                 mainRunExtender.with(s);
             }
+
+            s.co2 = s.co2.add(Co2Calculator.handling(s));
         });
 
         return result;

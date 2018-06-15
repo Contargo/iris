@@ -7,8 +7,8 @@
       },
       "toSite": {
         "type": "ADDRESS",
-        "lat": 49.004895,
-        "lon": 8.3848751
+        "lat": 49.011260,
+        "lon": 8.394950
       },
       "modeOfTransport": "ROAD",
       "loadingState": "EMPTY"
@@ -16,8 +16,8 @@
     {
       "fromSite": {
         "type": "ADDRESS",
-        "lat": 49.004895,
-        "lon": 8.3848751
+        "lat": 49.011260,
+        "lon": 8.394950
       },
       "toSite": {
         "type": "TERMINAL",

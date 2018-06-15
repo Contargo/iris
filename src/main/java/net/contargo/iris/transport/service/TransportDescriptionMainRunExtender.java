@@ -3,8 +3,7 @@ package net.contargo.iris.transport.service;
 import net.contargo.iris.connection.MainRunConnection;
 import net.contargo.iris.connection.service.MainRunConnectionService;
 import net.contargo.iris.route.RouteType;
-import net.contargo.iris.seaport.Seaport;
-import net.contargo.iris.terminal.Terminal;
+import net.contargo.iris.terminal.Region;
 import net.contargo.iris.transport.api.ModeOfTransport;
 import net.contargo.iris.transport.api.SiteType;
 import net.contargo.iris.transport.api.TransportResponseDto;
@@ -14,8 +13,8 @@ import java.math.BigInteger;
 
 import static net.contargo.iris.transport.api.SiteType.SEAPORT;
 import static net.contargo.iris.transport.api.SiteType.TERMINAL;
-import static net.contargo.iris.transport.service.TransportDescriptionMainRunExtender.WaterDirection.DOWNSTREAM;
-import static net.contargo.iris.transport.service.TransportDescriptionMainRunExtender.WaterDirection.UPSTREAM;
+import static net.contargo.iris.transport.service.FlowDirection.DOWNSTREAM;
+import static net.contargo.iris.transport.service.FlowDirection.UPSTREAM;
 
 import static java.math.RoundingMode.UP;
 
@@ -32,12 +31,7 @@ public class TransportDescriptionMainRunExtender {
     private static final BigDecimal SECONDS_IN_AN_HOUR = new BigDecimal("60.0");
 
     private static final int DIGITS_TO_ROUND = 0;
-
-    enum WaterDirection {
-
-        UPSTREAM,
-        DOWNSTREAM
-    }
+    private static final int SCALE = 2;
 
     private final MainRunConnectionService mainRunConnectionService;
 
@@ -61,7 +55,7 @@ public class TransportDescriptionMainRunExtender {
                 break;
 
             default:
-                throw new IllegalArgumentException("TODO: " + modeOfTransport
+                throw new IllegalArgumentException(modeOfTransport
                     + " is not a valid mode of transport for a main run segment");
         }
     }
@@ -70,47 +64,36 @@ public class TransportDescriptionMainRunExtender {
     private MainRunConnection getMainRunConnection(TransportResponseDto.TransportResponseSegment segment) {
 
         BigInteger terminalUuid = getUuid(segment, TERMINAL);
-        Terminal terminal = new Terminal();
-        terminal.setUniqueId(terminalUuid);
-
         BigInteger seaportUuid = getUuid(segment, SEAPORT);
-        Seaport seaport = new Seaport();
-        seaport.setUniqueId(seaportUuid);
 
         RouteType routeType = segment.modeOfTransport.getRouteType();
 
-        return mainRunConnectionService.findRoutingConnectionBetweenTerminalAndSeaportByType(terminal, seaport,
-                routeType, null);
+        return mainRunConnectionService.getConnectionByTerminalUidAndSeaportUidAndType(terminalUuid, seaportUuid,
+                routeType);
     }
 
 
     private static void extendRailSegment(TransportResponseDto.TransportResponseSegment segment,
         MainRunConnection mainRunConnection) {
 
-        BigDecimal railDistance;
+        BigDecimal dieselDistance = mainRunConnection.getRailDieselDistance();
+        BigDecimal electricDistance = mainRunConnection.getRailElectricDistance();
 
-        if (mainRunConnection.getRailDieselDistance() != null) {
-            railDistance = mainRunConnection.getRailDieselDistance();
-        } else if (mainRunConnection.getRailElectricDistance() != null) {
-            railDistance = mainRunConnection.getRailElectricDistance();
-        } else {
-            throw new IllegalStateException("TODO: No rail distance specified");
-        }
+        BigDecimal railDistance = dieselDistance.add(electricDistance);
 
         segment.distance = railDistance.intValue();
         segment.duration = calculateDuration(railDistance, AVERAGE_SPEED_RAIL);
+        segment.co2 = Co2Calculator.rail(dieselDistance.intValue(), electricDistance.intValue(), segment.loadingState);
     }
 
 
     private static void extendWaterSegment(TransportResponseDto.TransportResponseSegment segment,
         MainRunConnection mainRunConnection) {
 
-        BigDecimal bargeDistance = mainRunConnection.getBargeDieselDistance().setScale(2, UP);
-
-        WaterDirection waterDirection = getWaterDirection(segment);
+        FlowDirection flowDirection = getFlowDirection(segment);
         BigDecimal divisor;
 
-        switch (waterDirection) {
+        switch (flowDirection) {
             case UPSTREAM:
                 divisor = AVERAGE_SPEED_BARGE_UPSTREAM;
                 break;
@@ -120,15 +103,19 @@ public class TransportDescriptionMainRunExtender {
                 break;
 
             default:
-                throw new IllegalArgumentException("TODO: Unknown water direction: " + waterDirection);
+                throw new IllegalArgumentException("Unknown flow direction: " + flowDirection);
         }
+
+        BigDecimal bargeDistance = mainRunConnection.getBargeDieselDistance().setScale(SCALE, UP);
+        Region region = mainRunConnection.getTerminal().getRegion();
 
         segment.distance = bargeDistance.intValue();
         segment.duration = calculateDuration(bargeDistance, divisor);
+        segment.co2 = Co2Calculator.water(segment.distance, region, segment.loadingState, flowDirection);
     }
 
 
-    private static WaterDirection getWaterDirection(TransportResponseDto.TransportResponseSegment segment) {
+    private static FlowDirection getFlowDirection(TransportResponseDto.TransportResponseSegment segment) {
 
         if (segment.fromSite.type == SEAPORT && segment.toSite.type == TERMINAL) {
             return UPSTREAM;
@@ -138,7 +125,7 @@ public class TransportDescriptionMainRunExtender {
             return DOWNSTREAM;
         }
 
-        throw new IllegalArgumentException("TODO: Water direction can not be determined");
+        throw new IllegalArgumentException("Flow direction can not be determined");
     }
 
 

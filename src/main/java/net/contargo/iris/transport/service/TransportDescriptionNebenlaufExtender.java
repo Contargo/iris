@@ -1,7 +1,6 @@
 package net.contargo.iris.transport.service;
 
 import net.contargo.iris.GeoLocation;
-import net.contargo.iris.routedatarevision.RouteDataRevision;
 import net.contargo.iris.routedatarevision.service.RouteDataRevisionService;
 import net.contargo.iris.transport.api.ModeOfTransport;
 import net.contargo.iris.transport.api.TransportResponseDto;
@@ -9,8 +8,6 @@ import net.contargo.iris.transport.api.TransportResponseDto;
 import org.springframework.core.convert.ConversionService;
 
 import java.math.BigInteger;
-
-import java.util.Optional;
 
 import static net.contargo.iris.transport.api.SiteType.ADDRESS;
 import static net.contargo.iris.transport.api.SiteType.TERMINAL;
@@ -47,6 +44,8 @@ public class TransportDescriptionNebenlaufExtender {
         segment.geometries = routeResult.getGeometries();
 
         applyRouteRevision(segment);
+
+        segment.co2 = Co2Calculator.truck(segment.distance, segment.loadingState);
     }
 
 
@@ -56,17 +55,14 @@ public class TransportDescriptionNebenlaufExtender {
 
         GeoLocation address = getAddress(segment);
 
-        Optional<RouteDataRevision> routeDataRevisionMaybe = routeDataRevisionService.getRouteDataRevision(uuid,
-                address);
-
-        routeDataRevisionMaybe.ifPresent(r -> {
+        routeDataRevisionService.getRouteDataRevision(uuid, address).ifPresent(r -> {
             segment.distance = r.getTruckDistanceOneWayInKilometer().intValue();
             segment.tollDistance = r.getTollDistanceOneWayInKilometer().intValue();
         });
     }
 
 
-    private GeoLocation getAddress(TransportResponseDto.TransportResponseSegment segment) {
+    private static GeoLocation getAddress(TransportResponseDto.TransportResponseSegment segment) {
 
         if (segment.fromSite.type == ADDRESS) {
             return new GeoLocation(segment.fromSite.lat, segment.fromSite.lon);

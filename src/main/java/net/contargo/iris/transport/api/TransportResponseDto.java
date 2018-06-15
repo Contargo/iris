@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 import net.contargo.iris.container.ContainerState;
 
+import java.math.BigDecimal;
+
 import java.util.List;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
@@ -37,6 +39,7 @@ public class TransportResponseDto {
         public Integer tollDistance;
         public Integer duration;
         public List<String> geometries;
+        public BigDecimal co2;
 
         public TransportResponseSegment(TransportDescriptionDto.TransportDescriptionSegment segment) {
 

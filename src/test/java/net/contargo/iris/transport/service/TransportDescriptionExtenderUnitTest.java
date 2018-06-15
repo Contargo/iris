@@ -15,6 +15,8 @@ import org.mockito.Mock;
 
 import org.mockito.runners.MockitoJUnitRunner;
 
+import org.mockito.stubbing.Answer;
+
 import java.math.BigDecimal;
 
 import java.util.List;
@@ -27,13 +29,18 @@ import static net.contargo.iris.transport.api.SiteType.ADDRESS;
 import static net.contargo.iris.transport.api.SiteType.SEAPORT;
 import static net.contargo.iris.transport.api.SiteType.TERMINAL;
 
+import static org.hamcrest.Matchers.comparesEqualTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
 import static org.junit.Assert.assertThat;
 
+import static org.mockito.Matchers.any;
+
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import static java.util.Arrays.asList;
 
@@ -50,6 +57,7 @@ public class TransportDescriptionExtenderUnitTest {
 
     @Mock
     private TransportDescriptionMainRunExtender mainRunExtenderMock;
+
     @Mock
     private TransportDescriptionNebenlaufExtender nebenlaufExtenderMock;
 
@@ -77,6 +85,9 @@ public class TransportDescriptionExtenderUnitTest {
 
         TransportDescriptionDto description = new TransportDescriptionDto(descriptions);
 
+        doAnswer(setCo2(1)).when(mainRunExtenderMock).with(any(TransportResponseDto.TransportResponseSegment.class));
+        doAnswer(setCo2(2)).when(nebenlaufExtenderMock).with(any(TransportResponseDto.TransportResponseSegment.class));
+
         TransportResponseDto result = sut.withRoutingInformation(description);
 
         verify(mainRunExtenderMock).with(segmentCaptor.capture());
@@ -89,13 +100,29 @@ public class TransportDescriptionExtenderUnitTest {
         assertThat(result.transportChain.get(0).duration, nullValue());
         assertThat(result.transportChain.get(0).distance, nullValue());
         assertThat(result.transportChain.get(0).tollDistance, nullValue());
+        assertThat(result.transportChain.get(0).co2, comparesEqualTo(new BigDecimal("5.00")));
 
         assertThat(result.transportChain.get(1).duration, nullValue());
         assertThat(result.transportChain.get(1).distance, nullValue());
         assertThat(result.transportChain.get(1).tollDistance, nullValue());
+        assertThat(result.transportChain.get(1).co2, comparesEqualTo(new BigDecimal("6")));
 
         assertThat(result.transportChain.get(2).duration, nullValue());
         assertThat(result.transportChain.get(2).distance, nullValue());
         assertThat(result.transportChain.get(2).tollDistance, nullValue());
+        assertThat(result.transportChain.get(2).co2, comparesEqualTo(new BigDecimal("6.00")));
+    }
+
+
+    private static Answer setCo2(int co2) {
+
+        return
+            invocation -> {
+            TransportResponseDto.TransportResponseSegment segment = (TransportResponseDto.TransportResponseSegment)
+                invocation.getArguments()[0];
+            segment.co2 = new BigDecimal(co2);
+
+            return null;
+        };
     }
 }

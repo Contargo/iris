@@ -503,7 +503,7 @@
         <constructor-arg ref="routeDataRevisionService"/>
     </bean>
 
-    <bean class="net.contargo.iris.transport.service.DescriptionGenerator" id="descriptionGenerator">
+    <bean class="net.contargo.iris.transport.service.TransportChainGenerator" id="transportChainGenerator">
         <constructor-arg ref="terminalService"/>
         <constructor-arg ref="connectionService"/>
     </bean>

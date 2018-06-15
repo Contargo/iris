@@ -1,6 +1,6 @@
 package net.contargo.iris.transport.api;
 
-import net.contargo.iris.transport.service.DescriptionGenerator;
+import net.contargo.iris.transport.service.TransportChainGenerator;
 import net.contargo.iris.transport.service.TransportDescriptionExtender;
 
 import org.apache.commons.io.IOUtils;
@@ -55,14 +55,14 @@ public class TransportApiControllerUnitTest {
     private TransportDescriptionExtender transportDescriptionExtenderMock;
 
     @Autowired
-    private DescriptionGenerator descriptionGeneratorMock;
+    private TransportChainGenerator transportChainGeneratorMock;
 
     private MockMvc mockMvc;
 
     @Before
     public void setUp() {
 
-        reset(transportDescriptionExtenderMock, descriptionGeneratorMock);
+        reset(transportDescriptionExtenderMock, transportChainGeneratorMock);
         mockMvc = webAppContextSetup(webApplicationContext).build();
     }
 
@@ -71,7 +71,7 @@ public class TransportApiControllerUnitTest {
     public void transports() throws Exception {
 
         TransportDescriptionDto description = new TransportDescriptionDto(new TransportTemplateDto(emptyList()));
-        when(descriptionGeneratorMock.from(any(TransportTemplateDto.class))).thenReturn(asList(description,
+        when(transportChainGeneratorMock.from(any(TransportTemplateDto.class))).thenReturn(asList(description,
                 description));
 
         String json = IOUtils.toString(getClass().getResourceAsStream("/transport/request-transport-template.json"),
@@ -97,7 +97,7 @@ public class TransportApiControllerUnitTest {
 
         mockMvc.perform(request).andExpect(status().isBadRequest());
 
-        verifyZeroInteractions(descriptionGeneratorMock);
+        verifyZeroInteractions(transportChainGeneratorMock);
         verifyZeroInteractions(transportDescriptionExtenderMock);
     }
 

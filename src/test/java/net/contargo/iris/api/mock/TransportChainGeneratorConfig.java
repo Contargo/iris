@@ -1,6 +1,6 @@
 package net.contargo.iris.api.mock;
 
-import net.contargo.iris.transport.service.DescriptionGenerator;
+import net.contargo.iris.transport.service.TransportChainGenerator;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,11 +13,11 @@ import static org.mockito.Mockito.mock;
  * @author  Sandra Thieme - thieme@synyx.de
  */
 @Configuration
-public class DescriptionGeneratorConfig {
+public class TransportChainGeneratorConfig {
 
     @Bean
-    public DescriptionGenerator descriptionGenerator() {
+    public TransportChainGenerator transportChainGenerator() {
 
-        return mock(DescriptionGenerator.class);
+        return mock(TransportChainGenerator.class);
     }
 }

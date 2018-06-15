@@ -2,7 +2,7 @@ package net.contargo.iris.transport.api;
 
 import com.wordnik.swagger.annotations.Api;
 
-import net.contargo.iris.transport.service.DescriptionGenerator;
+import net.contargo.iris.transport.service.TransportChainGenerator;
 import net.contargo.iris.transport.service.TransportDescriptionExtender;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,15 +29,15 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 public class TransportApiController {
 
     private final TransportDescriptionExtender transportDescriptionExtender;
-    private final DescriptionGenerator descriptionGenerator;
+    private final TransportChainGenerator transportChainGenerator;
     private final ExecutorService executorService;
 
     @Autowired
     public TransportApiController(TransportDescriptionExtender transportDescriptionExtender,
-        DescriptionGenerator descriptionGenerator, ExecutorService executorService) {
+        TransportChainGenerator transportChainGenerator, ExecutorService executorService) {
 
         this.transportDescriptionExtender = transportDescriptionExtender;
-        this.descriptionGenerator = descriptionGenerator;
+        this.transportChainGenerator = transportChainGenerator;
         this.executorService = executorService;
     }
 
@@ -46,7 +46,7 @@ public class TransportApiController {
 
         TransportTemplateDtoValidator.validate(template);
 
-        List<TransportDescriptionDto> descriptions = descriptionGenerator.from(template);
+        List<TransportDescriptionDto> descriptions = transportChainGenerator.from(template);
 
         return descriptions.stream().map(description ->
                         CompletableFuture.supplyAsync(() ->

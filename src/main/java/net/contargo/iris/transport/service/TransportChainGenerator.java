@@ -37,14 +37,15 @@ import static java.util.stream.Collectors.toSet;
  * @author  Ben Antony - antony@synyx.de
  * @author  Sandra Thieme - thieme@synyx.de
  */
-public class DescriptionGenerator {
+public class TransportChainGenerator {
 
     private static final List<ModeOfTransport> ALL_MAIN_RUN_MODE_OF_TRANSPORTS = asList(WATER, RAIL);
 
     private final TerminalService terminalService;
     private final MainRunConnectionService mainRunConnectionService;
 
-    public DescriptionGenerator(TerminalService terminalService, MainRunConnectionService mainRunConnectionService) {
+    public TransportChainGenerator(TerminalService terminalService,
+        MainRunConnectionService mainRunConnectionService) {
 
         this.terminalService = terminalService;
         this.mainRunConnectionService = mainRunConnectionService;
@@ -60,9 +61,9 @@ public class DescriptionGenerator {
      */
     public List<TransportDescriptionDto> from(TransportTemplateDto template) {
 
-        Set<String> seaports = template.transportDescription.stream()
-                .filter(DescriptionGenerator::containsSeaport)
-                .map(DescriptionGenerator::getSeaportUuid)
+        Set<String> seaports = template.transportChain.stream()
+                .filter(TransportChainGenerator::containsSeaport)
+                .map(TransportChainGenerator::getSeaportUuid)
                 .collect(toSet());
 
         Map<Terminal, List<MainRunConnection>> terminalConnections = terminalService.getAllActive()
@@ -87,18 +88,16 @@ public class DescriptionGenerator {
 
         Map<BigInteger, List<ModeOfTransport>> seaportMots = extractSeaportsWithModeOfTransports(connections);
 
-        template.transportDescription.stream()
-            .filter(s -> isMainRunSegment(s.fromSite.type, s.toSite.type))
-            .forEach(s -> {
-                String seaportUuid = getSeaportUuid(s);
+        template.transportChain.stream().filter(s -> isMainRunSegment(s.fromSite.type, s.toSite.type)).forEach(s -> {
+            String seaportUuid = getSeaportUuid(s);
 
-                List<ModeOfTransport> mots = seaportMots.getOrDefault(new BigInteger(seaportUuid), emptyList());
+            List<ModeOfTransport> mots = seaportMots.getOrDefault(new BigInteger(seaportUuid), emptyList());
 
-                List<TransportDescriptionDto> updatedDescriptions = augmentDescriptionsForEachModeOfTransport(mots,
-                        terminal, descriptions.get(), s);
+            List<TransportDescriptionDto> updatedDescriptions = augmentDescriptionsForEachModeOfTransport(mots,
+                    terminal, descriptions.get(), s);
 
-                descriptions.updateWith(updatedDescriptions);
-            });
+            descriptions.updateWith(updatedDescriptions);
+        });
 
         return descriptions.get();
     }
@@ -106,7 +105,7 @@ public class DescriptionGenerator {
 
     private static void editNonMainRunSegments(TransportDescriptionDto description, String terminalUuid) {
 
-        description.transportDescription.stream()
+        description.transportChain.stream()
             .filter(s -> !isMainRunSegment(s.fromSite.type, s.toSite.type))
             .forEach(s -> {
                 s.modeOfTransport = ROAD;
@@ -160,7 +159,7 @@ public class DescriptionGenerator {
         ModeOfTransport mot, TransportTemplateDto.TransportTemplateSegment segment) {
 
         TransportDescriptionDto descriptionDto = new TransportDescriptionDto(original);
-        descriptionDto.transportDescription.stream().filter(s -> isEqual(segment, s)).findFirst().ifPresent(s -> {
+        descriptionDto.transportChain.stream().filter(s -> isEqual(segment, s)).findFirst().ifPresent(s -> {
             if (s.fromSite.type == TERMINAL) {
                 s.fromSite.uuid = terminal.getUniqueId().toString();
             }
@@ -200,7 +199,7 @@ public class DescriptionGenerator {
             t -> mainRunConnectionService.getConnectionsForTerminal(t.getUniqueId())
                 .stream()
                 .filter(MainRunConnection::getEnabled)
-                .filter(DescriptionGenerator::matchingMot)
+                .filter(TransportChainGenerator::matchingMot)
                 .filter(matchingSeaports(seaports))
                 .collect(toList());
     }

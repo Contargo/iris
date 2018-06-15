@@ -105,17 +105,17 @@ public class TransportDescriptionExtenderUnitTest {
 
         TransportResponseDto result = sut.withRoutingInformation(description);
 
-        assertThat(result.transportDescription.get(0).duration, nullValue());
-        assertThat(result.transportDescription.get(0).distance, nullValue());
-        assertThat(result.transportDescription.get(0).tollDistance, nullValue());
+        assertThat(result.transportChain.get(0).duration, nullValue());
+        assertThat(result.transportChain.get(0).distance, nullValue());
+        assertThat(result.transportChain.get(0).tollDistance, nullValue());
 
-        assertThat(result.transportDescription.get(1).duration, is(300));
-        assertThat(result.transportDescription.get(1).distance, is(40));
-        assertThat(result.transportDescription.get(1).tollDistance, is(20));
+        assertThat(result.transportChain.get(1).duration, is(300));
+        assertThat(result.transportChain.get(1).distance, is(40));
+        assertThat(result.transportChain.get(1).tollDistance, is(20));
 
-        assertThat(result.transportDescription.get(2).duration, is(400));
-        assertThat(result.transportDescription.get(2).distance, is(45));
-        assertThat(result.transportDescription.get(2).tollDistance, is(25));
+        assertThat(result.transportChain.get(2).duration, is(400));
+        assertThat(result.transportChain.get(2).distance, is(45));
+        assertThat(result.transportChain.get(2).tollDistance, is(25));
     }
 
 
@@ -163,17 +163,17 @@ public class TransportDescriptionExtenderUnitTest {
 
         TransportResponseDto result = sut.withRoutingInformation(description);
 
-        assertThat(result.transportDescription.get(0).duration, nullValue());
-        assertThat(result.transportDescription.get(0).distance, nullValue());
-        assertThat(result.transportDescription.get(0).tollDistance, nullValue());
+        assertThat(result.transportChain.get(0).duration, nullValue());
+        assertThat(result.transportChain.get(0).distance, nullValue());
+        assertThat(result.transportChain.get(0).tollDistance, nullValue());
 
-        assertThat(result.transportDescription.get(1).duration, is(300));
-        assertThat(result.transportDescription.get(1).distance, is(50));
-        assertThat(result.transportDescription.get(1).tollDistance, is(32));
+        assertThat(result.transportChain.get(1).duration, is(300));
+        assertThat(result.transportChain.get(1).distance, is(50));
+        assertThat(result.transportChain.get(1).tollDistance, is(32));
 
-        assertThat(result.transportDescription.get(2).duration, is(400));
-        assertThat(result.transportDescription.get(2).distance, is(50));
-        assertThat(result.transportDescription.get(2).tollDistance, is(32));
+        assertThat(result.transportChain.get(2).duration, is(400));
+        assertThat(result.transportChain.get(2).distance, is(50));
+        assertThat(result.transportChain.get(2).tollDistance, is(32));
     }
 
 

@@ -8,5 +8,9 @@ jdk:
 before_script:
   - mysql -e 'create database iris;'
 
+cache:
+  directories:
+    - $HOME/.m2
+
 addons:
     mariadb: '10.0'

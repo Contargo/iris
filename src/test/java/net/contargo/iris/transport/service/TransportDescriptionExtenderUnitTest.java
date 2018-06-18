@@ -47,6 +47,7 @@ import static org.mockito.Mockito.when;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 
 
 /**
@@ -92,11 +93,11 @@ public class TransportDescriptionExtenderUnitTest {
         when(conversionServiceMock.convert(matchesSiteType(TERMINAL), any())).thenReturn(terminalGeoLocation);
         when(conversionServiceMock.convert(matchesSiteType(ADDRESS), any())).thenReturn(addressGeoLocation);
 
-        RouteResult terminalAddressDistances = new RouteResult(40, 20, 300, emptyList(), OK);
+        RouteResult terminalAddressDistances = new RouteResult(40, 20, 300, asList("geometries1", "geometries2"), OK);
         when(routeServiceMock.route(terminalGeoLocation, addressGeoLocation, ROAD)).thenReturn(
             terminalAddressDistances);
 
-        RouteResult addressTerminalDistances = new RouteResult(45, 25, 400, emptyList(), OK);
+        RouteResult addressTerminalDistances = new RouteResult(45, 25, 400, singletonList("geometries3"), OK);
         when(routeServiceMock.route(addressGeoLocation, terminalGeoLocation, ROAD)).thenReturn(
             addressTerminalDistances);
 
@@ -112,10 +113,13 @@ public class TransportDescriptionExtenderUnitTest {
         assertThat(result.transportChain.get(1).duration, is(300));
         assertThat(result.transportChain.get(1).distance, is(40));
         assertThat(result.transportChain.get(1).tollDistance, is(20));
+        assertThat(result.transportChain.get(1).geometries.get(0), is("geometries1"));
+        assertThat(result.transportChain.get(1).geometries.get(1), is("geometries2"));
 
         assertThat(result.transportChain.get(2).duration, is(400));
         assertThat(result.transportChain.get(2).distance, is(45));
         assertThat(result.transportChain.get(2).tollDistance, is(25));
+        assertThat(result.transportChain.get(2).geometries.get(0), is("geometries3"));
     }
 
 

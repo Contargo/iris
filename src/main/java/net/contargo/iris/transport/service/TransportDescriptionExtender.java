@@ -60,6 +60,7 @@ public class TransportDescriptionExtender {
                 s.distance = routeResult.getDistance();
                 s.tollDistance = routeResult.getToll();
                 s.duration = routeResult.getDuration();
+                s.geometries = routeResult.getGeometries();
 
                 applyRouteRevision(s);
             });

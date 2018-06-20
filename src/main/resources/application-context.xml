@@ -498,14 +498,24 @@
     </bean>
 
     <bean class="net.contargo.iris.transport.service.TransportDescriptionExtender">
-        <constructor-arg ref="routeService"/>
-        <constructor-arg ref="conversionService"/>
-        <constructor-arg ref="routeDataRevisionService"/>
+        <constructor-arg ref="transportDescriptionMainRunExtender"/>
+        <constructor-arg ref="descriptionNebenlaufExtender"/>
     </bean>
 
     <bean class="net.contargo.iris.transport.service.TransportChainGenerator" id="transportChainGenerator">
         <constructor-arg ref="terminalService"/>
         <constructor-arg ref="connectionService"/>
+    </bean>
+    
+    <bean class="net.contargo.iris.transport.service.TransportDescriptionMainRunExtender" id="transportDescriptionMainRunExtender">
+        <constructor-arg ref="connectionService"/>
+    </bean>
+
+    <bean class="net.contargo.iris.transport.service.TransportDescriptionNebenlaufExtender"
+          id="descriptionNebenlaufExtender">
+        <constructor-arg ref="routeService"/>
+        <constructor-arg ref="conversionService"/>
+        <constructor-arg ref="routeDataRevisionService"/>
     </bean>
 
 </beans>

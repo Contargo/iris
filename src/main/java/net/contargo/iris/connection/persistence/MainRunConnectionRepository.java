@@ -48,7 +48,8 @@ public interface MainRunConnectionRepository extends JpaRepository<MainRunConnec
 
 
     /**
-     * Finds all {@link MainRunConnection}s with the given {@link RouteType} and the specified {@link Seaport} property.
+     * Finds all {@link MainRunConnection}s with the given {@link RouteType} and the specified {@link Seaport}
+     * property.
      *
      * @param  seaportUid  the {@link net.contargo.iris.connection.MainRunConnection}'s {@link Seaport}'s unique id
      * @param  routeType  the {@link net.contargo.iris.connection.MainRunConnection}'s {@link RouteType}
@@ -132,4 +133,13 @@ public interface MainRunConnectionRepository extends JpaRepository<MainRunConnec
 
     @Query("SELECT c FROM MainRunConnection c WHERE c.terminal.uniqueId = ?1")
     List<MainRunConnection> findConnectionsByTerminalUniqueId(BigInteger terminalUID);
+
+
+    @Query(
+        "SELECT connection FROM MainRunConnection connection WHERE connection.terminal.uniqueId = :terminalUid AND "
+        + "connection.seaport.uniqueId = :seaportUid AND connection.routeType = :routeType"
+    )
+    MainRunConnection findConnectionByTerminalUidAndSeaportUidAndType(@Param("terminalUid") BigInteger terminalUid,
+        @Param("seaportUid") BigInteger seaportUid,
+        @Param("routeType") RouteType routeType);
 }

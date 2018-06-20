@@ -129,6 +129,17 @@ public class MainRunConnectionServiceImpl implements MainRunConnectionService {
     }
 
 
+    @Override
+    @Transactional(readOnly = true)
+    @Cacheable("terminalSeaportMainRunConnections")
+    public MainRunConnection getConnectionByTerminalUidAndSeaportUidAndType(BigInteger terminalUid,
+        BigInteger seaportUid, RouteType routeType) {
+
+        return mainRunConnectionRepository.findConnectionByTerminalUidAndSeaportUidAndType(terminalUid, seaportUid,
+                routeType);
+    }
+
+
     private boolean combinationExists(MainRunConnection connection) {
 
         boolean exists;

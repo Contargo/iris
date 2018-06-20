@@ -21,6 +21,8 @@ import java.math.BigInteger;
 
 import java.util.List;
 
+import static net.contargo.iris.route.RouteType.RAIL;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import static org.hamcrest.Matchers.contains;
@@ -64,8 +66,8 @@ public class MainRunConnectionServiceImplUnitTest {
     @Before
     public void setUp() {
 
-        sut = new MainRunConnectionServiceImpl(mainRunConnectionRepositoryMock, seaportServiceMock, terminalServiceMock,
-                bargeRailConnectionFinderServiceMock);
+        sut = new MainRunConnectionServiceImpl(mainRunConnectionRepositoryMock, seaportServiceMock,
+                terminalServiceMock, bargeRailConnectionFinderServiceMock);
 
         con1 = new MainRunConnection();
         con2 = new MainRunConnection();
@@ -294,8 +296,25 @@ public class MainRunConnectionServiceImplUnitTest {
         MainRunConnection c1 = new MainRunConnection();
         MainRunConnection c2 = new MainRunConnection();
 
-        when(mainRunConnectionRepositoryMock.findConnectionsByTerminalUniqueId(terminalUID)).thenReturn(asList(c1, c2));
+        when(mainRunConnectionRepositoryMock.findConnectionsByTerminalUniqueId(terminalUID)).thenReturn(asList(c1,
+                c2));
 
         assertThat(sut.getConnectionsForTerminal(terminalUID), contains(c1, c2));
+    }
+
+
+    @Test
+    public void getConnectionByTerminalUidAndSeaportUidAndType() {
+
+        MainRunConnection connection = new MainRunConnection();
+        connection.setId(42L);
+
+        when(mainRunConnectionRepositoryMock.findConnectionByTerminalUidAndSeaportUidAndType(
+                    new BigInteger("123456789"), new BigInteger("111"), RAIL)).thenReturn(connection);
+
+        MainRunConnection result = sut.getConnectionByTerminalUidAndSeaportUidAndType(new BigInteger("123456789"),
+                new BigInteger("111"), RAIL);
+
+        assertThat(result.getId(), is(42L));
     }
 }

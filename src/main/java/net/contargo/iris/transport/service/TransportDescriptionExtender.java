@@ -5,9 +5,9 @@ import net.contargo.iris.transport.api.TransportResponseDto;
 
 import static net.contargo.iris.co2.Co2Calculator.handling;
 import static net.contargo.iris.transport.api.ModeOfTransport.ROAD;
-import static net.contargo.iris.transport.api.SiteType.ADDRESS;
-import static net.contargo.iris.transport.api.SiteType.SEAPORT;
-import static net.contargo.iris.transport.api.SiteType.TERMINAL;
+import static net.contargo.iris.transport.api.StopType.ADDRESS;
+import static net.contargo.iris.transport.api.StopType.SEAPORT;
+import static net.contargo.iris.transport.api.StopType.TERMINAL;
 
 
 /**
@@ -46,9 +46,9 @@ public class TransportDescriptionExtender {
                 mainRunExtender.with(s);
             }
 
-            boolean toSiteIsTerminal = s.toSite.type == TERMINAL;
-            boolean fromSiteIsTerminal = s.fromSite.type == TERMINAL;
-            s.co2 = s.co2.add(handling(fromSiteIsTerminal, toSiteIsTerminal));
+            boolean toIsTerminal = s.to.type == TERMINAL;
+            boolean fromIsTerminal = s.from.type == TERMINAL;
+            s.co2 = s.co2.add(handling(fromIsTerminal, toIsTerminal));
         });
 
         return result;
@@ -57,15 +57,14 @@ public class TransportDescriptionExtender {
 
     private static boolean isNebenlauf(TransportResponseDto.TransportResponseSegment segment) {
 
-        return ((segment.fromSite.type == TERMINAL && segment.toSite.type == ADDRESS)
-                || (segment.fromSite.type == ADDRESS && segment.toSite.type == TERMINAL))
-            && segment.modeOfTransport == ROAD;
+        return ((segment.from.type == TERMINAL && segment.to.type == ADDRESS)
+                || (segment.from.type == ADDRESS && segment.to.type == TERMINAL)) && segment.modeOfTransport == ROAD;
     }
 
 
     private static boolean isMainRun(TransportResponseDto.TransportResponseSegment segment) {
 
-        return (segment.fromSite.type == TERMINAL && segment.toSite.type == SEAPORT)
-            || (segment.fromSite.type == SEAPORT && segment.toSite.type == TERMINAL);
+        return (segment.from.type == TERMINAL && segment.to.type == SEAPORT)
+            || (segment.from.type == SEAPORT && segment.to.type == TERMINAL);
     }
 }

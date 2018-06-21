@@ -5,7 +5,7 @@ import net.contargo.iris.transport.api.TransportTemplateDto.TransportTemplateSeg
 import org.junit.Test;
 
 import static net.contargo.iris.transport.api.ModeOfTransport.ROAD;
-import static net.contargo.iris.transport.api.SiteType.TERMINAL;
+import static net.contargo.iris.transport.api.StopType.TERMINAL;
 
 import static org.junit.Assert.fail;
 
@@ -21,8 +21,8 @@ public class TransportTemplateDtoValidatorUnitTest {
     @Test
     public void validationSucceeds() {
 
-        TransportSite from = new TransportSite(TERMINAL, null, null, null);
-        TransportSite to = new TransportSite(TERMINAL, null, null, null);
+        TransportStop from = new TransportStop(TERMINAL, null, null, null);
+        TransportStop to = new TransportStop(TERMINAL, null, null, null);
 
         TransportTemplateSegment segment = new TransportTemplateSegment(from, to, null, null, null);
         TransportTemplateDtoValidator.validate(new TransportTemplateDto(singletonList(segment)));
@@ -32,14 +32,14 @@ public class TransportTemplateDtoValidatorUnitTest {
     @Test
     public void validationFailsTerminalSpecifiedOnTransportTemplate() {
 
-        TransportSite siteWithoutTerminal = new TransportSite(TERMINAL, null, null, null);
-        TransportSite siteWithTerminal = new TransportSite(TERMINAL, "uuid", null, null);
+        TransportStop stopWithoutTerminal = new TransportStop(TERMINAL, null, null, null);
+        TransportStop stopWithTerminal = new TransportStop(TERMINAL, "uuid", null, null);
         TransportTemplateSegment segment;
 
-        segment = new TransportTemplateSegment(siteWithoutTerminal, siteWithTerminal, null, null, null);
+        segment = new TransportTemplateSegment(stopWithoutTerminal, stopWithTerminal, null, null, null);
         assertIllegalArgumentExceptionThrown(segment);
 
-        segment = new TransportTemplateSegment(siteWithTerminal, siteWithoutTerminal, null, null, null);
+        segment = new TransportTemplateSegment(stopWithTerminal, stopWithoutTerminal, null, null, null);
         assertIllegalArgumentExceptionThrown(segment);
     }
 
@@ -47,8 +47,8 @@ public class TransportTemplateDtoValidatorUnitTest {
     @Test
     public void validationFailsMoTSpecified() {
 
-        TransportSite from = new TransportSite(TERMINAL, null, null, null);
-        TransportSite to = new TransportSite(TERMINAL, null, null, null);
+        TransportStop from = new TransportStop(TERMINAL, null, null, null);
+        TransportStop to = new TransportStop(TERMINAL, null, null, null);
 
         TransportTemplateSegment segment = new TransportTemplateSegment(from, to, null, null, ROAD);
         assertIllegalArgumentExceptionThrown(segment);

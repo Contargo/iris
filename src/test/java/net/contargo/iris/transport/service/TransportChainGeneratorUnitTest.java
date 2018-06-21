@@ -9,7 +9,7 @@ import net.contargo.iris.terminal.Terminal;
 import net.contargo.iris.terminal.service.TerminalService;
 import net.contargo.iris.transport.api.ModeOfTransport;
 import net.contargo.iris.transport.api.TransportDescriptionDto;
-import net.contargo.iris.transport.api.TransportSite;
+import net.contargo.iris.transport.api.TransportStop;
 import net.contargo.iris.transport.api.TransportTemplateDto;
 import net.contargo.iris.transport.api.TransportTemplateDto.TransportTemplateSegment;
 
@@ -31,9 +31,9 @@ import static net.contargo.iris.container.ContainerState.EMPTY;
 import static net.contargo.iris.container.ContainerState.FULL;
 import static net.contargo.iris.route.RouteType.BARGE;
 import static net.contargo.iris.route.RouteType.RAIL;
-import static net.contargo.iris.transport.api.SiteType.ADDRESS;
-import static net.contargo.iris.transport.api.SiteType.SEAPORT;
-import static net.contargo.iris.transport.api.SiteType.TERMINAL;
+import static net.contargo.iris.transport.api.StopType.ADDRESS;
+import static net.contargo.iris.transport.api.StopType.SEAPORT;
+import static net.contargo.iris.transport.api.StopType.TERMINAL;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -86,12 +86,12 @@ public class TransportChainGeneratorUnitTest {
         when(connectionServiceMock.getConnectionsForTerminal(new BigInteger("987654321"))).thenReturn(singletonList(
                 antwerpMaluWater));
 
-        TransportTemplateSegment antwerpTerminal = new TransportTemplateSegment(new TransportSite(SEAPORT, "111", null,
-                    null), new TransportSite(TERMINAL, null, null, null), FULL, true, null);
-        TransportTemplateSegment terminalAddress = new TransportTemplateSegment(new TransportSite(TERMINAL, null, null,
-                    null), new TransportSite(ADDRESS, null, TEN, ONE), FULL, true, null);
-        TransportTemplateSegment addressTerminal = new TransportTemplateSegment(new TransportSite(ADDRESS, null, TEN,
-                    ONE), new TransportSite(TERMINAL, null, null, null), EMPTY, true, null);
+        TransportTemplateSegment antwerpTerminal = new TransportTemplateSegment(new TransportStop(SEAPORT, "111", null,
+                    null), new TransportStop(TERMINAL, null, null, null), FULL, true, null);
+        TransportTemplateSegment terminalAddress = new TransportTemplateSegment(new TransportStop(TERMINAL, null, null,
+                    null), new TransportStop(ADDRESS, null, TEN, ONE), FULL, true, null);
+        TransportTemplateSegment addressTerminal = new TransportTemplateSegment(new TransportStop(ADDRESS, null, TEN,
+                    ONE), new TransportStop(TERMINAL, null, null, null), EMPTY, true, null);
         TransportTemplateDto template = new TransportTemplateDto(asList(antwerpTerminal, terminalAddress,
                     addressTerminal));
 
@@ -100,24 +100,24 @@ public class TransportChainGeneratorUnitTest {
         assertThat(descriptions, hasSize(3));
 
         assertThat(descriptions.get(0).transportChain.get(0).modeOfTransport, is(ModeOfTransport.WATER));
-        assertThat(descriptions.get(0).transportChain.get(0).toSite.uuid, is("1234565789"));
-        assertThat(descriptions.get(0).transportChain.get(1).fromSite.uuid, is("1234565789"));
+        assertThat(descriptions.get(0).transportChain.get(0).to.uuid, is("1234565789"));
+        assertThat(descriptions.get(0).transportChain.get(1).from.uuid, is("1234565789"));
         assertThat(descriptions.get(0).transportChain.get(1).modeOfTransport, is(ModeOfTransport.ROAD));
-        assertThat(descriptions.get(0).transportChain.get(2).toSite.uuid, is("1234565789"));
+        assertThat(descriptions.get(0).transportChain.get(2).to.uuid, is("1234565789"));
         assertThat(descriptions.get(0).transportChain.get(2).modeOfTransport, is(ModeOfTransport.ROAD));
 
         assertThat(descriptions.get(1).transportChain.get(0).modeOfTransport, is(ModeOfTransport.RAIL));
-        assertThat(descriptions.get(1).transportChain.get(0).toSite.uuid, is("1234565789"));
-        assertThat(descriptions.get(1).transportChain.get(1).fromSite.uuid, is("1234565789"));
+        assertThat(descriptions.get(1).transportChain.get(0).to.uuid, is("1234565789"));
+        assertThat(descriptions.get(1).transportChain.get(1).from.uuid, is("1234565789"));
         assertThat(descriptions.get(1).transportChain.get(1).modeOfTransport, is(ModeOfTransport.ROAD));
-        assertThat(descriptions.get(1).transportChain.get(2).toSite.uuid, is("1234565789"));
+        assertThat(descriptions.get(1).transportChain.get(2).to.uuid, is("1234565789"));
         assertThat(descriptions.get(1).transportChain.get(2).modeOfTransport, is(ModeOfTransport.ROAD));
 
         assertThat(descriptions.get(2).transportChain.get(0).modeOfTransport, is(ModeOfTransport.WATER));
-        assertThat(descriptions.get(2).transportChain.get(0).toSite.uuid, is("987654321"));
-        assertThat(descriptions.get(2).transportChain.get(1).fromSite.uuid, is("987654321"));
+        assertThat(descriptions.get(2).transportChain.get(0).to.uuid, is("987654321"));
+        assertThat(descriptions.get(2).transportChain.get(1).from.uuid, is("987654321"));
         assertThat(descriptions.get(2).transportChain.get(1).modeOfTransport, is(ModeOfTransport.ROAD));
-        assertThat(descriptions.get(2).transportChain.get(2).toSite.uuid, is("987654321"));
+        assertThat(descriptions.get(2).transportChain.get(2).to.uuid, is("987654321"));
         assertThat(descriptions.get(2).transportChain.get(2).modeOfTransport, is(ModeOfTransport.ROAD));
     }
 
@@ -143,13 +143,13 @@ public class TransportChainGeneratorUnitTest {
         when(connectionServiceMock.getConnectionsForTerminal(new BigInteger("987654321"))).thenReturn(singletonList(
                 antwerpMaluWater));
 
-        TransportTemplateSegment terminalAddress = new TransportTemplateSegment(new TransportSite(TERMINAL, null, null,
-                    null), new TransportSite(ADDRESS, null, TEN, ONE), EMPTY, true, null);
-        TransportTemplateSegment addressTerminal = new TransportTemplateSegment(new TransportSite(ADDRESS, null, TEN,
-                    ONE), new TransportSite(TERMINAL, null, null, null), FULL, true, null);
+        TransportTemplateSegment terminalAddress = new TransportTemplateSegment(new TransportStop(TERMINAL, null, null,
+                    null), new TransportStop(ADDRESS, null, TEN, ONE), EMPTY, true, null);
+        TransportTemplateSegment addressTerminal = new TransportTemplateSegment(new TransportStop(ADDRESS, null, TEN,
+                    ONE), new TransportStop(TERMINAL, null, null, null), FULL, true, null);
 
-        TransportTemplateSegment terminalAntwerp = new TransportTemplateSegment(new TransportSite(TERMINAL, null, null,
-                    null), new TransportSite(SEAPORT, "111", null, null), FULL, true, null);
+        TransportTemplateSegment terminalAntwerp = new TransportTemplateSegment(new TransportStop(TERMINAL, null, null,
+                    null), new TransportStop(SEAPORT, "111", null, null), FULL, true, null);
 
         TransportTemplateDto template = new TransportTemplateDto(asList(terminalAddress, addressTerminal,
                     terminalAntwerp));
@@ -159,24 +159,24 @@ public class TransportChainGeneratorUnitTest {
         assertThat(descriptions, hasSize(3));
 
         assertThat(descriptions.get(0).transportChain.get(0).modeOfTransport, is(ModeOfTransport.ROAD));
-        assertThat(descriptions.get(0).transportChain.get(0).fromSite.uuid, is("1234565789"));
-        assertThat(descriptions.get(0).transportChain.get(1).toSite.uuid, is("1234565789"));
+        assertThat(descriptions.get(0).transportChain.get(0).from.uuid, is("1234565789"));
+        assertThat(descriptions.get(0).transportChain.get(1).to.uuid, is("1234565789"));
         assertThat(descriptions.get(0).transportChain.get(1).modeOfTransport, is(ModeOfTransport.ROAD));
-        assertThat(descriptions.get(0).transportChain.get(2).fromSite.uuid, is("1234565789"));
+        assertThat(descriptions.get(0).transportChain.get(2).from.uuid, is("1234565789"));
         assertThat(descriptions.get(0).transportChain.get(2).modeOfTransport, is(ModeOfTransport.WATER));
 
         assertThat(descriptions.get(1).transportChain.get(0).modeOfTransport, is(ModeOfTransport.ROAD));
-        assertThat(descriptions.get(1).transportChain.get(0).fromSite.uuid, is("1234565789"));
-        assertThat(descriptions.get(1).transportChain.get(1).toSite.uuid, is("1234565789"));
+        assertThat(descriptions.get(1).transportChain.get(0).from.uuid, is("1234565789"));
+        assertThat(descriptions.get(1).transportChain.get(1).to.uuid, is("1234565789"));
         assertThat(descriptions.get(1).transportChain.get(1).modeOfTransport, is(ModeOfTransport.ROAD));
-        assertThat(descriptions.get(1).transportChain.get(2).fromSite.uuid, is("1234565789"));
+        assertThat(descriptions.get(1).transportChain.get(2).from.uuid, is("1234565789"));
         assertThat(descriptions.get(1).transportChain.get(2).modeOfTransport, is(ModeOfTransport.RAIL));
 
         assertThat(descriptions.get(2).transportChain.get(0).modeOfTransport, is(ModeOfTransport.ROAD));
-        assertThat(descriptions.get(2).transportChain.get(0).fromSite.uuid, is("987654321"));
-        assertThat(descriptions.get(2).transportChain.get(1).toSite.uuid, is("987654321"));
+        assertThat(descriptions.get(2).transportChain.get(0).from.uuid, is("987654321"));
+        assertThat(descriptions.get(2).transportChain.get(1).to.uuid, is("987654321"));
         assertThat(descriptions.get(2).transportChain.get(1).modeOfTransport, is(ModeOfTransport.ROAD));
-        assertThat(descriptions.get(2).transportChain.get(2).fromSite.uuid, is("987654321"));
+        assertThat(descriptions.get(2).transportChain.get(2).from.uuid, is("987654321"));
         assertThat(descriptions.get(2).transportChain.get(2).modeOfTransport, is(ModeOfTransport.WATER));
     }
 
@@ -199,14 +199,14 @@ public class TransportChainGeneratorUnitTest {
         when(connectionServiceMock.getConnectionsForTerminal(new BigInteger("1234565789"))).thenReturn(asList(
                 antwerpWoerthWater, antwerpWoerthRail, hamburgWoerthRail));
 
-        TransportTemplateSegment hamburgTerminal = new TransportTemplateSegment(new TransportSite(SEAPORT, "112", null,
-                    null), new TransportSite(TERMINAL, null, null, null), EMPTY, true, null);
-        TransportTemplateSegment terminalAddress = new TransportTemplateSegment(new TransportSite(TERMINAL, null, null,
-                    null), new TransportSite(ADDRESS, null, TEN, ONE), EMPTY, true, null);
-        TransportTemplateSegment addressTerminal = new TransportTemplateSegment(new TransportSite(ADDRESS, null, TEN,
-                    ONE), new TransportSite(TERMINAL, null, null, null), FULL, true, null);
-        TransportTemplateSegment terminalAntwerp = new TransportTemplateSegment(new TransportSite(TERMINAL, null, null,
-                    null), new TransportSite(SEAPORT, "111", null, null), FULL, true, null);
+        TransportTemplateSegment hamburgTerminal = new TransportTemplateSegment(new TransportStop(SEAPORT, "112", null,
+                    null), new TransportStop(TERMINAL, null, null, null), EMPTY, true, null);
+        TransportTemplateSegment terminalAddress = new TransportTemplateSegment(new TransportStop(TERMINAL, null, null,
+                    null), new TransportStop(ADDRESS, null, TEN, ONE), EMPTY, true, null);
+        TransportTemplateSegment addressTerminal = new TransportTemplateSegment(new TransportStop(ADDRESS, null, TEN,
+                    ONE), new TransportStop(TERMINAL, null, null, null), FULL, true, null);
+        TransportTemplateSegment terminalAntwerp = new TransportTemplateSegment(new TransportStop(TERMINAL, null, null,
+                    null), new TransportStop(SEAPORT, "111", null, null), FULL, true, null);
 
         TransportTemplateDto template = new TransportTemplateDto(asList(hamburgTerminal, terminalAddress,
                     addressTerminal, terminalAntwerp));
@@ -216,21 +216,21 @@ public class TransportChainGeneratorUnitTest {
         assertThat(descriptions, hasSize(2));
 
         assertThat(descriptions.get(0).transportChain.get(0).modeOfTransport, is(ModeOfTransport.RAIL));
-        assertThat(descriptions.get(0).transportChain.get(0).toSite.uuid, is("1234565789"));
+        assertThat(descriptions.get(0).transportChain.get(0).to.uuid, is("1234565789"));
         assertThat(descriptions.get(0).transportChain.get(1).modeOfTransport, is(ModeOfTransport.ROAD));
-        assertThat(descriptions.get(0).transportChain.get(1).fromSite.uuid, is("1234565789"));
-        assertThat(descriptions.get(0).transportChain.get(2).toSite.uuid, is("1234565789"));
+        assertThat(descriptions.get(0).transportChain.get(1).from.uuid, is("1234565789"));
+        assertThat(descriptions.get(0).transportChain.get(2).to.uuid, is("1234565789"));
         assertThat(descriptions.get(0).transportChain.get(2).modeOfTransport, is(ModeOfTransport.ROAD));
-        assertThat(descriptions.get(0).transportChain.get(3).fromSite.uuid, is("1234565789"));
+        assertThat(descriptions.get(0).transportChain.get(3).from.uuid, is("1234565789"));
         assertThat(descriptions.get(0).transportChain.get(3).modeOfTransport, is(ModeOfTransport.WATER));
 
         assertThat(descriptions.get(1).transportChain.get(0).modeOfTransport, is(ModeOfTransport.RAIL));
-        assertThat(descriptions.get(1).transportChain.get(0).toSite.uuid, is("1234565789"));
+        assertThat(descriptions.get(1).transportChain.get(0).to.uuid, is("1234565789"));
         assertThat(descriptions.get(1).transportChain.get(1).modeOfTransport, is(ModeOfTransport.ROAD));
-        assertThat(descriptions.get(1).transportChain.get(1).fromSite.uuid, is("1234565789"));
-        assertThat(descriptions.get(1).transportChain.get(2).toSite.uuid, is("1234565789"));
+        assertThat(descriptions.get(1).transportChain.get(1).from.uuid, is("1234565789"));
+        assertThat(descriptions.get(1).transportChain.get(2).to.uuid, is("1234565789"));
         assertThat(descriptions.get(1).transportChain.get(2).modeOfTransport, is(ModeOfTransport.ROAD));
-        assertThat(descriptions.get(1).transportChain.get(3).fromSite.uuid, is("1234565789"));
+        assertThat(descriptions.get(1).transportChain.get(3).from.uuid, is("1234565789"));
         assertThat(descriptions.get(1).transportChain.get(3).modeOfTransport, is(ModeOfTransport.RAIL));
     }
 
@@ -256,14 +256,14 @@ public class TransportChainGeneratorUnitTest {
         when(connectionServiceMock.getConnectionsForTerminal(new BigInteger("987654321"))).thenReturn(singletonList(
                 antwerpMaluWater));
 
-        TransportTemplateSegment antwerpTerminal = new TransportTemplateSegment(new TransportSite(SEAPORT, "111", null,
-                    null), new TransportSite(TERMINAL, null, null, null), EMPTY, true, null);
-        TransportTemplateSegment terminalAddress = new TransportTemplateSegment(new TransportSite(TERMINAL, null, null,
-                    null), new TransportSite(ADDRESS, null, TEN, ONE), EMPTY, true, null);
-        TransportTemplateSegment addressTerminal = new TransportTemplateSegment(new TransportSite(ADDRESS, null, TEN,
-                    ONE), new TransportSite(TERMINAL, null, null, null), FULL, true, null);
-        TransportTemplateSegment terminalAntwerp = new TransportTemplateSegment(new TransportSite(TERMINAL, null, null,
-                    null), new TransportSite(SEAPORT, "111", null, null), FULL, true, null);
+        TransportTemplateSegment antwerpTerminal = new TransportTemplateSegment(new TransportStop(SEAPORT, "111", null,
+                    null), new TransportStop(TERMINAL, null, null, null), EMPTY, true, null);
+        TransportTemplateSegment terminalAddress = new TransportTemplateSegment(new TransportStop(TERMINAL, null, null,
+                    null), new TransportStop(ADDRESS, null, TEN, ONE), EMPTY, true, null);
+        TransportTemplateSegment addressTerminal = new TransportTemplateSegment(new TransportStop(ADDRESS, null, TEN,
+                    ONE), new TransportStop(TERMINAL, null, null, null), FULL, true, null);
+        TransportTemplateSegment terminalAntwerp = new TransportTemplateSegment(new TransportStop(TERMINAL, null, null,
+                    null), new TransportStop(SEAPORT, "111", null, null), FULL, true, null);
 
         TransportTemplateDto template = new TransportTemplateDto(asList(antwerpTerminal, terminalAddress,
                     addressTerminal, terminalAntwerp));
@@ -273,48 +273,48 @@ public class TransportChainGeneratorUnitTest {
         assertThat(descriptions, hasSize(5));
 
         assertThat(descriptions.get(0).transportChain.get(0).modeOfTransport, is(ModeOfTransport.WATER));
-        assertThat(descriptions.get(0).transportChain.get(0).toSite.uuid, is("1234565789"));
+        assertThat(descriptions.get(0).transportChain.get(0).to.uuid, is("1234565789"));
         assertThat(descriptions.get(0).transportChain.get(1).modeOfTransport, is(ModeOfTransport.ROAD));
-        assertThat(descriptions.get(0).transportChain.get(1).fromSite.uuid, is("1234565789"));
-        assertThat(descriptions.get(0).transportChain.get(2).toSite.uuid, is("1234565789"));
+        assertThat(descriptions.get(0).transportChain.get(1).from.uuid, is("1234565789"));
+        assertThat(descriptions.get(0).transportChain.get(2).to.uuid, is("1234565789"));
         assertThat(descriptions.get(0).transportChain.get(2).modeOfTransport, is(ModeOfTransport.ROAD));
-        assertThat(descriptions.get(0).transportChain.get(3).fromSite.uuid, is("1234565789"));
+        assertThat(descriptions.get(0).transportChain.get(3).from.uuid, is("1234565789"));
         assertThat(descriptions.get(0).transportChain.get(3).modeOfTransport, is(ModeOfTransport.WATER));
 
         assertThat(descriptions.get(1).transportChain.get(0).modeOfTransport, is(ModeOfTransport.RAIL));
-        assertThat(descriptions.get(1).transportChain.get(0).toSite.uuid, is("1234565789"));
+        assertThat(descriptions.get(1).transportChain.get(0).to.uuid, is("1234565789"));
         assertThat(descriptions.get(1).transportChain.get(1).modeOfTransport, is(ModeOfTransport.ROAD));
-        assertThat(descriptions.get(1).transportChain.get(1).fromSite.uuid, is("1234565789"));
-        assertThat(descriptions.get(1).transportChain.get(2).toSite.uuid, is("1234565789"));
+        assertThat(descriptions.get(1).transportChain.get(1).from.uuid, is("1234565789"));
+        assertThat(descriptions.get(1).transportChain.get(2).to.uuid, is("1234565789"));
         assertThat(descriptions.get(1).transportChain.get(2).modeOfTransport, is(ModeOfTransport.ROAD));
-        assertThat(descriptions.get(1).transportChain.get(3).fromSite.uuid, is("1234565789"));
+        assertThat(descriptions.get(1).transportChain.get(3).from.uuid, is("1234565789"));
         assertThat(descriptions.get(1).transportChain.get(3).modeOfTransport, is(ModeOfTransport.WATER));
 
         assertThat(descriptions.get(2).transportChain.get(0).modeOfTransport, is(ModeOfTransport.WATER));
-        assertThat(descriptions.get(2).transportChain.get(0).toSite.uuid, is("1234565789"));
+        assertThat(descriptions.get(2).transportChain.get(0).to.uuid, is("1234565789"));
         assertThat(descriptions.get(2).transportChain.get(1).modeOfTransport, is(ModeOfTransport.ROAD));
-        assertThat(descriptions.get(2).transportChain.get(1).fromSite.uuid, is("1234565789"));
-        assertThat(descriptions.get(2).transportChain.get(2).toSite.uuid, is("1234565789"));
+        assertThat(descriptions.get(2).transportChain.get(1).from.uuid, is("1234565789"));
+        assertThat(descriptions.get(2).transportChain.get(2).to.uuid, is("1234565789"));
         assertThat(descriptions.get(2).transportChain.get(2).modeOfTransport, is(ModeOfTransport.ROAD));
-        assertThat(descriptions.get(2).transportChain.get(3).fromSite.uuid, is("1234565789"));
+        assertThat(descriptions.get(2).transportChain.get(3).from.uuid, is("1234565789"));
         assertThat(descriptions.get(2).transportChain.get(3).modeOfTransport, is(ModeOfTransport.RAIL));
 
         assertThat(descriptions.get(3).transportChain.get(0).modeOfTransport, is(ModeOfTransport.RAIL));
-        assertThat(descriptions.get(3).transportChain.get(0).toSite.uuid, is("1234565789"));
+        assertThat(descriptions.get(3).transportChain.get(0).to.uuid, is("1234565789"));
         assertThat(descriptions.get(3).transportChain.get(1).modeOfTransport, is(ModeOfTransport.ROAD));
-        assertThat(descriptions.get(3).transportChain.get(1).fromSite.uuid, is("1234565789"));
-        assertThat(descriptions.get(3).transportChain.get(2).toSite.uuid, is("1234565789"));
+        assertThat(descriptions.get(3).transportChain.get(1).from.uuid, is("1234565789"));
+        assertThat(descriptions.get(3).transportChain.get(2).to.uuid, is("1234565789"));
         assertThat(descriptions.get(3).transportChain.get(2).modeOfTransport, is(ModeOfTransport.ROAD));
-        assertThat(descriptions.get(3).transportChain.get(3).fromSite.uuid, is("1234565789"));
+        assertThat(descriptions.get(3).transportChain.get(3).from.uuid, is("1234565789"));
         assertThat(descriptions.get(3).transportChain.get(3).modeOfTransport, is(ModeOfTransport.RAIL));
 
         assertThat(descriptions.get(4).transportChain.get(0).modeOfTransport, is(ModeOfTransport.WATER));
-        assertThat(descriptions.get(4).transportChain.get(0).toSite.uuid, is("987654321"));
+        assertThat(descriptions.get(4).transportChain.get(0).to.uuid, is("987654321"));
         assertThat(descriptions.get(4).transportChain.get(1).modeOfTransport, is(ModeOfTransport.ROAD));
-        assertThat(descriptions.get(4).transportChain.get(1).fromSite.uuid, is("987654321"));
-        assertThat(descriptions.get(4).transportChain.get(2).toSite.uuid, is("987654321"));
+        assertThat(descriptions.get(4).transportChain.get(1).from.uuid, is("987654321"));
+        assertThat(descriptions.get(4).transportChain.get(2).to.uuid, is("987654321"));
         assertThat(descriptions.get(4).transportChain.get(2).modeOfTransport, is(ModeOfTransport.ROAD));
-        assertThat(descriptions.get(4).transportChain.get(3).fromSite.uuid, is("987654321"));
+        assertThat(descriptions.get(4).transportChain.get(3).from.uuid, is("987654321"));
         assertThat(descriptions.get(4).transportChain.get(3).modeOfTransport, is(ModeOfTransport.WATER));
     }
 

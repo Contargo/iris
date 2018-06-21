@@ -3,10 +3,10 @@ package net.contargo.iris.transport.service;
 import net.contargo.iris.GeoLocation;
 import net.contargo.iris.routedatarevision.RouteDataRevision;
 import net.contargo.iris.routedatarevision.service.RouteDataRevisionService;
-import net.contargo.iris.transport.api.SiteType;
+import net.contargo.iris.transport.api.StopType;
 import net.contargo.iris.transport.api.TransportDescriptionDto;
 import net.contargo.iris.transport.api.TransportResponseDto;
-import net.contargo.iris.transport.api.TransportSite;
+import net.contargo.iris.transport.api.TransportStop;
 
 import org.junit.Test;
 
@@ -26,8 +26,8 @@ import java.math.BigInteger;
 import java.util.Optional;
 
 import static net.contargo.iris.transport.api.ModeOfTransport.ROAD;
-import static net.contargo.iris.transport.api.SiteType.ADDRESS;
-import static net.contargo.iris.transport.api.SiteType.TERMINAL;
+import static net.contargo.iris.transport.api.StopType.ADDRESS;
+import static net.contargo.iris.transport.api.StopType.TERMINAL;
 import static net.contargo.iris.transport.service.RouteStatus.OK;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -65,10 +65,10 @@ public class TransportDescriptionNebenlaufExtenderUnitTest {
     @Test
     public void withoutRouteRevision() {
 
-        TransportSite terminal = new TransportSite(TERMINAL, "111", null, null);
+        TransportStop terminal = new TransportStop(TERMINAL, "111", null, null);
         GeoLocation terminalGeoLocation = new GeoLocation(new BigDecimal("42.42"), new BigDecimal("8.42"));
 
-        TransportSite address = new TransportSite(ADDRESS, null, new BigDecimal("49.23123"), new BigDecimal("8.1233"));
+        TransportStop address = new TransportStop(ADDRESS, null, new BigDecimal("49.23123"), new BigDecimal("8.1233"));
         GeoLocation addressGeoLocation = new GeoLocation(new BigDecimal("49.23123"), new BigDecimal("8.1233"));
 
         TransportDescriptionDto.TransportDescriptionSegment descriptionSegment =
@@ -77,8 +77,8 @@ public class TransportDescriptionNebenlaufExtenderUnitTest {
         TransportResponseDto.TransportResponseSegment segment = new TransportResponseDto.TransportResponseSegment(
                 descriptionSegment);
 
-        when(conversionServiceMock.convert(matchesSiteType(TERMINAL), any())).thenReturn(terminalGeoLocation);
-        when(conversionServiceMock.convert(matchesSiteType(ADDRESS), any())).thenReturn(addressGeoLocation);
+        when(conversionServiceMock.convert(matchesStopType(TERMINAL), any())).thenReturn(terminalGeoLocation);
+        when(conversionServiceMock.convert(matchesStopType(ADDRESS), any())).thenReturn(addressGeoLocation);
 
         RouteResult routeResult = new RouteResult(40, 20, 300, asList("geometries1", "geometries2"), OK);
         when(routeServiceMock.route(terminalGeoLocation, addressGeoLocation, ROAD)).thenReturn(routeResult);
@@ -99,10 +99,10 @@ public class TransportDescriptionNebenlaufExtenderUnitTest {
     @Test
     public void withRouteRevision() {
 
-        TransportSite terminal = new TransportSite(TERMINAL, "111", null, null);
+        TransportStop terminal = new TransportStop(TERMINAL, "111", null, null);
         GeoLocation terminalGeoLocation = new GeoLocation(new BigDecimal("42.42"), new BigDecimal("8.42"));
 
-        TransportSite address = new TransportSite(ADDRESS, null, new BigDecimal("49.23123"), new BigDecimal("8.1233"));
+        TransportStop address = new TransportStop(ADDRESS, null, new BigDecimal("49.23123"), new BigDecimal("8.1233"));
         GeoLocation addressGeoLocation = new GeoLocation(new BigDecimal("49.23123"), new BigDecimal("8.1233"));
 
         TransportDescriptionDto.TransportDescriptionSegment descriptionSegment =
@@ -111,8 +111,8 @@ public class TransportDescriptionNebenlaufExtenderUnitTest {
         TransportResponseDto.TransportResponseSegment segment = new TransportResponseDto.TransportResponseSegment(
                 descriptionSegment);
 
-        when(conversionServiceMock.convert(matchesSiteType(TERMINAL), any())).thenReturn(terminalGeoLocation);
-        when(conversionServiceMock.convert(matchesSiteType(ADDRESS), any())).thenReturn(addressGeoLocation);
+        when(conversionServiceMock.convert(matchesStopType(TERMINAL), any())).thenReturn(terminalGeoLocation);
+        when(conversionServiceMock.convert(matchesStopType(ADDRESS), any())).thenReturn(addressGeoLocation);
 
         RouteResult routeResult = new RouteResult(40, 20, 300, singletonList("geometries1"), OK);
         when(routeServiceMock.route(addressGeoLocation, terminalGeoLocation, ROAD)).thenReturn(routeResult);
@@ -133,14 +133,14 @@ public class TransportDescriptionNebenlaufExtenderUnitTest {
     }
 
 
-    private TransportSite matchesSiteType(SiteType type) {
+    private TransportStop matchesStopType(StopType type) {
 
-        return argThat(new ArgumentMatcher<TransportSite>() {
+        return argThat(new ArgumentMatcher<TransportStop>() {
 
                     @Override
                     public boolean matches(Object argument) {
 
-                        return argument != null && ((TransportSite) argument).type == type;
+                        return argument != null && ((TransportStop) argument).type == type;
                     }
                 });
     }

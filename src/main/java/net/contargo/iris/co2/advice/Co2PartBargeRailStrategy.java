@@ -38,10 +38,10 @@ public class Co2PartBargeRailStrategy implements Co2PartStrategy {
                 emission = getEmissionForRailSubRoutePart(subRoutePart, routePart.getContainerState());
             }
 
-            boolean fromSiteIsTerminal = subRoutePart.getOrigin() instanceof Terminal;
-            boolean toSiteIsTerminal = subRoutePart.getDestination() instanceof Terminal;
+            boolean fromIsTerminal = subRoutePart.getOrigin() instanceof Terminal;
+            boolean toIsTerminal = subRoutePart.getDestination() instanceof Terminal;
 
-            BigDecimal handlingEmission = Co2Calculator.handling(fromSiteIsTerminal, toSiteIsTerminal);
+            BigDecimal handlingEmission = Co2Calculator.handling(fromIsTerminal, toIsTerminal);
 
             emission = emission.add(handlingEmission);
 

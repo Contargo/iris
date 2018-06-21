@@ -484,7 +484,7 @@
     <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
         <property name="converters">
             <set>
-                <bean class="net.contargo.iris.transport.service.TransportSiteToGeoLocationConverter">
+                <bean class="net.contargo.iris.transport.service.TransportStopToGeoLocationConverter">
                     <constructor-arg ref="seaportService"/>
                     <constructor-arg ref="terminalService"/>
                 </bean>
@@ -501,7 +501,7 @@
         <constructor-arg ref="terminalService"/>
         <constructor-arg ref="connectionService"/>
     </bean>
-    
+
     <bean class="net.contargo.iris.transport.service.TransportDescriptionMainRunExtender" id="transportDescriptionMainRunExtender">
         <constructor-arg ref="connectionService"/>
     </bean>

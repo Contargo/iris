@@ -1,11 +1,13 @@
 package net.contargo.iris.co2.service;
 
+import net.contargo.iris.co2.Co2Calculator;
 import net.contargo.iris.co2.advice.Co2PartStrategy;
 import net.contargo.iris.co2.advice.Co2PartStrategyAdvisor;
 import net.contargo.iris.route.Route;
 import net.contargo.iris.route.RoutePart;
 import net.contargo.iris.route.RouteType;
 import net.contargo.iris.route.builder.DirectTruckRouteBuilder;
+import net.contargo.iris.terminal.Terminal;
 
 import org.slf4j.Logger;
 
@@ -21,16 +23,12 @@ import static org.slf4j.LoggerFactory.getLogger;
 /**
  * @author  Aljona Murygina - murygina@synyx.de
  * @author  Oliver Messner - messner@synyx.de
+ * @author  Sandra Thieme - thieme@synyx.de
+ * @author  Ben Antony - antony@synyx.de
  */
 class Co2ServiceImpl implements Co2Service {
 
     private static final Logger LOG = getLogger(MethodHandles.lookup().lookupClass());
-
-    // Umschlag "CO2 Handling"
-    private static final BigDecimal CO2_HANDLING = BigDecimal.valueOf(8);
-
-    // Umschlag "Direkttruck Oneway"
-    private static final BigDecimal CO2_TRUCK_ONE_WAY = BigDecimal.valueOf(4);
 
     private final DirectTruckRouteBuilder directTruckRouteBuilder;
     private final Co2PartStrategyAdvisor co2PartStrategyAdvisor;
@@ -48,20 +46,16 @@ class Co2ServiceImpl implements Co2Service {
 
         List<RoutePart> parts = route.getData().getParts();
 
-        for (int i = 0; i < parts.size(); i++) {
-            RoutePart part = parts.get(i);
+        for (RoutePart part : parts) {
             RouteType type = part.getRouteType();
 
             Co2PartStrategy strategy = co2PartStrategyAdvisor.advice(type);
             co2 = co2.add(strategy.getEmissionForRoutePart(part));
 
-            if (co2HandlingRequired(parts, i)) {
-                co2 = co2.add(CO2_HANDLING);
-            }
-        }
+            boolean fromSiteIsTerminal = part.getOrigin() instanceof Terminal;
+            boolean toSiteIsTerminal = part.getDestination() instanceof Terminal;
 
-        if (!route.isRoundTrip()) {
-            co2 = co2.add(CO2_TRUCK_ONE_WAY);
+            co2 = co2.add(Co2Calculator.handling(fromSiteIsTerminal, toSiteIsTerminal));
         }
 
         LOG.debug("Setting CO2 for route {}: {} kg", route.getName(), co2);
@@ -81,34 +75,15 @@ class Co2ServiceImpl implements Co2Service {
         for (RoutePart part : parts) {
             Co2PartStrategy strategy = co2PartStrategyAdvisor.advice(RouteType.TRUCK);
             co2 = co2.add(strategy.getEmissionForRoutePart(part));
-        }
 
-        if (!truckRoute.isRoundTrip()) {
-            co2 = co2.add(CO2_TRUCK_ONE_WAY);
+            boolean fromSiteIsTerminal = part.getOrigin() instanceof Terminal;
+            boolean toSiteIsTerminal = part.getDestination() instanceof Terminal;
+
+            co2 = co2.add(Co2Calculator.handling(fromSiteIsTerminal, toSiteIsTerminal));
         }
 
         LOG.debug("Setting CO2 Direct Truck for route {}: {} kg", route.getName(), co2);
 
         return co2;
-    }
-
-
-    /**
-     * If there a is a change in transport, you have to consider Co2-Handling in emission calculation. (e.g. from truck
-     * route to rail route). Please notice that there are two different Co2-Handling values: one for direct truck and
-     * one for transport with main run (barge or rail)
-     *
-     * @param  routeParts
-     * @param  indexOfRoutePart
-     *
-     * @return  true if Co2 Handling is to be considered in emission calculation, false if not
-     */
-    private boolean co2HandlingRequired(List<RoutePart> routeParts, int indexOfRoutePart) {
-
-        RoutePart part = routeParts.get(indexOfRoutePart);
-
-        // if this part is not the last route part AND the next part is not of the same route type, then return true
-        return (indexOfRoutePart < (routeParts.size() - 1))
-            && (!part.isOfType(routeParts.get(indexOfRoutePart + 1).getRouteType()));
     }
 }

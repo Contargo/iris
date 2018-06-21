@@ -2,7 +2,6 @@ package net.contargo.iris.co2.advice;
 
 import net.contargo.iris.route.RoutePart;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -20,42 +19,33 @@ import static org.hamcrest.Matchers.comparesEqualTo;
  *
  * @author  Oliver Messner - messner@synyx.de
  * @author  Tobias Schneider - schneider@synyx.de
+ * @author  Ben Antony - antony@synyx.de
+ * @author  Sandra Thieme - thieme@synyx.de
  */
 public class Co2PartTruckStrategyUnitTest {
 
-    private Co2PartTruckStrategy sut;
-
-    private BigDecimal distance;
-    private RoutePart routePart;
-
-    @Before
-    public void before() {
-
-        routePart = new RoutePart();
-        distance = new BigDecimal("42");
-
-        sut = new Co2PartTruckStrategy();
-    }
-
+    private Co2PartTruckStrategy sut = new Co2PartTruckStrategy();
 
     @Test
     public void getEmissionForRoutePartFull() {
 
+        RoutePart routePart = new RoutePart();
         routePart.setContainerState(FULL);
-        routePart.getData().setDistance(distance);
+        routePart.getData().setDistance(new BigDecimal("42"));
 
         BigDecimal co2 = sut.getEmissionForRoutePart(routePart);
-        assertThat(co2, comparesEqualTo(BigDecimal.valueOf(distance.doubleValue() * 0.88)));
+        assertThat(co2, comparesEqualTo(new BigDecimal("36.96")));
     }
 
 
     @Test
     public void getEmissionForRoutePartEmpty() {
 
+        RoutePart routePart = new RoutePart();
         routePart.setContainerState(EMPTY);
-        routePart.getData().setDistance(distance);
+        routePart.getData().setDistance(new BigDecimal("42"));
 
         BigDecimal co2 = sut.getEmissionForRoutePart(routePart);
-        assertThat(co2, comparesEqualTo(BigDecimal.valueOf(distance.doubleValue() * 0.73)));
+        assertThat(co2, comparesEqualTo(new BigDecimal("30.66")));
     }
 }

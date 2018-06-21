@@ -1,28 +1,21 @@
-package net.contargo.iris.transport.service;
-
-import net.contargo.iris.transport.api.TransportDescriptionDto;
-import net.contargo.iris.transport.api.TransportResponseDto;
-import net.contargo.iris.transport.api.TransportSite;
+package net.contargo.iris.co2;
 
 import org.junit.Test;
 
 import java.math.BigDecimal;
 
+import static net.contargo.iris.FlowDirection.DOWNSTREAM;
+import static net.contargo.iris.FlowDirection.UPSTREAM;
+import static net.contargo.iris.co2.Co2Calculator.handling;
+import static net.contargo.iris.co2.Co2Calculator.rail;
+import static net.contargo.iris.co2.Co2Calculator.road;
+import static net.contargo.iris.co2.Co2Calculator.water;
 import static net.contargo.iris.container.ContainerState.EMPTY;
 import static net.contargo.iris.container.ContainerState.FULL;
 import static net.contargo.iris.terminal.Region.NIEDERRHEIN;
 import static net.contargo.iris.terminal.Region.NOT_SET;
 import static net.contargo.iris.terminal.Region.OBERRHEIN;
 import static net.contargo.iris.terminal.Region.SCHELDE;
-import static net.contargo.iris.transport.api.SiteType.ADDRESS;
-import static net.contargo.iris.transport.api.SiteType.SEAPORT;
-import static net.contargo.iris.transport.api.SiteType.TERMINAL;
-import static net.contargo.iris.transport.service.Co2Calculator.handling;
-import static net.contargo.iris.transport.service.Co2Calculator.rail;
-import static net.contargo.iris.transport.service.Co2Calculator.truck;
-import static net.contargo.iris.transport.service.Co2Calculator.water;
-import static net.contargo.iris.transport.service.FlowDirection.DOWNSTREAM;
-import static net.contargo.iris.transport.service.FlowDirection.UPSTREAM;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -31,16 +24,17 @@ import static org.hamcrest.Matchers.comparesEqualTo;
 
 /**
  * @author  Ben Antony - antony@synyx.de
+ * @author  Sandra Thieme - thieme@synyx.de
  */
 public class Co2CalculatorUnitTest {
 
     private static final int DISTANCE = 100;
 
     @Test
-    public void testTruck() {
+    public void testRoad() {
 
-        assertThat(truck(DISTANCE, FULL), comparesEqualTo(new BigDecimal("88.00")));
-        assertThat(truck(DISTANCE, EMPTY), comparesEqualTo(new BigDecimal("73")));
+        assertThat(road(DISTANCE, FULL), comparesEqualTo(new BigDecimal("88.00")));
+        assertThat(road(DISTANCE, EMPTY), comparesEqualTo(new BigDecimal("73")));
     }
 
 
@@ -80,20 +74,10 @@ public class Co2CalculatorUnitTest {
     @Test
     public void testHandling() {
 
-        TransportSite terminal = new TransportSite(TERMINAL, "123456789", null, null);
-        TransportSite seaport = new TransportSite(SEAPORT, "1234", null, null);
-        TransportSite address = new TransportSite(ADDRESS, null, new BigDecimal("42.32432"),
-                new BigDecimal("8.123412"));
-
-        assertHandling(terminal, seaport, "4.00");
-        assertHandling(seaport, terminal, "4.00");
-        assertHandling(terminal, terminal, "8.00");
-        assertHandling(terminal, address, "4.00");
-        assertHandling(address, terminal, "4.00");
-        assertHandling(seaport, address, "0.00");
-        assertHandling(address, seaport, "0.00");
-        assertHandling(address, address, "0.00");
-        assertHandling(seaport, seaport, "0.00");
+        assertThat(handling(true, true), comparesEqualTo(new BigDecimal("8.00")));
+        assertThat(handling(true, false), comparesEqualTo(new BigDecimal("4.00")));
+        assertThat(handling(false, true), comparesEqualTo(new BigDecimal("4.00")));
+        assertThat(handling(false, false), comparesEqualTo(new BigDecimal("0.00")));
     }
 
 
@@ -101,15 +85,5 @@ public class Co2CalculatorUnitTest {
     public void testRailNullLoadingState() {
 
         rail(DISTANCE, DISTANCE, null);
-    }
-
-
-    private void assertHandling(TransportSite fromSite, TransportSite toSite, String value) {
-
-        TransportDescriptionDto.TransportDescriptionSegment descriptionSegment =
-            new TransportDescriptionDto.TransportDescriptionSegment(fromSite, toSite, null, null, null);
-        TransportResponseDto.TransportResponseSegment segment = new TransportResponseDto.TransportResponseSegment(
-                descriptionSegment);
-        assertThat(handling(segment), comparesEqualTo(new BigDecimal(value)));
     }
 }

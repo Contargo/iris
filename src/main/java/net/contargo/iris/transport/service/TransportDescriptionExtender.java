@@ -3,6 +3,7 @@ package net.contargo.iris.transport.service;
 import net.contargo.iris.transport.api.TransportDescriptionDto;
 import net.contargo.iris.transport.api.TransportResponseDto;
 
+import static net.contargo.iris.co2.Co2Calculator.handling;
 import static net.contargo.iris.transport.api.ModeOfTransport.ROAD;
 import static net.contargo.iris.transport.api.SiteType.ADDRESS;
 import static net.contargo.iris.transport.api.SiteType.SEAPORT;
@@ -45,7 +46,9 @@ public class TransportDescriptionExtender {
                 mainRunExtender.with(s);
             }
 
-            s.co2 = s.co2.add(Co2Calculator.handling(s));
+            boolean toSiteIsTerminal = s.toSite.type == TERMINAL;
+            boolean fromSiteIsTerminal = s.fromSite.type == TERMINAL;
+            s.co2 = s.co2.add(handling(fromSiteIsTerminal, toSiteIsTerminal));
         });
 
         return result;

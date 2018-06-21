@@ -1,10 +1,11 @@
 package net.contargo.iris.co2.advice;
 
-import net.contargo.iris.container.ContainerState;
+import net.contargo.iris.co2.Co2Calculator;
 import net.contargo.iris.route.RoutePart;
-import net.contargo.iris.route.RoutePartData;
 
 import java.math.BigDecimal;
+
+import static java.math.RoundingMode.UP;
 
 
 /**
@@ -14,24 +15,11 @@ import java.math.BigDecimal;
  */
 class Co2PartTruckStrategy implements Co2PartStrategy {
 
-    static final BigDecimal CO2_TRUCK_FULL = BigDecimal.valueOf(0.88);
-    static final BigDecimal CO2_TRUCK_EMPTY = BigDecimal.valueOf(0.73);
-
     @Override
     public BigDecimal getEmissionForRoutePart(RoutePart routePart) {
 
-        RoutePartData routePartData = routePart.getData();
+        int distance = routePart.getData().getDistance().setScale(0, UP).intValue();
 
-        BigDecimal co2Factor;
-
-        if (ContainerState.FULL == routePart.getContainerState()) {
-            co2Factor = CO2_TRUCK_FULL;
-        } else {
-            co2Factor = CO2_TRUCK_EMPTY;
-        }
-
-        BigDecimal distance = routePartData.getDistance();
-
-        return distance.multiply(co2Factor);
+        return Co2Calculator.road(distance, routePart.getContainerState());
     }
 }

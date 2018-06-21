@@ -62,7 +62,7 @@ public class RouteServiceUnitTest {
         RouteResult result = sut.route(start, end, ROAD);
 
         assertThat(result.getDistance(), is(62));
-        assertThat(result.getDuration(), is(22068));
+        assertThat(result.getDuration(), is(368));
         assertThat(result.getToll(), is(61));
         assertThat(result.getGeometries().get(0), is("geometry1"));
         assertThat(result.getGeometries().get(1), is("geometry2"));

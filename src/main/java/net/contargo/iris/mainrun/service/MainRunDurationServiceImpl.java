@@ -30,7 +30,7 @@ public class MainRunDurationServiceImpl implements MainRunDurationService {
     private static final BigDecimal AVERAGE_SPEED_BARGE_UPSTREAM = new BigDecimal("10.0");
     private static final BigDecimal AVERAGE_SPEED_BARGE_DOWNSTREAM = new BigDecimal("18.0");
     private static final BigDecimal AVERAGE_SPEED_RAIL = new BigDecimal("45.0");
-    private static final BigDecimal SECONDS_IN_AN_HOUR = new BigDecimal("60.0");
+    private static final BigDecimal MINUTES_PER_HOUR = new BigDecimal("60.0");
     private static final int SCALE = 5;
 
     private final RoundingService roundingService;
@@ -101,7 +101,7 @@ public class MainRunDurationServiceImpl implements MainRunDurationService {
 
     private BigDecimal computeDuration(BigDecimal distance, BigDecimal divisor) {
 
-        BigDecimal duration = distance.divide(divisor, SCALE, RoundingMode.HALF_UP).multiply(SECONDS_IN_AN_HOUR);
+        BigDecimal duration = distance.divide(divisor, SCALE, RoundingMode.HALF_UP).multiply(MINUTES_PER_HOUR);
 
         return roundingService.roundDuration(duration);
     }

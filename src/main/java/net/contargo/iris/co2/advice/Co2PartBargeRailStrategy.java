@@ -18,13 +18,10 @@ import static java.math.RoundingMode.UP;
  * Co2 strategy for main run connections with route type barge-rail.
  *
  * @author  Sandra Thieme - thieme@synyx.de
+ * @author  Ben Antony - antony@synyx.de
  */
 public class Co2PartBargeRailStrategy implements Co2PartStrategy {
 
-    private static final BigDecimal CO2_RAIL_FULL_DIESEL = BigDecimal.valueOf(0.5);
-    private static final BigDecimal CO2_RAIL_EMPTY_DIESEL = BigDecimal.valueOf(0.4);
-    private static final BigDecimal CO2_RAIL_FULL_ELEKTRO = BigDecimal.valueOf(0.34);
-    private static final BigDecimal CO2_RAIL_EMPTY_ELEKTRO = BigDecimal.valueOf(0.27);
     private static final BigDecimal CO2_HANDLING = BigDecimal.valueOf(8);
 
     @Override
@@ -74,27 +71,9 @@ public class Co2PartBargeRailStrategy implements Co2PartStrategy {
 
     private BigDecimal getEmissionForRailSubRoutePart(SubRoutePart subRoutePart, ContainerState state) {
 
-        BigDecimal co2 = BigDecimal.ZERO;
+        int railDieselDistance = subRoutePart.getRailDieselDistance().setScale(0, UP).intValue();
+        int railElectricDistance = subRoutePart.getElectricDistance().setScale(0, UP).intValue();
 
-        BigDecimal railDieselDistance = subRoutePart.getRailDieselDistance();
-        BigDecimal railElectricDistance = subRoutePart.getElectricDistance();
-
-        BigDecimal co2DieselFactor;
-        BigDecimal co2ElectricFactor;
-
-        if (ContainerState.FULL == state) {
-            co2DieselFactor = CO2_RAIL_FULL_DIESEL;
-            co2ElectricFactor = CO2_RAIL_FULL_ELEKTRO;
-        } else {
-            co2DieselFactor = CO2_RAIL_EMPTY_DIESEL;
-            co2ElectricFactor = CO2_RAIL_EMPTY_ELEKTRO;
-        }
-
-        co2 = co2.add(railDieselDistance.multiply(co2DieselFactor));
-        co2 = co2.add(railElectricDistance.multiply(co2ElectricFactor));
-
-        subRoutePart.setCo2(co2);
-
-        return co2;
+        return Co2Calculator.rail(railDieselDistance, railElectricDistance, state);
     }
 }

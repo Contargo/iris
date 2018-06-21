@@ -22,8 +22,6 @@ import static java.math.RoundingMode.UP;
  */
 public class Co2PartBargeRailStrategy implements Co2PartStrategy {
 
-    private static final BigDecimal CO2_HANDLING = BigDecimal.valueOf(8);
-
     @Override
     public BigDecimal getEmissionForRoutePart(RoutePart routePart) {
 
@@ -40,12 +38,17 @@ public class Co2PartBargeRailStrategy implements Co2PartStrategy {
                 emission = getEmissionForRailSubRoutePart(subRoutePart, routePart.getContainerState());
             }
 
+            boolean fromSiteIsTerminal = subRoutePart.getOrigin() instanceof Terminal;
+            boolean toSiteIsTerminal = subRoutePart.getDestination() instanceof Terminal;
+
+            BigDecimal handlingEmission = Co2Calculator.handling(fromSiteIsTerminal, toSiteIsTerminal);
+
+            emission = emission.add(handlingEmission);
+
             subRoutePart.setCo2(emission);
+
             totalEmission = totalEmission.add(emission);
         }
-
-        totalEmission = totalEmission.add(CO2_HANDLING.multiply(
-                    new BigDecimal(routePart.getSubRouteParts().size() - 1)));
 
         return totalEmission;
     }

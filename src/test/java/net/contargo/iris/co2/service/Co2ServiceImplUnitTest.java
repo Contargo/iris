@@ -6,6 +6,8 @@ import net.contargo.iris.co2.advice.Co2PartStrategyAdvisor;
 import net.contargo.iris.route.Route;
 import net.contargo.iris.route.RoutePart;
 import net.contargo.iris.route.builder.DirectTruckRouteBuilder;
+import net.contargo.iris.seaport.Seaport;
+import net.contargo.iris.terminal.Terminal;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -36,13 +38,15 @@ import static java.util.Arrays.asList;
  *
  * @author  Aljona Murygina - murygina@synyx.de
  * @author  Oliver Messner - messner@synyx.de
+ * @author  Sandra Thieme - thieme@synyx.de
+ * @author  Ben Antony - antony@synyx.de
  */
 @RunWith(MockitoJUnitRunner.class)
 public class Co2ServiceImplUnitTest {
 
-    private static final GeoLocation GEO_TERMINAL = new GeoLocation(BigDecimal.ONE, BigDecimal.ONE);
+    private static final GeoLocation GEO_TERMINAL = new Terminal(new GeoLocation(BigDecimal.ONE, BigDecimal.ONE));
     private static final GeoLocation GEO_ADDRESS = new GeoLocation(BigDecimal.ONE, BigDecimal.TEN);
-    private static final GeoLocation GEO_SEAPORT = new GeoLocation(BigDecimal.TEN, BigDecimal.TEN);
+    private static final GeoLocation GEO_SEAPORT = new Seaport(new GeoLocation(BigDecimal.TEN, BigDecimal.TEN));
 
     private Co2ServiceImpl sut;
 

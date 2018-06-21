@@ -75,9 +75,9 @@ public class Co2PartBargeRailStrategyUnitTest {
         routePart.setRouteType(BARGE_RAIL);
 
         BigDecimal emission = sut.getEmissionForRoutePart(routePart);
-        assertThat(subRoutePart1.getCo2(), comparesEqualTo(new BigDecimal(4)));
-        assertThat(subRoutePart2.getCo2(), comparesEqualTo(new BigDecimal(43)));
-        assertThat(emission, comparesEqualTo(new BigDecimal(55)));
+        assertThat(subRoutePart1.getCo2(), comparesEqualTo(new BigDecimal("8")));
+        assertThat(subRoutePart2.getCo2(), comparesEqualTo(new BigDecimal("51")));
+        assertThat(emission, comparesEqualTo(new BigDecimal("59")));
     }
 
 
@@ -110,8 +110,8 @@ public class Co2PartBargeRailStrategyUnitTest {
         routePart.setRouteType(BARGE_RAIL);
 
         BigDecimal emission = sut.getEmissionForRoutePart(routePart);
-        assertThat(subRoutePart2.getCo2(), comparesEqualTo(new BigDecimal(51)));
-        assertThat(subRoutePart1.getCo2(), comparesEqualTo(new BigDecimal(43)));
-        assertThat(emission, comparesEqualTo(new BigDecimal(102)));
+        assertThat(subRoutePart1.getCo2(), comparesEqualTo(new BigDecimal("47")));
+        assertThat(subRoutePart2.getCo2(), comparesEqualTo(new BigDecimal("59")));
+        assertThat(emission, comparesEqualTo(new BigDecimal("106")));
     }
 }

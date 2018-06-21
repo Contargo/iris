@@ -1,4 +1,4 @@
-package net.contargo.iris.transport.service;
+package net.contargo.iris;
 
 /**
  * @author  Ben Antony - antony@synyx.de

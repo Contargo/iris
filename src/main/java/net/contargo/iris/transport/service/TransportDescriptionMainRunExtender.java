@@ -1,5 +1,6 @@
 package net.contargo.iris.transport.service;
 
+import net.contargo.iris.FlowDirection;
 import net.contargo.iris.connection.MainRunConnection;
 import net.contargo.iris.connection.service.MainRunConnectionService;
 import net.contargo.iris.route.RouteType;
@@ -11,16 +12,19 @@ import net.contargo.iris.transport.api.TransportResponseDto;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import static net.contargo.iris.co2.Co2Calculator.rail;
+import static net.contargo.iris.co2.Co2Calculator.water;
 import static net.contargo.iris.transport.api.SiteType.SEAPORT;
 import static net.contargo.iris.transport.api.SiteType.TERMINAL;
-import static net.contargo.iris.transport.service.FlowDirection.DOWNSTREAM;
-import static net.contargo.iris.transport.service.FlowDirection.UPSTREAM;
+import static net.contargo.iris.FlowDirection.DOWNSTREAM;
+import static net.contargo.iris.FlowDirection.UPSTREAM;
 
 import static java.math.RoundingMode.UP;
 
 
 /**
  * @author  Ben Antony - antony@synyx.de
+ * @author  Sandra Thieme - thieme@synyx.de
  */
 public class TransportDescriptionMainRunExtender {
 
@@ -83,7 +87,7 @@ public class TransportDescriptionMainRunExtender {
 
         segment.distance = railDistance.intValue();
         segment.duration = calculateDuration(railDistance, AVERAGE_SPEED_RAIL);
-        segment.co2 = Co2Calculator.rail(dieselDistance.intValue(), electricDistance.intValue(), segment.loadingState);
+        segment.co2 = rail(dieselDistance.intValue(), electricDistance.intValue(), segment.loadingState);
     }
 
 
@@ -111,7 +115,7 @@ public class TransportDescriptionMainRunExtender {
 
         segment.distance = bargeDistance.intValue();
         segment.duration = calculateDuration(bargeDistance, divisor);
-        segment.co2 = Co2Calculator.water(segment.distance, region, segment.loadingState, flowDirection);
+        segment.co2 = water(segment.distance, region, segment.loadingState, flowDirection);
     }
 
 

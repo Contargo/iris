@@ -1,18 +1,20 @@
 package net.contargo.iris.co2.advice;
 
+import net.contargo.iris.FlowDirection;
 import net.contargo.iris.container.ContainerState;
 import net.contargo.iris.route.RoutePart;
 import net.contargo.iris.route.RoutePartData;
 import net.contargo.iris.seaport.Seaport;
 import net.contargo.iris.terminal.Region;
 import net.contargo.iris.terminal.Terminal;
-import net.contargo.iris.transport.service.FlowDirection;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
 
+import static net.contargo.iris.FlowDirection.DOWNSTREAM;
+import static net.contargo.iris.FlowDirection.UPSTREAM;
 import static net.contargo.iris.container.ContainerState.EMPTY;
 import static net.contargo.iris.container.ContainerState.FULL;
 import static net.contargo.iris.route.RouteType.BARGE;
@@ -20,8 +22,6 @@ import static net.contargo.iris.terminal.Region.NIEDERRHEIN;
 import static net.contargo.iris.terminal.Region.NOT_SET;
 import static net.contargo.iris.terminal.Region.OBERRHEIN;
 import static net.contargo.iris.terminal.Region.SCHELDE;
-import static net.contargo.iris.transport.service.FlowDirection.DOWNSTREAM;
-import static net.contargo.iris.transport.service.FlowDirection.UPSTREAM;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -31,7 +31,7 @@ import static java.math.RoundingMode.UP;
 
 
 /**
- * This test is a validation for {@link net.contargo.iris.transport.service.Co2CalculatorUnitTest}.
+ * This test is a validation for {@link net.contargo.iris.co2.Co2CalculatorUnitTest}.
  *
  * @author  Ben Antony - antony@synyx.de
  */

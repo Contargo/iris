@@ -1,23 +1,22 @@
-package net.contargo.iris.transport.service;
+package net.contargo.iris.co2;
 
+import net.contargo.iris.FlowDirection;
 import net.contargo.iris.container.ContainerState;
 import net.contargo.iris.terminal.Region;
-import net.contargo.iris.transport.api.TransportResponseDto;
 
 import java.math.BigDecimal;
 
 import java.util.EnumMap;
 import java.util.Map;
 
+import static net.contargo.iris.FlowDirection.DOWNSTREAM;
+import static net.contargo.iris.FlowDirection.UPSTREAM;
 import static net.contargo.iris.container.ContainerState.EMPTY;
 import static net.contargo.iris.container.ContainerState.FULL;
 import static net.contargo.iris.terminal.Region.NIEDERRHEIN;
 import static net.contargo.iris.terminal.Region.NOT_SET;
 import static net.contargo.iris.terminal.Region.OBERRHEIN;
 import static net.contargo.iris.terminal.Region.SCHELDE;
-import static net.contargo.iris.transport.api.SiteType.TERMINAL;
-import static net.contargo.iris.transport.service.FlowDirection.DOWNSTREAM;
-import static net.contargo.iris.transport.service.FlowDirection.UPSTREAM;
 
 import static java.math.BigDecimal.ZERO;
 import static java.math.RoundingMode.UP;
@@ -27,8 +26,9 @@ import static java.util.Collections.unmodifiableMap;
 
 /**
  * @author  Ben Antony - antony@synyx.de
+ * @author  Sandra Thieme - thieme@synyx.de
  */
-class Co2Calculator {
+public class Co2Calculator {
 
     private static final BigDecimal CO2_TRUCK_FULL = new BigDecimal("0.88");
     private static final BigDecimal CO2_TRUCK_EMPTY = new BigDecimal("0.73");
@@ -56,7 +56,7 @@ class Co2Calculator {
     private Co2Calculator() {
     }
 
-    static BigDecimal truck(Integer distance, ContainerState loadingState) {
+    public static BigDecimal truck(Integer distance, ContainerState loadingState) {
 
         BigDecimal multiplier = loadingState == FULL ? CO2_TRUCK_FULL : CO2_TRUCK_EMPTY;
 
@@ -64,7 +64,7 @@ class Co2Calculator {
     }
 
 
-    static BigDecimal rail(Integer dieselDistance, Integer electricDistance, ContainerState loadingState) {
+    public static BigDecimal rail(Integer dieselDistance, Integer electricDistance, ContainerState loadingState) {
 
         BigDecimal multiplierDiesel;
         BigDecimal multiplierElectric;
@@ -83,7 +83,7 @@ class Co2Calculator {
     }
 
 
-    static BigDecimal water(Integer distance, Region region, ContainerState loadingState,
+    public static BigDecimal water(Integer distance, Region region, ContainerState loadingState,
         FlowDirection flowDirection) {
 
         BigDecimal multiplier = CO2_REGIONS.get(region).getMultiplierFor(loadingState).and(flowDirection);
@@ -92,15 +92,15 @@ class Co2Calculator {
     }
 
 
-    static BigDecimal handling(TransportResponseDto.TransportResponseSegment segment) {
+    public static BigDecimal handling(boolean fromSiteIsTerminal, boolean toSiteIsTerminal) {
 
         BigDecimal result = ZERO;
 
-        if (segment.fromSite.type == TERMINAL) {
+        if (fromSiteIsTerminal) {
             result = result.add(CO2_PER_HANDLING);
         }
 
-        if (segment.toSite.type == TERMINAL) {
+        if (toSiteIsTerminal) {
             result = result.add(CO2_PER_HANDLING);
         }
 

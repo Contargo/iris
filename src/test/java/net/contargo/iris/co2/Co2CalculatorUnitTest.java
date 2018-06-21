@@ -8,7 +8,7 @@ import static net.contargo.iris.FlowDirection.DOWNSTREAM;
 import static net.contargo.iris.FlowDirection.UPSTREAM;
 import static net.contargo.iris.co2.Co2Calculator.handling;
 import static net.contargo.iris.co2.Co2Calculator.rail;
-import static net.contargo.iris.co2.Co2Calculator.truck;
+import static net.contargo.iris.co2.Co2Calculator.road;
 import static net.contargo.iris.co2.Co2Calculator.water;
 import static net.contargo.iris.container.ContainerState.EMPTY;
 import static net.contargo.iris.container.ContainerState.FULL;
@@ -24,16 +24,17 @@ import static org.hamcrest.Matchers.comparesEqualTo;
 
 /**
  * @author  Ben Antony - antony@synyx.de
+ * @author  Sandra Thieme - thieme@synyx.de
  */
 public class Co2CalculatorUnitTest {
 
     private static final int DISTANCE = 100;
 
     @Test
-    public void testTruck() {
+    public void testRoad() {
 
-        assertThat(truck(DISTANCE, FULL), comparesEqualTo(new BigDecimal("88.00")));
-        assertThat(truck(DISTANCE, EMPTY), comparesEqualTo(new BigDecimal("73")));
+        assertThat(road(DISTANCE, FULL), comparesEqualTo(new BigDecimal("88.00")));
+        assertThat(road(DISTANCE, EMPTY), comparesEqualTo(new BigDecimal("73")));
     }
 
 

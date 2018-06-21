@@ -56,7 +56,7 @@ public class Co2Calculator {
     private Co2Calculator() {
     }
 
-    public static BigDecimal truck(Integer distance, ContainerState loadingState) {
+    public static BigDecimal road(Integer distance, ContainerState loadingState) {
 
         BigDecimal multiplier = loadingState == FULL ? CO2_TRUCK_FULL : CO2_TRUCK_EMPTY;
 

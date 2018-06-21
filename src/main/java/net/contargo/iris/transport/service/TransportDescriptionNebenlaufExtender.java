@@ -9,7 +9,7 @@ import org.springframework.core.convert.ConversionService;
 
 import java.math.BigInteger;
 
-import static net.contargo.iris.co2.Co2Calculator.truck;
+import static net.contargo.iris.co2.Co2Calculator.road;
 import static net.contargo.iris.transport.api.SiteType.ADDRESS;
 import static net.contargo.iris.transport.api.SiteType.TERMINAL;
 
@@ -46,7 +46,7 @@ public class TransportDescriptionNebenlaufExtender {
 
         applyRouteRevision(segment);
 
-        segment.co2 = truck(segment.distance, segment.loadingState);
+        segment.co2 = road(segment.distance, segment.loadingState);
     }
 
 

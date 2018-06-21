@@ -20,6 +20,6 @@ class Co2PartTruckStrategy implements Co2PartStrategy {
 
         int distance = routePart.getData().getDistance().setScale(0, UP).intValue();
 
-        return Co2Calculator.truck(distance, routePart.getContainerState());
+        return Co2Calculator.road(distance, routePart.getContainerState());
     }
 }

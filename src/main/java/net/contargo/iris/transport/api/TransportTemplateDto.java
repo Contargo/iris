@@ -25,21 +25,21 @@ public class TransportTemplateDto {
 
     public static class TransportTemplateSegment {
 
-        public TransportSite fromSite;
-        public TransportSite toSite;
+        public TransportStop from;
+        public TransportStop to;
         public ContainerState loadingState;
         public Boolean unitAvailable;
         public ModeOfTransport modeOfTransport;
 
         @JsonCreator
-        public TransportTemplateSegment(@JsonProperty("fromSite") TransportSite fromSite,
-            @JsonProperty("toSite") TransportSite toSite,
+        public TransportTemplateSegment(@JsonProperty("from") TransportStop from,
+            @JsonProperty("to") TransportStop to,
             @JsonProperty("loadingState") ContainerState loadingState,
             @JsonProperty("unitAvailable") Boolean unitAvailable,
             @JsonProperty("modeOfTransport") ModeOfTransport modeOfTransport) {
 
-            this.fromSite = fromSite;
-            this.toSite = toSite;
+            this.from = from;
+            this.to = to;
             this.loadingState = loadingState;
             this.unitAvailable = unitAvailable == null ? true : unitAvailable;
             this.modeOfTransport = modeOfTransport;

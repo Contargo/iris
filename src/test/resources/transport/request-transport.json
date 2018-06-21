@@ -1,11 +1,11 @@
 {
   "transportChain": [
     {
-      "fromSite": {
+      "from": {
         "type": "TERMINAL",
         "uuid": "1300000000000025"
       },
-      "toSite": {
+      "to": {
         "type": "ADDRESS",
         "lat": 49.011260,
         "lon": 8.394950
@@ -14,12 +14,12 @@
       "loadingState": "EMPTY"
     },
     {
-      "fromSite": {
+      "from": {
         "type": "ADDRESS",
         "lat": 49.011260,
         "lon": 8.394950
       },
-      "toSite": {
+      "to": {
         "type": "TERMINAL",
         "uuid": "1300000000000025"
       },
@@ -27,11 +27,11 @@
       "loadingState": "FULL"
     },
     {
-      "fromSite": {
+      "from": {
         "type": "TERMINAL",
         "uuid": "1300000000000025"
       },
-      "toSite": {
+      "to": {
         "type": "SEAPORT",
         "uuid": "1300000000000006"
       },

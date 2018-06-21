@@ -6,18 +6,18 @@ import net.contargo.iris.connection.service.MainRunConnectionService;
 import net.contargo.iris.route.RouteType;
 import net.contargo.iris.terminal.Region;
 import net.contargo.iris.transport.api.ModeOfTransport;
-import net.contargo.iris.transport.api.SiteType;
+import net.contargo.iris.transport.api.StopType;
 import net.contargo.iris.transport.api.TransportResponseDto;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import static net.contargo.iris.co2.Co2Calculator.rail;
-import static net.contargo.iris.co2.Co2Calculator.water;
-import static net.contargo.iris.transport.api.SiteType.SEAPORT;
-import static net.contargo.iris.transport.api.SiteType.TERMINAL;
 import static net.contargo.iris.FlowDirection.DOWNSTREAM;
 import static net.contargo.iris.FlowDirection.UPSTREAM;
+import static net.contargo.iris.co2.Co2Calculator.rail;
+import static net.contargo.iris.co2.Co2Calculator.water;
+import static net.contargo.iris.transport.api.StopType.SEAPORT;
+import static net.contargo.iris.transport.api.StopType.TERMINAL;
 
 import static java.math.RoundingMode.UP;
 
@@ -121,11 +121,11 @@ public class TransportDescriptionMainRunExtender {
 
     private static FlowDirection getFlowDirection(TransportResponseDto.TransportResponseSegment segment) {
 
-        if (segment.fromSite.type == SEAPORT && segment.toSite.type == TERMINAL) {
+        if (segment.from.type == SEAPORT && segment.to.type == TERMINAL) {
             return UPSTREAM;
         }
 
-        if (segment.fromSite.type == TERMINAL && segment.toSite.type == SEAPORT) {
+        if (segment.from.type == TERMINAL && segment.to.type == SEAPORT) {
             return DOWNSTREAM;
         }
 
@@ -139,12 +139,12 @@ public class TransportDescriptionMainRunExtender {
     }
 
 
-    private static BigInteger getUuid(TransportResponseDto.TransportResponseSegment segment, SiteType siteType) {
+    private static BigInteger getUuid(TransportResponseDto.TransportResponseSegment segment, StopType stopType) {
 
-        if (segment.fromSite.type == siteType) {
-            return new BigInteger(segment.fromSite.uuid);
-        } else if (segment.toSite.type == siteType) {
-            return new BigInteger(segment.toSite.uuid);
+        if (segment.from.type == stopType) {
+            return new BigInteger(segment.from.uuid);
+        } else if (segment.to.type == stopType) {
+            return new BigInteger(segment.to.uuid);
         } else {
             return null;
         }

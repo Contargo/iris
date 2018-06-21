@@ -7,7 +7,7 @@ import net.contargo.iris.terminal.Terminal;
 import net.contargo.iris.transport.api.ModeOfTransport;
 import net.contargo.iris.transport.api.TransportDescriptionDto;
 import net.contargo.iris.transport.api.TransportResponseDto;
-import net.contargo.iris.transport.api.TransportSite;
+import net.contargo.iris.transport.api.TransportStop;
 
 import org.junit.Test;
 
@@ -23,9 +23,9 @@ import java.math.BigInteger;
 
 import static net.contargo.iris.container.ContainerState.EMPTY;
 import static net.contargo.iris.container.ContainerState.FULL;
-import static net.contargo.iris.transport.api.SiteType.ADDRESS;
-import static net.contargo.iris.transport.api.SiteType.SEAPORT;
-import static net.contargo.iris.transport.api.SiteType.TERMINAL;
+import static net.contargo.iris.transport.api.StopType.ADDRESS;
+import static net.contargo.iris.transport.api.StopType.SEAPORT;
+import static net.contargo.iris.transport.api.StopType.TERMINAL;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -67,8 +67,8 @@ public class TransportDescriptionMainRunExtenderUnitTest {
     @Test
     public void withWaterDownstreamSegment() {
 
-        TransportSite from = new TransportSite(TERMINAL, "123456789", null, null);
-        TransportSite to = new TransportSite(SEAPORT, "111", null, null);
+        TransportStop from = new TransportStop(TERMINAL, "123456789", null, null);
+        TransportStop to = new TransportStop(SEAPORT, "111", null, null);
 
         TransportDescriptionDto.TransportDescriptionSegment descriptionSegment =
             new TransportDescriptionDto.TransportDescriptionSegment(from, to, FULL, null, ModeOfTransport.WATER);
@@ -97,8 +97,8 @@ public class TransportDescriptionMainRunExtenderUnitTest {
     @Test
     public void withWaterUpstreamSegment() {
 
-        TransportSite from = new TransportSite(SEAPORT, "112", null, null);
-        TransportSite to = new TransportSite(TERMINAL, "113456789", null, null);
+        TransportStop from = new TransportStop(SEAPORT, "112", null, null);
+        TransportStop to = new TransportStop(TERMINAL, "113456789", null, null);
 
         TransportDescriptionDto.TransportDescriptionSegment descriptionSegment =
             new TransportDescriptionDto.TransportDescriptionSegment(from, to, EMPTY, null, ModeOfTransport.WATER);
@@ -127,8 +127,8 @@ public class TransportDescriptionMainRunExtenderUnitTest {
     @Test
     public void withRailSegment() {
 
-        TransportSite from = new TransportSite(SEAPORT, "113", null, null);
-        TransportSite to = new TransportSite(TERMINAL, "121456789", null, null);
+        TransportStop from = new TransportStop(SEAPORT, "113", null, null);
+        TransportStop to = new TransportStop(TERMINAL, "121456789", null, null);
 
         TransportDescriptionDto.TransportDescriptionSegment descriptionSegment =
             new TransportDescriptionDto.TransportDescriptionSegment(from, to, FULL, null, ModeOfTransport.RAIL);
@@ -154,8 +154,8 @@ public class TransportDescriptionMainRunExtenderUnitTest {
     @Test(expected = IllegalArgumentException.class)
     public void withNonMainRunSegment() {
 
-        TransportSite from = new TransportSite(ADDRESS, null, new BigDecimal("49.12323"), new BigDecimal("8.32432"));
-        TransportSite to = new TransportSite(TERMINAL, "114", null, null);
+        TransportStop from = new TransportStop(ADDRESS, null, new BigDecimal("49.12323"), new BigDecimal("8.32432"));
+        TransportStop to = new TransportStop(TERMINAL, "114", null, null);
 
         TransportDescriptionDto.TransportDescriptionSegment descriptionSegment =
             new TransportDescriptionDto.TransportDescriptionSegment(from, to, null, null, ModeOfTransport.ROAD);

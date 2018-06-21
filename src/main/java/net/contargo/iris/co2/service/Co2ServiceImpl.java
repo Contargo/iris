@@ -52,10 +52,10 @@ class Co2ServiceImpl implements Co2Service {
             Co2PartStrategy strategy = co2PartStrategyAdvisor.advice(type);
             co2 = co2.add(strategy.getEmissionForRoutePart(part));
 
-            boolean fromSiteIsTerminal = part.getOrigin() instanceof Terminal;
-            boolean toSiteIsTerminal = part.getDestination() instanceof Terminal;
+            boolean fromIsTerminal = part.getOrigin() instanceof Terminal;
+            boolean toIsTerminal = part.getDestination() instanceof Terminal;
 
-            co2 = co2.add(Co2Calculator.handling(fromSiteIsTerminal, toSiteIsTerminal));
+            co2 = co2.add(Co2Calculator.handling(fromIsTerminal, toIsTerminal));
         }
 
         LOG.debug("Setting CO2 for route {}: {} kg", route.getName(), co2);
@@ -76,10 +76,10 @@ class Co2ServiceImpl implements Co2Service {
             Co2PartStrategy strategy = co2PartStrategyAdvisor.advice(RouteType.TRUCK);
             co2 = co2.add(strategy.getEmissionForRoutePart(part));
 
-            boolean fromSiteIsTerminal = part.getOrigin() instanceof Terminal;
-            boolean toSiteIsTerminal = part.getDestination() instanceof Terminal;
+            boolean fromIsTerminal = part.getOrigin() instanceof Terminal;
+            boolean toIsTerminal = part.getDestination() instanceof Terminal;
 
-            co2 = co2.add(Co2Calculator.handling(fromSiteIsTerminal, toSiteIsTerminal));
+            co2 = co2.add(Co2Calculator.handling(fromIsTerminal, toIsTerminal));
         }
 
         LOG.debug("Setting CO2 Direct Truck for route {}: {} kg", route.getName(), co2);

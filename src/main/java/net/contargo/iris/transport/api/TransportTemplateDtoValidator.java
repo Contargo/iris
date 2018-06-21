@@ -26,14 +26,14 @@ class TransportTemplateDtoValidator {
 
     private static void noTerminalSpecified(TransportTemplateDto.TransportTemplateSegment segment) {
 
-        if (segment.fromSite.type == SiteType.TERMINAL && segment.fromSite.uuid != null) {
+        if (segment.from.type == StopType.TERMINAL && segment.from.uuid != null) {
             throw new IllegalArgumentException("A transport template's terminal UUID must be null, but was: "
-                + segment.fromSite.uuid);
+                + segment.from.uuid);
         }
 
-        if (segment.toSite.type == SiteType.TERMINAL && segment.toSite.uuid != null) {
+        if (segment.to.type == StopType.TERMINAL && segment.to.uuid != null) {
             throw new IllegalArgumentException("A transport template's terminal UUID must be null, but was: "
-                + segment.toSite.uuid);
+                + segment.to.uuid);
         }
     }
 

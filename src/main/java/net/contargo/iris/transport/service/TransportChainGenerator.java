@@ -5,7 +5,7 @@ import net.contargo.iris.connection.service.MainRunConnectionService;
 import net.contargo.iris.terminal.Terminal;
 import net.contargo.iris.terminal.service.TerminalService;
 import net.contargo.iris.transport.api.ModeOfTransport;
-import net.contargo.iris.transport.api.SiteType;
+import net.contargo.iris.transport.api.StopType;
 import net.contargo.iris.transport.api.TransportDescriptionDto;
 import net.contargo.iris.transport.api.TransportTemplateDto;
 
@@ -21,8 +21,8 @@ import java.util.function.Predicate;
 import static net.contargo.iris.transport.api.ModeOfTransport.RAIL;
 import static net.contargo.iris.transport.api.ModeOfTransport.ROAD;
 import static net.contargo.iris.transport.api.ModeOfTransport.WATER;
-import static net.contargo.iris.transport.api.SiteType.SEAPORT;
-import static net.contargo.iris.transport.api.SiteType.TERMINAL;
+import static net.contargo.iris.transport.api.StopType.SEAPORT;
+import static net.contargo.iris.transport.api.StopType.TERMINAL;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -88,7 +88,7 @@ public class TransportChainGenerator {
 
         Map<BigInteger, List<ModeOfTransport>> seaportMots = extractSeaportsWithModeOfTransports(connections);
 
-        template.transportChain.stream().filter(s -> isMainRunSegment(s.fromSite.type, s.toSite.type)).forEach(s -> {
+        template.transportChain.stream().filter(s -> isMainRunSegment(s.from.type, s.to.type)).forEach(s -> {
             String seaportUuid = getSeaportUuid(s);
 
             List<ModeOfTransport> mots = seaportMots.getOrDefault(new BigInteger(seaportUuid), emptyList());
@@ -105,19 +105,17 @@ public class TransportChainGenerator {
 
     private static void editNonMainRunSegments(TransportDescriptionDto description, String terminalUuid) {
 
-        description.transportChain.stream()
-            .filter(s -> !isMainRunSegment(s.fromSite.type, s.toSite.type))
-            .forEach(s -> {
-                s.modeOfTransport = ROAD;
+        description.transportChain.stream().filter(s -> !isMainRunSegment(s.from.type, s.to.type)).forEach(s -> {
+            s.modeOfTransport = ROAD;
 
-                if (s.fromSite.type == TERMINAL) {
-                    s.fromSite.uuid = terminalUuid;
-                }
+            if (s.from.type == TERMINAL) {
+                s.from.uuid = terminalUuid;
+            }
 
-                if (s.toSite.type == TERMINAL) {
-                    s.toSite.uuid = terminalUuid;
-                }
-            });
+            if (s.to.type == TERMINAL) {
+                s.to.uuid = terminalUuid;
+            }
+        });
     }
 
 
@@ -145,10 +143,10 @@ public class TransportChainGenerator {
 
     private static String getSeaportUuid(TransportTemplateDto.TransportTemplateSegment s) {
 
-        if (s.fromSite.type == SEAPORT) {
-            return s.fromSite.uuid;
-        } else if (s.toSite.type == SEAPORT) {
-            return s.toSite.uuid;
+        if (s.from.type == SEAPORT) {
+            return s.from.uuid;
+        } else if (s.to.type == SEAPORT) {
+            return s.to.uuid;
         } else {
             throw new IllegalArgumentException("Does not contain seaport");
         }
@@ -160,12 +158,12 @@ public class TransportChainGenerator {
 
         TransportDescriptionDto descriptionDto = new TransportDescriptionDto(original);
         descriptionDto.transportChain.stream().filter(s -> isEqual(segment, s)).findFirst().ifPresent(s -> {
-            if (s.fromSite.type == TERMINAL) {
-                s.fromSite.uuid = terminal.getUniqueId().toString();
+            if (s.from.type == TERMINAL) {
+                s.from.uuid = terminal.getUniqueId().toString();
             }
 
-            if (s.toSite.type == TERMINAL) {
-                s.toSite.uuid = terminal.getUniqueId().toString();
+            if (s.to.type == TERMINAL) {
+                s.to.uuid = terminal.getUniqueId().toString();
             }
 
             s.modeOfTransport = mot;
@@ -178,18 +176,18 @@ public class TransportChainGenerator {
     private static boolean isEqual(TransportTemplateDto.TransportTemplateSegment templateSegment,
         TransportDescriptionDto.TransportDescriptionSegment descriptionSegment) {
 
-        boolean fromSiteType = templateSegment.fromSite.type == descriptionSegment.fromSite.type;
-        boolean fromSiteUuid = Objects.equals(templateSegment.fromSite.uuid, descriptionSegment.fromSite.uuid);
-        boolean equalFromSite = fromSiteType && fromSiteUuid;
+        boolean fromType = templateSegment.from.type == descriptionSegment.from.type;
+        boolean fromUuid = Objects.equals(templateSegment.from.uuid, descriptionSegment.from.uuid);
+        boolean equalFrom = fromType && fromUuid;
 
-        boolean toSiteType = templateSegment.toSite.type == descriptionSegment.toSite.type;
-        boolean toSiteUuid = Objects.equals(templateSegment.toSite.uuid, descriptionSegment.toSite.uuid);
-        boolean equalToSite = toSiteType && toSiteUuid;
+        boolean toType = templateSegment.to.type == descriptionSegment.to.type;
+        boolean toUuid = Objects.equals(templateSegment.to.uuid, descriptionSegment.to.uuid);
+        boolean equalTo = toType && toUuid;
 
         boolean loadingState = templateSegment.loadingState == descriptionSegment.loadingState;
         boolean unitAvailable = templateSegment.unitAvailable.equals(descriptionSegment.unitAvailable);
 
-        return equalFromSite && equalToSite && loadingState && unitAvailable;
+        return equalFrom && equalTo && loadingState && unitAvailable;
     }
 
 
@@ -220,11 +218,11 @@ public class TransportChainGenerator {
 
     private static boolean containsSeaport(TransportTemplateDto.TransportTemplateSegment segment) {
 
-        return segment.fromSite.type == SEAPORT || segment.toSite.type == SEAPORT;
+        return segment.from.type == SEAPORT || segment.to.type == SEAPORT;
     }
 
 
-    private static boolean isMainRunSegment(SiteType fromType, SiteType toType) {
+    private static boolean isMainRunSegment(StopType fromType, StopType toType) {
 
         return (fromType == SEAPORT && toType == TERMINAL) || (fromType == TERMINAL && toType == SEAPORT);
     }

@@ -22,7 +22,7 @@ public class TransportDescriptionDto {
     public TransportDescriptionDto(TransportDescriptionDto template) {
 
         this.transportChain = template.transportChain.stream().map(s ->
-                        new TransportDescriptionSegment(s.fromSite, s.toSite, s.loadingState, s.unitAvailable,
+                        new TransportDescriptionSegment(s.from, s.to, s.loadingState, s.unitAvailable,
                             s.modeOfTransport)).collect(toList());
     }
 
@@ -30,7 +30,7 @@ public class TransportDescriptionDto {
     public TransportDescriptionDto(TransportTemplateDto template) {
 
         this.transportChain = template.transportChain.stream().map(s ->
-                        new TransportDescriptionSegment(s.fromSite, s.toSite, s.loadingState, s.unitAvailable,
+                        new TransportDescriptionSegment(s.from, s.to, s.loadingState, s.unitAvailable,
                             s.modeOfTransport)).collect(toList());
     }
 
@@ -43,21 +43,21 @@ public class TransportDescriptionDto {
 
     public static class TransportDescriptionSegment {
 
-        public TransportSite fromSite;
-        public TransportSite toSite;
+        public TransportStop from;
+        public TransportStop to;
         public ContainerState loadingState;
         public Boolean unitAvailable;
         public ModeOfTransport modeOfTransport;
 
         @JsonCreator
-        public TransportDescriptionSegment(@JsonProperty("fromSite") TransportSite fromSite,
-            @JsonProperty("toSite") TransportSite toSite,
+        public TransportDescriptionSegment(@JsonProperty("from") TransportStop from,
+            @JsonProperty("to") TransportStop to,
             @JsonProperty("loadingState") ContainerState loadingState,
             @JsonProperty("unitAvailable") Boolean unitAvailable,
             @JsonProperty("modeOfTransport") ModeOfTransport modeOfTransport) {
 
-            this.fromSite = new TransportSite(fromSite);
-            this.toSite = new TransportSite(toSite);
+            this.from = new TransportStop(from);
+            this.to = new TransportStop(to);
             this.loadingState = loadingState;
             this.unitAvailable = unitAvailable == null ? true : unitAvailable;
             this.modeOfTransport = modeOfTransport;

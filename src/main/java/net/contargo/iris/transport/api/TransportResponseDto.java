@@ -30,8 +30,8 @@ public class TransportResponseDto {
     @JsonInclude(value = NON_NULL)
     public static class TransportResponseSegment {
 
-        public final TransportSite fromSite;
-        public final TransportSite toSite;
+        public final TransportStop from;
+        public final TransportStop to;
         public final ContainerState loadingState;
         public final boolean unitAvailable;
         public final ModeOfTransport modeOfTransport;
@@ -43,8 +43,8 @@ public class TransportResponseDto {
 
         public TransportResponseSegment(TransportDescriptionDto.TransportDescriptionSegment segment) {
 
-            this.fromSite = new TransportSite(segment.fromSite);
-            this.toSite = new TransportSite(segment.toSite);
+            this.from = new TransportStop(segment.from);
+            this.to = new TransportStop(segment.to);
             this.loadingState = segment.loadingState;
             this.unitAvailable = segment.unitAvailable;
             this.modeOfTransport = segment.modeOfTransport;

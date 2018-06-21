@@ -2,7 +2,7 @@ package net.contargo.iris.transport.service;
 
 import net.contargo.iris.transport.api.TransportDescriptionDto;
 import net.contargo.iris.transport.api.TransportResponseDto;
-import net.contargo.iris.transport.api.TransportSite;
+import net.contargo.iris.transport.api.TransportStop;
 
 import org.junit.Test;
 
@@ -25,9 +25,9 @@ import static net.contargo.iris.container.ContainerState.EMPTY;
 import static net.contargo.iris.container.ContainerState.FULL;
 import static net.contargo.iris.transport.api.ModeOfTransport.RAIL;
 import static net.contargo.iris.transport.api.ModeOfTransport.ROAD;
-import static net.contargo.iris.transport.api.SiteType.ADDRESS;
-import static net.contargo.iris.transport.api.SiteType.SEAPORT;
-import static net.contargo.iris.transport.api.SiteType.TERMINAL;
+import static net.contargo.iris.transport.api.StopType.ADDRESS;
+import static net.contargo.iris.transport.api.StopType.SEAPORT;
+import static net.contargo.iris.transport.api.StopType.TERMINAL;
 
 import static org.hamcrest.Matchers.comparesEqualTo;
 import static org.hamcrest.Matchers.is;
@@ -40,7 +40,6 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import static java.util.Arrays.asList;
 
@@ -67,11 +66,11 @@ public class TransportDescriptionExtenderUnitTest {
     @Test
     public void withRoutingInformation() {
 
-        TransportSite terminal = new TransportSite(TERMINAL, "42", null, null);
+        TransportStop terminal = new TransportStop(TERMINAL, "42", null, null);
 
-        TransportSite seaport = new TransportSite(SEAPORT, "62", null, null);
+        TransportStop seaport = new TransportStop(SEAPORT, "62", null, null);
 
-        TransportSite address = new TransportSite(ADDRESS, null, new BigDecimal("42.34234"), new BigDecimal("8.0023"));
+        TransportStop address = new TransportStop(ADDRESS, null, new BigDecimal("42.34234"), new BigDecimal("8.0023"));
 
         TransportDescriptionDto.TransportDescriptionSegment seaportTerminal =
             new TransportDescriptionDto.TransportDescriptionSegment(seaport, terminal, FULL, true, RAIL);

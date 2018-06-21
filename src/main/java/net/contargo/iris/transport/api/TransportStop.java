@@ -14,15 +14,15 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
  * @author  Ben Antony - antony@synyx.de
  */
 @JsonInclude(NON_NULL)
-public class TransportSite {
+public class TransportStop {
 
-    public SiteType type;
+    public StopType type;
     public String uuid;
     public BigDecimal lon;
     public BigDecimal lat;
 
     @JsonCreator
-    public TransportSite(@JsonProperty("type") SiteType type,
+    public TransportStop(@JsonProperty("type") StopType type,
         @JsonProperty("uuid") String uuid,
         @JsonProperty("lat") BigDecimal lat,
         @JsonProperty("lon") BigDecimal lon) {
@@ -34,11 +34,11 @@ public class TransportSite {
     }
 
 
-    TransportSite(TransportSite site) {
+    TransportStop(TransportStop stop) {
 
-        this.type = site.type;
-        this.uuid = site.uuid;
-        this.lat = site.lat;
-        this.lon = site.lon;
+        this.type = stop.type;
+        this.uuid = stop.uuid;
+        this.lat = stop.lat;
+        this.lon = stop.lon;
     }
 }

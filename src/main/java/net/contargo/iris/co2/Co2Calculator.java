@@ -92,15 +92,15 @@ public class Co2Calculator {
     }
 
 
-    public static BigDecimal handling(boolean fromSiteIsTerminal, boolean toSiteIsTerminal) {
+    public static BigDecimal handling(boolean fromIsTerminal, boolean toIsTerminal) {
 
         BigDecimal result = ZERO;
 
-        if (fromSiteIsTerminal) {
+        if (fromIsTerminal) {
             result = result.add(CO2_PER_HANDLING);
         }
 
-        if (toSiteIsTerminal) {
+        if (toIsTerminal) {
             result = result.add(CO2_PER_HANDLING);
         }
 

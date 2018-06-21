@@ -5,8 +5,6 @@ import org.junit.Test;
 
 import org.junit.runner.RunWith;
 
-import org.mockito.Mock;
-
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static net.contargo.iris.route.RouteType.BARGE;
@@ -25,68 +23,64 @@ import static org.hamcrest.Matchers.is;
  *
  * @author  Oliver Messner - messner@synyx.de
  * @author  Tobias Schneider - schneider@synyx.de
+ * @author  Ben Antony - antony@synyx.de
+ * @author  Sandra Thieme - thieme@synyx.de
  */
 @RunWith(MockitoJUnitRunner.class)
 public class Co2PartStrategyAdvisorUnitTest {
 
     private Co2PartStrategyAdvisor sut;
 
-    @Mock
-    private Co2PartStrategy expectedStrategyMock;
+    private Co2PartStrategy bargeStrategy = new Co2PartBargeStrategy();
+    private Co2PartStrategy railStrategy = new Co2PartRailStrategy();
+    private Co2PartStrategy truckStrategy = new Co2PartTruckStrategy();
+    private Co2PartStrategy bargeRailStrategy = new Co2PartBargeRailStrategy();
+    private Co2PartStrategy dtruckStrategy = new Co2PartDtruckStrategy();
 
     @Before
     public void before() {
 
-        sut = new Co2PartStrategyAdvisor();
+        sut = new Co2PartStrategyAdvisor(bargeStrategy, railStrategy, truckStrategy, bargeRailStrategy,
+                dtruckStrategy);
     }
 
 
     @Test
     public void adviceForRouteTypeBarge() {
 
-        sut.setBargeStrategy(expectedStrategyMock);
-
         Co2PartStrategy strategy = sut.advice(BARGE);
-        assertThat(strategy, is(expectedStrategyMock));
+        assertThat(strategy, is(bargeStrategy));
     }
 
 
     @Test
     public void adviceForRouteTypeRail() {
 
-        sut.setRailStrategy(expectedStrategyMock);
-
         Co2PartStrategy strategy = sut.advice(RAIL);
-        assertThat(strategy, is(expectedStrategyMock));
+        assertThat(strategy, is(railStrategy));
     }
 
 
     @Test
     public void adviceForRouteTypeTruck() {
 
-        sut.setTruckStrategy(expectedStrategyMock);
-
         Co2PartStrategy strategy = sut.advice(TRUCK);
-        assertThat(strategy, is(expectedStrategyMock));
+        assertThat(strategy, is(truckStrategy));
     }
 
 
     @Test
     public void adviceForRouteTypeBargeRail() {
 
-        sut.setBargeRailStrategy(expectedStrategyMock);
-
         Co2PartStrategy strategy = sut.advice(BARGE_RAIL);
-        assertThat(strategy, is(expectedStrategyMock));
+        assertThat(strategy, is(bargeRailStrategy));
     }
 
 
     @Test
     public void adviceForRouteTypeDtruck() {
 
-        sut.setDtruckStrategy(expectedStrategyMock);
-
         Co2PartStrategy strategy = sut.advice(DTRUCK);
-        assertThat(strategy, is(expectedStrategyMock));
+        assertThat(strategy, is(dtruckStrategy));
     }
 }

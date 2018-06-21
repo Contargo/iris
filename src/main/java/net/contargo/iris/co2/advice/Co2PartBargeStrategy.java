@@ -1,37 +1,34 @@
 package net.contargo.iris.co2.advice;
 
+import net.contargo.iris.FlowDirection;
+import net.contargo.iris.co2.Co2Calculator;
 import net.contargo.iris.route.RoutePart;
 import net.contargo.iris.route.RoutePartData;
-import net.contargo.iris.terminal.Terminal;
+import net.contargo.iris.terminal.Region;
 
 import java.math.BigDecimal;
+
+import static java.math.RoundingMode.UP;
 
 
 /**
  * Co2 strategy for main run connections with route type barge.
  *
  * @author  Sandra Thieme - thieme@synyx.de
+ * @author  Ben Antony - antony@synyx.de
  */
 class Co2PartBargeStrategy implements Co2PartStrategy {
-
-    private final Co2BargeRegionMap co2BargeRegionMap;
-
-    public Co2PartBargeStrategy(Co2BargeRegionMap co2BargeRegionMap) {
-
-        this.co2BargeRegionMap = co2BargeRegionMap;
-    }
 
     @Override
     public BigDecimal getEmissionForRoutePart(RoutePart routePart) {
 
         RoutePartData routePartData = routePart.getData();
-        Terminal terminal = routePart.findTerminal();
+        Region region = routePart.findTerminal().getRegion();
 
-        BigDecimal distance1 = routePartData.getBargeDieselDistance();
+        int distance = routePartData.getBargeDieselDistance().setScale(0, UP).intValue();
 
-        BigDecimal co2Factor = co2BargeRegionMap.getCo2Factor(terminal.getRegion(), routePart.getDirection(),
-                routePart.getContainerState());
+        FlowDirection flowDirection = FlowDirection.from(routePart.getDirection());
 
-        return distance1.multiply(co2Factor);
+        return Co2Calculator.water(distance, region, routePart.getContainerState(), flowDirection);
     }
 }

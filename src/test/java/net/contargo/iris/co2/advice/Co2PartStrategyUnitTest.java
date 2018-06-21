@@ -51,8 +51,7 @@ public class Co2PartStrategyUnitTest {
 
         co2PartRailStrategy = new Co2PartRailStrategy();
 
-        Co2BargeRegionMap co2RegionMap = new Co2BargeRegionMap();
-        co2PartBargeStrategy = new Co2PartBargeStrategy(co2RegionMap);
+        co2PartBargeStrategy = new Co2PartBargeStrategy();
     }
 
 

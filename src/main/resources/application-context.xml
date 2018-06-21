@@ -357,13 +357,10 @@
         <constructor-arg name="co2PartStrategyAdvisor" ref="co2PartStrategyAdvisor"/>
     </bean>
 
-    <bean id="co2BargeRegionMap" class="net.contargo.iris.co2.advice.Co2BargeRegionMap"/>
 
     <bean id="co2PartStrategyAdvisor" class="net.contargo.iris.co2.advice.Co2PartStrategyAdvisor">
         <constructor-arg name="bargeStrategy">
-            <bean class="net.contargo.iris.co2.advice.Co2PartBargeStrategy">
-                <constructor-arg name="co2BargeRegionMap" ref="co2BargeRegionMap"/>
-            </bean>
+            <bean class="net.contargo.iris.co2.advice.Co2PartBargeStrategy"/>
         </constructor-arg>
         <constructor-arg name="railStrategy">
             <bean class="net.contargo.iris.co2.advice.Co2PartRailStrategy"/>
@@ -372,9 +369,7 @@
             <bean class="net.contargo.iris.co2.advice.Co2PartTruckStrategy"/>
         </constructor-arg>
         <constructor-arg name="bargeRailStrategy">
-            <bean class="net.contargo.iris.co2.advice.Co2PartBargeRailStrategy">
-                <constructor-arg name="co2BargeRegionMap" ref="co2BargeRegionMap"/>
-            </bean>
+            <bean class="net.contargo.iris.co2.advice.Co2PartBargeRailStrategy"/>
         </constructor-arg>
         <constructor-arg name="dtruckStrategy">
             <bean class="net.contargo.iris.co2.advice.Co2PartDtruckStrategy"/>

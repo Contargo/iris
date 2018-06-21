@@ -1,5 +1,7 @@
 package net.contargo.iris.co2.advice;
 
+import net.contargo.iris.FlowDirection;
+import net.contargo.iris.co2.Co2Calculator;
 import net.contargo.iris.container.ContainerState;
 import net.contargo.iris.route.RoutePart;
 import net.contargo.iris.route.RouteType;
@@ -8,6 +10,8 @@ import net.contargo.iris.terminal.Region;
 import net.contargo.iris.terminal.Terminal;
 
 import java.math.BigDecimal;
+
+import static java.math.RoundingMode.UP;
 
 
 /**
@@ -22,13 +26,6 @@ public class Co2PartBargeRailStrategy implements Co2PartStrategy {
     private static final BigDecimal CO2_RAIL_FULL_ELEKTRO = BigDecimal.valueOf(0.34);
     private static final BigDecimal CO2_RAIL_EMPTY_ELEKTRO = BigDecimal.valueOf(0.27);
     private static final BigDecimal CO2_HANDLING = BigDecimal.valueOf(8);
-
-    private final Co2BargeRegionMap co2BargeRegionMap;
-
-    public Co2PartBargeRailStrategy(Co2BargeRegionMap co2BargeRegionMap) {
-
-        this.co2BargeRegionMap = co2BargeRegionMap;
-    }
 
     @Override
     public BigDecimal getEmissionForRoutePart(RoutePart routePart) {
@@ -68,11 +65,10 @@ public class Co2PartBargeRailStrategy implements Co2PartStrategy {
             region = ((Terminal) subRoutePart.getDestination()).getRegion();
         }
 
-        BigDecimal distance = subRoutePart.getBargeDieselDistance();
+        int distance = subRoutePart.getBargeDieselDistance().setScale(0, UP).intValue();
+        FlowDirection flowDirection = FlowDirection.from(direction);
 
-        BigDecimal co2Factor = co2BargeRegionMap.getCo2Factor(region, direction, state);
-
-        return distance.multiply(co2Factor);
+        return Co2Calculator.water(distance, region, state, flowDirection);
     }
 
 

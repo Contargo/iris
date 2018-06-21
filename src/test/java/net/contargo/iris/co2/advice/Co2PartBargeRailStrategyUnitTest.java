@@ -12,6 +12,7 @@ import org.junit.Test;
 import java.math.BigDecimal;
 
 import static net.contargo.iris.route.RouteType.BARGE;
+import static net.contargo.iris.route.RouteType.BARGE_RAIL;
 import static net.contargo.iris.route.RouteType.RAIL;
 import static net.contargo.iris.terminal.Region.OBERRHEIN;
 
@@ -27,16 +28,18 @@ import static java.util.Arrays.asList;
 
 /**
  * @author  Sandra Thieme - thieme@synyx.de
+ * @author  Ben Antony - antony@synyx.de
  */
 public class Co2PartBargeRailStrategyUnitTest {
 
     private Co2PartBargeRailStrategy sut;
+
     private Terminal terminal;
 
     @Before
     public void setUp() {
 
-        sut = new Co2PartBargeRailStrategy(new Co2BargeRegionMap());
+        sut = new Co2PartBargeRailStrategy();
 
         terminal = new Terminal();
         terminal.setRegion(OBERRHEIN);
@@ -69,6 +72,7 @@ public class Co2PartBargeRailStrategyUnitTest {
         routePart.setOrigin(seaport);
         routePart.setDestination(terminal);
         routePart.setContainerState(ContainerState.EMPTY);
+        routePart.setRouteType(BARGE_RAIL);
 
         BigDecimal emission = sut.getEmissionForRoutePart(routePart);
         assertThat(subRoutePart1.getCo2(), comparesEqualTo(new BigDecimal(4)));
@@ -103,6 +107,7 @@ public class Co2PartBargeRailStrategyUnitTest {
         routePart.setOrigin(seaport);
         routePart.setDestination(terminal);
         routePart.setContainerState(ContainerState.FULL);
+        routePart.setRouteType(BARGE_RAIL);
 
         BigDecimal emission = sut.getEmissionForRoutePart(routePart);
         assertThat(subRoutePart2.getCo2(), comparesEqualTo(new BigDecimal(51)));

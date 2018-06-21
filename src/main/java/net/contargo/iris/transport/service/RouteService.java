@@ -27,7 +27,8 @@ import static java.math.RoundingMode.UP;
 public class RouteService {
 
     private static final BigDecimal METER_PER_KILOMETER = new BigDecimal("1000");
-    private static final int SCALE = 2;
+    private static final BigDecimal SECONDS_PER_MINUTES = new BigDecimal("60");
+
     private final RoutingQueryStrategyProvider routingQueryStrategyProvider;
 
     public RouteService(RoutingQueryStrategyProvider routingQueryStrategyProvider) {
@@ -54,7 +55,9 @@ public class RouteService {
 
         Integer toll = queryResult.getToll().setScale(0, UP).intValue();
 
-        Integer duration = BigDecimal.valueOf(queryResult.getTotalTime()).setScale(0, UP).intValue();
+        Integer duration = BigDecimal.valueOf(queryResult.getTotalTime())
+                .divide(SECONDS_PER_MINUTES, 0, UP)
+                .intValue();
 
         RouteStatus status = null;
 

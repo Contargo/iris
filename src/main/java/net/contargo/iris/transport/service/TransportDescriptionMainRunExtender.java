@@ -32,7 +32,7 @@ public class TransportDescriptionMainRunExtender {
     private static final BigDecimal AVERAGE_SPEED_BARGE_UPSTREAM = new BigDecimal("10.0");
     private static final BigDecimal AVERAGE_SPEED_BARGE_DOWNSTREAM = new BigDecimal("18.0");
     private static final BigDecimal AVERAGE_SPEED_RAIL = new BigDecimal("45.0");
-    private static final BigDecimal SECONDS_IN_AN_HOUR = new BigDecimal("60.0");
+    private static final BigDecimal MINUTES_PER_HOUR = new BigDecimal("60.0");
 
     private static final int DIGITS_TO_ROUND = 0;
     private static final int SCALE = 2;
@@ -135,7 +135,7 @@ public class TransportDescriptionMainRunExtender {
 
     static int calculateDuration(BigDecimal distance, BigDecimal divisor) {
 
-        return distance.multiply(SECONDS_IN_AN_HOUR).divide(divisor, DIGITS_TO_ROUND, UP).intValue();
+        return distance.multiply(MINUTES_PER_HOUR).divide(divisor, DIGITS_TO_ROUND, UP).intValue();
     }
 
 

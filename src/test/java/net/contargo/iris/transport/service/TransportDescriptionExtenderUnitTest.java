@@ -3,6 +3,8 @@ package net.contargo.iris.transport.service;
 import net.contargo.iris.transport.api.TransportDescriptionDto;
 import net.contargo.iris.transport.api.TransportResponseDto;
 import net.contargo.iris.transport.api.TransportStop;
+import net.contargo.iris.units.MassUnit;
+import net.contargo.iris.units.Weight;
 
 import org.junit.Test;
 
@@ -99,17 +101,17 @@ public class TransportDescriptionExtenderUnitTest {
         assertThat(result.transportChain.get(0).duration, nullValue());
         assertThat(result.transportChain.get(0).distance, nullValue());
         assertThat(result.transportChain.get(0).tollDistance, nullValue());
-        assertThat(result.transportChain.get(0).co2, comparesEqualTo(new BigDecimal("5.00")));
+        assertThat(result.transportChain.get(0).co2.value, comparesEqualTo(new BigDecimal("5.00")));
 
         assertThat(result.transportChain.get(1).duration, nullValue());
         assertThat(result.transportChain.get(1).distance, nullValue());
         assertThat(result.transportChain.get(1).tollDistance, nullValue());
-        assertThat(result.transportChain.get(1).co2, comparesEqualTo(new BigDecimal("6")));
+        assertThat(result.transportChain.get(1).co2.value, comparesEqualTo(new BigDecimal("6")));
 
         assertThat(result.transportChain.get(2).duration, nullValue());
         assertThat(result.transportChain.get(2).distance, nullValue());
         assertThat(result.transportChain.get(2).tollDistance, nullValue());
-        assertThat(result.transportChain.get(2).co2, comparesEqualTo(new BigDecimal("6.00")));
+        assertThat(result.transportChain.get(2).co2.value, comparesEqualTo(new BigDecimal("6.00")));
     }
 
 
@@ -119,7 +121,7 @@ public class TransportDescriptionExtenderUnitTest {
             invocation -> {
             TransportResponseDto.TransportResponseSegment segment = (TransportResponseDto.TransportResponseSegment)
                 invocation.getArguments()[0];
-            segment.co2 = new BigDecimal(co2);
+            segment.co2 = new Weight(new BigDecimal(co2), MassUnit.KILOGRAM);
 
             return null;
         };

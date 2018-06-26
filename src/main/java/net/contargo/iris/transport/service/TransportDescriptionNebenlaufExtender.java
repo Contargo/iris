@@ -4,6 +4,7 @@ import net.contargo.iris.GeoLocation;
 import net.contargo.iris.routedatarevision.service.RouteDataRevisionService;
 import net.contargo.iris.transport.api.ModeOfTransport;
 import net.contargo.iris.transport.api.TransportResponseDto;
+import net.contargo.iris.units.Distance;
 
 import org.springframework.core.convert.ConversionService;
 
@@ -12,6 +13,7 @@ import java.math.BigInteger;
 import static net.contargo.iris.co2.Co2Calculator.road;
 import static net.contargo.iris.transport.api.StopType.ADDRESS;
 import static net.contargo.iris.transport.api.StopType.TERMINAL;
+import static net.contargo.iris.units.LengthUnit.KILOMETRE;
 
 
 /**
@@ -39,14 +41,14 @@ public class TransportDescriptionNebenlaufExtender {
         ModeOfTransport mot = segment.modeOfTransport;
         RouteResult routeResult = routeService.route(start, end, mot);
 
-        segment.distance = routeResult.getDistance();
-        segment.tollDistance = routeResult.getToll();
+        segment.distance = new Distance(routeResult.getDistance(), KILOMETRE);
+        segment.tollDistance = new Distance(routeResult.getToll(), KILOMETRE);
         segment.duration = routeResult.getDuration();
         segment.geometries = routeResult.getGeometries();
 
         applyRouteRevision(segment);
 
-        segment.co2 = road(segment.distance, segment.loadingState);
+        segment.co2 = road(routeResult.getDistance(), segment.loadingState);
     }
 
 
@@ -57,8 +59,8 @@ public class TransportDescriptionNebenlaufExtender {
         GeoLocation address = getAddress(segment);
 
         routeDataRevisionService.getRouteDataRevision(uuid, address).ifPresent(r -> {
-            segment.distance = r.getTruckDistanceOneWayInKilometer().intValue();
-            segment.tollDistance = r.getTollDistanceOneWayInKilometer().intValue();
+            segment.distance = new Distance(r.getTruckDistanceOneWayInKilometer().intValue(), KILOMETRE);
+            segment.tollDistance = new Distance(r.getTollDistanceOneWayInKilometer().intValue(), KILOMETRE);
         });
     }
 

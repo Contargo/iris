@@ -26,6 +26,7 @@ import static net.contargo.iris.container.ContainerState.FULL;
 import static net.contargo.iris.transport.api.StopType.ADDRESS;
 import static net.contargo.iris.transport.api.StopType.SEAPORT;
 import static net.contargo.iris.transport.api.StopType.TERMINAL;
+import static net.contargo.iris.units.LengthUnit.KILOMETRE;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -88,7 +89,8 @@ public class TransportDescriptionMainRunExtenderUnitTest {
 
         sut.with(segment);
 
-        assertThat(segment.distance, is(400));
+        assertThat(segment.distance.value, is(400));
+        assertThat(segment.distance.unit, is(KILOMETRE));
         assertThat(segment.duration, is(1334));
         assertThat(segment.co2, comparesEqualTo(new BigDecimal("68.00")));
     }
@@ -118,7 +120,8 @@ public class TransportDescriptionMainRunExtenderUnitTest {
 
         sut.with(segment);
 
-        assertThat(segment.distance, is(500));
+        assertThat(segment.distance.value, is(500));
+        assertThat(segment.distance.unit, is(KILOMETRE));
         assertThat(segment.duration, is(3000));
         assertThat(segment.co2, comparesEqualTo(new BigDecimal("135.00")));
     }
@@ -145,7 +148,8 @@ public class TransportDescriptionMainRunExtenderUnitTest {
 
         sut.with(segment);
 
-        assertThat(segment.distance, is(600));
+        assertThat(segment.distance.value, is(600));
+        assertThat(segment.distance.unit, is(KILOMETRE));
         assertThat(segment.duration, is(800));
         assertThat(segment.co2, comparesEqualTo(new BigDecimal("268.00")));
     }

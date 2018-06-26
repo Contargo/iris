@@ -8,6 +8,7 @@ import net.contargo.iris.terminal.Region;
 import net.contargo.iris.transport.api.ModeOfTransport;
 import net.contargo.iris.transport.api.StopType;
 import net.contargo.iris.transport.api.TransportResponseDto;
+import net.contargo.iris.units.Distance;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -18,6 +19,7 @@ import static net.contargo.iris.co2.Co2Calculator.rail;
 import static net.contargo.iris.co2.Co2Calculator.water;
 import static net.contargo.iris.transport.api.StopType.SEAPORT;
 import static net.contargo.iris.transport.api.StopType.TERMINAL;
+import static net.contargo.iris.units.LengthUnit.KILOMETRE;
 
 import static java.math.RoundingMode.UP;
 
@@ -85,7 +87,7 @@ public class TransportDescriptionMainRunExtender {
 
         BigDecimal railDistance = dieselDistance.add(electricDistance);
 
-        segment.distance = railDistance.intValue();
+        segment.distance = new Distance(railDistance.intValue(), KILOMETRE);
         segment.duration = calculateDuration(railDistance, AVERAGE_SPEED_RAIL);
         segment.co2 = rail(dieselDistance.intValue(), electricDistance.intValue(), segment.loadingState);
     }
@@ -113,9 +115,10 @@ public class TransportDescriptionMainRunExtender {
         BigDecimal bargeDistance = mainRunConnection.getBargeDieselDistance().setScale(SCALE, UP);
         Region region = mainRunConnection.getTerminal().getRegion();
 
-        segment.distance = bargeDistance.intValue();
+        int convertedBargeDistance = bargeDistance.intValue();
+        segment.distance = new Distance(convertedBargeDistance, KILOMETRE);
         segment.duration = calculateDuration(bargeDistance, divisor);
-        segment.co2 = water(segment.distance, region, segment.loadingState, flowDirection);
+        segment.co2 = water(convertedBargeDistance, region, segment.loadingState, flowDirection);
     }
 
 

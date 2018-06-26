@@ -5,6 +5,7 @@ import net.contargo.iris.routedatarevision.service.RouteDataRevisionService;
 import net.contargo.iris.transport.api.ModeOfTransport;
 import net.contargo.iris.transport.api.TransportResponseDto;
 import net.contargo.iris.units.Distance;
+import net.contargo.iris.units.Duration;
 
 import org.springframework.core.convert.ConversionService;
 
@@ -14,6 +15,7 @@ import static net.contargo.iris.co2.Co2Calculator.road;
 import static net.contargo.iris.transport.api.StopType.ADDRESS;
 import static net.contargo.iris.transport.api.StopType.TERMINAL;
 import static net.contargo.iris.units.LengthUnit.KILOMETRE;
+import static net.contargo.iris.units.TimeUnit.MINUTE;
 
 
 /**
@@ -43,7 +45,7 @@ public class TransportDescriptionNebenlaufExtender {
 
         segment.distance = new Distance(routeResult.getDistance(), KILOMETRE);
         segment.tollDistance = new Distance(routeResult.getToll(), KILOMETRE);
-        segment.duration = routeResult.getDuration();
+        segment.duration = new Duration(routeResult.getDuration(), MINUTE);
         segment.geometries = routeResult.getGeometries();
 
         applyRouteRevision(segment);

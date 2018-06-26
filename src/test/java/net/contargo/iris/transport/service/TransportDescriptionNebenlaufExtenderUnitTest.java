@@ -30,6 +30,7 @@ import static net.contargo.iris.transport.api.StopType.ADDRESS;
 import static net.contargo.iris.transport.api.StopType.TERMINAL;
 import static net.contargo.iris.transport.service.RouteStatus.OK;
 import static net.contargo.iris.units.LengthUnit.KILOMETRE;
+import static net.contargo.iris.units.TimeUnit.MINUTE;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -93,7 +94,8 @@ public class TransportDescriptionNebenlaufExtenderUnitTest {
         assertThat(segment.distance.unit, is(KILOMETRE));
         assertThat(segment.tollDistance.value, is(20));
         assertThat(segment.tollDistance.unit, is(KILOMETRE));
-        assertThat(segment.duration, is(300));
+        assertThat(segment.duration.value, is(300));
+        assertThat(segment.duration.unit, is(MINUTE));
         assertThat(segment.geometries.get(0), is("geometries1"));
         assertThat(segment.geometries.get(1), is("geometries2"));
     }
@@ -133,7 +135,8 @@ public class TransportDescriptionNebenlaufExtenderUnitTest {
         assertThat(segment.distance.unit, is(KILOMETRE));
         assertThat(segment.tollDistance.value, is(32));
         assertThat(segment.tollDistance.unit, is(KILOMETRE));
-        assertThat(segment.duration, is(300));
+        assertThat(segment.duration.value, is(300));
+        assertThat(segment.duration.unit, is(MINUTE));
         assertThat(segment.geometries.get(0), is("geometries1"));
     }
 

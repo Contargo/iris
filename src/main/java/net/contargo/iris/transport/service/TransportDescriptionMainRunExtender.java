@@ -9,6 +9,7 @@ import net.contargo.iris.transport.api.ModeOfTransport;
 import net.contargo.iris.transport.api.StopType;
 import net.contargo.iris.transport.api.TransportResponseDto;
 import net.contargo.iris.units.Distance;
+import net.contargo.iris.units.Duration;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -20,6 +21,7 @@ import static net.contargo.iris.co2.Co2Calculator.water;
 import static net.contargo.iris.transport.api.StopType.SEAPORT;
 import static net.contargo.iris.transport.api.StopType.TERMINAL;
 import static net.contargo.iris.units.LengthUnit.KILOMETRE;
+import static net.contargo.iris.units.TimeUnit.MINUTE;
 
 import static java.math.RoundingMode.UP;
 
@@ -136,9 +138,10 @@ public class TransportDescriptionMainRunExtender {
     }
 
 
-    static int calculateDuration(BigDecimal distance, BigDecimal divisor) {
+    static Duration calculateDuration(BigDecimal distance, BigDecimal divisor) {
 
-        return distance.multiply(MINUTES_PER_HOUR).divide(divisor, DIGITS_TO_ROUND, UP).intValue();
+        return new Duration(distance.multiply(MINUTES_PER_HOUR).divide(divisor, DIGITS_TO_ROUND, UP).intValue(),
+                MINUTE);
     }
 
 

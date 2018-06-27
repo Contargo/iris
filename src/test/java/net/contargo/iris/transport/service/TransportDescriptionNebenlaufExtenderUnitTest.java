@@ -29,9 +29,13 @@ import static net.contargo.iris.transport.api.ModeOfTransport.ROAD;
 import static net.contargo.iris.transport.api.StopType.ADDRESS;
 import static net.contargo.iris.transport.api.StopType.TERMINAL;
 import static net.contargo.iris.transport.service.RouteStatus.OK;
+import static net.contargo.iris.units.LengthUnit.KILOMETRE;
+import static net.contargo.iris.units.MassUnit.KILOGRAM;
+import static net.contargo.iris.units.TimeUnit.MINUTE;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import static org.hamcrest.Matchers.comparesEqualTo;
 import static org.hamcrest.Matchers.is;
 
 import static org.mockito.Matchers.any;
@@ -88,9 +92,14 @@ public class TransportDescriptionNebenlaufExtenderUnitTest {
 
         sut.with(segment);
 
-        assertThat(segment.distance, is(40));
-        assertThat(segment.tollDistance, is(20));
-        assertThat(segment.duration, is(300));
+        assertThat(segment.distance.value, is(40));
+        assertThat(segment.distance.unit, is(KILOMETRE));
+        assertThat(segment.tollDistance.value, is(20));
+        assertThat(segment.tollDistance.unit, is(KILOMETRE));
+        assertThat(segment.duration.value, is(300));
+        assertThat(segment.duration.unit, is(MINUTE));
+        assertThat(segment.co2.value, comparesEqualTo(new BigDecimal("29.2")));
+        assertThat(segment.co2.unit, is(KILOGRAM));
         assertThat(segment.geometries.get(0), is("geometries1"));
         assertThat(segment.geometries.get(1), is("geometries2"));
     }
@@ -126,9 +135,14 @@ public class TransportDescriptionNebenlaufExtenderUnitTest {
 
         sut.with(segment);
 
-        assertThat(segment.distance, is(50));
-        assertThat(segment.tollDistance, is(32));
-        assertThat(segment.duration, is(300));
+        assertThat(segment.distance.value, is(50));
+        assertThat(segment.distance.unit, is(KILOMETRE));
+        assertThat(segment.tollDistance.value, is(32));
+        assertThat(segment.tollDistance.unit, is(KILOMETRE));
+        assertThat(segment.duration.value, is(300));
+        assertThat(segment.duration.unit, is(MINUTE));
+        assertThat(segment.co2.value, comparesEqualTo(new BigDecimal("29.2")));
+        assertThat(segment.co2.unit, is(KILOGRAM));
         assertThat(segment.geometries.get(0), is("geometries1"));
     }
 

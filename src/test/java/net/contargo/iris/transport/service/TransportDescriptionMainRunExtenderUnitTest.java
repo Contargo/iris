@@ -8,6 +8,7 @@ import net.contargo.iris.transport.api.ModeOfTransport;
 import net.contargo.iris.transport.api.TransportDescriptionDto;
 import net.contargo.iris.transport.api.TransportResponseDto;
 import net.contargo.iris.transport.api.TransportStop;
+import net.contargo.iris.units.Duration;
 
 import org.junit.Test;
 
@@ -26,6 +27,9 @@ import static net.contargo.iris.container.ContainerState.FULL;
 import static net.contargo.iris.transport.api.StopType.ADDRESS;
 import static net.contargo.iris.transport.api.StopType.SEAPORT;
 import static net.contargo.iris.transport.api.StopType.TERMINAL;
+import static net.contargo.iris.units.LengthUnit.KILOMETRE;
+import static net.contargo.iris.units.MassUnit.KILOGRAM;
+import static net.contargo.iris.units.TimeUnit.MINUTE;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -37,6 +41,7 @@ import static org.mockito.Mockito.when;
 
 /**
  * @author  Ben Antony - antony@synyx.de
+ * @author  Sandra Thieme - thieme@synyx.de
  */
 @RunWith(MockitoJUnitRunner.class)
 public class TransportDescriptionMainRunExtenderUnitTest {
@@ -58,9 +63,10 @@ public class TransportDescriptionMainRunExtenderUnitTest {
 
     private void assertDuration(String distance, int expected) {
 
-        int result = TransportDescriptionMainRunExtender.calculateDuration(new BigDecimal(distance),
+        Duration result = TransportDescriptionMainRunExtender.calculateDuration(new BigDecimal(distance),
                 new BigDecimal("1"));
-        assertThat(result, is(expected));
+        assertThat(result.value, is(expected));
+        assertThat(result.unit, is(MINUTE));
     }
 
 
@@ -88,9 +94,12 @@ public class TransportDescriptionMainRunExtenderUnitTest {
 
         sut.with(segment);
 
-        assertThat(segment.distance, is(400));
-        assertThat(segment.duration, is(1334));
-        assertThat(segment.co2, comparesEqualTo(new BigDecimal("68.00")));
+        assertThat(segment.distance.value, is(400));
+        assertThat(segment.distance.unit, is(KILOMETRE));
+        assertThat(segment.duration.value, is(1334));
+        assertThat(segment.duration.unit, is(MINUTE));
+        assertThat(segment.co2.value, comparesEqualTo(new BigDecimal("68.00")));
+        assertThat(segment.co2.unit, is(KILOGRAM));
     }
 
 
@@ -118,9 +127,12 @@ public class TransportDescriptionMainRunExtenderUnitTest {
 
         sut.with(segment);
 
-        assertThat(segment.distance, is(500));
-        assertThat(segment.duration, is(3000));
-        assertThat(segment.co2, comparesEqualTo(new BigDecimal("135.00")));
+        assertThat(segment.distance.value, is(500));
+        assertThat(segment.distance.unit, is(KILOMETRE));
+        assertThat(segment.duration.value, is(3000));
+        assertThat(segment.duration.unit, is(MINUTE));
+        assertThat(segment.co2.value, comparesEqualTo(new BigDecimal("135.00")));
+        assertThat(segment.co2.unit, is(KILOGRAM));
     }
 
 
@@ -145,9 +157,12 @@ public class TransportDescriptionMainRunExtenderUnitTest {
 
         sut.with(segment);
 
-        assertThat(segment.distance, is(600));
-        assertThat(segment.duration, is(800));
-        assertThat(segment.co2, comparesEqualTo(new BigDecimal("268.00")));
+        assertThat(segment.distance.value, is(600));
+        assertThat(segment.distance.unit, is(KILOMETRE));
+        assertThat(segment.duration.value, is(800));
+        assertThat(segment.duration.unit, is(MINUTE));
+        assertThat(segment.co2.value, comparesEqualTo(new BigDecimal("268.00")));
+        assertThat(segment.co2.unit, is(KILOGRAM));
     }
 
 

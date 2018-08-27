@@ -12,6 +12,7 @@ import net.contargo.iris.seaport.service.SeaportService;
 import net.contargo.iris.terminal.Terminal;
 import net.contargo.iris.terminal.service.TerminalService;
 
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -70,6 +71,7 @@ public class MainRunConnectionServiceImpl implements MainRunConnectionService {
 
 
     @Override
+    @CacheEvict({ "terminalMainRunConnections", "terminalSeaportMainRunConnections" })
     public MainRunConnection save(MainRunConnection mainrunConnection) {
 
         mainrunConnection.setSeaport(seaportService.getByUniqueId(mainrunConnection.getSeaport().getUniqueId()));

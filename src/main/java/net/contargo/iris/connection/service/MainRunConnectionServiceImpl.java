@@ -71,7 +71,7 @@ public class MainRunConnectionServiceImpl implements MainRunConnectionService {
 
 
     @Override
-    @CacheEvict({ "terminalMainRunConnections", "terminalSeaportMainRunConnections" })
+    @CacheEvict(value = { "terminalMainRunConnections", "terminalSeaportMainRunConnections" }, allEntries = true)
     public MainRunConnection save(MainRunConnection mainrunConnection) {
 
         mainrunConnection.setSeaport(seaportService.getByUniqueId(mainrunConnection.getSeaport().getUniqueId()));

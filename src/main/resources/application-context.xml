@@ -206,7 +206,6 @@
         <constructor-arg name="mainRunConnectionRepository" ref="mainRunConnectionRepository"/>
         <constructor-arg name="seaportService" ref="seaportService"/>
         <constructor-arg name="terminalService" ref="terminalService"/>
-        <constructor-arg name="bargeRailConnectionFinderService" ref="bargeRailConnectionFinderService"/>
     </bean>
 
     <bean id="seaportTerminalConnectionService"
@@ -269,8 +268,6 @@
           class="net.contargo.iris.connection.dto.SeaportConnectionRoutesDtoServiceImpl">
         <constructor-arg name="seaportConnectionRoutesService" ref="seaportConnectionRoutesService"/>
     </bean>
-
-    <bean id="bargeRailConnectionFinderService" class="net.contargo.iris.connection.service.BargeRailConnectionFinderService"/>
 
     <bean id="enricherService" class="net.contargo.iris.route.service.EnricherServiceImpl">
         <constructor-arg name="routePartEnricherList">

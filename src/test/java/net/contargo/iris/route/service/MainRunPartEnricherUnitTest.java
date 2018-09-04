@@ -22,15 +22,12 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 
-import java.util.Collections;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
 
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -86,7 +83,7 @@ public class MainRunPartEnricherUnitTest {
         routePart.setRouteType(routeType);
 
         when(mainRunConnectionServiceMock.findRoutingConnectionBetweenTerminalAndSeaportByType(terminal, seaport,
-                    routeType, Collections.emptyList())).thenReturn(mainrunConnection);
+                    routeType)).thenReturn(mainrunConnection);
         when(connectionDistanceServiceMock.getElectricDistance(mainrunConnection)).thenReturn(ELECTRICAL_DISTANCE);
         when(connectionDistanceServiceMock.getDistance(mainrunConnection)).thenReturn(DISTANCE);
         when(connectionDistanceServiceMock.getDieselDistance(mainrunConnection)).thenReturn(DIESEL_DISTANCE);
@@ -136,7 +133,7 @@ public class MainRunPartEnricherUnitTest {
     public void enrichWithoutMainRunConnection() throws CriticalEnricherException {
 
         when(mainRunConnectionServiceMock.findRoutingConnectionBetweenTerminalAndSeaportByType(any(Terminal.class),
-                    any(Seaport.class), any(RouteType.class), eq(Collections.emptyList()))).thenReturn(null);
+                    any(Seaport.class), any(RouteType.class))).thenReturn(null);
 
         sut.enrich(routePart, enricherContext);
     }

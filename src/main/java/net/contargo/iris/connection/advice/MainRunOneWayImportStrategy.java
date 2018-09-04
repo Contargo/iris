@@ -22,12 +22,7 @@ class MainRunOneWayImportStrategy implements MainRunStrategy {
 
         RouteBuilder routeBuilder = new RouteBuilder(connection.getSeaport(), containerType, ContainerState.FULL);
 
-        if (connection.getSubConnections().isEmpty()) {
-            routeBuilder.goTo(connection.getTerminal(), connection.getRouteType());
-        } else {
-            routeBuilder.goToTerminalViaSubConnections(connection.getTerminal(), connection.getSubConnections());
-        }
-
+        routeBuilder.goTo(connection.getTerminal(), connection.getRouteType());
         routeBuilder.goTo(destination, TRUCK);
         routeBuilder.unloadContainer();
         routeBuilder.goTo(connection.getTerminal(), TRUCK);

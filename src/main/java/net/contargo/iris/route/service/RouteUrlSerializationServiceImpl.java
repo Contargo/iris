@@ -2,7 +2,6 @@ package net.contargo.iris.route.service;
 
 import net.contargo.iris.connection.dto.RouteDto;
 import net.contargo.iris.connection.dto.RoutePartDto;
-import net.contargo.iris.connection.dto.SubRoutePartDto;
 
 
 /**
@@ -12,8 +11,7 @@ import net.contargo.iris.connection.dto.SubRoutePartDto;
  */
 public class RouteUrlSerializationServiceImpl implements RouteUrlSerializationService {
 
-    public static final String DATA_PARTS = "&data.parts[";
-    private static final String SUB_ROUTE_PARTS = "].subRouteParts[";
+    private static final String DATA_PARTS = "&data.parts[";
 
     @Override
     public void serializeUrl(RouteDto route, String baseUrlRoute, String baseUrlRoutePart) {
@@ -50,25 +48,6 @@ public class RouteUrlSerializationServiceImpl implements RouteUrlSerializationSe
 
             url.append(DATA_PARTS).append(i).append("].containerState=");
             url.append(routePart.getContainerState());
-
-            for (int j = 0; j < routePart.getSubRouteParts().size(); j++) {
-                SubRoutePartDto subRoutePart = routePart.getSubRouteParts().get(j);
-
-                url.append(DATA_PARTS).append(i).append(SUB_ROUTE_PARTS).append(j).append("].origin.longitude=");
-                url.append(subRoutePart.getOrigin().getLongitude());
-
-                url.append(DATA_PARTS).append(i).append(SUB_ROUTE_PARTS).append(j).append("].origin.latitude=");
-                url.append(subRoutePart.getOrigin().getLatitude());
-
-                url.append(DATA_PARTS).append(i).append(SUB_ROUTE_PARTS).append(j).append("].destination.longitude=");
-                url.append(subRoutePart.getDestination().getLongitude());
-
-                url.append(DATA_PARTS).append(i).append(SUB_ROUTE_PARTS).append(j).append("].destination.latitude=");
-                url.append(subRoutePart.getDestination().getLatitude());
-
-                url.append(DATA_PARTS).append(i).append(SUB_ROUTE_PARTS).append(j).append("].routeType=");
-                url.append(subRoutePart.getRouteType());
-            }
         }
 
         route.setUrl(url.toString());

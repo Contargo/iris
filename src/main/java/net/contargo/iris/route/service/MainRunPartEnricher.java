@@ -47,8 +47,7 @@ class MainRunPartEnricher implements RoutePartEnricher {
 
             try {
                 mainRunConnection = mainRunConnectionService.findRoutingConnectionBetweenTerminalAndSeaportByType(
-                        routePart.findTerminal(), routePart.findSeaport(), routePart.getRouteType(),
-                        routePart.getSubRouteParts());
+                        routePart.findTerminal(), routePart.findSeaport(), routePart.getRouteType());
 
                 if (mainRunConnection == null) {
                     throw new IllegalStateException("mainRunConnection may not be null");

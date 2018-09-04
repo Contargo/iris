@@ -6,7 +6,6 @@ import net.contargo.iris.connection.SeaportSubConnection;
 import net.contargo.iris.connection.TerminalSubConnection;
 import net.contargo.iris.connection.persistence.MainRunConnectionRepository;
 import net.contargo.iris.route.RouteType;
-import net.contargo.iris.route.SubRoutePart;
 import net.contargo.iris.seaport.Seaport;
 import net.contargo.iris.seaport.service.SeaportService;
 import net.contargo.iris.terminal.Terminal;
@@ -37,16 +36,13 @@ public class MainRunConnectionServiceImpl implements MainRunConnectionService {
     private final MainRunConnectionRepository mainRunConnectionRepository;
     private final SeaportService seaportService;
     private final TerminalService terminalService;
-    private final BargeRailConnectionFinderService bargeRailConnectionFinderService;
 
     public MainRunConnectionServiceImpl(MainRunConnectionRepository mainRunConnectionRepository,
-        SeaportService seaportService, TerminalService terminalService,
-        BargeRailConnectionFinderService bargeRailConnectionFinderService) {
+        SeaportService seaportService, TerminalService terminalService) {
 
         this.mainRunConnectionRepository = mainRunConnectionRepository;
         this.seaportService = seaportService;
         this.terminalService = terminalService;
-        this.bargeRailConnectionFinderService = bargeRailConnectionFinderService;
     }
 
     @Override
@@ -100,7 +96,7 @@ public class MainRunConnectionServiceImpl implements MainRunConnectionService {
     @Override
     @Transactional(readOnly = true)
     public MainRunConnection findRoutingConnectionBetweenTerminalAndSeaportByType(Terminal terminal, Seaport seaport,
-        RouteType routeType, List<SubRoutePart> subRouteParts) {
+        RouteType routeType) {
 
         Assert.notNull(terminal);
         Assert.notNull(seaport);
@@ -114,11 +110,7 @@ public class MainRunConnectionServiceImpl implements MainRunConnectionService {
             return null;
         }
 
-        if (routeType == RouteType.BARGE_RAIL) {
-            return bargeRailConnectionFinderService.findMatchingBargeRailConnection(connections, subRouteParts);
-        } else {
-            return connections.get(0);
-        }
+        return connections.get(0);
     }
 
 

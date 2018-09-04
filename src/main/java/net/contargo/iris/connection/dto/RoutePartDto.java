@@ -6,13 +6,6 @@ import net.contargo.iris.container.ContainerType;
 import net.contargo.iris.route.RoutePart;
 import net.contargo.iris.route.RouteType;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static net.contargo.iris.route.RouteType.BARGE_RAIL;
-
-import static java.util.stream.Collectors.toList;
-
 
 /**
  * Dto layer for {@link RoutePart}.
@@ -29,7 +22,6 @@ public class RoutePartDto {
     private RoutePart.Direction direction;
     private RouteType routeType;
     private GeoLocationDto destination;
-    private List<SubRoutePartDto> subRouteParts = new ArrayList<>();
 
     public RoutePartDto() {
 
@@ -48,10 +40,6 @@ public class RoutePartDto {
             this.data = part.getData() == null ? null : new RoutePartDataDto(part.getData());
             this.origin = GeolocationDtoFactory.createGeolocationDto(part.getOrigin());
             this.destination = GeolocationDtoFactory.createGeolocationDto(part.getDestination());
-
-            if (part.getRouteType() == BARGE_RAIL) {
-                this.subRouteParts = part.getSubRouteParts().stream().map(SubRoutePartDto::new).collect(toList());
-            }
         }
     }
 
@@ -67,7 +55,6 @@ public class RoutePartDto {
         routePart.setRouteType(this.routeType);
         routePart.setContainerState(this.containerState);
         routePart.setContainerType(this.containerType);
-        routePart.setSubRouteParts(this.subRouteParts.stream().map(SubRoutePartDto::toSubRoutePart).collect(toList()));
 
         return routePart;
     }
@@ -121,12 +108,6 @@ public class RoutePartDto {
     }
 
 
-    public List<SubRoutePartDto> getSubRouteParts() {
-
-        return subRouteParts;
-    }
-
-
     public void setName(String name) {
 
         this.name = name;
@@ -172,11 +153,5 @@ public class RoutePartDto {
     public void setDestination(GeoLocationDto destination) {
 
         this.destination = destination;
-    }
-
-
-    public void setSubRouteParts(List<SubRoutePartDto> subRouteParts) {
-
-        this.subRouteParts = subRouteParts;
     }
 }

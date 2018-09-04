@@ -4,7 +4,6 @@ import net.contargo.iris.GeoLocation;
 import net.contargo.iris.address.nominatim.service.AddressResolutionException;
 import net.contargo.iris.location.GeoLocationService;
 import net.contargo.iris.route.RoutePart;
-import net.contargo.iris.route.SubRoutePart;
 import net.contargo.iris.terminal.Terminal;
 
 import org.junit.Before;
@@ -16,16 +15,11 @@ import org.mockito.Mock;
 
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static net.contargo.iris.route.RouteType.BARGE_RAIL;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 
-import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 
 import static org.mockito.Mockito.when;
-
-import static java.util.Collections.singletonList;
 
 
 /**
@@ -87,29 +81,5 @@ public class GeoLocationPartEnricherUnitTest {
                 new Throwable()));
 
         sut.enrich(routePart, enricherContext);
-    }
-
-
-    @Test
-    public void enrichWithSubRouteParts() throws CriticalEnricherException {
-
-        SubRoutePart subRoutePart = new SubRoutePart();
-        subRoutePart.setOrigin(x);
-        subRoutePart.setDestination(y);
-
-        Terminal t = new Terminal();
-        Terminal t2 = new Terminal();
-
-        routePart.setRouteType(BARGE_RAIL);
-        routePart.setSubRouteParts(singletonList(subRoutePart));
-
-        when(geoLocationServiceMock.getDetailedGeoLocation(x)).thenReturn(t);
-        when(geoLocationServiceMock.getDetailedGeoLocation(y)).thenReturn(t2);
-
-        sut.enrich(routePart, enricherContext);
-
-        assertThat(routePart.getSubRouteParts(), hasSize(1));
-        assertThat(routePart.getSubRouteParts().get(0).getOrigin(), is(t));
-        assertThat(routePart.getSubRouteParts().get(0).getDestination(), is(t2));
     }
 }

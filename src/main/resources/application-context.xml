@@ -368,9 +368,6 @@
         <constructor-arg name="truckStrategy">
             <bean class="net.contargo.iris.co2.advice.Co2PartTruckStrategy"/>
         </constructor-arg>
-        <constructor-arg name="bargeRailStrategy">
-            <bean class="net.contargo.iris.co2.advice.Co2PartBargeRailStrategy"/>
-        </constructor-arg>
         <constructor-arg name="dtruckStrategy">
             <bean class="net.contargo.iris.co2.advice.Co2PartDtruckStrategy"/>
         </constructor-arg>

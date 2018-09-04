@@ -8,7 +8,6 @@ import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static net.contargo.iris.route.RouteType.BARGE;
-import static net.contargo.iris.route.RouteType.BARGE_RAIL;
 import static net.contargo.iris.route.RouteType.DTRUCK;
 import static net.contargo.iris.route.RouteType.RAIL;
 import static net.contargo.iris.route.RouteType.TRUCK;
@@ -34,14 +33,12 @@ public class Co2PartStrategyAdvisorUnitTest {
     private Co2PartStrategy bargeStrategy = new Co2PartBargeStrategy();
     private Co2PartStrategy railStrategy = new Co2PartRailStrategy();
     private Co2PartStrategy truckStrategy = new Co2PartTruckStrategy();
-    private Co2PartStrategy bargeRailStrategy = new Co2PartBargeRailStrategy();
     private Co2PartStrategy dtruckStrategy = new Co2PartDtruckStrategy();
 
     @Before
     public void before() {
 
-        sut = new Co2PartStrategyAdvisor(bargeStrategy, railStrategy, truckStrategy, bargeRailStrategy,
-                dtruckStrategy);
+        sut = new Co2PartStrategyAdvisor(bargeStrategy, railStrategy, truckStrategy, dtruckStrategy);
     }
 
 
@@ -66,14 +63,6 @@ public class Co2PartStrategyAdvisorUnitTest {
 
         Co2PartStrategy strategy = sut.advice(TRUCK);
         assertThat(strategy, is(truckStrategy));
-    }
-
-
-    @Test
-    public void adviceForRouteTypeBargeRail() {
-
-        Co2PartStrategy strategy = sut.advice(BARGE_RAIL);
-        assertThat(strategy, is(bargeRailStrategy));
     }
 
 

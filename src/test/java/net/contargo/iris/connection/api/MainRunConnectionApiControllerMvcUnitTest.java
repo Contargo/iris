@@ -235,7 +235,6 @@ public class MainRunConnectionApiControllerMvcUnitTest {
         resultActions.andExpect(status().isOk());
         resultActions.andExpect(jsonPath("$['BARGE']", is("Barge")));
         resultActions.andExpect(jsonPath("$['RAIL']", is("Rail")));
-        resultActions.andExpect(jsonPath("$['BARGE_RAIL']", is("Barge-Rail")));
     }
 
 

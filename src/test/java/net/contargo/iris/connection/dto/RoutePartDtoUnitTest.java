@@ -47,7 +47,7 @@ public class RoutePartDtoUnitTest {
         RoutePart part = new RoutePart();
         part.setOrigin(geoLocation);
         part.setDestination(geoLocation);
-        part.setRouteType(RouteType.BARGE_RAIL);
+        part.setRouteType(RouteType.BARGE);
 
         RoutePartDto routePartDto = new RoutePartDto(part);
 

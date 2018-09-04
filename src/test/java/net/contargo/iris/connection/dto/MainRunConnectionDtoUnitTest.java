@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import java.math.BigInteger;
 
-import static net.contargo.iris.route.RouteType.BARGE_RAIL;
+import static net.contargo.iris.route.RouteType.BARGE;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -38,7 +38,7 @@ public class MainRunConnectionDtoUnitTest {
         assertThat(entity.getRailElectricDistance(), is(ZERO));
         assertThat(entity.getRailDieselDistance(), is(ZERO));
         assertThat(entity.getBargeDieselDistance(), is(ZERO));
-        assertThat(entity.getRouteType(), is(BARGE_RAIL));
+        assertThat(entity.getRouteType(), is(BARGE));
         assertThat(entity.getEnabled(), is(true));
         assertThat(entity.getSeaport().getUniqueId(), is(new BigInteger(SEAPORT_UID)));
         assertThat(entity.getTerminal().getUniqueId(), is(new BigInteger(TERMINAL_UID)));
@@ -47,7 +47,6 @@ public class MainRunConnectionDtoUnitTest {
 
     private MainRunConnectionDto createDto() {
 
-        return new MainRunConnectionDto(CONNECTION_ID, SEAPORT_UID, TERMINAL_UID, ZERO, ZERO, ZERO, ONE, BARGE_RAIL,
-                true);
+        return new MainRunConnectionDto(CONNECTION_ID, SEAPORT_UID, TERMINAL_UID, ZERO, ZERO, ZERO, ONE, BARGE, true);
     }
 }

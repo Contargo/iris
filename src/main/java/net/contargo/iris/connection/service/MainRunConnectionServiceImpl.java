@@ -70,7 +70,7 @@ public class MainRunConnectionServiceImpl implements MainRunConnectionService {
         mainrunConnection.setSeaport(seaportService.getByUniqueId(mainrunConnection.getSeaport().getUniqueId()));
         mainrunConnection.setTerminal(terminalService.getByUniqueId(mainrunConnection.getTerminal().getUniqueId()));
 
-        if (combinationExists(mainrunConnection) && mainrunConnection.getRouteType() != RouteType.BARGE_RAIL) {
+        if (combinationExists(mainrunConnection)) {
             throw new DuplicateMainRunConnectionException();
         }
 

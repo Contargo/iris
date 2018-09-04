@@ -73,7 +73,7 @@ public class MainRunConnectionServiceImplIntegrationTest {
 
         MainRunConnection connection = new MainRunConnection(seaport);
         connection.setTerminal(terminal);
-        connection.setRouteType(RouteType.BARGE_RAIL);
+        connection.setRouteType(RouteType.BARGE);
         connection.setBargeDieselDistance(ZERO);
         connection.setRailDieselDistance(ZERO);
         connection.setRailElectricDistance(ZERO);

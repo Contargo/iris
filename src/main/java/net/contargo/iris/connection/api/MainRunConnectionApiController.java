@@ -42,7 +42,6 @@ import java.util.TreeMap;
 import javax.validation.Valid;
 
 import static net.contargo.iris.route.RouteType.BARGE;
-import static net.contargo.iris.route.RouteType.BARGE_RAIL;
 import static net.contargo.iris.route.RouteType.DTRUCK;
 import static net.contargo.iris.route.RouteType.RAIL;
 
@@ -159,7 +158,6 @@ public class MainRunConnectionApiController {
 
         types.put(BARGE, "Barge");
         types.put(RAIL, "Rail");
-        types.put(BARGE_RAIL, "Barge-Rail");
 
         if (isDtruckFeatureActive) {
             types.put(DTRUCK, "Direct Truck");

@@ -3,7 +3,6 @@ package net.contargo.iris.route;
 import org.junit.Test;
 
 import static net.contargo.iris.route.RouteType.BARGE;
-import static net.contargo.iris.route.RouteType.BARGE_RAIL;
 import static net.contargo.iris.route.RouteType.RAIL;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -39,21 +38,11 @@ public class RouteComboUnitTest {
 
 
     @Test
-    public void getWaterwayRailRouteTypes() {
-
-        RouteType[] routeTypes = RouteCombo.WATERWAY_RAIL.getRouteTypes();
-
-        assertThat(routeTypes, arrayWithSize(1));
-        assertThat(routeTypes, arrayContainingInAnyOrder(BARGE_RAIL));
-    }
-
-
-    @Test
     public void getAllRouteTypes() {
 
         RouteType[] routeTypes = RouteCombo.ALL.getRouteTypes();
 
-        assertThat(routeTypes, arrayWithSize(3));
-        assertThat(routeTypes, arrayContainingInAnyOrder(BARGE, RAIL, BARGE_RAIL));
+        assertThat(routeTypes, arrayWithSize(2));
+        assertThat(routeTypes, arrayContainingInAnyOrder(BARGE, RAIL));
     }
 }

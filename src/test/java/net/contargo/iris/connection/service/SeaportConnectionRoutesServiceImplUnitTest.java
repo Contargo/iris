@@ -36,7 +36,6 @@ import static net.contargo.iris.route.RouteDirection.IMPORT;
 import static net.contargo.iris.route.RouteProduct.ONEWAY;
 import static net.contargo.iris.route.RouteProduct.ROUNDTRIP;
 import static net.contargo.iris.route.RouteType.BARGE;
-import static net.contargo.iris.route.RouteType.BARGE_RAIL;
 import static net.contargo.iris.route.RouteType.DTRUCK;
 import static net.contargo.iris.route.RouteType.RAIL;
 import static net.contargo.iris.route.RouteType.TRUCK;
@@ -248,18 +247,6 @@ public class SeaportConnectionRoutesServiceImplUnitTest {
         when(secondConnection.getEverythingEnabled()).thenReturn(true);
         when(secondConnection.getRouteType()).thenReturn(RAIL);
 
-        List<RouteType> expectedThirdRouteTypes = new ArrayList<>();
-        expectedThirdRouteTypes.add(BARGE_RAIL);
-        expectedThirdRouteTypes.add(TRUCK);
-        expectedThirdRouteTypes.add(TRUCK);
-
-        Route expectedThirdRoute = getExpectedRoute(expectedThirdRouteTypes);
-
-        MainRunConnection thirdConnection = mock(MainRunConnection.class);
-        when(thirdConnection.getSeaport()).thenReturn(seaport);
-        when(thirdConnection.getEverythingEnabled()).thenReturn(true);
-        when(thirdConnection.getRouteType()).thenReturn(RAIL);
-
         MainRunStrategy mainRunStrategy = mock(MainRunStrategy.class);
         when(mainRunAdvisorMock.advice(eq(ONEWAY), eq(IMPORT))).thenReturn(mainRunStrategy);
 
@@ -267,12 +254,9 @@ public class SeaportConnectionRoutesServiceImplUnitTest {
                 firstConnection, disabledConnection));
         when(seaportTerminalConnectionService.getConnectionsToSeaPortByRouteType(seaport, RAIL)).thenReturn(
             singletonList(secondConnection));
-        when(seaportTerminalConnectionService.getConnectionsToSeaPortByRouteType(seaport, BARGE_RAIL)).thenReturn(
-            singletonList(thirdConnection));
 
         when(mainRunStrategy.getRoute(firstConnection, destination, TWENTY_LIGHT)).thenReturn(expectedFirstRoute);
         when(mainRunStrategy.getRoute(secondConnection, destination, TWENTY_LIGHT)).thenReturn(expectedSecondRoute);
-        when(mainRunStrategy.getRoute(thirdConnection, destination, TWENTY_LIGHT)).thenReturn(expectedThirdRoute);
 
         RouteInformation information = new RouteInformation(destination, ONEWAY, containerType, IMPORT,
                 RouteCombo.ALL);
@@ -281,7 +265,7 @@ public class SeaportConnectionRoutesServiceImplUnitTest {
         List<Route> routes = sut.getAvailableSeaportConnectionRoutes(seaport, information);
 
         // assert stuff
-        assertThat(routes.size(), is(3));
+        assertThat(routes.size(), is(2));
 
         assertThat(routes.get(0).getData().getParts().size(), is(3));
         assertThat(routes.get(0).getData().getParts().get(0).getRouteType(), is(BARGE));
@@ -292,11 +276,6 @@ public class SeaportConnectionRoutesServiceImplUnitTest {
         assertThat(routes.get(1).getData().getParts().get(0).getRouteType(), is(RAIL));
         assertThat(routes.get(1).getData().getParts().get(1).getRouteType(), is(TRUCK));
         assertThat(routes.get(1).getData().getParts().get(2).getRouteType(), is(TRUCK));
-
-        assertThat(routes.get(2).getData().getParts().size(), is(3));
-        assertThat(routes.get(2).getData().getParts().get(0).getRouteType(), is(BARGE_RAIL));
-        assertThat(routes.get(2).getData().getParts().get(1).getRouteType(), is(TRUCK));
-        assertThat(routes.get(2).getData().getParts().get(2).getRouteType(), is(TRUCK));
     }
 
 
@@ -334,18 +313,6 @@ public class SeaportConnectionRoutesServiceImplUnitTest {
         when(secondConnection.getEverythingEnabled()).thenReturn(true);
         when(secondConnection.getRouteType()).thenReturn(RAIL);
 
-        List<RouteType> expectedThirdRouteTypes = new ArrayList<>();
-        expectedThirdRouteTypes.add(BARGE_RAIL);
-        expectedThirdRouteTypes.add(TRUCK);
-        expectedThirdRouteTypes.add(TRUCK);
-
-        Route expectedThirdRoute = getExpectedRoute(expectedThirdRouteTypes);
-
-        MainRunConnection thirdConnection = mock(MainRunConnection.class);
-        when(thirdConnection.getSeaport()).thenReturn(seaport);
-        when(thirdConnection.getEverythingEnabled()).thenReturn(true);
-        when(thirdConnection.getRouteType()).thenReturn(RAIL);
-
         List<RouteType> expectedFourthRouteTypes = new ArrayList<>();
         expectedFourthRouteTypes.add(DTRUCK);
         expectedFourthRouteTypes.add(TRUCK);
@@ -365,14 +332,11 @@ public class SeaportConnectionRoutesServiceImplUnitTest {
                 firstConnection, disabledConnection));
         when(seaportTerminalConnectionService.getConnectionsToSeaPortByRouteType(seaport, RAIL)).thenReturn(
             singletonList(secondConnection));
-        when(seaportTerminalConnectionService.getConnectionsToSeaPortByRouteType(seaport, BARGE_RAIL)).thenReturn(
-            singletonList(thirdConnection));
         when(seaportTerminalConnectionService.getConnectionsToSeaPortByRouteType(seaport, DTRUCK)).thenReturn(
             singletonList(fourthConnection));
 
         when(mainRunStrategy.getRoute(firstConnection, destination, TWENTY_LIGHT)).thenReturn(expectedFirstRoute);
         when(mainRunStrategy.getRoute(secondConnection, destination, TWENTY_LIGHT)).thenReturn(expectedSecondRoute);
-        when(mainRunStrategy.getRoute(thirdConnection, destination, TWENTY_LIGHT)).thenReturn(expectedThirdRoute);
         when(mainRunStrategy.getRoute(fourthConnection, destination, TWENTY_LIGHT)).thenReturn(expectedFourthRoute);
 
         RouteInformation information = new RouteInformation(destination, ONEWAY, containerType, IMPORT,
@@ -382,7 +346,7 @@ public class SeaportConnectionRoutesServiceImplUnitTest {
         List<Route> routes = sut.getAvailableSeaportConnectionRoutes(seaport, information);
 
         // assert stuff
-        assertThat(routes.size(), is(4));
+        assertThat(routes.size(), is(3));
 
         assertThat(routes.get(0).getData().getParts().size(), is(3));
         assertThat(routes.get(0).getData().getParts().get(0).getRouteType(), is(BARGE));
@@ -395,14 +359,9 @@ public class SeaportConnectionRoutesServiceImplUnitTest {
         assertThat(routes.get(1).getData().getParts().get(2).getRouteType(), is(TRUCK));
 
         assertThat(routes.get(2).getData().getParts().size(), is(3));
-        assertThat(routes.get(2).getData().getParts().get(0).getRouteType(), is(BARGE_RAIL));
+        assertThat(routes.get(2).getData().getParts().get(0).getRouteType(), is(DTRUCK));
         assertThat(routes.get(2).getData().getParts().get(1).getRouteType(), is(TRUCK));
         assertThat(routes.get(2).getData().getParts().get(2).getRouteType(), is(TRUCK));
-
-        assertThat(routes.get(3).getData().getParts().size(), is(3));
-        assertThat(routes.get(3).getData().getParts().get(0).getRouteType(), is(DTRUCK));
-        assertThat(routes.get(3).getData().getParts().get(1).getRouteType(), is(TRUCK));
-        assertThat(routes.get(3).getData().getParts().get(2).getRouteType(), is(TRUCK));
     }
 
 

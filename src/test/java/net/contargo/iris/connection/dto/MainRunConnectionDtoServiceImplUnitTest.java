@@ -37,7 +37,6 @@ import static java.math.BigDecimal.TEN;
 import static java.math.BigDecimal.ZERO;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
 
 
 /**
@@ -111,7 +110,7 @@ public class MainRunConnectionDtoServiceImplUnitTest {
     public void save() {
 
         MainRunConnectionDto dto = new MainRunConnectionDto(42L, ONE.toString(), TEN.toString(), ONE, TEN, ZERO, ONE,
-                BARGE, true, emptyList());
+                BARGE, true);
 
         MainRunConnection connection = newConnection(seaportOne, terminal, BARGE);
         connection.setId(42L);

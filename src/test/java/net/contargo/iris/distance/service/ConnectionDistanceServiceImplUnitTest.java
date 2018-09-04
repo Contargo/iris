@@ -1,11 +1,8 @@
 package net.contargo.iris.distance.service;
 
-import net.contargo.iris.connection.AbstractSubConnection;
 import net.contargo.iris.connection.MainRunConnection;
-import net.contargo.iris.connection.TerminalSubConnection;
 import net.contargo.iris.rounding.RoundingService;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import org.junit.runner.RunWith;
@@ -21,8 +18,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import static org.hamcrest.Matchers.comparesEqualTo;
 import static org.hamcrest.Matchers.is;
-
-import static org.mockito.Matchers.argThat;
 
 import static org.mockito.Mockito.when;
 
@@ -44,15 +39,6 @@ public class ConnectionDistanceServiceImplUnitTest {
     private MainRunConnection mainrunConnectionMock;
     @Mock
     private RoundingService roundingServiceMock;
-
-    private AbstractSubConnection subConnection;
-
-    @Before
-    public void setUp() {
-
-        subConnection = new TerminalSubConnection();
-    }
-
 
     @Test
     public void getDistance() {
@@ -113,53 +99,5 @@ public class ConnectionDistanceServiceImplUnitTest {
         when(roundingServiceMock.roundDistance(roadDistance)).thenReturn(new BigDecimal("467"));
 
         assertThat(sut.getDtruckDistance(mainrunConnectionMock), comparesEqualTo(new BigDecimal("467")));
-    }
-
-
-    @Test
-    public void getBargeDieselDistanceForSubConnection() {
-
-        subConnection.setBargeDieselDistance(TEN);
-        when(roundingServiceMock.roundDistance(TEN)).thenReturn(ONE);
-        assertThat(sut.getBargeDieselDistance(subConnection), is(ONE));
-    }
-
-
-    @Test
-    public void getRailDieselDistanceForSubConnection() {
-
-        subConnection.setRailDieselDistance(TEN);
-        when(roundingServiceMock.roundDistance(TEN)).thenReturn(ONE);
-        assertThat(sut.getRailDieselDistance(subConnection), is(ONE));
-    }
-
-
-    @Test
-    public void getRailElectricDistanceForSubConnection() {
-
-        subConnection.setRailElectricDistance(TEN);
-        when(roundingServiceMock.roundDistance(TEN)).thenReturn(ONE);
-        assertThat(sut.getRailElectricDistance(subConnection), is(ONE));
-    }
-
-
-    @Test
-    public void getDieselDistanceForSubConnection() {
-
-        subConnection.setBargeDieselDistance(TEN);
-        subConnection.setRailDieselDistance(TEN);
-        when(roundingServiceMock.roundDistance(argThat(comparesEqualTo(new BigDecimal(20))))).thenReturn(ONE);
-        assertThat(sut.getDieselDistance(subConnection), is(ONE));
-    }
-
-
-    @Test
-    public void getDistanceForSubConnection() {
-
-        subConnection.setBargeDieselDistance(TEN);
-        subConnection.setRailDieselDistance(TEN);
-        subConnection.setRailElectricDistance(TEN);
-        when(roundingServiceMock.roundDistance(argThat(comparesEqualTo(new BigDecimal(30))))).thenReturn(ONE);
-        assertThat(sut.getDistance(subConnection), is(ONE));
     }
 }

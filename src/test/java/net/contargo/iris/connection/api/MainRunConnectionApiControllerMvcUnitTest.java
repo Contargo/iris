@@ -28,7 +28,6 @@ import static net.contargo.iris.route.RouteType.BARGE;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
-import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.is;
 
@@ -53,7 +52,6 @@ import static java.math.BigDecimal.ONE;
 import static java.math.BigDecimal.TEN;
 import static java.math.BigDecimal.ZERO;
 
-import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
 
@@ -109,8 +107,7 @@ public class MainRunConnectionApiControllerMvcUnitTest {
     @Test
     public void getConnection() throws Exception {
 
-        MainRunConnectionDto dto = new MainRunConnectionDto(42L, "1", "2", ONE, TEN, ZERO, ONE, BARGE, true,
-                emptyList());
+        MainRunConnectionDto dto = new MainRunConnectionDto(42L, "1", "2", ONE, TEN, ZERO, ONE, BARGE, true);
 
         when(connectionApiDtoServiceMock.get(42L)).thenReturn(dto);
 
@@ -124,7 +121,6 @@ public class MainRunConnectionApiControllerMvcUnitTest {
         resultActions.andExpect(jsonPath("$.railDieselDistance", is(10)));
         resultActions.andExpect(jsonPath("$.railElectricDistance", is(0)));
         resultActions.andExpect(jsonPath("$.routeType", is("BARGE")));
-        resultActions.andExpect(jsonPath("$.subConnections", empty()));
         resultActions.andExpect(jsonPath("$.seaportUid", is("1")));
         resultActions.andExpect(jsonPath("$.terminalUid", is("2")));
         resultActions.andExpect(jsonPath("$.enabled", is(true)));
@@ -135,13 +131,13 @@ public class MainRunConnectionApiControllerMvcUnitTest {
     public void createConnection() throws Exception {
 
         when(connectionApiDtoServiceMock.save(any(MainRunConnectionDto.class))).thenReturn(new MainRunConnectionDto(
-                42L, null, null, null, null, null, null, null, null, null));
+                42L, null, null, null, null, null, null, null, null));
 
         MockHttpServletRequestBuilder builder = post("/connections/");
         builder.contentType("application/json;charset=UTF-8");
         builder.content(
             "{\"id\":42, \"bargeDieselDistance\":1,\"railDieselDistance\":10,\"roadDistance\":10,\"railElectricDistance\":0,"
-            + "\"routeType\":\"BARGE\",\"subConnections\":[],\"seaportUid\":\"1\",\"terminalUid\":\"2\","
+            + "\"routeType\":\"BARGE\",\"seaportUid\":\"1\",\"terminalUid\":\"2\","
             + "\"enabled\":true}");
 
         ResultActions resultActions = perform(builder);
@@ -166,7 +162,7 @@ public class MainRunConnectionApiControllerMvcUnitTest {
         builder.contentType("application/json;charset=UTF-8");
         builder.content(
             "{\"id\":42, \"bargeDieselDistance\":1,\"railDieselDistance\":10,\"roadDistance\":10,\"railElectricDistance\":0,"
-            + "\"routeType\":\"BARGE\",\"subConnections\":[],\"seaportUid\":\"1\",\"terminalUid\":\"2\","
+            + "\"routeType\":\"BARGE\",\"seaportUid\":\"1\",\"terminalUid\":\"2\","
             + "\"enabled\":true}");
 
         ResultActions resultActions = perform(builder);
@@ -184,8 +180,7 @@ public class MainRunConnectionApiControllerMvcUnitTest {
         builder.contentType("application/json;charset=UTF-8");
         builder.content(
             "{\"id\":42, \"bargeDieselDistance\":11111111111,\"railDieselDistance\":10,\"railElectricDistance\":0,"
-            + "\"roadDistance\":0,\"routeType\":\"BARGE\",\"subConnections\":[],"
-            + "\"seaportUid\":\"1\",\"terminalUid\":\"2\",\"enabled\":true}");
+            + "\"roadDistance\":0,\"routeType\":\"BARGE\",\"seaportUid\":\"1\",\"terminalUid\":\"2\",\"enabled\":true}");
 
         ResultActions resultActions = perform(builder);
         resultActions.andExpect(status().isBadRequest());
@@ -202,7 +197,7 @@ public class MainRunConnectionApiControllerMvcUnitTest {
         builder.contentType("application/json;charset=UTF-8");
         builder.content(
             "{\"id\":42, \"bargeDieselDistance\":1,\"railDieselDistance\":10,\"roadDistance\":10,\"railElectricDistance\":0,"
-            + "\"routeType\":\"BARGE\",\"subConnections\":[],\"seaportUid\":\"1\",\"terminalUid\":\"2\","
+            + "\"routeType\":\"BARGE\",\"seaportUid\":\"1\",\"terminalUid\":\"2\","
             + "\"enabled\":true}");
 
         ResultActions resultActions = perform(builder);
@@ -223,7 +218,7 @@ public class MainRunConnectionApiControllerMvcUnitTest {
         builder.contentType("application/json;charset=UTF-8");
         builder.content(
             "{\"id\":42, \"bargeDieselDistance\":1,\"railDieselDistance\":\"\",\"roadDistance\":\"0\",\"railElectricDistance\":0,"
-            + "\"routeType\":\"BARGE\",\"subConnections\":[],\"seaportUid\":\"1\",\"terminalUid\":\"2\","
+            + "\"routeType\":\"BARGE\",\"seaportUid\":\"1\",\"terminalUid\":\"2\","
             + "\"enabled\":true}");
 
         ResultActions resultActions = perform(builder);

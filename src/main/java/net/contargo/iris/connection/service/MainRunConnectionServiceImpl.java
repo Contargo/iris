@@ -1,9 +1,6 @@
 package net.contargo.iris.connection.service;
 
-import net.contargo.iris.connection.AbstractSubConnection;
 import net.contargo.iris.connection.MainRunConnection;
-import net.contargo.iris.connection.SeaportSubConnection;
-import net.contargo.iris.connection.TerminalSubConnection;
 import net.contargo.iris.connection.persistence.MainRunConnectionRepository;
 import net.contargo.iris.route.RouteType;
 import net.contargo.iris.seaport.Seaport;
@@ -75,18 +72,6 @@ public class MainRunConnectionServiceImpl implements MainRunConnectionService {
 
         if (combinationExists(mainrunConnection) && mainrunConnection.getRouteType() != RouteType.BARGE_RAIL) {
             throw new DuplicateMainRunConnectionException();
-        }
-
-        for (AbstractSubConnection subConnection : mainrunConnection.getSubConnections()) {
-            subConnection.setTerminal(terminalService.getByUniqueId(subConnection.getTerminal().getUniqueId()));
-
-            if (subConnection instanceof SeaportSubConnection) {
-                ((SeaportSubConnection) subConnection).setSeaport(seaportService.getByUniqueId(
-                        ((SeaportSubConnection) subConnection).getSeaport().getUniqueId()));
-            } else {
-                ((TerminalSubConnection) subConnection).setTerminal2(terminalService.getByUniqueId(
-                        ((TerminalSubConnection) subConnection).getTerminal2().getUniqueId()));
-            }
         }
 
         return mainRunConnectionRepository.save(mainrunConnection);

@@ -6,9 +6,6 @@ import net.contargo.iris.container.ContainerType;
 import net.contargo.iris.seaport.Seaport;
 import net.contargo.iris.terminal.Terminal;
 
-import java.util.ArrayList;
-import java.util.List;
-
 
 /**
  * This class represents a route part having two associated {@link GeoLocation}s, each denoting an origin or a
@@ -33,7 +30,6 @@ public class RoutePart {
     private ContainerType containerType;
     private ContainerState containerState;
     private RoutePartData data = new RoutePartData();
-    private List<SubRoutePart> subRouteParts = new ArrayList<>();
 
     public RoutePart() {
 
@@ -63,14 +59,14 @@ public class RoutePart {
      * Computes this {@link RoutePart}'s direction.
      *
      * @return  <ul>
-     *          <li>UPSTREAM if it's a {@link RoutePart} from {@link Seaport} to {@link Terminal}</li>
-     *          <li>DOWNSTREAM if it's a {@link RoutePart} from {@link Terminal} to {@link Seaport}</li>
-     *          <li>NOT_SET otherwise, or if it's not a main run part</li>
+     *            <li>UPSTREAM if it's a {@link RoutePart} from {@link Seaport} to {@link Terminal}</li>
+     *            <li>DOWNSTREAM if it's a {@link RoutePart} from {@link Terminal} to {@link Seaport}</li>
+     *            <li>NOT_SET otherwise, or if it's not a main run part</li>
      *          </ul>
      */
     public Direction getDirection() {
 
-        if (!(isOfType(RouteType.BARGE) || isOfType(RouteType.BARGE_RAIL))) {
+        if (!(isOfType(RouteType.BARGE))) {
             return Direction.NOT_SET;
         }
 
@@ -165,18 +161,6 @@ public class RoutePart {
     public void setData(RoutePartData data) {
 
         this.data = data;
-    }
-
-
-    public List<SubRoutePart> getSubRouteParts() {
-
-        return subRouteParts;
-    }
-
-
-    public void setSubRouteParts(List<SubRoutePart> subRouteParts) {
-
-        this.subRouteParts = subRouteParts;
     }
 
 

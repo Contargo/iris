@@ -8,24 +8,16 @@ import net.contargo.validation.bigdecimal.BigDecimalValidate;
 
 import java.math.BigDecimal;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import javax.validation.constraints.NotNull;
-
-import static net.contargo.iris.route.RouteType.BARGE_RAIL;
 
 
 /**
@@ -81,13 +73,9 @@ public class MainRunConnection {
     @NotNull
     private Boolean enabled = Boolean.TRUE;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "parentConnection", orphanRemoval = true, cascade = CascadeType.ALL)
-    private List<AbstractSubConnection> subConnections;
-
     public MainRunConnection() {
 
         // JPA needs no-arg constructor
-        this.subConnections = new ArrayList<>();
     }
 
 
@@ -95,7 +83,6 @@ public class MainRunConnection {
 
         super();
         this.seaport = seaport;
-        this.subConnections = new ArrayList<>();
     }
 
     /**
@@ -148,17 +135,7 @@ public class MainRunConnection {
 
     public BigDecimal getBargeDieselDistance() {
 
-        if (routeType == BARGE_RAIL) {
-            BigDecimal distance = BigDecimal.ZERO;
-
-            for (AbstractSubConnection subConnection : subConnections) {
-                distance = distance.add(subConnection.getBargeDieselDistance());
-            }
-
-            return distance;
-        } else {
-            return bargeDieselDistance;
-        }
+        return bargeDieselDistance;
     }
 
 
@@ -170,17 +147,7 @@ public class MainRunConnection {
 
     public BigDecimal getRailDieselDistance() {
 
-        if (routeType == BARGE_RAIL) {
-            BigDecimal distance = BigDecimal.ZERO;
-
-            for (AbstractSubConnection subConnection : subConnections) {
-                distance = distance.add(subConnection.getRailDieselDistance());
-            }
-
-            return distance;
-        } else {
-            return railDieselDistance;
-        }
+        return railDieselDistance;
     }
 
 
@@ -192,17 +159,7 @@ public class MainRunConnection {
 
     public BigDecimal getRailElectricDistance() {
 
-        if (routeType == BARGE_RAIL) {
-            BigDecimal distance = BigDecimal.ZERO;
-
-            for (AbstractSubConnection subConnection : subConnections) {
-                distance = distance.add(subConnection.getRailElectricDistance());
-            }
-
-            return distance;
-        } else {
-            return railElectricDistance;
-        }
+        return railElectricDistance;
     }
 
 
@@ -236,18 +193,6 @@ public class MainRunConnection {
     }
 
 
-    public List<AbstractSubConnection> getSubConnections() {
-
-        return subConnections;
-    }
-
-
-    public void setSubConnections(List<AbstractSubConnection> subConnections) {
-
-        this.subConnections = subConnections;
-    }
-
-
     public BigDecimal getRoadDistance() {
 
         return roadDistance;
@@ -278,14 +223,6 @@ public class MainRunConnection {
 
         if (!terminal.isEnabled()) {
             return false;
-        }
-
-        if (!subConnections.isEmpty()) {
-            for (AbstractSubConnection subConnection : subConnections) {
-                if (!subConnection.isEnabled()) {
-                    return false;
-                }
-            }
         }
 
         return true;

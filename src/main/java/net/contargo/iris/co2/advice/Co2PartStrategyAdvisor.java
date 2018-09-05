@@ -3,7 +3,6 @@ package net.contargo.iris.co2.advice;
 import net.contargo.iris.route.RouteType;
 
 import static net.contargo.iris.route.RouteType.BARGE;
-import static net.contargo.iris.route.RouteType.BARGE_RAIL;
 import static net.contargo.iris.route.RouteType.DTRUCK;
 import static net.contargo.iris.route.RouteType.RAIL;
 import static net.contargo.iris.route.RouteType.TRUCK;
@@ -19,16 +18,14 @@ public class Co2PartStrategyAdvisor {
     private Co2PartStrategy bargeStrategy;
     private Co2PartStrategy railStrategy;
     private Co2PartStrategy truckStrategy;
-    private Co2PartStrategy bargeRailStrategy;
     private Co2PartStrategy dtruckStrategy;
 
     public Co2PartStrategyAdvisor(Co2PartStrategy bargeStrategy, Co2PartStrategy railStrategy,
-        Co2PartStrategy truckStrategy, Co2PartStrategy bargeRailStrategy, Co2PartStrategy dtruckStrategy) {
+        Co2PartStrategy truckStrategy, Co2PartStrategy dtruckStrategy) {
 
         this.bargeStrategy = bargeStrategy;
         this.railStrategy = railStrategy;
         this.truckStrategy = truckStrategy;
-        this.bargeRailStrategy = bargeRailStrategy;
         this.dtruckStrategy = dtruckStrategy;
     }
 
@@ -43,9 +40,6 @@ public class Co2PartStrategyAdvisor {
 
             case TRUCK:
                 return truckStrategy;
-
-            case BARGE_RAIL:
-                return bargeRailStrategy;
 
             case DTRUCK:
                 return dtruckStrategy;

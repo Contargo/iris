@@ -1,6 +1,5 @@
 package net.contargo.iris.distance.service;
 
-import net.contargo.iris.connection.AbstractSubConnection;
 import net.contargo.iris.connection.MainRunConnection;
 import net.contargo.iris.rounding.RoundingService;
 
@@ -71,41 +70,5 @@ public class ConnectionDistanceServiceImpl implements ConnectionDistanceService 
     public BigDecimal getDtruckDistance(MainRunConnection mainrunConnection) {
 
         return roundingService.roundDistance(mainrunConnection.getRoadDistance());
-    }
-
-
-    @Override
-    public BigDecimal getBargeDieselDistance(AbstractSubConnection subConnection) {
-
-        return roundingService.roundDistance(subConnection.getBargeDieselDistance());
-    }
-
-
-    @Override
-    public BigDecimal getRailElectricDistance(AbstractSubConnection subConnection) {
-
-        return roundingService.roundDistance(subConnection.getRailElectricDistance());
-    }
-
-
-    @Override
-    public BigDecimal getRailDieselDistance(AbstractSubConnection subConnection) {
-
-        return roundingService.roundDistance(subConnection.getRailDieselDistance());
-    }
-
-
-    @Override
-    public BigDecimal getDieselDistance(AbstractSubConnection subConnection) {
-
-        return roundingService.roundDistance(subConnection.getRailDieselDistance()
-                .add(subConnection.getBargeDieselDistance()));
-    }
-
-
-    @Override
-    public BigDecimal getDistance(AbstractSubConnection subConnection) {
-
-        return roundingService.roundDistance(subConnection.getTotalDistance());
     }
 }

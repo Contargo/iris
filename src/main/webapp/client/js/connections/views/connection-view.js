@@ -63,35 +63,15 @@ var ConnectionView = Backbone.View.extend({
             el: this.$('#routeTypes')
         });
 
-        if (this.model.get('routeType').get('value') === 'BARGE_RAIL') {
-            this.createSubconnections();
-        } else {
-            DistancesView.prototype.create({
-                model: this.model.get('distances'),
-                el: this.$('#distances'),
-                isBarge: this.model.get('routeType').get('value') === 'BARGE',
-                isRail: this.model.get('routeType').get('value') === 'RAIL',
-                isDtruck: this.model.get('routeType').get('value') === 'DTRUCK',
-                isDtruckAvailable:  this.routeTypes.find(function (rt) {
-                    return rt.get('value') === 'DTRUCK';
-                }) !== undefined
-            });
-        }
-    },
-
-    createSubconnections: function () {
-        'use strict';
-        var that = this;
-        this.model.get('subconnections').each(function (subconnection, index) {
-            var subView = SubconnectionView.prototype.create({
-                model: subconnection,
-                terminals: new ConnectionTerminals(that.terminals.map(function (terminal) {
-                    return terminal.clone();
-                })),
-                latest: that.model.get('subconnections').size() - 1 === index,
-                first: index === 0
-            });
-            that.$('#subconnections').append(subView.el);
+        DistancesView.prototype.create({
+            model: this.model.get('distances'),
+            el: this.$('#distances'),
+            isBarge: this.model.get('routeType').get('value') === 'BARGE',
+            isRail: this.model.get('routeType').get('value') === 'RAIL',
+            isDtruck: this.model.get('routeType').get('value') === 'DTRUCK',
+            isDtruckAvailable:  this.routeTypes.find(function (rt) {
+                return rt.get('value') === 'DTRUCK';
+            }) !== undefined
         });
     },
 
@@ -130,11 +110,6 @@ var ConnectionView = Backbone.View.extend({
                 message: 'Cannot create or update connection: validation errors.',
                 className: 'message message-error message-width'
             });
-        } else if (this.hasSubConnectionMatchingError()) {
-            MessageView.prototype.create({
-                message: 'Cannot create or update connection: last subconnection terminal does not match connection terminal.',
-                className: 'message message-error message-width'
-            });
         } else {
             this.model.trigger('updateConnection');
         }
@@ -142,9 +117,6 @@ var ConnectionView = Backbone.View.extend({
 
     hasFormError: function () {
         return this.$('input.error').size() > 0;
-    },
-
-    hasSubConnectionMatchingError: function () {
-        return !this.model.hasValidLastSubConnectionTerminal();
     }
+
 });

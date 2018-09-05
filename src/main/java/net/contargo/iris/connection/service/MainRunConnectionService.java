@@ -2,7 +2,6 @@ package net.contargo.iris.connection.service;
 
 import net.contargo.iris.connection.MainRunConnection;
 import net.contargo.iris.route.RouteType;
-import net.contargo.iris.route.SubRoutePart;
 import net.contargo.iris.seaport.Seaport;
 import net.contargo.iris.terminal.Terminal;
 
@@ -66,7 +65,7 @@ public interface MainRunConnectionService {
      * @return  a {@link net.contargo.iris.connection.MainRunConnection}
      */
     MainRunConnection findRoutingConnectionBetweenTerminalAndSeaportByType(Terminal terminal, Seaport seaport,
-        RouteType routeType, List<SubRoutePart> subRouteParts);
+        RouteType routeType);
 
 
     /**

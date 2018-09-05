@@ -24,12 +24,7 @@ class MainRunOneWayExportStrategy implements MainRunStrategy {
         routeBuilder.goTo(destination, TRUCK);
         routeBuilder.loadContainer();
         routeBuilder.goTo(connection.getTerminal(), TRUCK);
-
-        if (connection.getSubConnections().isEmpty()) {
-            routeBuilder.goTo(connection.getSeaport(), connection.getRouteType());
-        } else {
-            routeBuilder.goToSeaportViaSubConnections(connection.getSeaport(), connection.getSubConnections());
-        }
+        routeBuilder.goTo(connection.getSeaport(), connection.getRouteType());
 
         routeBuilder.responsibleTerminal(connection.getTerminal());
 

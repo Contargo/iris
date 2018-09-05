@@ -22,21 +22,11 @@ class MainRunRoundTripImportStrategy implements MainRunStrategy {
 
         RouteBuilder routeBuilder = new RouteBuilder(connection.getSeaport(), containerType, FULL);
 
-        if (connection.getSubConnections().isEmpty()) {
-            routeBuilder.goTo(connection.getTerminal(), connection.getRouteType());
-        } else {
-            routeBuilder.goToTerminalViaSubConnections(connection.getTerminal(), connection.getSubConnections());
-        }
-
+        routeBuilder.goTo(connection.getTerminal(), connection.getRouteType());
         routeBuilder.goTo(destination, TRUCK);
         routeBuilder.unloadContainer();
         routeBuilder.goTo(connection.getTerminal(), TRUCK);
-
-        if (connection.getSubConnections().isEmpty()) {
-            routeBuilder.goTo(connection.getSeaport(), connection.getRouteType());
-        } else {
-            routeBuilder.goToSeaportViaSubConnections(connection.getSeaport(), connection.getSubConnections());
-        }
+        routeBuilder.goTo(connection.getSeaport(), connection.getRouteType());
 
         routeBuilder.responsibleTerminal(connection.getTerminal());
 

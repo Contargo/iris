@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 
 import static net.contargo.iris.route.RouteCombo.ALL;
 import static net.contargo.iris.route.RouteType.BARGE;
-import static net.contargo.iris.route.RouteType.BARGE_RAIL;
 import static net.contargo.iris.route.RouteType.DTRUCK;
 import static net.contargo.iris.route.RouteType.RAIL;
 
@@ -42,7 +41,7 @@ public class SeaportConnectionRoutesServiceImpl implements SeaportConnectionRout
 
     Route getMainRunRoute(MainRunConnection connection, RouteInformation routeInformation, RouteType routeType) {
 
-        if (routeType != BARGE && routeType != RAIL && routeType != BARGE_RAIL && routeType != DTRUCK) {
+        if (routeType != BARGE && routeType != RAIL && routeType != DTRUCK) {
             throw new IllegalArgumentException();
         }
 

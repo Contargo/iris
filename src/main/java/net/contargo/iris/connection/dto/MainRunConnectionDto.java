@@ -3,10 +3,7 @@ package net.contargo.iris.connection.dto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import net.contargo.iris.connection.AbstractSubConnection;
 import net.contargo.iris.connection.MainRunConnection;
-import net.contargo.iris.connection.SeaportSubConnection;
-import net.contargo.iris.connection.TerminalSubConnection;
 import net.contargo.iris.route.RouteType;
 import net.contargo.iris.seaport.Seaport;
 import net.contargo.iris.terminal.Terminal;
@@ -16,12 +13,7 @@ import net.contargo.validation.bigdecimal.BigDecimalValidate;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import java.util.List;
-import java.util.function.Function;
-
 import javax.validation.constraints.NotNull;
-
-import static java.util.stream.Collectors.toList;
 
 
 /**
@@ -60,7 +52,6 @@ public final class MainRunConnectionDto {
 
     @NotNull
     private final Boolean enabled;
-    private final List<AbstractSubConnectionDto> subConnections;
 
     @JsonCreator
     public MainRunConnectionDto(@JsonProperty("id") Long id, // NOSONAR dtos should be final
@@ -71,8 +62,7 @@ public final class MainRunConnectionDto {
         @JsonProperty("railElectricDistance") BigDecimal railElectricDistance,
         @JsonProperty("roadDistance") BigDecimal roadDistance,
         @JsonProperty("routeType") RouteType routeType,
-        @JsonProperty("enabled") Boolean enabled,
-        @JsonProperty("subConnections") List<AbstractSubConnectionDto> subConnections) {
+        @JsonProperty("enabled") Boolean enabled) {
 
         this.id = id;
         this.seaportUid = seaportUid;
@@ -83,7 +73,6 @@ public final class MainRunConnectionDto {
         this.roadDistance = roadDistance;
         this.routeType = routeType;
         this.enabled = enabled;
-        this.subConnections = subConnections;
     }
 
 
@@ -98,21 +87,7 @@ public final class MainRunConnectionDto {
         this.roadDistance = mainRunConnection.getRoadDistance();
         this.routeType = mainRunConnection.getRouteType();
         this.enabled = mainRunConnection.getEnabled();
-        this.subConnections = mainRunConnection.getSubConnections().stream().map(toDto()).collect(toList());
     }
-
-    private Function<AbstractSubConnection, AbstractSubConnectionDto> toDto() {
-
-        return
-            (AbstractSubConnection subConnection) -> {
-            if (subConnection instanceof SeaportSubConnection) {
-                return new SeaportSubConnectionDto((SeaportSubConnection) subConnection);
-            } else {
-                return new TerminalSubConnectionDto((TerminalSubConnection) subConnection);
-            }
-        };
-    }
-
 
     public Long getId() {
 
@@ -168,12 +143,6 @@ public final class MainRunConnectionDto {
     }
 
 
-    public List<AbstractSubConnectionDto> getSubConnections() {
-
-        return subConnections;
-    }
-
-
     public MainRunConnection toEntity() {
 
         MainRunConnection connection = new MainRunConnection();
@@ -193,8 +162,6 @@ public final class MainRunConnectionDto {
         connection.setRoadDistance(this.roadDistance);
         connection.setEnabled(this.enabled);
         connection.setId(this.id);
-
-        connection.setSubConnections(this.subConnections.stream().map(s -> s.toEntity(connection)).collect(toList()));
 
         return connection;
     }

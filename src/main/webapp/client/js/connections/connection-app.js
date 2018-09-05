@@ -14,7 +14,7 @@ ConnectionApp.prototype.start = function () {
     'use strict';
 
     _.bindAll(this, 'update', 'registerEvents', 'updateTerminal', 'updateSeaport', 'updateRouteType', 'loadModels',
-        'createView', 'addNewSubconnection', 'handleSaveError', 'removeLastSubconnection');
+        'createView', 'handleSaveError');
 
     if (this.newlyCreated) {
         MessageView.prototype.create({message: 'Created connection.'});
@@ -65,7 +65,7 @@ ConnectionApp.prototype.loadModels = function (callback) {
 
                 if (that.connectionId) {
                     that.server.getConnection(that.connectionId, function (connection) {
-                        that.connection = that.mapper.connectionFromJson(connection, that.seaports, that.terminals);
+                        that.connection = that.mapper.connectionFromJson(connection);
                         callback();
                     }, that.handleCriticalError);
                 } else {
@@ -83,8 +83,6 @@ ConnectionApp.prototype.registerEvents = function () {
     this.seaports.bind('selectionChange', this.updateSeaport);
     this.terminals.bind('selectionChange', this.updateTerminal);
     this.routeTypes.bind('selectionChange', this.updateRouteType);
-    this.connection.get('subconnections').bind('addNew', this.addNewSubconnection);
-    this.connection.get('subconnections').bind('removeLast', this.removeLastSubconnection);
 };
 
 ConnectionApp.prototype.updateTerminal = function (updatedValue) {
@@ -122,19 +120,6 @@ ConnectionApp.prototype.update = function () {
 ConnectionApp.prototype.redirect = function (location) {
     'use strict';
     window.location.href = location;
-};
-
-ConnectionApp.prototype.addNewSubconnection = function () {
-    'use strict';
-    this.connection.createSubconnection();
-    this.connectionView.render();
-};
-
-ConnectionApp.prototype.removeLastSubconnection = function () {
-    'use strict';
-    var subconnections = this.connection.get('subconnections');
-    subconnections.remove(subconnections.last());
-    this.connectionView.render();
 };
 
 ConnectionApp.prototype.handleSaveError = function (data) {

@@ -9,8 +9,7 @@ describe('ConnectionApp', function () {
         "bargeDieselDistance": 0,
         "railDieselDistance": 0,
         "railElectricDistance": 0,
-        "routeType": "BARGE_RAIL",
-        "subConnections": []
+        "routeType": "BARGE_RAIL"
     };
     var callback;
 
@@ -96,7 +95,7 @@ describe('ConnectionApp', function () {
 
         expect(sut.handleCriticalError).toHaveBeenCalledWith('No seaports available');
         expect(callback).not.toHaveBeenCalled();
-        
+
     });
 
     it('loadModels with seaport loading error', function () {
@@ -197,34 +196,6 @@ describe('ConnectionApp', function () {
         sut.routeTypes.trigger('selectionChange', 'updatedRouteType');
 
         expect(sut.connection.updateRouteType).toHaveBeenCalledWith('updatedRouteType');
-        expect(sut.connectionView.render).toHaveBeenCalled();
-    });
-
-    it('adds subconnections', function () {
-        sut.start();
-        spyOn(sut.connection, 'createSubconnection');
-        spyOn(sut.connectionView, 'render');
-        sut.connection.get('subconnections').trigger('addNew');
-
-        expect(sut.connection.createSubconnection).toHaveBeenCalledWith();
-        expect(sut.connectionView.render).toHaveBeenCalled();
-    });
-
-    it('removes subconnections', function () {
-        sut.start();
-
-        sut.connection.get('subconnections').add(new Subconnection({
-            foo: 'bar'
-        }));
-        sut.connection.get('subconnections').add(new Subconnection({
-            foo: 'baz'
-        }));
-
-        spyOn(sut.connectionView, 'render');
-        sut.connection.get('subconnections').trigger('removeLast');
-
-        expect(sut.connection.get('subconnections').length).toBe(1);
-        expect(sut.connection.get('subconnections').first().get('foo')).toBe('bar');
         expect(sut.connectionView.render).toHaveBeenCalled();
     });
 

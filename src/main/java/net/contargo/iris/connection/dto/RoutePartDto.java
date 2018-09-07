@@ -1,17 +1,24 @@
 package net.contargo.iris.connection.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import net.contargo.iris.address.dto.GeoLocationDto;
 import net.contargo.iris.container.ContainerState;
 import net.contargo.iris.container.ContainerType;
 import net.contargo.iris.route.RoutePart;
 import net.contargo.iris.route.RouteType;
 
+import java.util.Collections;
+import java.util.List;
+
 
 /**
  * Dto layer for {@link RoutePart}.
  *
  * @author  Sandra Thieme - thieme@synyx.de
+ * @author  Oliver Messner - messner@synyx.de
  */
+@JsonIgnoreProperties(value = "subRouteParts", ignoreUnknown = true)
 public class RoutePartDto {
 
     private String name;
@@ -153,5 +160,17 @@ public class RoutePartDto {
     public void setDestination(GeoLocationDto destination) {
 
         this.destination = destination;
+    }
+
+
+    /**
+     * This method exists in order to maintain backward compatibility regarding clients that are calling API endpoints
+     * /routeDetails and /connections.
+     *
+     * @return  the empty list
+     */
+    public List<?> getSubRouteParts() {
+
+        return Collections.emptyList();
     }
 }

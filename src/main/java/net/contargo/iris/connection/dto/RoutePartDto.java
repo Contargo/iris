@@ -18,7 +18,7 @@ import java.util.List;
  * @author  Sandra Thieme - thieme@synyx.de
  * @author  Oliver Messner - messner@synyx.de
  */
-@JsonIgnoreProperties(value = "subRouteParts", ignoreUnknown = true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RoutePartDto {
 
     private String name;

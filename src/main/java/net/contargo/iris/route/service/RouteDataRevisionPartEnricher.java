@@ -13,15 +13,17 @@ import org.slf4j.Logger;
 import java.lang.invoke.MethodHandles;
 
 import static net.contargo.iris.route.RouteType.TRUCK;
+import static net.contargo.iris.route.service.RouteDataRevisionPartEnricher.RouteDataRevisionPolicy.MANDATORY_FOR_SWISS_ADDRESS;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
 
 /**
  * Enriches a {@link net.contargo.iris.route.RoutePart RoutePart} if the following conditions are met: the route parts
- * direction is either terminal -> address or address -> terminal and the route parts type is TRUCK
+ * direction is either terminal -> address or address -> terminal and the route parts type is TRUCK.
  *
  * @author  Tobias Schneider - schneider@synyx.de
+ * @author  Oliver Messner - messner@synyx.de
  */
 public class RouteDataRevisionPartEnricher implements RoutePartEnricher {
 
@@ -29,14 +31,22 @@ public class RouteDataRevisionPartEnricher implements RoutePartEnricher {
     private static final String MESSAGE = "Route part isn't Address -> Terminal or Terminal -> Address. "
         + "So not applicable for route data revision.";
 
+    enum RouteDataRevisionPolicy {
+
+        MANDATORY_FOR_SWISS_ADDRESS,
+        OPTIONAL
+    }
+
     private final RouteDataRevisionService routeDataRevisionService;
     private final AddressListFilter addressListFilter;
+    private final RouteDataRevisionPolicy routeDataRevisionPolicy;
 
     public RouteDataRevisionPartEnricher(RouteDataRevisionService routeDataRevisionService,
-        AddressListFilter addressListFilter) {
+        AddressListFilter addressListFilter, RouteDataRevisionPolicy routeDataRevisionPolicy) {
 
         this.routeDataRevisionService = routeDataRevisionService;
         this.addressListFilter = addressListFilter;
+        this.routeDataRevisionPolicy = routeDataRevisionPolicy;
     }
 
     @Override
@@ -50,7 +60,7 @@ public class RouteDataRevisionPartEnricher implements RoutePartEnricher {
                 RouteDataRevision routeDataRevision = routeDataRevisionService.getRouteDataRevision(terminal, address);
 
                 if (routeDataRevision == null) {
-                    if (isSwissAddress(address)) {
+                    if (routeDataRevisionPolicy == MANDATORY_FOR_SWISS_ADDRESS && isSwissAddress(address)) {
                         context.addError("swiss-route", "no route revision available");
                         LOG.info("Routing from {} to CH without route revision", terminal.getName());
                     }

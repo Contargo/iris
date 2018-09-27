@@ -33,16 +33,15 @@ import static org.mockito.Mockito.when;
 
 
 /**
- * Unit test of {@link net.contargo.iris.route.service.RouteDataRevisionPartEnricher RouteDataRevisionPartEnricher}.
- *
  * @author  Tobias Schneider - schneider@synyx.de
+ * @author  Oliver Messner - messner@synyx.de
  */
 @RunWith(MockitoJUnitRunner.class)
 public class RouteDataRevisionPartEnricherUnitTest {
 
-    protected static final BigDecimal AIRLINE_DISTANCE = BigDecimal.ZERO;
-    protected static final BigDecimal TOLL_DISTANCE_ONE_WAY = BigDecimal.ONE;
-    protected static final BigDecimal TRUCK_DISTANCE_ONE_WAY = BigDecimal.TEN;
+    private static final BigDecimal AIRLINE_DISTANCE = BigDecimal.ZERO;
+    private static final BigDecimal TOLL_DISTANCE_ONE_WAY = BigDecimal.ONE;
+    private static final BigDecimal TRUCK_DISTANCE_ONE_WAY = BigDecimal.TEN;
 
     private RoutePartEnricher sut;
 
@@ -71,7 +70,8 @@ public class RouteDataRevisionPartEnricherUnitTest {
 
         enricherContext = new EnricherContext.Builder().build();
 
-        sut = new RouteDataRevisionPartEnricher(routeDataRevisionServiceMock, addressListFilter);
+        sut = new RouteDataRevisionPartEnricher(routeDataRevisionServiceMock, addressListFilter,
+                RouteDataRevisionPartEnricher.RouteDataRevisionPolicy.MANDATORY_FOR_SWISS_ADDRESS);
     }
 
 
@@ -131,7 +131,7 @@ public class RouteDataRevisionPartEnricherUnitTest {
 
 
     @Test
-    public void routeToSwissAddressWithoutRouteRevision() throws CriticalEnricherException {
+    public void routeToSwissAddressMandatoryRouteRevisionMissing() throws CriticalEnricherException {
 
         Address chAddress = new Address();
         chAddress.getAddress().put("country_code", "CH");
@@ -144,6 +144,26 @@ public class RouteDataRevisionPartEnricherUnitTest {
         sut.enrich(routePart, enricherContext);
 
         assertThat(enricherContext.getErrors(), hasEntry("swiss-route", "no route revision available"));
+    }
+
+
+    @Test
+    public void routeToSwissAddressOptionalRouteRevisionMissing() throws CriticalEnricherException {
+
+        Address chAddress = new Address();
+        chAddress.getAddress().put("country_code", "CH");
+
+        RoutePart routePart = new RoutePart(terminal, chAddress, TRUCK);
+
+        when(routeDataRevisionServiceMock.getRouteDataRevision(terminal, chAddress)).thenReturn(null);
+        when(addressListFilter.isAddressOfCountry(address, "CH")).thenReturn(true);
+
+        sut = new RouteDataRevisionPartEnricher(routeDataRevisionServiceMock, addressListFilter,
+                RouteDataRevisionPartEnricher.RouteDataRevisionPolicy.OPTIONAL);
+
+        sut.enrich(routePart, enricherContext);
+
+        assertThat(enricherContext.getErrors().isEmpty(), is(true));
     }
 
 

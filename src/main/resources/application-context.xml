@@ -297,6 +297,8 @@
                 <bean class="net.contargo.iris.route.service.RouteDataRevisionPartEnricher">
                     <constructor-arg name="routeDataRevisionService" ref="routeDataRevisionService"/>
                     <constructor-arg name="addressListFilter" ref="addressListFilter"/>
+                    <constructor-arg name="routeDataRevisionPolicy"
+                                     value="#{'${routeDataRevision.mandatoryForSwissAddress}' ? 'MANDATORY_FOR_SWISS_ADDRESS' : 'OPTIONAL'}"/>
                 </bean>
             </list>
         </constructor-arg>

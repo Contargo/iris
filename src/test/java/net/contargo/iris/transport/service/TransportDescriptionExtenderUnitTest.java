@@ -42,8 +42,12 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
+
+import static java.math.BigDecimal.ONE;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 
 
 /**
@@ -60,7 +64,7 @@ public class TransportDescriptionExtenderUnitTest {
     private TransportDescriptionMainRunExtender mainRunExtenderMock;
 
     @Mock
-    private TransportDescriptionNebenlaufExtender nebenlaufExtenderMock;
+    private TransportDescriptionRoadExtender nebenlaufExtenderMock;
 
     @Captor
     private ArgumentCaptor<TransportResponseDto.TransportResponseSegment> segmentCaptor;
@@ -87,12 +91,13 @@ public class TransportDescriptionExtenderUnitTest {
         TransportDescriptionDto description = new TransportDescriptionDto(descriptions);
 
         doAnswer(setCo2(1)).when(mainRunExtenderMock).with(any(TransportResponseDto.TransportResponseSegment.class));
-        doAnswer(setCo2(2)).when(nebenlaufExtenderMock).with(any(TransportResponseDto.TransportResponseSegment.class));
+        doAnswer(setCo2(2)).when(nebenlaufExtenderMock)
+            .forNebenlauf(any(TransportResponseDto.TransportResponseSegment.class));
 
         TransportResponseDto result = sut.withRoutingInformation(description);
 
         verify(mainRunExtenderMock).with(segmentCaptor.capture());
-        verify(nebenlaufExtenderMock, times(2)).with(segmentCaptor.capture());
+        verify(nebenlaufExtenderMock, times(2)).forNebenlauf(segmentCaptor.capture());
 
         assertThat(segmentCaptor.getAllValues().get(0), is(result.transportChain.get(0)));
         assertThat(segmentCaptor.getAllValues().get(1), is(result.transportChain.get(1)));
@@ -112,6 +117,36 @@ public class TransportDescriptionExtenderUnitTest {
         assertThat(result.transportChain.get(2).distance, nullValue());
         assertThat(result.transportChain.get(2).tollDistance, nullValue());
         assertThat(result.transportChain.get(2).co2.value, comparesEqualTo(new BigDecimal("6.00")));
+    }
+
+
+    @Test
+    public void withOnlyAddresses() {
+
+        TransportStop from = new TransportStop(ADDRESS, null, new BigDecimal("42.34234"), new BigDecimal("8.0023"));
+        TransportStop to = new TransportStop(ADDRESS, null, new BigDecimal("43.34234"), new BigDecimal("9.0023"));
+
+        TransportDescriptionDto.TransportDescriptionSegment segment =
+            new TransportDescriptionDto.TransportDescriptionSegment(from, to, FULL, true, ROAD);
+
+        List<TransportDescriptionDto.TransportDescriptionSegment> descriptions = singletonList(segment);
+
+        TransportDescriptionDto description = new TransportDescriptionDto(descriptions);
+
+        doAnswer(setCo2(1)).when(nebenlaufExtenderMock)
+            .forAddressesOnly(any(TransportResponseDto.TransportResponseSegment.class));
+
+        TransportResponseDto result = sut.withRoutingInformation(description);
+
+        verifyZeroInteractions(mainRunExtenderMock);
+        verify(nebenlaufExtenderMock).forAddressesOnly(segmentCaptor.capture());
+
+        assertThat(segmentCaptor.getValue(), is(result.transportChain.get(0)));
+
+        assertThat(result.transportChain.get(0).duration, nullValue());
+        assertThat(result.transportChain.get(0).distance, nullValue());
+        assertThat(result.transportChain.get(0).tollDistance, nullValue());
+        assertThat(result.transportChain.get(0).co2.value, comparesEqualTo(ONE));
     }
 
 

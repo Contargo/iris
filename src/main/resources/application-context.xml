@@ -502,7 +502,7 @@
         <constructor-arg ref="connectionService"/>
     </bean>
 
-    <bean class="net.contargo.iris.transport.service.TransportDescriptionNebenlaufExtender"
+    <bean class="net.contargo.iris.transport.service.TransportDescriptionRoadExtender"
           id="descriptionNebenlaufExtender">
         <constructor-arg ref="routeService"/>
         <constructor-arg ref="conversionService"/>

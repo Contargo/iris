@@ -131,7 +131,7 @@ public class AddressApiControllerMvcUnitTest {
         resultActions.andExpect(jsonPath("$.reverseGeocodeResponse.links", hasSize(1)));
         resultActions.andExpect(jsonPath("$.reverseGeocodeResponse.links[0].rel", is("self")));
         resultActions.andExpect(jsonPath("$.reverseGeocodeResponse.links[0].href",
-                is("http://localhost/reversegeocode/1:1/")));
+                is("http://localhost/reversegeocode/1:1")));
     }
 
 

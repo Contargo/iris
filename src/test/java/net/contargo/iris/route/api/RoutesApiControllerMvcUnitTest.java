@@ -118,7 +118,7 @@ public class RoutesApiControllerMvcUnitTest {
         resultActions.andExpect(status().isOk());
         resultActions.andExpect(content().contentType(APPLICATION_JSON));
         resultActions.andExpect(jsonPath("$.response.routes", hasSize(1)));
-        resultActions.andExpect(jsonPath("$response.routes[0].roundTrip", is(false)));
+        resultActions.andExpect(jsonPath("$.response.routes[0].roundTrip", is(false)));
 
         verify(routeUrlSerializationServiceMock).serializeUrl(routeDto, "/routedetails", "/routepartdetails");
     }
@@ -151,7 +151,7 @@ public class RoutesApiControllerMvcUnitTest {
         resultActions.andExpect(status().isOk());
         resultActions.andExpect(content().contentType(APPLICATION_JSON));
         resultActions.andExpect(jsonPath("$.response.routes", hasSize(1)));
-        resultActions.andExpect(jsonPath("$response.routes[0].roundTrip", is(false)));
+        resultActions.andExpect(jsonPath("$.response.routes[0].roundTrip", is(false)));
 
         verify(routeUrlSerializationServiceMock).serializeUrl(routeDto, "/routedetails", "/routepartdetails");
     }

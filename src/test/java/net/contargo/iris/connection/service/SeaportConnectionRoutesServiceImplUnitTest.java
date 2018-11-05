@@ -1,7 +1,5 @@
 package net.contargo.iris.connection.service;
 
-import com.vividsolutions.jts.util.Assert;
-
 import net.contargo.iris.GeoLocation;
 import net.contargo.iris.connection.MainRunConnection;
 import net.contargo.iris.connection.advice.MainRunAdvisor;
@@ -144,11 +142,11 @@ public class SeaportConnectionRoutesServiceImplUnitTest {
         // run test
         List<Route> routes = sut.getAvailableSeaportConnectionRoutes(seaport, information);
 
-        Assert.equals(1, routes.size());
-        Assert.equals(3, routes.get(0).getData().getParts().size());
-        Assert.equals(BARGE, routes.get(0).getData().getParts().get(0).getRouteType());
-        Assert.equals(TRUCK, routes.get(0).getData().getParts().get(1).getRouteType());
-        Assert.equals(TRUCK, routes.get(0).getData().getParts().get(2).getRouteType());
+        assertThat(1, is(routes.size()));
+        assertThat(3, is(routes.get(0).getData().getParts().size()));
+        assertThat(BARGE, is(routes.get(0).getData().getParts().get(0).getRouteType()));
+        assertThat(TRUCK, is(routes.get(0).getData().getParts().get(1).getRouteType()));
+        assertThat(TRUCK, is(routes.get(0).getData().getParts().get(2).getRouteType()));
     }
 
 

@@ -132,15 +132,15 @@ public class SeaportApiControllerMvcUnitTest {
         resultActions.andExpect(status().isOk());
         resultActions.andExpect(content().contentType(APPLICATION_JSON));
 
-        resultActions.andExpect(jsonPath("$response.seaport.latitude", is(seaportDto.getLatitude().intValue())));
-        resultActions.andExpect(jsonPath("$response.seaport.longitude", is(seaportDto.getLongitude().intValue())));
-        resultActions.andExpect(jsonPath("$response.seaport.name", is(seaportDto.getName())));
-        resultActions.andExpect(jsonPath("$response.seaport.enabled", is(seaportDto.isEnabled())));
+        resultActions.andExpect(jsonPath("$.response.seaport.latitude", is(seaportDto.getLatitude().intValue())));
+        resultActions.andExpect(jsonPath("$.response.seaport.longitude", is(seaportDto.getLongitude().intValue())));
+        resultActions.andExpect(jsonPath("$.response.seaport.name", is(seaportDto.getName())));
+        resultActions.andExpect(jsonPath("$.response.seaport.enabled", is(seaportDto.isEnabled())));
 
-        resultActions.andExpect(jsonPath("$response.links", hasSize(2)));
-        resultActions.andExpect(jsonPath("$response.links[0].rel", is("self")));
-        resultActions.andExpect(jsonPath("$response.links[0].href", endsWith("/seaports/42")));
-        resultActions.andExpect(jsonPath("$response.links[1].rel", is("seaports")));
+        resultActions.andExpect(jsonPath("$.response.links", hasSize(2)));
+        resultActions.andExpect(jsonPath("$.response.links[0].rel", is("self")));
+        resultActions.andExpect(jsonPath("$.response.links[0].href", endsWith("/seaports/42")));
+        resultActions.andExpect(jsonPath("$.response.links[1].rel", is("seaports")));
     }
 
 

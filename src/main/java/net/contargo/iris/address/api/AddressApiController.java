@@ -106,7 +106,7 @@ public class AddressApiController {
         Method method = AddressApiController.class.getMethod(METHOD_ADDRESS_BY_GEOLOCATION, BigDecimal.class,
                 BigDecimal.class);
 
-        response.add(linkTo(method, latitude, longitude).slash(".").withSelfRel());
+        response.add(linkTo(method, latitude, longitude).withSelfRel());
 
         LOG.info("API: Responding to request for address by geolocation with latitude {} and longitude {}", latitude,
             longitude);

@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.closeTo;
 
 
 /**
@@ -24,7 +24,7 @@ public class GisServiceImplUnitTest {
         GeoLocation b = new GeoLocation(new BigDecimal(50.015), new BigDecimal(9.42));
         GisService sut = new GisServiceImpl();
 
-        BigDecimal expected = new BigDecimal(132713.63654607915668748319149017333984375);
-        assertThat(sut.calcAirLineDistInMeters(a, b), is(expected));
+        BigDecimal expected = new BigDecimal(132713.636546);
+        assertThat(sut.calcAirLineDistInMeters(a, b), closeTo(expected, new BigDecimal("0.000001")));
     }
 }

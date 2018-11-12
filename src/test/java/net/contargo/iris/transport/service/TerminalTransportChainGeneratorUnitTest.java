@@ -55,10 +55,10 @@ import static java.util.Collections.singletonList;
  * @author  Ben Antony - antony@synyx.de
  */
 @RunWith(MockitoJUnitRunner.class)
-public class TransportChainGeneratorUnitTest {
+public class TerminalTransportChainGeneratorUnitTest {
 
     @InjectMocks
-    private TransportChainGenerator sut;
+    private TerminalTransportChainGenerator sut;
 
     @Mock
     private TerminalService terminalServiceMock;

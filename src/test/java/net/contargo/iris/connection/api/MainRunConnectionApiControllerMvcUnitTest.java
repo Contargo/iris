@@ -38,6 +38,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -96,7 +97,7 @@ public class MainRunConnectionApiControllerMvcUnitTest {
 
         ResultActions resultActions = perform(builder);
         resultActions.andExpect(status().isOk());
-        resultActions.andExpect(content().contentType(APPLICATION_JSON));
+        resultActions.andExpect(content().contentType(APPLICATION_JSON_UTF8));
 
         resultActions.andExpect(jsonPath("$.[0].terminalUid", is(terminalUid)));
         resultActions.andExpect(jsonPath("$.[0].seaportUid", is(seaportUid)));
@@ -186,7 +187,7 @@ public class MainRunConnectionApiControllerMvcUnitTest {
         resultActions.andExpect(status().isBadRequest());
         resultActions.andExpect(jsonPath("$.message",
                 is("bargeDieselDistance: The count of the digits before the point is out of range. "
-                    + "It should be in the range 1 - 10 but is 11.")));
+                    + "It should be in the range 1 - 10.")));
     }
 
 

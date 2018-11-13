@@ -128,20 +128,22 @@ public class TerminalApiControllerMvcUnitTest {
         resultActions.andExpect(status().isOk());
         resultActions.andExpect(content().contentType("application/json"));
 
-        resultActions.andExpect(jsonPath("$response.terminals[0].latitude", is(terminalDto1.getLatitude().intValue())));
-        resultActions.andExpect(jsonPath("$response.terminals[0].longitude",
+        resultActions.andExpect(jsonPath("$.response.terminals[0].latitude",
+                is(terminalDto1.getLatitude().intValue())));
+        resultActions.andExpect(jsonPath("$.response.terminals[0].longitude",
                 is(terminalDto1.getLongitude().intValue())));
-        resultActions.andExpect(jsonPath("$response.terminals[0].name", is(terminalDto1.getName())));
-        resultActions.andExpect(jsonPath("$response.terminals[0].enabled", is(terminalDto1.isEnabled())));
+        resultActions.andExpect(jsonPath("$.response.terminals[0].name", is(terminalDto1.getName())));
+        resultActions.andExpect(jsonPath("$.response.terminals[0].enabled", is(terminalDto1.isEnabled())));
 
-        resultActions.andExpect(jsonPath("$response.terminals[1].latitude", is(terminalDto2.getLatitude().intValue())));
-        resultActions.andExpect(jsonPath("$response.terminals[1].longitude",
+        resultActions.andExpect(jsonPath("$.response.terminals[1].latitude",
+                is(terminalDto2.getLatitude().intValue())));
+        resultActions.andExpect(jsonPath("$.response.terminals[1].longitude",
                 is(terminalDto2.getLongitude().intValue())));
-        resultActions.andExpect(jsonPath("$response.terminals[1].name", is(terminalDto2.getName())));
-        resultActions.andExpect(jsonPath("$response.terminals[1].enabled", is(terminalDto2.isEnabled())));
+        resultActions.andExpect(jsonPath("$.response.terminals[1].name", is(terminalDto2.getName())));
+        resultActions.andExpect(jsonPath("$.response.terminals[1].enabled", is(terminalDto2.isEnabled())));
 
-        resultActions.andExpect(jsonPath("$response.links", hasSize(1)));
-        resultActions.andExpect(jsonPath("$response.links[0].rel", is("self")));
+        resultActions.andExpect(jsonPath("$.response.links", hasSize(1)));
+        resultActions.andExpect(jsonPath("$.response.links[0].rel", is("self")));
 
         verify(terminalDtoService, never()).getAll();
     }
@@ -156,20 +158,22 @@ public class TerminalApiControllerMvcUnitTest {
         resultActions.andExpect(status().isOk());
         resultActions.andExpect(content().contentType("application/json"));
 
-        resultActions.andExpect(jsonPath("$response.terminals[0].latitude", is(terminalDto1.getLatitude().intValue())));
-        resultActions.andExpect(jsonPath("$response.terminals[0].longitude",
+        resultActions.andExpect(jsonPath("$.response.terminals[0].latitude",
+                is(terminalDto1.getLatitude().intValue())));
+        resultActions.andExpect(jsonPath("$.response.terminals[0].longitude",
                 is(terminalDto1.getLongitude().intValue())));
-        resultActions.andExpect(jsonPath("$response.terminals[0].name", is(terminalDto1.getName())));
-        resultActions.andExpect(jsonPath("$response.terminals[0].enabled", is(terminalDto1.isEnabled())));
+        resultActions.andExpect(jsonPath("$.response.terminals[0].name", is(terminalDto1.getName())));
+        resultActions.andExpect(jsonPath("$.response.terminals[0].enabled", is(terminalDto1.isEnabled())));
 
-        resultActions.andExpect(jsonPath("$response.terminals[1].latitude", is(terminalDto2.getLatitude().intValue())));
-        resultActions.andExpect(jsonPath("$response.terminals[1].longitude",
+        resultActions.andExpect(jsonPath("$.response.terminals[1].latitude",
+                is(terminalDto2.getLatitude().intValue())));
+        resultActions.andExpect(jsonPath("$.response.terminals[1].longitude",
                 is(terminalDto2.getLongitude().intValue())));
-        resultActions.andExpect(jsonPath("$response.terminals[1].name", is(terminalDto2.getName())));
-        resultActions.andExpect(jsonPath("$response.terminals[1].enabled", is(terminalDto2.isEnabled())));
+        resultActions.andExpect(jsonPath("$.response.terminals[1].name", is(terminalDto2.getName())));
+        resultActions.andExpect(jsonPath("$.response.terminals[1].enabled", is(terminalDto2.isEnabled())));
 
-        resultActions.andExpect(jsonPath("$response.links", hasSize(1)));
-        resultActions.andExpect(jsonPath("$response.links[0].rel", is("self")));
+        resultActions.andExpect(jsonPath("$.response.links", hasSize(1)));
+        resultActions.andExpect(jsonPath("$.response.links[0].rel", is("self")));
 
         verify(terminalDtoService, never()).getAllActive();
     }
@@ -188,16 +192,17 @@ public class TerminalApiControllerMvcUnitTest {
         resultActions.andExpect(status().isOk());
         resultActions.andExpect(content().contentType("application/json"));
 
-        resultActions.andExpect(jsonPath("$response.terminals", hasSize(1)));
+        resultActions.andExpect(jsonPath("$.response.terminals", hasSize(1)));
 
-        resultActions.andExpect(jsonPath("$response.terminals[0].latitude", is(terminalDto2.getLatitude().intValue())));
-        resultActions.andExpect(jsonPath("$response.terminals[0].longitude",
+        resultActions.andExpect(jsonPath("$.response.terminals[0].latitude",
+                is(terminalDto2.getLatitude().intValue())));
+        resultActions.andExpect(jsonPath("$.response.terminals[0].longitude",
                 is(terminalDto2.getLongitude().intValue())));
-        resultActions.andExpect(jsonPath("$response.terminals[0].name", is(terminalDto2.getName())));
-        resultActions.andExpect(jsonPath("$response.terminals[0].enabled", is(terminalDto2.isEnabled())));
+        resultActions.andExpect(jsonPath("$.response.terminals[0].name", is(terminalDto2.getName())));
+        resultActions.andExpect(jsonPath("$.response.terminals[0].enabled", is(terminalDto2.isEnabled())));
 
-        resultActions.andExpect(jsonPath("$response.links", hasSize(1)));
-        resultActions.andExpect(jsonPath("$response.links[0].rel", is("self")));
+        resultActions.andExpect(jsonPath("$.response.links", hasSize(1)));
+        resultActions.andExpect(jsonPath("$.response.links[0].rel", is("self")));
     }
 
 
@@ -208,7 +213,7 @@ public class TerminalApiControllerMvcUnitTest {
                 .param("routeType", "RAIL")
                 .accept(APPLICATION_JSON));
         resultActions.andExpect(status().isOk());
-        resultActions.andExpect(jsonPath("$response.terminals", empty()));
+        resultActions.andExpect(jsonPath("$.response.terminals", empty()));
     }
 
 
@@ -221,15 +226,15 @@ public class TerminalApiControllerMvcUnitTest {
         resultActions.andExpect(status().isOk());
         resultActions.andExpect(content().contentType("application/json"));
 
-        resultActions.andExpect(jsonPath("$response.terminal.latitude", is(terminalDto2.getLatitude().intValue())));
-        resultActions.andExpect(jsonPath("$response.terminal.longitude", is(terminalDto2.getLongitude().intValue())));
-        resultActions.andExpect(jsonPath("$response.terminal.name", is(terminalDto2.getName())));
-        resultActions.andExpect(jsonPath("$response.terminal.enabled", is(terminalDto2.isEnabled())));
+        resultActions.andExpect(jsonPath("$.response.terminal.latitude", is(terminalDto2.getLatitude().intValue())));
+        resultActions.andExpect(jsonPath("$.response.terminal.longitude", is(terminalDto2.getLongitude().intValue())));
+        resultActions.andExpect(jsonPath("$.response.terminal.name", is(terminalDto2.getName())));
+        resultActions.andExpect(jsonPath("$.response.terminal.enabled", is(terminalDto2.isEnabled())));
 
-        resultActions.andExpect(jsonPath("$response.links", hasSize(2)));
-        resultActions.andExpect(jsonPath("$response.links[0].rel", is("self")));
-        resultActions.andExpect(jsonPath("$response.links[0].href", endsWith("/terminals/42")));
-        resultActions.andExpect(jsonPath("$response.links[1].rel", is("terminals")));
+        resultActions.andExpect(jsonPath("$.response.links", hasSize(2)));
+        resultActions.andExpect(jsonPath("$.response.links[0].rel", is("self")));
+        resultActions.andExpect(jsonPath("$.response.links[0].href", endsWith("/terminals/42")));
+        resultActions.andExpect(jsonPath("$.response.links[1].rel", is("terminals")));
     }
 
 

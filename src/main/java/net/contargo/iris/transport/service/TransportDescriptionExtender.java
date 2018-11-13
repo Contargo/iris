@@ -18,13 +18,13 @@ import static net.contargo.iris.transport.api.StopType.TERMINAL;
 public class TransportDescriptionExtender {
 
     private final TransportDescriptionMainRunExtender mainRunExtender;
-    private final TransportDescriptionNebenlaufExtender nebenlaufExtender;
+    private final TransportDescriptionRoadExtender roadExtender;
 
     public TransportDescriptionExtender(TransportDescriptionMainRunExtender mainRunExtender,
-        TransportDescriptionNebenlaufExtender nebenlaufExtender) {
+        TransportDescriptionRoadExtender roadExtender) {
 
         this.mainRunExtender = mainRunExtender;
-        this.nebenlaufExtender = nebenlaufExtender;
+        this.roadExtender = roadExtender;
     }
 
     /**
@@ -41,9 +41,11 @@ public class TransportDescriptionExtender {
 
         result.transportChain.forEach(s -> {
             if (isNebenlauf(s)) {
-                nebenlaufExtender.with(s);
+                roadExtender.forNebenlauf(s);
             } else if (isMainRun(s)) {
                 mainRunExtender.with(s);
+            } else if (isRoadAndAddressOnly(s)) {
+                roadExtender.forAddressesOnly(s);
             }
 
             boolean toIsTerminal = s.to.type == TERMINAL;
@@ -52,6 +54,12 @@ public class TransportDescriptionExtender {
         });
 
         return result;
+    }
+
+
+    private static boolean isRoadAndAddressOnly(TransportResponseDto.TransportResponseSegment segment) {
+
+        return segment.from.type == ADDRESS && segment.to.type == ADDRESS && segment.modeOfTransport == ROAD;
     }
 
 

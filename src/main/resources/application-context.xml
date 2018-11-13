@@ -493,16 +493,24 @@
         <constructor-arg ref="descriptionNebenlaufExtender"/>
     </bean>
 
-    <bean class="net.contargo.iris.transport.service.TransportChainGenerator" id="transportChainGenerator">
+    <bean class="net.contargo.iris.transport.service.TerminalTransportChainGenerator" id="terminalTransportChainGenerator">
         <constructor-arg ref="terminalService"/>
         <constructor-arg ref="connectionService"/>
+    </bean>
+
+    <bean class="net.contargo.iris.transport.service.AddressOnlyTransportChainGenerator" id="addressTransportChainGenerator"/>
+
+    <bean class="net.contargo.iris.transport.service.TransportChainGeneratorStrategyAdvisor"
+          id="transportChainGeneratorStrategyAdvisor">
+        <constructor-arg ref="terminalTransportChainGenerator"/>
+        <constructor-arg ref="addressTransportChainGenerator"/>
     </bean>
 
     <bean class="net.contargo.iris.transport.service.TransportDescriptionMainRunExtender" id="transportDescriptionMainRunExtender">
         <constructor-arg ref="connectionService"/>
     </bean>
 
-    <bean class="net.contargo.iris.transport.service.TransportDescriptionNebenlaufExtender"
+    <bean class="net.contargo.iris.transport.service.TransportDescriptionRoadExtender"
           id="descriptionNebenlaufExtender">
         <constructor-arg ref="routeService"/>
         <constructor-arg ref="conversionService"/>

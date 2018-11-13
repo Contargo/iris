@@ -25,13 +25,13 @@ import static net.contargo.iris.units.TimeUnit.MINUTE;
  * @author  Ben Antony - antony@synyx.de
  * @author  Sandra Thieme - thieme@synyx.de
  */
-public class TransportDescriptionNebenlaufExtender {
+public class TransportDescriptionRoadExtender {
 
     private final RouteService routeService;
     private final ConversionService conversionService;
     private final RouteDataRevisionService routeDataRevisionService;
 
-    public TransportDescriptionNebenlaufExtender(RouteService routeService, ConversionService conversionService,
+    public TransportDescriptionRoadExtender(RouteService routeService, ConversionService conversionService,
         RouteDataRevisionService routeDataRevisionService) {
 
         this.routeService = routeService;
@@ -39,7 +39,19 @@ public class TransportDescriptionNebenlaufExtender {
         this.routeDataRevisionService = routeDataRevisionService;
     }
 
-    void with(TransportResponseDto.TransportResponseSegment segment) {
+    void forNebenlauf(TransportResponseDto.TransportResponseSegment segment) {
+
+        with(segment, true);
+    }
+
+
+    void forAddressesOnly(TransportResponseDto.TransportResponseSegment segment) {
+
+        with(segment, false);
+    }
+
+
+    private void with(TransportResponseDto.TransportResponseSegment segment, boolean includeRouteRevision) {
 
         GeoLocation start = conversionService.convert(segment.from, GeoLocation.class);
         GeoLocation end = conversionService.convert(segment.to, GeoLocation.class);
@@ -51,7 +63,9 @@ public class TransportDescriptionNebenlaufExtender {
         segment.duration = new Duration(routeResult.getDuration(), MINUTE);
         segment.geometries = routeResult.getGeometries();
 
-        applyRouteRevision(segment);
+        if (includeRouteRevision) {
+            applyRouteRevision(segment);
+        }
 
         BigDecimal co2Value = road(routeResult.getDistance(), segment.loadingState);
         segment.co2 = new Weight(co2Value, KILOGRAM);

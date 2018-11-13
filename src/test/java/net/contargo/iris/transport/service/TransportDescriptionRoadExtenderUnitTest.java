@@ -53,10 +53,10 @@ import static java.util.Optional.empty;
  * @author  Sandra Thieme - thieme@synyx.de
  */
 @RunWith(MockitoJUnitRunner.class)
-public class TransportDescriptionNebenlaufExtenderUnitTest {
+public class TransportDescriptionRoadExtenderUnitTest {
 
     @InjectMocks
-    private TransportDescriptionNebenlaufExtender sut;
+    private TransportDescriptionRoadExtender sut;
 
     @Mock
     private RouteService routeServiceMock;
@@ -90,7 +90,7 @@ public class TransportDescriptionNebenlaufExtenderUnitTest {
         when(routeDataRevisionServiceMock.getRouteDataRevision(new BigInteger("111"), addressGeoLocation)).thenReturn(
             empty());
 
-        sut.with(segment);
+        sut.forNebenlauf(segment);
 
         assertThat(segment.distance.value, is(40));
         assertThat(segment.distance.unit, is(KILOMETRE));
@@ -133,7 +133,7 @@ public class TransportDescriptionNebenlaufExtenderUnitTest {
         when(routeDataRevisionServiceMock.getRouteDataRevision(new BigInteger("111"), addressGeoLocation)).thenReturn(
             Optional.of(routeRevision));
 
-        sut.with(segment);
+        sut.forNebenlauf(segment);
 
         assertThat(segment.distance.value, is(50));
         assertThat(segment.distance.unit, is(KILOMETRE));

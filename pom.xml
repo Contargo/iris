@@ -691,7 +691,7 @@
                         <configuration>
                             <images>
                                 <image>
-                                    <name>mariadb</name>
+                                    <name>mariadb:5.5</name>
                                     <run>
                                         <ports>
                                             <port>host.port:3306</port>

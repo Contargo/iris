@@ -45,6 +45,10 @@
         <logback.version>1.2.3</logback.version>
         <org.aspectj-version>1.9.2</org.aspectj-version>
 
+        <junit.jupiter.version>5.3.1</junit.jupiter.version>
+        <junit.vintage.version>5.3.1</junit.vintage.version>
+        <spring.test.junit5>1.3.1</spring.test.junit5>
+
         <!-- Unit test and integration test coverage for sonar -->
         <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
         <sonar.jacoco.reportPath>${project.build.directory}/coverage-reports/jacoco-ut.exec</sonar.jacoco.reportPath>
@@ -94,6 +98,10 @@
             <id>oss-jfrog-artifactory</id>
             <name>oss-jfrog-artifactory-releases</name>
             <url>http://oss.jfrog.org/artifactory/oss-release-local</url>
+        </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
         </repository>
     </repositories>
 
@@ -272,6 +280,30 @@
         </dependency>
 
         <!-- Test -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit.jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
+            <version>${junit.vintage.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.sbrannen</groupId>
+            <artifactId>spring-test-junit5</artifactId>
+            <version>${spring.test.junit5}</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -726,7 +758,7 @@
                         </executions>
                     </plugin>
                 </plugins>
-    
+
             </build>
         </profile>
     </profiles>

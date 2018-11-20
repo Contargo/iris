@@ -74,24 +74,6 @@ public interface RouteDataRevisionService {
 
 
     /**
-     * Finds all {@link net.contargo.iris.routedatarevision.RouteDataRevision}.
-     *
-     * @return  a list of all {@link net.contargo.iris.routedatarevision.RouteDataRevision}
-     */
-    List<RouteDataRevision> getRouteDataRevisions();
-
-
-    /**
-     * Finds all {@link net.contargo.iris.routedatarevision.RouteDataRevision} belonging to the given terminal.
-     *
-     * @param  terminalId  The parameter to filter the {@link net.contargo.iris.routedatarevision.RouteDataRevision}s.
-     *
-     * @return  a list of {@link net.contargo.iris.routedatarevision.RouteDataRevision}s.
-     */
-    List<RouteDataRevision> getRouteDataRevisions(Long terminalId);
-
-
-    /**
      * Finds the {@link net.contargo.iris.routedatarevision.RouteDataRevision} for the given id.
      *
      * @param  id  param identifying the {@link net.contargo.iris.routedatarevision.RouteDataRevision}

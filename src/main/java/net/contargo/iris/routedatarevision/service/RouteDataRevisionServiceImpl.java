@@ -40,6 +40,9 @@ import static org.slf4j.LoggerFactory.getLogger;
 import static org.springframework.data.jpa.domain.Specifications.where;
 
 
+/**
+ * @author  Oliver Messner - messner@synyx.de
+ */
 @Transactional
 public class RouteDataRevisionServiceImpl implements RouteDataRevisionService {
 
@@ -111,20 +114,6 @@ public class RouteDataRevisionServiceImpl implements RouteDataRevisionService {
                 destination.getLongitude(), new Date());
 
         return Optional.ofNullable(nearest);
-    }
-
-
-    @Override
-    public List<RouteDataRevision> getRouteDataRevisions() {
-
-        return routeDataRevisionRepository.findAll();
-    }
-
-
-    @Override
-    public List<RouteDataRevision> getRouteDataRevisions(Long terminalId) {
-
-        return routeDataRevisionRepository.findByTerminalId(terminalId);
     }
 
 

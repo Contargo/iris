@@ -2,6 +2,7 @@ package net.contargo.iris.routedatarevision;
 
 import org.springframework.util.StringUtils;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static org.springframework.util.StringUtils.trimWhitespace;
@@ -12,15 +13,56 @@ import static org.springframework.util.StringUtils.trimWhitespace;
  * {@link net.contargo.iris.routedatarevision.RouteDataRevision}s.
  *
  * @author  Sandra Thieme - thieme@synyx.de
+ * @author  Oliver Messner - messner@synyx.de
  */
 public class RouteRevisionRequest {
 
     private static final int LEAST_VALID_PARAMETER_COUNT = 1;
     private static final int PARAMETER_COUNT = 3;
 
+    public enum ExpirationFilter {
+
+        NOT_EXPIRED("notExpired", "routerevision.expirationFilter.notExpired"),
+        EXPIRED("expired", "routerevision.expirationFilter.expired");
+
+        private final String filterName;
+        private final String messageKey;
+
+        ExpirationFilter(String filterName, String messageKey) {
+
+            this.filterName = filterName;
+            this.messageKey = messageKey;
+        }
+
+        private static ExpirationFilter fromFilterName(String filterName) {
+
+            if (NOT_EXPIRED.filterName.equals(filterName)) {
+                return NOT_EXPIRED;
+            } else if (EXPIRED.filterName.equals(filterName)) {
+                return EXPIRED;
+            } else {
+                return null;
+            }
+        }
+
+
+        public String getFilterName() {
+
+            return filterName;
+        }
+
+
+        public String getMessageKey() {
+
+            return messageKey;
+        }
+    }
+
     private String postalcode;
     private String city;
     private Long terminalId;
+
+    private String filterName;
 
     public boolean isValid() {
 
@@ -76,5 +118,23 @@ public class RouteRevisionRequest {
     public Long getTerminalId() {
 
         return terminalId;
+    }
+
+
+    public String getFilterName() {
+
+        return filterName;
+    }
+
+
+    public void setFilterName(String filterName) {
+
+        this.filterName = filterName;
+    }
+
+
+    public Optional<ExpirationFilter> getExpirationFilter() {
+
+        return Optional.ofNullable(ExpirationFilter.fromFilterName(filterName));
     }
 }

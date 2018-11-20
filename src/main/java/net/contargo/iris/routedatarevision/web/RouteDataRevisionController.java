@@ -95,7 +95,6 @@ public class RouteDataRevisionController {
         if (!routeRevisionRequest.isEmpty()) {
             if (routeRevisionRequest.isValid()) {
                 List<RouteDataRevisionDto> routeRevisions = routeDataRevisionDtoService.search(routeRevisionRequest);
-
                 model.addAttribute("routeRevisions", routeRevisions);
             } else {
                 model.addAttribute("message", Message.error("routerevision.parameter.count"));
@@ -104,6 +103,7 @@ public class RouteDataRevisionController {
 
         model.addAttribute("terminals", terminalService.getAll());
         model.addAttribute("request", routeRevisionRequest);
+        model.addAttribute("filterModes", RouteRevisionRequest.ExpirationFilter.values());
 
         return CONTROLLER_CONTEXT + "routeRevisions";
     }

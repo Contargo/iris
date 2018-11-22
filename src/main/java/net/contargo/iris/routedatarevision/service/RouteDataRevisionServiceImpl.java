@@ -10,12 +10,23 @@ import net.contargo.iris.routedatarevision.RouteRevisionRequest;
 import net.contargo.iris.routedatarevision.ValidityRange;
 import net.contargo.iris.routedatarevision.dto.RouteDataRevisionDto;
 import net.contargo.iris.routedatarevision.persistence.RouteDataRevisionRepository;
+
+import static net.contargo.iris.routedatarevision.service.RouteRevisionSpecifications.hasCity;
+import static net.contargo.iris.routedatarevision.service.RouteRevisionSpecifications.hasPostalCode;
+import static net.contargo.iris.routedatarevision.service.RouteRevisionSpecifications.hasTerminal;
+import static net.contargo.iris.routedatarevision.service.RouteRevisionSpecifications.isExpired;
+import static net.contargo.iris.routedatarevision.service.RouteRevisionSpecifications.isNotExpired;
+
 import net.contargo.iris.terminal.Terminal;
 import net.contargo.iris.terminal.service.TerminalService;
 
 import org.slf4j.Logger;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import org.springframework.data.jpa.domain.Specifications;
+
+import static org.springframework.data.jpa.domain.Specifications.where;
 
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,15 +42,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
-import static net.contargo.iris.routedatarevision.service.RouteRevisionSpecifications.hasCity;
-import static net.contargo.iris.routedatarevision.service.RouteRevisionSpecifications.hasPostalCode;
-import static net.contargo.iris.routedatarevision.service.RouteRevisionSpecifications.hasTerminal;
 
-import static org.slf4j.LoggerFactory.getLogger;
-
-import static org.springframework.data.jpa.domain.Specifications.where;
-
-
+/**
+ * @author  Oliver Messner - messner@synyx.de
+ */
 @Transactional
 public class RouteDataRevisionServiceImpl implements RouteDataRevisionService {
 
@@ -115,20 +121,6 @@ public class RouteDataRevisionServiceImpl implements RouteDataRevisionService {
 
 
     @Override
-    public List<RouteDataRevision> getRouteDataRevisions() {
-
-        return routeDataRevisionRepository.findAll();
-    }
-
-
-    @Override
-    public List<RouteDataRevision> getRouteDataRevisions(Long terminalId) {
-
-        return routeDataRevisionRepository.findByTerminalId(terminalId);
-    }
-
-
-    @Override
     public RouteDataRevision getRouteDataRevision(Long id) {
 
         RouteDataRevision routeDataRevision = routeDataRevisionRepository.findOne(id);
@@ -188,6 +180,20 @@ public class RouteDataRevisionServiceImpl implements RouteDataRevisionService {
 
         Specifications<RouteDataRevision> spec = where(hasCity(normalizedCity)).and(hasPostalCode(postalcode))
                 .and(hasTerminal(terminalId));
+
+        Optional<RouteRevisionRequest.ExpirationFilter> filterMode = routeRevisionRequest.getExpirationFilter();
+
+        if (filterMode.isPresent()) {
+            switch (filterMode.get()) {
+                case NOT_EXPIRED:
+                    spec = spec.and(isNotExpired());
+                    break;
+
+                case EXPIRED:
+                    spec = spec.and(isExpired());
+                    break;
+            }
+        }
 
         return routeDataRevisionRepository.findAll(spec);
     }

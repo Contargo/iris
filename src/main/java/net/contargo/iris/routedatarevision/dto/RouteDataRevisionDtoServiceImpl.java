@@ -32,20 +32,6 @@ public class RouteDataRevisionDtoServiceImpl implements RouteDataRevisionDtoServ
     }
 
     @Override
-    public List<RouteDataRevisionDto> getRouteDataRevisions() {
-
-        return convertToDtoList(routeDataRevisionService.getRouteDataRevisions());
-    }
-
-
-    @Override
-    public List<RouteDataRevisionDto> getRouteDataRevisions(Long terminalId) {
-
-        return convertToDtoList(routeDataRevisionService.getRouteDataRevisions(terminalId));
-    }
-
-
-    @Override
     public RouteDataRevisionDto getRouteDataRevision(Long id) {
 
         return new RouteDataRevisionDto(routeDataRevisionService.getRouteDataRevision(id));

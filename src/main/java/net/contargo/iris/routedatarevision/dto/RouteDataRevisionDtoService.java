@@ -21,25 +21,6 @@ import java.util.List;
 public interface RouteDataRevisionDtoService {
 
     /**
-     * Finds all {@link net.contargo.iris.routedatarevision.dto.RouteDataRevisionDto}.
-     *
-     * @return  a list of all {@link net.contargo.iris.routedatarevision.dto.RouteDataRevisionDto}
-     */
-    List<RouteDataRevisionDto> getRouteDataRevisions();
-
-
-    /**
-     * Finds all {@link net.contargo.iris.routedatarevision.RouteDataRevision} belonging to the given terminal.
-     *
-     * @param  terminalId  The parameter to filter the
-     *                     {@link net.contargo.iris.routedatarevision.dto.RouteDataRevisionDto}s.
-     *
-     * @return  a list of {@link net.contargo.iris.routedatarevision.dto.RouteDataRevisionDto}s.
-     */
-    List<RouteDataRevisionDto> getRouteDataRevisions(Long terminalId);
-
-
-    /**
      * Finds the {@link net.contargo.iris.routedatarevision.dto.RouteDataRevisionDto} for the given id.
      *
      * @param  id  param identifying the {@link net.contargo.iris.routedatarevision.dto.RouteDataRevisionDto}
@@ -77,8 +58,8 @@ public interface RouteDataRevisionDtoService {
      * @return  {@code true} if there is an overlap. Otherwise {@code false}
      */
 
-    boolean existsEntry(String terminalUniqueId, BigDecimal latitude, BigDecimal longitude, ValidityRange validityRange,
-        Long routeRevisionId);
+    boolean existsEntry(String terminalUniqueId, BigDecimal latitude, BigDecimal longitude,
+        ValidityRange validityRange, Long routeRevisionId);
 
 
     /**

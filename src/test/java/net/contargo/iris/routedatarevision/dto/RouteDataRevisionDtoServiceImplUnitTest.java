@@ -84,28 +84,6 @@ public class RouteDataRevisionDtoServiceImplUnitTest {
 
 
     @Test
-    public void getRouteDataRevisions() {
-
-        when(routeDataRevisionServiceMock.getRouteDataRevisions()).thenReturn(routeDataRevisions);
-
-        List<RouteDataRevisionDto> resultList = sut.getRouteDataRevisions();
-        assertThat(resultList.size(), is(1));
-        assertThat(resultList.get(0).getId(), is(5L));
-    }
-
-
-    @Test
-    public void getRouteDataRevisionsByTerminal() {
-
-        when(routeDataRevisionServiceMock.getRouteDataRevisions(1L)).thenReturn(routeDataRevisions);
-
-        List<RouteDataRevisionDto> resultList = sut.getRouteDataRevisions(1L);
-        assertThat(resultList.size(), is(1));
-        assertThat(resultList.get(0).getId(), is(5L));
-    }
-
-
-    @Test
     public void getRouteDataRevisionById() {
 
         when(routeDataRevisionServiceMock.getRouteDataRevision(5L)).thenReturn(routeDataRevision);
@@ -157,7 +135,8 @@ public class RouteDataRevisionDtoServiceImplUnitTest {
 
         Date date = new Date();
 
-        when(routeDataRevisionServiceMock.getRouteDataRevision(BigInteger.ONE, geoLocation, date)).thenReturn(revision);
+        when(routeDataRevisionServiceMock.getRouteDataRevision(BigInteger.ONE, geoLocation, date)).thenReturn(
+            revision);
 
         RouteDataRevisionDto result = sut.findNearest("1", geoLocation, date);
 

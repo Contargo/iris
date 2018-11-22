@@ -44,8 +44,24 @@
                                 </form:select>
                             </div>
                         </div>
+
                         <iris:inputField property="postalcode" messageKey="routerevision.postalcode"/>
                         <iris:inputField property="city" messageKey="routerevision.city"/>
+
+                        <div class="control-group">
+                            <form:label path="${expirationFilter}" cssClass="control-label"
+                                        cssErrorClass="control-label error">
+                                <spring:message code="routerevision.expirationFilter"/>
+                            </form:label>
+                            <div class="controls">
+                                <form:select path="filterName" cssErrorClass="error">
+                                    <c:forEach var="expirationFilter" items="${filterModes}">
+                                        <spring:message code="${expirationFilter.messageKey}" var="name"/>
+                                        <form:option value="${expirationFilter.filterName}" label="${name}"/>
+                                    </c:forEach>
+                                </form:select>
+                            </div>
+                        </div>
 
                         <div class="form-actions">
                             <input id="search" class="btn btn-primary" type="submit"

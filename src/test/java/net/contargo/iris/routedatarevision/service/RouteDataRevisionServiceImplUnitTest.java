@@ -49,13 +49,13 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 
 
 /**
  * Unit test of {@link RouteDataRevisionServiceImpl}.
  *
  * @author  Tobias Schneider - schneider@synyx.de
+ * @author  Oliver Messner - messner@synyx.de
  */
 @RunWith(MockitoJUnitRunner.class)
 public class RouteDataRevisionServiceImplUnitTest {
@@ -175,28 +175,6 @@ public class RouteDataRevisionServiceImplUnitTest {
         } catch (RevisionDoesNotExistException e) {
             assertThat(e.getCode(), is("terminal.error.notfound"));
         }
-    }
-
-
-    @Test
-    public void getRouteDataRevision() {
-
-        List<RouteDataRevision> routeDataRevisions = singletonList(new RouteDataRevision());
-        when(routeDataRevisionRepositoryMock.findAll()).thenReturn(routeDataRevisions);
-
-        List<RouteDataRevision> resultList = sut.getRouteDataRevisions();
-        assertThat(resultList, is(routeDataRevisions));
-    }
-
-
-    @Test
-    public void getRouteDataRevisionByTerminal() {
-
-        List<RouteDataRevision> routeDataRevisions = singletonList(new RouteDataRevision());
-        when(routeDataRevisionRepositoryMock.findByTerminalId(1L)).thenReturn(routeDataRevisions);
-
-        List<RouteDataRevision> resultList = sut.getRouteDataRevisions(1L);
-        assertThat(resultList, is(routeDataRevisions));
     }
 
 

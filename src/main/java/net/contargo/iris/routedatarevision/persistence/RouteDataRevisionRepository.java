@@ -26,6 +26,7 @@ import static org.hibernate.jpa.QueryHints.HINT_FETCH_SIZE;
  *
  * @author  Tobias Schneider - schneider@synyx.de
  * @author  David Schilling - schilling@synyx.de
+ * @author  Oliver Messner - messner@synyx.de
  */
 
 public interface RouteDataRevisionRepository extends JpaRepository<RouteDataRevision, Long>,
@@ -56,10 +57,6 @@ public interface RouteDataRevisionRepository extends JpaRepository<RouteDataRevi
         @Param("latitude") BigDecimal latitude,
         @Param("longitude") BigDecimal longitude,
         @Param("date") Date date);
-
-
-    @Query("SELECT r FROM RouteDataRevision r WHERE r.terminal.id = ?1")
-    List<RouteDataRevision> findByTerminalId(Long id);
 
 
     @Query("SELECT r FROM RouteDataRevision r WHERE r.terminal.uniqueId = ?1 and r.latitude = ?2 and longitude = ?3")

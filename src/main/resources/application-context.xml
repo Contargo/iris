@@ -4,6 +4,7 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:cache="http://www.springframework.org/schema/cache"
        xmlns:util="http://www.springframework.org/schema/util" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:condbean="http://www.springframework.org/schema/p"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd
         http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-4.2.xsd
@@ -515,6 +516,26 @@
         <constructor-arg ref="routeService"/>
         <constructor-arg ref="conversionService"/>
         <constructor-arg ref="routeDataRevisionService"/>
+    </bean>
+
+    <bean class="net.contargo.iris.transport.inclinations.service.InclinationsService" id="inclinationsService" >
+        <constructor-arg ref="elevationServiceClient"/>
+        <constructor-arg ref="inclinationsRoutingClient"/>
+        <constructor-arg ref="conversionService"/>
+    </bean>
+
+    <bean id="elevationServiceClient" class="net.contargo.iris.transport.inclinations.client.elevation.ElevationServiceClient">
+        <constructor-arg name="restTemplate">
+            <bean class="org.springframework.web.client.RestTemplate"/>
+        </constructor-arg>
+        <constructor-arg value="${maps.host}"/>
+    </bean>
+
+    <bean id="inclinationsRoutingClient" class="net.contargo.iris.transport.inclinations.client.maps.MapsClient">
+        <constructor-arg name="restTemplate">
+            <bean class="org.springframework.web.client.RestTemplate"/>
+        </constructor-arg>
+        <constructor-arg value="${maps.host}"/>
     </bean>
 
 </beans>

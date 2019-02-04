@@ -1,5 +1,7 @@
 package net.contargo.iris.transport.inclinations.client.elevation;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.math.BigDecimal;
 
 
@@ -19,18 +21,21 @@ public class ElevationServicePoint2D {
         this.osmId = osmId;
     }
 
+    @JsonProperty("lat")
     public BigDecimal getLatitude() {
 
         return latitude;
     }
 
 
+    @JsonProperty("lon")
     public BigDecimal getLongitude() {
 
         return longitude;
     }
 
 
+    @JsonProperty("osmId")
     public Long getOsmId() {
 
         return osmId;

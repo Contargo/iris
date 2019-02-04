@@ -518,9 +518,12 @@
         <constructor-arg ref="routeDataRevisionService"/>
     </bean>
 
-    <bean class="net.contargo.iris.transport.inclinations.service.InclinationsService" id="inclinationsService" >
+    <bean id="elevationSmoother" class="net.contargo.iris.transport.inclinations.smoothing.ElevationSmoother"/>
+
+    <bean class="net.contargo.iris.transport.inclinations.service.InclinationsService" id="inclinationsService">
         <constructor-arg ref="elevationServiceClient"/>
         <constructor-arg ref="inclinationsRoutingClient"/>
+        <constructor-arg ref="elevationSmoother"/>
         <constructor-arg ref="conversionService"/>
     </bean>
 

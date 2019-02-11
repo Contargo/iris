@@ -1,4 +1,4 @@
-package net.contargo.iris.transport.inclinations.client.elevation;
+package net.contargo.iris.transport.inclinations.client.contargo;
 
 import net.contargo.iris.transport.inclinations.dto.Point2D;
 import net.contargo.iris.transport.inclinations.dto.Point3D;
@@ -56,7 +56,7 @@ public class ElevationServiceClientTest {
             new ElevationServicePoint3D(new BigDecimal("49.45646354"), new BigDecimal("8.45646354"), 3546321L, 123),
             new ElevationServicePoint3D(new BigDecimal("50.45646354"), new BigDecimal("9.45646354"), 7983168L, 122)
         };
-        when(restTemplateMock.postForObject(eq("{mapsHost}/elevation"), anyList(), eq(ElevationServicePoint3D[].class),
+        when(restTemplateMock.postForObject(eq("{mapsHost}/contargo"), anyList(), eq(ElevationServicePoint3D[].class),
                     eq("https://mapshost"))).thenReturn(response);
 
         List<Point3D> result = sut.getElevations(asList(

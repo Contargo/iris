@@ -1,6 +1,6 @@
-package net.contargo.iris.transport.inclinations.client.elevation;
+package net.contargo.iris.transport.inclinations.client.contargo;
 
-import net.contargo.iris.transport.inclinations.client.InclinationsClient;
+import net.contargo.iris.transport.inclinations.client.ElevationProviderClient;
 import net.contargo.iris.transport.inclinations.dto.Point2D;
 import net.contargo.iris.transport.inclinations.dto.Point3D;
 
@@ -15,7 +15,7 @@ import static java.util.stream.Collectors.toList;
 /**
  * @author  Ben Antony - antony@synyx.de
  */
-public class ElevationServiceClient implements InclinationsClient {
+public class ElevationServiceClient implements ElevationProviderClient {
 
     private static final String URL = "{mapsHost}/elevation";
     private final RestTemplate restTemplate;

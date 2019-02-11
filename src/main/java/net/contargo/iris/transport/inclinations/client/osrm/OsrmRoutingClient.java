@@ -1,7 +1,7 @@
-package net.contargo.iris.transport.inclinations.client.maps;
+package net.contargo.iris.transport.inclinations.client.osrm;
 
 import net.contargo.iris.GeoLocation;
-import net.contargo.iris.transport.inclinations.client.InclinationsRoutingClient;
+import net.contargo.iris.transport.inclinations.client.RoutingClient;
 import net.contargo.iris.transport.inclinations.dto.Point2D;
 
 import org.springframework.web.client.RestTemplate;
@@ -17,17 +17,17 @@ import static java.util.stream.Collectors.toList;
 /**
  * @author  Ben Antony - antony@synyx.de
  */
-public class MapsClient implements InclinationsRoutingClient {
+public class OsrmRoutingClient implements RoutingClient {
 
     private static final String url =
-        "{mapsHost}/osrm/route/v1/driving/{lon1},{lat1};{lon2},{lat2}?overview=full&geometries=geojson&annotations=nodes";
+        "{mapsHost}/v1/driving/{lon1},{lat1};{lon2},{lat2}?overview=full&geometries=geojson&annotations=nodes";
     private static final int INDEX_LAT = 1;
     private static final int INDEX_LON = 0;
 
     private final RestTemplate restTemplate;
     private final String mapsHost;
 
-    public MapsClient(RestTemplate restTemplate, String mapsHost) {
+    public OsrmRoutingClient(RestTemplate restTemplate, String mapsHost) {
 
         this.restTemplate = restTemplate;
         this.mapsHost = mapsHost;

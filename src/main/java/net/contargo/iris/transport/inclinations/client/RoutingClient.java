@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * @author  Ben Antony - antony@synyx.de
  */
-public interface InclinationsRoutingClient {
+public interface RoutingClient {
 
     /**
      * Returns a list of list of 2D points with osm id for a routing of a route with the given start and end.

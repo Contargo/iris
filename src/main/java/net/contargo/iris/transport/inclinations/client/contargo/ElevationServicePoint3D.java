@@ -1,4 +1,4 @@
-package net.contargo.iris.transport.inclinations.client.elevation;
+package net.contargo.iris.transport.inclinations.client.contargo;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

@@ -3,8 +3,8 @@ package net.contargo.iris.transport.inclinations.service;
 import net.contargo.iris.GeoLocation;
 import net.contargo.iris.transport.api.TransportDescriptionDto;
 import net.contargo.iris.transport.api.TransportStop;
-import net.contargo.iris.transport.inclinations.client.InclinationsClient;
-import net.contargo.iris.transport.inclinations.client.InclinationsRoutingClient;
+import net.contargo.iris.transport.inclinations.client.ElevationProviderClient;
+import net.contargo.iris.transport.inclinations.client.RoutingClient;
 import net.contargo.iris.transport.inclinations.dto.Point2D;
 import net.contargo.iris.transport.inclinations.dto.Point3D;
 import net.contargo.iris.transport.inclinations.smoothing.ElevationSmoother;
@@ -35,12 +35,12 @@ import static java.util.Collections.singletonList;
  */
 class InclinationsServiceUnitTest {
 
-    private InclinationsClient inclinationsClientMock = mock(InclinationsClient.class);
-    private InclinationsRoutingClient routingClientMock = mock(InclinationsRoutingClient.class);
+    private ElevationProviderClient elevationProviderClientMock = mock(ElevationProviderClient.class);
+    private RoutingClient routingClientMock = mock(RoutingClient.class);
     private ElevationSmoother elevationSmootherMock = mock(ElevationSmoother.class);
     private ConversionService conversionServiceMock = mock(ConversionService.class);
 
-    private InclinationsService sut = new InclinationsService(inclinationsClientMock, routingClientMock,
+    private InclinationsService sut = new InclinationsService(elevationProviderClientMock, routingClientMock,
             elevationSmootherMock, conversionServiceMock);
 
     @Test
@@ -64,7 +64,7 @@ class InclinationsServiceUnitTest {
         List<Point3D> points3D = emptyList();
 
         when(routingClientMock.getPoints(locationFrom, locationTo)).thenReturn(points2D);
-        when(inclinationsClientMock.getElevations(points2D)).thenReturn(points3D);
+        when(elevationProviderClientMock.getElevations(points2D)).thenReturn(points3D);
 
         List<Point3D> smoothedPoints = asList(new Point3D(100, null, null), new Point3D(125, null, null),
                 new Point3D(105, null, null), new Point3D(115, null, null));

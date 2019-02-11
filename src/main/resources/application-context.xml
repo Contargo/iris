@@ -522,23 +522,23 @@
 
     <bean class="net.contargo.iris.transport.inclinations.service.InclinationsService" id="inclinationsService">
         <constructor-arg ref="elevationServiceClient"/>
-        <constructor-arg ref="inclinationsRoutingClient"/>
+        <constructor-arg ref="routingClient"/>
         <constructor-arg ref="elevationSmoother"/>
         <constructor-arg ref="conversionService"/>
     </bean>
 
-    <bean id="elevationServiceClient" class="net.contargo.iris.transport.inclinations.client.elevation.ElevationServiceClient">
+    <bean id="elevationServiceClient" class="net.contargo.iris.transport.inclinations.client.contargo.ElevationServiceClient">
         <constructor-arg name="restTemplate">
             <bean class="org.springframework.web.client.RestTemplate"/>
         </constructor-arg>
-        <constructor-arg value="${maps.host}"/>
+        <constructor-arg value="${elevationprovider.url}"/>
     </bean>
 
-    <bean id="inclinationsRoutingClient" class="net.contargo.iris.transport.inclinations.client.maps.MapsClient">
+    <bean id="routingClient" class="net.contargo.iris.transport.inclinations.client.osrm.OsrmRoutingClient">
         <constructor-arg name="restTemplate">
             <bean class="org.springframework.web.client.RestTemplate"/>
         </constructor-arg>
-        <constructor-arg value="${maps.host}"/>
+        <constructor-arg value="${osrm.url}"/>
     </bean>
 
 </beans>

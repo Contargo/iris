@@ -1,4 +1,4 @@
-package net.contargo.iris.transport.inclinations.client.maps;
+package net.contargo.iris.transport.inclinations.client.osrm;
 
 import net.contargo.iris.GeoLocation;
 import net.contargo.iris.transport.inclinations.dto.Point2D;
@@ -35,9 +35,9 @@ import static java.util.Collections.singletonList;
  * @author  Ben Antony - antony@synyx.de
  */
 @RunWith(MockitoJUnitRunner.class)
-public class MapsClientTest {
+public class OsrmRoutingClientTest {
 
-    private MapsClient sut;
+    private OsrmRoutingClient sut;
 
     @Mock
     private RestTemplate restTemplateMock;
@@ -45,7 +45,7 @@ public class MapsClientTest {
     @Before
     public void setUp() {
 
-        sut = new MapsClient(restTemplateMock, "https://mapshost");
+        sut = new OsrmRoutingClient(restTemplateMock, "https://mapshost");
     }
 
 

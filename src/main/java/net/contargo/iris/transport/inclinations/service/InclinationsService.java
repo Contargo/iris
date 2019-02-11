@@ -2,8 +2,8 @@ package net.contargo.iris.transport.inclinations.service;
 
 import net.contargo.iris.GeoLocation;
 import net.contargo.iris.transport.api.TransportDescriptionDto;
-import net.contargo.iris.transport.inclinations.client.InclinationsClient;
-import net.contargo.iris.transport.inclinations.client.InclinationsRoutingClient;
+import net.contargo.iris.transport.inclinations.client.ElevationProviderClient;
+import net.contargo.iris.transport.inclinations.client.RoutingClient;
 import net.contargo.iris.transport.inclinations.dto.Point2D;
 import net.contargo.iris.transport.inclinations.dto.Point3D;
 import net.contargo.iris.transport.inclinations.smoothing.ElevationSmoother;
@@ -22,17 +22,16 @@ import static net.contargo.iris.transport.inclinations.service.Inclinations.zero
  */
 public class InclinationsService {
 
-    private final InclinationsClient elevationServiceClient;
-    private final InclinationsRoutingClient inclinationsRoutingClient;
+    private final ElevationProviderClient elevationServiceClient;
+    private final RoutingClient routingClient;
     private final ElevationSmoother elevationSmoother;
     private final ConversionService conversionService;
 
-    public InclinationsService(InclinationsClient elevationServiceClient,
-        InclinationsRoutingClient inclinationsRoutingClient, ElevationSmoother elevationSmoother,
-        ConversionService conversionService) {
+    public InclinationsService(ElevationProviderClient elevationServiceClient, RoutingClient routingClient,
+        ElevationSmoother elevationSmoother, ConversionService conversionService) {
 
         this.elevationServiceClient = elevationServiceClient;
-        this.inclinationsRoutingClient = inclinationsRoutingClient;
+        this.routingClient = routingClient;
         this.elevationSmoother = elevationSmoother;
         this.conversionService = conversionService;
     }
@@ -60,10 +59,9 @@ public class InclinationsService {
         GeoLocation start = conversionService.convert(segment.from, GeoLocation.class);
         GeoLocation end = conversionService.convert(segment.to, GeoLocation.class);
 
-        List<Point2D> points2D = inclinationsRoutingClient.getPoints(start, end);
+        List<Point2D> points2D = routingClient.getPoints(start, end);
         List<Point3D> points3D = elevationServiceClient.getElevations(points2D);
 
-        // smooth the list of 3D points before calculating inclinations
         List<Point3D> smoothedPoints = elevationSmoother.smooth(points3D);
 
         return mapToInclinations(smoothedPoints);

@@ -12,7 +12,7 @@ import static java.lang.Math.toRadians;
  */
 class DistanceCalculationUtil {
 
-    public static final double R = 6371000; // meter
+    private static final double EARTH_RADIUS = 6371000; // meter
 
     private DistanceCalculationUtil() {
     }
@@ -25,7 +25,7 @@ class DistanceCalculationUtil {
 
         double normedDist = normalizedDistance(fromLat, fromLon, toLat, toLon);
 
-        return R * 2 * asin(sqrt(normedDist));
+        return EARTH_RADIUS * 2 * asin(sqrt(normedDist));
     }
 
 

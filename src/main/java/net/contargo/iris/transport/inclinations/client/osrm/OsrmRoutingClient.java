@@ -20,33 +20,33 @@ import static java.util.stream.Collectors.toList;
 public class OsrmRoutingClient implements RoutingClient {
 
     private static final String url =
-        "{mapsHost}/v1/driving/{lon1},{lat1};{lon2},{lat2}?overview=full&geometries=geojson&annotations=nodes";
+        "{osrmHost}/v1/driving/{lon1},{lat1};{lon2},{lat2}?overview=full&geometries=geojson&annotations=nodes";
     private static final int INDEX_LAT = 1;
     private static final int INDEX_LON = 0;
 
     private final RestTemplate restTemplate;
-    private final String mapsHost;
+    private final String osrmHost;
 
-    public OsrmRoutingClient(RestTemplate restTemplate, String mapsHost) {
+    public OsrmRoutingClient(RestTemplate restTemplate, String osrmHost) {
 
         this.restTemplate = restTemplate;
-        this.mapsHost = mapsHost;
+        this.osrmHost = osrmHost;
     }
 
     @Override
     public List<Point2D> getPoints(GeoLocation start, GeoLocation end) {
 
-        return restTemplate.getForObject(url, AnnotatedOsrmResponse.class, mapsHost, start.getLongitude(),
+        return restTemplate.getForObject(url, AnnotatedOsrmResponse.class, osrmHost, start.getLongitude(),
                     start.getLatitude(), end.getLongitude(), end.getLatitude())
             .getRoutes()
             .stream()
-            .map(this::mergeToPoints)
+            .map(OsrmRoutingClient::mergeToPoints)
             .flatMap(List::stream)
             .collect(toList());
     }
 
 
-    private List<Point2D> mergeToPoints(AnnotatedOsrmResponse.Route route) {
+    private static List<Point2D> mergeToPoints(AnnotatedOsrmResponse.Route route) {
 
         List<BigDecimal[]> coordinates = route.getGeometry().getCoordinates();
 

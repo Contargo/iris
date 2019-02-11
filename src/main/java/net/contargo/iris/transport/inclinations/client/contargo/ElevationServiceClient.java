@@ -17,21 +17,22 @@ import static java.util.stream.Collectors.toList;
  */
 public class ElevationServiceClient implements ElevationProviderClient {
 
-    private static final String URL = "{mapsHost}/elevation";
-    private final RestTemplate restTemplate;
-    private final String mapsHost;
+    private static final String URL = "{elevationServiceHost}/elevation";
 
-    public ElevationServiceClient(RestTemplate restTemplate, String mapsHost) {
+    private final RestTemplate restTemplate;
+    private final String elevationServiceHost;
+
+    public ElevationServiceClient(RestTemplate restTemplate, String elevationServiceHost) {
 
         this.restTemplate = restTemplate;
-        this.mapsHost = mapsHost;
+        this.elevationServiceHost = elevationServiceHost;
     }
 
     @Override
     public List<Point3D> getElevations(List<Point2D> points) {
 
         return stream(restTemplate.postForObject(URL, toElevationServicePoints(points),
-                        ElevationServicePoint3D[].class, mapsHost)).map(p ->
+                        ElevationServicePoint3D[].class, elevationServiceHost)).map(p ->
                     new Point3D(p.getElevation(), p.getLatitude(), p.getLongitude())).collect(toList());
     }
 

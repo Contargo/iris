@@ -5,5 +5,6 @@ package net.contargo.iris.units;
  */
 public enum LengthUnit {
 
-    KILOMETRE
+    KILOMETRE,
+    METER
 }

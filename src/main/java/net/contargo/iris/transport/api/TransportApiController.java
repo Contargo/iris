@@ -2,6 +2,8 @@ package net.contargo.iris.transport.api;
 
 import com.wordnik.swagger.annotations.Api;
 
+import net.contargo.iris.transport.inclinations.service.Inclinations;
+import net.contargo.iris.transport.inclinations.service.InclinationsService;
 import net.contargo.iris.transport.service.TransportChainGeneratorStrategyAdvisor;
 import net.contargo.iris.transport.service.TransportDescriptionExtender;
 
@@ -31,14 +33,17 @@ public class TransportApiController {
     private final TransportDescriptionExtender transportDescriptionExtender;
     private final TransportChainGeneratorStrategyAdvisor transportChainGeneratorAdvisor;
     private final ExecutorService executorService;
+    private final InclinationsService inclinationsService;
 
     @Autowired
     public TransportApiController(TransportDescriptionExtender transportDescriptionExtender,
-        TransportChainGeneratorStrategyAdvisor generatorStrategyAdvisor, ExecutorService executorService) {
+        TransportChainGeneratorStrategyAdvisor generatorStrategyAdvisor, ExecutorService executorService,
+        InclinationsService inclinationsService) {
 
         this.transportDescriptionExtender = transportDescriptionExtender;
         this.transportChainGeneratorAdvisor = generatorStrategyAdvisor;
         this.executorService = executorService;
+        this.inclinationsService = inclinationsService;
     }
 
     @RequestMapping(value = "/transports", method = POST)
@@ -59,5 +64,18 @@ public class TransportApiController {
     public TransportResponseDto transportDescription(@RequestBody TransportDescriptionDto description) {
 
         return transportDescriptionExtender.withRoutingInformation(description);
+    }
+
+
+    @RequestMapping(value = "/transport/inclinations", method = POST)
+    public InclinationsResponseDto inclinations(@RequestBody TransportDescriptionDto description) {
+
+        return mapToResponse(inclinationsService.get(description));
+    }
+
+
+    private InclinationsResponseDto mapToResponse(Inclinations inclinations) {
+
+        return new InclinationsResponseDto(inclinations.getUp(), inclinations.getDown());
     }
 }

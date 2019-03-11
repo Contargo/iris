@@ -38,7 +38,7 @@ public class Co2Calculator {
     private static final BigDecimal CO2_RAIL_FULL_ELEKTRO = new BigDecimal("0.34");
     private static final BigDecimal CO2_RAIL_EMPTY_ELEKTRO = new BigDecimal("0.27");
 
-    private static final BigDecimal CO2_PER_HANDLING = new BigDecimal("4");
+    private static final BigDecimal CO2_PER_HANDLING = new BigDecimal("10.8");
 
     private static final Map<Region, Co2Region> CO2_REGIONS = unmodifiableMap(new EnumMap<Region, Co2Region>(
                 Region.class) {
@@ -52,6 +52,7 @@ public class Co2Calculator {
             });
 
     private static final int SCALE = 2;
+    private static final BigDecimal COUNT_HANDLINGS_PER_TERMINAL = new BigDecimal("2");
 
     private Co2Calculator() {
     }
@@ -97,11 +98,11 @@ public class Co2Calculator {
         BigDecimal result = ZERO;
 
         if (fromIsTerminal) {
-            result = result.add(CO2_PER_HANDLING);
+            result = result.add(CO2_PER_HANDLING).multiply(COUNT_HANDLINGS_PER_TERMINAL);
         }
 
         if (toIsTerminal) {
-            result = result.add(CO2_PER_HANDLING);
+            result = result.add(CO2_PER_HANDLING).multiply(COUNT_HANDLINGS_PER_TERMINAL);
         }
 
         return result;

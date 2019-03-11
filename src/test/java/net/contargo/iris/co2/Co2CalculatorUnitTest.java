@@ -74,9 +74,9 @@ public class Co2CalculatorUnitTest {
     @Test
     public void testHandling() {
 
-        assertThat(handling(true, true), comparesEqualTo(new BigDecimal("8.00")));
-        assertThat(handling(true, false), comparesEqualTo(new BigDecimal("4.00")));
-        assertThat(handling(false, true), comparesEqualTo(new BigDecimal("4.00")));
+        assertThat(handling(true, true), comparesEqualTo(new BigDecimal("64.8")));
+        assertThat(handling(true, false), comparesEqualTo(new BigDecimal("21.6")));
+        assertThat(handling(false, true), comparesEqualTo(new BigDecimal("21.6")));
         assertThat(handling(false, false), comparesEqualTo(new BigDecimal("0.00")));
     }
 

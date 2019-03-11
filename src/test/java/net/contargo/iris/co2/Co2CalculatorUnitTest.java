@@ -33,8 +33,8 @@ public class Co2CalculatorUnitTest {
     @Test
     public void testRoad() {
 
-        assertThat(road(DISTANCE, FULL), comparesEqualTo(new BigDecimal("88.00")));
-        assertThat(road(DISTANCE, EMPTY), comparesEqualTo(new BigDecimal("73")));
+        assertThat(road(DISTANCE, FULL), comparesEqualTo(new BigDecimal("85.10")));
+        assertThat(road(DISTANCE, EMPTY), comparesEqualTo(new BigDecimal("71.3")));
     }
 
 

@@ -30,8 +30,8 @@ import static java.util.Collections.unmodifiableMap;
  */
 public class Co2Calculator {
 
-    private static final BigDecimal CO2_TRUCK_FULL = new BigDecimal("0.88");
-    private static final BigDecimal CO2_TRUCK_EMPTY = new BigDecimal("0.73");
+    private static final BigDecimal CO2_TRUCK_FULL = new BigDecimal("0.851");
+    private static final BigDecimal CO2_TRUCK_EMPTY = new BigDecimal("0.713");
 
     private static final BigDecimal CO2_RAIL_FULL_DIESEL = new BigDecimal("0.5");
     private static final BigDecimal CO2_RAIL_EMPTY_DIESEL = new BigDecimal("0.4");

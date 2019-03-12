@@ -50,7 +50,7 @@ class Co2ServiceImpl implements Co2Service {
             RouteType type = part.getRouteType();
 
             Co2PartStrategy strategy = co2PartStrategyAdvisor.advice(type);
-            co2 = co2.add(strategy.getEmissionForRoutePart(part));
+            co2 = co2.add(strategy.getEmissionForRoutePart(part, route.getDirection()));
 
             boolean fromIsTerminal = part.getOrigin() instanceof Terminal;
             boolean toIsTerminal = part.getDestination() instanceof Terminal;
@@ -74,7 +74,7 @@ class Co2ServiceImpl implements Co2Service {
 
         for (RoutePart part : parts) {
             Co2PartStrategy strategy = co2PartStrategyAdvisor.advice(RouteType.TRUCK);
-            co2 = co2.add(strategy.getEmissionForRoutePart(part));
+            co2 = co2.add(strategy.getEmissionForRoutePart(part, route.getDirection()));
 
             boolean fromIsTerminal = part.getOrigin() instanceof Terminal;
             boolean toIsTerminal = part.getDestination() instanceof Terminal;

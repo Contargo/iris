@@ -5,6 +5,7 @@ import net.contargo.iris.container.ContainerState;
 import net.contargo.iris.container.ContainerType;
 import net.contargo.iris.seaport.Seaport;
 import net.contargo.iris.terminal.Terminal;
+import net.contargo.iris.units.Direction;
 
 
 /**

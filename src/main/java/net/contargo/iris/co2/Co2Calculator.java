@@ -3,6 +3,7 @@ package net.contargo.iris.co2;
 import net.contargo.iris.FlowDirection;
 import net.contargo.iris.container.ContainerState;
 import net.contargo.iris.terminal.Region;
+import net.contargo.iris.units.Direction;
 
 import java.math.BigDecimal;
 
@@ -33,10 +34,10 @@ public class Co2Calculator {
     private static final BigDecimal CO2_TRUCK_FULL = new BigDecimal("0.851");
     private static final BigDecimal CO2_TRUCK_EMPTY = new BigDecimal("0.713");
 
-    private static final BigDecimal CO2_RAIL_FULL_DIESEL = new BigDecimal("0.5");
-    private static final BigDecimal CO2_RAIL_EMPTY_DIESEL = new BigDecimal("0.4");
-    private static final BigDecimal CO2_RAIL_FULL_ELEKTRO = new BigDecimal("0.34");
-    private static final BigDecimal CO2_RAIL_EMPTY_ELEKTRO = new BigDecimal("0.27");
+    private static final BigDecimal CO2_RAIL_IMPORT_DIESEL = new BigDecimal("0.48");
+    private static final BigDecimal CO2_RAIL_IMPORT_ELEKTRO = new BigDecimal("0.322");
+    private static final BigDecimal CO2_RAIL_EXPORT_DIESEL = new BigDecimal("0.417");
+    private static final BigDecimal CO2_RAIL_EXPORT_ELEKTRO = new BigDecimal("0.279");
 
     private static final BigDecimal CO2_PER_HANDLING = new BigDecimal("10.8");
 
@@ -65,19 +66,19 @@ public class Co2Calculator {
     }
 
 
-    public static BigDecimal rail(Integer dieselDistance, Integer electricDistance, ContainerState loadingState) {
+    public static BigDecimal rail(Integer dieselDistance, Integer electricDistance, Direction direction) {
 
         BigDecimal multiplierDiesel;
         BigDecimal multiplierElectric;
 
-        if (loadingState == FULL) {
-            multiplierDiesel = CO2_RAIL_FULL_DIESEL;
-            multiplierElectric = CO2_RAIL_FULL_ELEKTRO;
-        } else if (loadingState == EMPTY) {
-            multiplierDiesel = CO2_RAIL_EMPTY_DIESEL;
-            multiplierElectric = CO2_RAIL_EMPTY_ELEKTRO;
+        if (direction == Direction.IMPORT) {
+            multiplierDiesel = CO2_RAIL_IMPORT_DIESEL;
+            multiplierElectric = CO2_RAIL_IMPORT_ELEKTRO;
+        } else if (direction == Direction.EXPORT) {
+            multiplierDiesel = CO2_RAIL_EXPORT_DIESEL;
+            multiplierElectric = CO2_RAIL_EXPORT_ELEKTRO;
         } else {
-            throw new IllegalArgumentException("Unknown loading state: " + loadingState);
+            throw new IllegalArgumentException("Unknown direction: " + direction);
         }
 
         return calculate(dieselDistance, multiplierDiesel).add(calculate(electricDistance, multiplierElectric));

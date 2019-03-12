@@ -9,6 +9,7 @@ import org.junit.Test;
 import java.math.BigDecimal;
 
 import static net.contargo.iris.container.ContainerState.EMPTY;
+import static net.contargo.iris.route.RouteDirection.IMPORT;
 import static net.contargo.iris.route.RouteType.BARGE;
 import static net.contargo.iris.terminal.Region.OBERRHEIN;
 
@@ -43,7 +44,7 @@ public class Co2PartBargeStrategyUnitTest {
 
         routePart.getData().setBargeDieselDistance(new BigDecimal("714"));
 
-        assertThat(sut.getEmissionForRoutePart(routePart), comparesEqualTo(new BigDecimal("285.6")));
+        assertThat(sut.getEmissionForRoutePart(routePart, IMPORT), comparesEqualTo(new BigDecimal("285.6")));
     }
 
 
@@ -61,6 +62,6 @@ public class Co2PartBargeStrategyUnitTest {
 
         routePart.getData().setBargeDieselDistance(new BigDecimal("714"));
 
-        assertThat(sut.getEmissionForRoutePart(routePart), comparesEqualTo(new BigDecimal("149.94")));
+        assertThat(sut.getEmissionForRoutePart(routePart, IMPORT), comparesEqualTo(new BigDecimal("149.94")));
     }
 }

@@ -1,6 +1,7 @@
 package net.contargo.iris.co2.advice;
 
 import net.contargo.iris.co2.Co2Calculator;
+import net.contargo.iris.route.RouteDirection;
 import net.contargo.iris.route.RoutePart;
 
 import java.math.BigDecimal;
@@ -15,7 +16,7 @@ import static java.math.RoundingMode.UP;
 public class Co2PartDtruckStrategy implements Co2PartStrategy {
 
     @Override
-    public BigDecimal getEmissionForRoutePart(RoutePart routePart) {
+    public BigDecimal getEmissionForRoutePart(RoutePart routePart, RouteDirection routeDirection) {
 
         int distance = routePart.getData().getDtruckDistance().setScale(0, UP).intValue();
 

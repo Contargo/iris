@@ -16,6 +16,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 
+import static net.contargo.iris.route.RouteDirection.IMPORT;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import static org.hamcrest.Matchers.is;
@@ -55,9 +57,11 @@ public class Co2PartEnricherUnitTest {
     public void enrich() throws CriticalEnricherException {
 
         when(co2PartStrategyAdvisorMock.advice(RouteType.RAIL)).thenReturn(strategyMock);
-        when(strategyMock.getEmissionForRoutePart(routePart)).thenReturn(BigDecimal.TEN);
+        when(strategyMock.getEmissionForRoutePart(routePart, IMPORT)).thenReturn(BigDecimal.TEN);
 
-        sut.enrich(routePart, null);
+        EnricherContext context = new EnricherContext.Builder().routeDirection(IMPORT).build();
+
+        sut.enrich(routePart, context);
         assertThat(routePart.getData().getCo2(), is(BigDecimal.TEN));
     }
 

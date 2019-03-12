@@ -8,6 +8,7 @@ import org.junit.Test;
 import java.math.BigDecimal;
 
 import static net.contargo.iris.container.ContainerState.FULL;
+import static net.contargo.iris.route.RouteDirection.IMPORT;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -34,9 +35,9 @@ public class Co2PartRailStrategyUnitTest {
         routePart.getData().setRailDieselDistance(new BigDecimal("105"));
         routePart.getData().setElectricDistance(new BigDecimal("530"));
 
-        BigDecimal co2 = sut.getEmissionForRoutePart(routePart);
+        BigDecimal co2 = sut.getEmissionForRoutePart(routePart, IMPORT);
 
-        assertThat(co2, comparesEqualTo(new BigDecimal("232.7")));
+        assertThat(co2, comparesEqualTo(new BigDecimal("221.06")));
     }
 
 
@@ -48,7 +49,7 @@ public class Co2PartRailStrategyUnitTest {
         routePart.getData().setRailDieselDistance(new BigDecimal("105"));
         routePart.getData().setElectricDistance(new BigDecimal("530"));
 
-        BigDecimal co2 = sut.getEmissionForRoutePart(routePart);
-        assertThat(co2, comparesEqualTo(new BigDecimal("185.1")));
+        BigDecimal co2 = sut.getEmissionForRoutePart(routePart, IMPORT);
+        assertThat(co2, comparesEqualTo(new BigDecimal("221.06")));
     }
 }

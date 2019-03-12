@@ -8,6 +8,7 @@ import net.contargo.iris.terminal.Region;
 import net.contargo.iris.transport.api.ModeOfTransport;
 import net.contargo.iris.transport.api.StopType;
 import net.contargo.iris.transport.api.TransportResponseDto;
+import net.contargo.iris.units.Direction;
 import net.contargo.iris.units.Distance;
 import net.contargo.iris.units.Duration;
 import net.contargo.iris.units.Weight;
@@ -19,8 +20,11 @@ import static net.contargo.iris.FlowDirection.DOWNSTREAM;
 import static net.contargo.iris.FlowDirection.UPSTREAM;
 import static net.contargo.iris.co2.Co2Calculator.rail;
 import static net.contargo.iris.co2.Co2Calculator.water;
+import static net.contargo.iris.container.ContainerState.FULL;
 import static net.contargo.iris.transport.api.StopType.SEAPORT;
 import static net.contargo.iris.transport.api.StopType.TERMINAL;
+import static net.contargo.iris.units.Direction.EXPORT;
+import static net.contargo.iris.units.Direction.IMPORT;
 import static net.contargo.iris.units.LengthUnit.KILOMETRE;
 import static net.contargo.iris.units.MassUnit.KILOGRAM;
 import static net.contargo.iris.units.TimeUnit.MINUTE;
@@ -94,7 +98,7 @@ public class TransportDescriptionMainRunExtender {
         segment.distance = new Distance(railDistance.intValue(), KILOMETRE);
         segment.duration = calculateDuration(railDistance, AVERAGE_SPEED_RAIL);
 
-        BigDecimal co2Value = rail(dieselDistance.intValue(), electricDistance.intValue(), segment.loadingState);
+        BigDecimal co2Value = rail(dieselDistance.intValue(), electricDistance.intValue(), getRailDirection(segment));
         segment.co2 = new Weight(co2Value, KILOGRAM);
     }
 
@@ -141,6 +145,20 @@ public class TransportDescriptionMainRunExtender {
         }
 
         throw new IllegalArgumentException("Flow direction can not be determined");
+    }
+
+
+    private static Direction getRailDirection(TransportResponseDto.TransportResponseSegment segment) {
+
+        if (segment.from.type == SEAPORT && segment.to.type == TERMINAL) {
+            return segment.loadingState == FULL ? IMPORT : EXPORT;
+        }
+
+        if (segment.from.type == TERMINAL && segment.to.type == SEAPORT) {
+            return segment.loadingState == FULL ? EXPORT : IMPORT;
+        }
+
+        throw new IllegalArgumentException("Direction can not be determined");
     }
 
 

@@ -2,6 +2,7 @@ package net.contargo.iris.co2.advice;
 
 import net.contargo.iris.FlowDirection;
 import net.contargo.iris.co2.Co2Calculator;
+import net.contargo.iris.route.RouteDirection;
 import net.contargo.iris.route.RoutePart;
 import net.contargo.iris.route.RoutePartData;
 import net.contargo.iris.terminal.Region;
@@ -20,7 +21,7 @@ import static java.math.RoundingMode.UP;
 class Co2PartBargeStrategy implements Co2PartStrategy {
 
     @Override
-    public BigDecimal getEmissionForRoutePart(RoutePart routePart) {
+    public BigDecimal getEmissionForRoutePart(RoutePart routePart, RouteDirection routeDirection) {
 
         RoutePartData routePartData = routePart.getData();
         Region region = routePart.findTerminal().getRegion();

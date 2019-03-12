@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 
 import static net.contargo.iris.container.ContainerState.EMPTY;
 import static net.contargo.iris.container.ContainerState.FULL;
+import static net.contargo.iris.route.RouteDirection.IMPORT;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -29,8 +30,8 @@ public class Co2PartDtruckStrategyUnitTest {
         routePart.setContainerState(FULL);
         routePart.getData().setDtruckDistance(new BigDecimal("420"));
 
-        BigDecimal co2 = sut.getEmissionForRoutePart(routePart);
-        assertThat(co2, comparesEqualTo(new BigDecimal("369.6")));
+        BigDecimal co2 = sut.getEmissionForRoutePart(routePart, IMPORT);
+        assertThat(co2, comparesEqualTo(new BigDecimal("357.42")));
     }
 
 
@@ -41,7 +42,7 @@ public class Co2PartDtruckStrategyUnitTest {
         routePart.setContainerState(EMPTY);
         routePart.getData().setDtruckDistance(new BigDecimal("420"));
 
-        BigDecimal co2 = sut.getEmissionForRoutePart(routePart);
-        assertThat(co2, comparesEqualTo(new BigDecimal("306.6")));
+        BigDecimal co2 = sut.getEmissionForRoutePart(routePart, IMPORT);
+        assertThat(co2, comparesEqualTo(new BigDecimal("299.46")));
     }
 }

@@ -1,5 +1,7 @@
 package net.contargo.iris.co2;
 
+import net.contargo.iris.units.Direction;
+
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -41,8 +43,8 @@ public class Co2CalculatorUnitTest {
     @Test
     public void testRail() {
 
-        assertThat(rail(DISTANCE, DISTANCE, FULL), comparesEqualTo(new BigDecimal("84.00")));
-        assertThat(rail(DISTANCE, DISTANCE, EMPTY), comparesEqualTo(new BigDecimal("67.00")));
+        assertThat(rail(DISTANCE, DISTANCE, Direction.IMPORT), comparesEqualTo(new BigDecimal("80.2")));
+        assertThat(rail(DISTANCE, DISTANCE, Direction.EXPORT), comparesEqualTo(new BigDecimal("69.6")));
     }
 
 

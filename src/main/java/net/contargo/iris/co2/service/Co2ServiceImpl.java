@@ -1,13 +1,14 @@
 package net.contargo.iris.co2.service;
 
+import net.contargo.iris.co2.Co2CalculationParams;
 import net.contargo.iris.co2.Co2Calculator;
+import net.contargo.iris.co2.advice.Co2CalculationHandlingParams;
 import net.contargo.iris.co2.advice.Co2PartStrategy;
 import net.contargo.iris.co2.advice.Co2PartStrategyAdvisor;
 import net.contargo.iris.route.Route;
 import net.contargo.iris.route.RoutePart;
 import net.contargo.iris.route.RouteType;
 import net.contargo.iris.route.builder.DirectTruckRouteBuilder;
-import net.contargo.iris.terminal.Terminal;
 
 import org.slf4j.Logger;
 
@@ -47,15 +48,11 @@ class Co2ServiceImpl implements Co2Service {
         List<RoutePart> parts = route.getData().getParts();
 
         for (RoutePart part : parts) {
-            RouteType type = part.getRouteType();
-
-            Co2PartStrategy strategy = co2PartStrategyAdvisor.advice(type);
+            Co2PartStrategy strategy = co2PartStrategyAdvisor.advice(part.getRouteType());
             co2 = co2.add(strategy.getEmissionForRoutePart(part, route.getDirection()));
 
-            boolean fromIsTerminal = part.getOrigin() instanceof Terminal;
-            boolean toIsTerminal = part.getDestination() instanceof Terminal;
-
-            co2 = co2.add(Co2Calculator.handling(fromIsTerminal, toIsTerminal));
+            Co2CalculationParams.Handling params = new Co2CalculationHandlingParams(part);
+            co2 = co2.add(Co2Calculator.handling(params));
         }
 
         LOG.debug("Setting CO2 for route {}: {} kg", route.getName(), co2);
@@ -76,10 +73,8 @@ class Co2ServiceImpl implements Co2Service {
             Co2PartStrategy strategy = co2PartStrategyAdvisor.advice(RouteType.TRUCK);
             co2 = co2.add(strategy.getEmissionForRoutePart(part, route.getDirection()));
 
-            boolean fromIsTerminal = part.getOrigin() instanceof Terminal;
-            boolean toIsTerminal = part.getDestination() instanceof Terminal;
-
-            co2 = co2.add(Co2Calculator.handling(fromIsTerminal, toIsTerminal));
+            Co2CalculationParams.Handling params = new Co2CalculationHandlingParams(part);
+            co2 = co2.add(Co2Calculator.handling(params));
         }
 
         LOG.debug("Setting CO2 Direct Truck for route {}: {} kg", route.getName(), co2);

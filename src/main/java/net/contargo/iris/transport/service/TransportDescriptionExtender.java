@@ -1,7 +1,9 @@
 package net.contargo.iris.transport.service;
 
+import net.contargo.iris.co2.Co2CalculationParams;
 import net.contargo.iris.transport.api.TransportDescriptionDto;
 import net.contargo.iris.transport.api.TransportResponseDto;
+import net.contargo.iris.transport.service.co2.Co2CalculationHandlingParams;
 
 import static net.contargo.iris.co2.Co2Calculator.handling;
 import static net.contargo.iris.transport.api.ModeOfTransport.ROAD;
@@ -39,18 +41,17 @@ public class TransportDescriptionExtender {
 
         TransportResponseDto result = new TransportResponseDto(description);
 
-        result.transportChain.forEach(s -> {
-            if (isNebenlauf(s)) {
-                roadExtender.forNebenlauf(s);
-            } else if (isMainRun(s)) {
-                mainRunExtender.with(s);
-            } else if (isRoadAndAddressOnly(s)) {
-                roadExtender.forAddressesOnly(s);
+        result.transportChain.forEach(segment -> {
+            if (isNebenlauf(segment)) {
+                roadExtender.forNebenlauf(segment);
+            } else if (isMainRun(segment)) {
+                mainRunExtender.with(segment);
+            } else if (isRoadAndAddressOnly(segment)) {
+                roadExtender.forAddressesOnly(segment);
             }
 
-            boolean toIsTerminal = s.to.type == TERMINAL;
-            boolean fromIsTerminal = s.from.type == TERMINAL;
-            s.co2 = s.co2.add(handling(fromIsTerminal, toIsTerminal));
+            Co2CalculationParams.Handling params = new Co2CalculationHandlingParams(segment);
+            segment.co2 = segment.co2.add(handling(params));
         });
 
         return result;

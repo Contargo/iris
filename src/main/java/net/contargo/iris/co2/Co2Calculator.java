@@ -9,8 +9,6 @@ import java.math.BigDecimal;
 import java.util.EnumMap;
 import java.util.Map;
 
-import static net.contargo.iris.FlowDirection.DOWNSTREAM;
-import static net.contargo.iris.FlowDirection.UPSTREAM;
 import static net.contargo.iris.container.ContainerState.EMPTY;
 import static net.contargo.iris.container.ContainerState.FULL;
 import static net.contargo.iris.terminal.Region.NIEDERRHEIN;
@@ -18,7 +16,7 @@ import static net.contargo.iris.terminal.Region.NOT_SET;
 import static net.contargo.iris.terminal.Region.OBERRHEIN;
 import static net.contargo.iris.terminal.Region.SCHELDE;
 
-import static java.math.BigDecimal.ZERO;
+import static java.math.BigDecimal.valueOf;
 import static java.math.RoundingMode.UP;
 
 import static java.util.Collections.unmodifiableMap;
@@ -27,18 +25,19 @@ import static java.util.Collections.unmodifiableMap;
 /**
  * @author  Ben Antony - antony@synyx.de
  * @author  Sandra Thieme - thieme@synyx.de
+ * @author  Oliver Messner - messner@synyx.de
  */
 public class Co2Calculator {
 
-    private static final BigDecimal CO2_TRUCK_FULL = new BigDecimal("0.88");
-    private static final BigDecimal CO2_TRUCK_EMPTY = new BigDecimal("0.73");
+    private static final BigDecimal CO2_TRUCK_FULL = new BigDecimal("0.851");
+    private static final BigDecimal CO2_TRUCK_EMPTY = new BigDecimal("0.713");
 
-    private static final BigDecimal CO2_RAIL_FULL_DIESEL = new BigDecimal("0.5");
-    private static final BigDecimal CO2_RAIL_EMPTY_DIESEL = new BigDecimal("0.4");
-    private static final BigDecimal CO2_RAIL_FULL_ELEKTRO = new BigDecimal("0.34");
-    private static final BigDecimal CO2_RAIL_EMPTY_ELEKTRO = new BigDecimal("0.27");
+    private static final BigDecimal CO2_RAIL_IMPORT_DIESEL = new BigDecimal("0.48");
+    private static final BigDecimal CO2_RAIL_IMPORT_ELEKTRO = new BigDecimal("0.322");
+    private static final BigDecimal CO2_RAIL_EXPORT_DIESEL = new BigDecimal("0.417");
+    private static final BigDecimal CO2_RAIL_EXPORT_ELEKTRO = new BigDecimal("0.279");
 
-    private static final BigDecimal CO2_PER_HANDLING = new BigDecimal("4");
+    private static final BigDecimal CO2_PER_HANDLING = new BigDecimal("3.6");
 
     private static final Map<Region, Co2Region> CO2_REGIONS = unmodifiableMap(new EnumMap<Region, Co2Region>(
                 Region.class) {
@@ -56,55 +55,56 @@ public class Co2Calculator {
     private Co2Calculator() {
     }
 
-    public static BigDecimal road(Integer distance, ContainerState loadingState) {
+    public static BigDecimal road(Co2CalculationParams.Road params) {
 
-        BigDecimal multiplier = loadingState == FULL ? CO2_TRUCK_FULL : CO2_TRUCK_EMPTY;
+        BigDecimal factor = params.getLoadingState() == FULL ? CO2_TRUCK_FULL : CO2_TRUCK_EMPTY;
 
-        return calculate(distance, multiplier);
+        return calculate(params.getDistance(), factor);
     }
 
 
-    public static BigDecimal rail(Integer dieselDistance, Integer electricDistance, ContainerState loadingState) {
+    public static BigDecimal rail(Co2CalculationParams.Rail params) {
 
-        BigDecimal multiplierDiesel;
-        BigDecimal multiplierElectric;
+        BigDecimal dieselFactor;
+        BigDecimal electricFactor;
 
-        if (loadingState == FULL) {
-            multiplierDiesel = CO2_RAIL_FULL_DIESEL;
-            multiplierElectric = CO2_RAIL_FULL_ELEKTRO;
-        } else if (loadingState == EMPTY) {
-            multiplierDiesel = CO2_RAIL_EMPTY_DIESEL;
-            multiplierElectric = CO2_RAIL_EMPTY_ELEKTRO;
-        } else {
-            throw new IllegalArgumentException("Unknown loading state: " + loadingState);
+        Co2CalculationParams.Rail.Direction direction = params.getDirection();
+
+        switch (direction) {
+            case IMPORT:
+                dieselFactor = CO2_RAIL_IMPORT_DIESEL;
+                electricFactor = CO2_RAIL_IMPORT_ELEKTRO;
+                break;
+
+            case EXPORT:
+                dieselFactor = CO2_RAIL_EXPORT_DIESEL;
+                electricFactor = CO2_RAIL_EXPORT_ELEKTRO;
+                break;
+
+            default:
+                throw new IllegalArgumentException("Illegal direction: " + direction);
         }
 
-        return calculate(dieselDistance, multiplierDiesel).add(calculate(electricDistance, multiplierElectric));
+        Integer dieselDistance = params.getDieselDistance();
+        Integer electricDistance = params.getElectricDistance();
+
+        return calculate(dieselDistance, dieselFactor).add(calculate(electricDistance, electricFactor));
     }
 
 
-    public static BigDecimal water(Integer distance, Region region, ContainerState loadingState,
-        FlowDirection flowDirection) {
+    public static BigDecimal water(Co2CalculationParams.Water params) {
 
-        BigDecimal multiplier = CO2_REGIONS.get(region).getMultiplierFor(loadingState).and(flowDirection);
+        BigDecimal factor = CO2_REGIONS.get(params.getRegion())
+                .getFactorFor(params.getLoadingState())
+                .and(params.getFlowDirection());
 
-        return calculate(distance, multiplier);
+        return calculate(params.getDistance(), factor);
     }
 
 
-    public static BigDecimal handling(boolean fromIsTerminal, boolean toIsTerminal) {
+    public static BigDecimal handling(Co2CalculationParams.Handling params) {
 
-        BigDecimal result = ZERO;
-
-        if (fromIsTerminal) {
-            result = result.add(CO2_PER_HANDLING);
-        }
-
-        if (toIsTerminal) {
-            result = result.add(CO2_PER_HANDLING);
-        }
-
-        return result;
+        return CO2_PER_HANDLING.multiply(valueOf(params.numberOfTerminals()));
     }
 
 
@@ -118,33 +118,33 @@ public class Co2Calculator {
      */
     private static class Co2Region {
 
-        private final Map<ContainerState, DirectionCo2> loadingStateDirectionCo2Map = new EnumMap<>(
+        private final Map<ContainerState, WaterCo2Factors> loadingStateDirectionCo2Map = new EnumMap<>(
                 ContainerState.class);
 
-        Co2Region(String upFull, String upEmpty, String downFull, String downEmpty) {
+        private Co2Region(String upFull, String upEmpty, String downFull, String downEmpty) {
 
-            loadingStateDirectionCo2Map.put(FULL, new DirectionCo2(upFull, downFull));
-            loadingStateDirectionCo2Map.put(EMPTY, new DirectionCo2(upEmpty, downEmpty));
+            loadingStateDirectionCo2Map.put(FULL, new WaterCo2Factors(upFull, downFull));
+            loadingStateDirectionCo2Map.put(EMPTY, new WaterCo2Factors(upEmpty, downEmpty));
         }
 
-        DirectionCo2 getMultiplierFor(ContainerState containerState) {
+        private WaterCo2Factors getFactorFor(ContainerState containerState) {
 
             return loadingStateDirectionCo2Map.get(containerState);
         }
 
-        private static class DirectionCo2 {
+        private static class WaterCo2Factors {
 
-            private final Map<FlowDirection, BigDecimal> directionCo2Map = new EnumMap<>(FlowDirection.class);
+            private final Map<FlowDirection, BigDecimal> co2Factors = new EnumMap<>(FlowDirection.class);
 
-            DirectionCo2(String up, String down) {
+            private WaterCo2Factors(String up, String down) {
 
-                directionCo2Map.put(UPSTREAM, new BigDecimal(up));
-                directionCo2Map.put(DOWNSTREAM, new BigDecimal(down));
+                co2Factors.put(FlowDirection.UPSTREAM, new BigDecimal(up));
+                co2Factors.put(FlowDirection.DOWNSTREAM, new BigDecimal(down));
             }
 
-            public BigDecimal and(FlowDirection direction) {
+            private BigDecimal and(FlowDirection flowDirection) {
 
-                return directionCo2Map.get(direction);
+                return co2Factors.get(flowDirection);
             }
         }
     }

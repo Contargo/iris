@@ -1,13 +1,16 @@
 package net.contargo.iris.transport.service;
 
 import net.contargo.iris.FlowDirection;
+import net.contargo.iris.co2.Co2CalculationParams;
 import net.contargo.iris.connection.MainRunConnection;
 import net.contargo.iris.connection.service.MainRunConnectionService;
 import net.contargo.iris.route.RouteType;
-import net.contargo.iris.terminal.Region;
 import net.contargo.iris.transport.api.ModeOfTransport;
 import net.contargo.iris.transport.api.StopType;
 import net.contargo.iris.transport.api.TransportResponseDto;
+import net.contargo.iris.transport.service.co2.Co2CalculationRailParams;
+import net.contargo.iris.transport.service.co2.Co2CalculationWaterParams;
+import net.contargo.iris.transport.service.util.TransportDescriptionUtils;
 import net.contargo.iris.units.Distance;
 import net.contargo.iris.units.Duration;
 import net.contargo.iris.units.Weight;
@@ -15,8 +18,6 @@ import net.contargo.iris.units.Weight;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import static net.contargo.iris.FlowDirection.DOWNSTREAM;
-import static net.contargo.iris.FlowDirection.UPSTREAM;
 import static net.contargo.iris.co2.Co2Calculator.rail;
 import static net.contargo.iris.co2.Co2Calculator.water;
 import static net.contargo.iris.transport.api.StopType.SEAPORT;
@@ -31,6 +32,7 @@ import static java.math.RoundingMode.UP;
 /**
  * @author  Ben Antony - antony@synyx.de
  * @author  Sandra Thieme - thieme@synyx.de
+ * @author  Oliver Messner - messner@synyx.de
  */
 public class TransportDescriptionMainRunExtender {
 
@@ -88,21 +90,20 @@ public class TransportDescriptionMainRunExtender {
 
         BigDecimal dieselDistance = mainRunConnection.getRailDieselDistance();
         BigDecimal electricDistance = mainRunConnection.getRailElectricDistance();
-
         BigDecimal railDistance = dieselDistance.add(electricDistance);
 
         segment.distance = new Distance(railDistance.intValue(), KILOMETRE);
         segment.duration = calculateDuration(railDistance, AVERAGE_SPEED_RAIL);
 
-        BigDecimal co2Value = rail(dieselDistance.intValue(), electricDistance.intValue(), segment.loadingState);
-        segment.co2 = new Weight(co2Value, KILOGRAM);
+        Co2CalculationParams.Rail params = new Co2CalculationRailParams(mainRunConnection, segment);
+        segment.co2 = new Weight(rail(params), KILOGRAM);
     }
 
 
     private static void extendWaterSegment(TransportResponseDto.TransportResponseSegment segment,
         MainRunConnection mainRunConnection) {
 
-        FlowDirection flowDirection = getFlowDirection(segment);
+        FlowDirection flowDirection = TransportDescriptionUtils.getFlowDirection(segment);
         BigDecimal divisor;
 
         switch (flowDirection) {
@@ -119,28 +120,13 @@ public class TransportDescriptionMainRunExtender {
         }
 
         BigDecimal bargeDistance = mainRunConnection.getBargeDieselDistance().setScale(SCALE, UP);
-        Region region = mainRunConnection.getTerminal().getRegion();
-
         int convertedBargeDistance = bargeDistance.intValue();
+
         segment.distance = new Distance(convertedBargeDistance, KILOMETRE);
         segment.duration = calculateDuration(bargeDistance, divisor);
 
-        BigDecimal co2Value = water(convertedBargeDistance, region, segment.loadingState, flowDirection);
-        segment.co2 = new Weight(co2Value, KILOGRAM);
-    }
-
-
-    private static FlowDirection getFlowDirection(TransportResponseDto.TransportResponseSegment segment) {
-
-        if (segment.from.type == SEAPORT && segment.to.type == TERMINAL) {
-            return UPSTREAM;
-        }
-
-        if (segment.from.type == TERMINAL && segment.to.type == SEAPORT) {
-            return DOWNSTREAM;
-        }
-
-        throw new IllegalArgumentException("Flow direction can not be determined");
+        Co2CalculationParams.Water params = new Co2CalculationWaterParams(mainRunConnection, segment);
+        segment.co2 = new Weight(water(params), KILOGRAM);
     }
 
 

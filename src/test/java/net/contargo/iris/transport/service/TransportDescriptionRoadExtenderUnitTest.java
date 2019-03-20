@@ -25,6 +25,7 @@ import java.math.BigInteger;
 
 import java.util.Optional;
 
+import static net.contargo.iris.container.ContainerState.EMPTY;
 import static net.contargo.iris.transport.api.ModeOfTransport.ROAD;
 import static net.contargo.iris.transport.api.StopType.ADDRESS;
 import static net.contargo.iris.transport.api.StopType.TERMINAL;
@@ -76,7 +77,7 @@ public class TransportDescriptionRoadExtenderUnitTest {
         GeoLocation addressGeoLocation = new GeoLocation(new BigDecimal("49.23123"), new BigDecimal("8.1233"));
 
         TransportDescriptionDto.TransportDescriptionSegment descriptionSegment =
-            new TransportDescriptionDto.TransportDescriptionSegment(terminal, address, null, null, ROAD);
+            new TransportDescriptionDto.TransportDescriptionSegment(terminal, address, EMPTY, null, ROAD);
 
         TransportResponseDto.TransportResponseSegment segment = new TransportResponseDto.TransportResponseSegment(
                 descriptionSegment);
@@ -98,7 +99,7 @@ public class TransportDescriptionRoadExtenderUnitTest {
         assertThat(segment.tollDistance.unit, is(KILOMETRE));
         assertThat(segment.duration.value, is(300));
         assertThat(segment.duration.unit, is(MINUTE));
-        assertThat(segment.co2.value, comparesEqualTo(new BigDecimal("29.2")));
+        assertThat(segment.co2.value, comparesEqualTo(new BigDecimal("28.52")));
         assertThat(segment.co2.unit, is(KILOGRAM));
         assertThat(segment.geometries.get(0), is("geometries1"));
         assertThat(segment.geometries.get(1), is("geometries2"));
@@ -115,7 +116,7 @@ public class TransportDescriptionRoadExtenderUnitTest {
         GeoLocation addressGeoLocation = new GeoLocation(new BigDecimal("49.23123"), new BigDecimal("8.1233"));
 
         TransportDescriptionDto.TransportDescriptionSegment descriptionSegment =
-            new TransportDescriptionDto.TransportDescriptionSegment(address, terminal, null, null, ROAD);
+            new TransportDescriptionDto.TransportDescriptionSegment(address, terminal, EMPTY, null, ROAD);
 
         TransportResponseDto.TransportResponseSegment segment = new TransportResponseDto.TransportResponseSegment(
                 descriptionSegment);
@@ -141,7 +142,7 @@ public class TransportDescriptionRoadExtenderUnitTest {
         assertThat(segment.tollDistance.unit, is(KILOMETRE));
         assertThat(segment.duration.value, is(300));
         assertThat(segment.duration.unit, is(MINUTE));
-        assertThat(segment.co2.value, comparesEqualTo(new BigDecimal("29.2")));
+        assertThat(segment.co2.value, comparesEqualTo(new BigDecimal("28.52")));
         assertThat(segment.co2.unit, is(KILOGRAM));
         assertThat(segment.geometries.get(0), is("geometries1"));
     }

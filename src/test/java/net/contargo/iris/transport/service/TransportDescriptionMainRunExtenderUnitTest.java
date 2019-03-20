@@ -161,7 +161,7 @@ public class TransportDescriptionMainRunExtenderUnitTest {
         assertThat(segment.distance.unit, is(KILOMETRE));
         assertThat(segment.duration.value, is(800));
         assertThat(segment.duration.unit, is(MINUTE));
-        assertThat(segment.co2.value, comparesEqualTo(new BigDecimal("268.00")));
+        assertThat(segment.co2.value, comparesEqualTo(new BigDecimal("256.4")));
         assertThat(segment.co2.unit, is(KILOGRAM));
     }
 

@@ -5,20 +5,19 @@ import net.contargo.iris.route.RoutePart;
 
 import java.math.BigDecimal;
 
-import static java.math.RoundingMode.UP;
+import static net.contargo.iris.co2.advice.Co2CalculationRoadParams.dTruckParams;
 
 
 /**
  * @author  Ben Antony - antony@synyx.de
  * @author  Sandra Thieme - thieme@synyx.de
+ * @author  Oliver Messner - messner@synyx.de
  */
 public class Co2PartDtruckStrategy implements Co2PartStrategy {
 
     @Override
     public BigDecimal getEmissionForRoutePart(RoutePart routePart) {
 
-        int distance = routePart.getData().getDtruckDistance().setScale(0, UP).intValue();
-
-        return Co2Calculator.road(distance, routePart.getContainerState());
+        return Co2Calculator.road(dTruckParams(routePart));
     }
 }

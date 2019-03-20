@@ -5,7 +5,7 @@ import net.contargo.iris.route.RoutePart;
 
 import java.math.BigDecimal;
 
-import static java.math.RoundingMode.UP;
+import static net.contargo.iris.co2.advice.Co2CalculationRoadParams.truckParams;
 
 
 /**
@@ -18,8 +18,6 @@ class Co2PartTruckStrategy implements Co2PartStrategy {
     @Override
     public BigDecimal getEmissionForRoutePart(RoutePart routePart) {
 
-        int distance = routePart.getData().getDistance().setScale(0, UP).intValue();
-
-        return Co2Calculator.road(distance, routePart.getContainerState());
+        return Co2Calculator.road(truckParams(routePart));
     }
 }

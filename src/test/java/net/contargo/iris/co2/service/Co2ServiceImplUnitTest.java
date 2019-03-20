@@ -20,6 +20,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 
+import static net.contargo.iris.container.ContainerState.EMPTY;
+import static net.contargo.iris.container.ContainerState.FULL;
 import static net.contargo.iris.route.RouteType.BARGE;
 import static net.contargo.iris.route.RouteType.TRUCK;
 
@@ -75,11 +77,13 @@ public class Co2ServiceImplUnitTest {
         truckPart1.setRouteType(TRUCK);
         truckPart1.setOrigin(GEO_TERMINAL);
         truckPart1.setDestination(GEO_ADDRESS);
+        truckPart1.setContainerState(EMPTY);
 
         RoutePart truckPart2 = new RoutePart();
         truckPart2.setRouteType(TRUCK);
         truckPart2.setOrigin(GEO_ADDRESS);
         truckPart2.setDestination(GEO_TERMINAL);
+        truckPart2.setContainerState(FULL);
 
         RoutePart bargePart = new RoutePart();
         bargePart.setRouteType(BARGE);
@@ -95,13 +99,13 @@ public class Co2ServiceImplUnitTest {
 
         // + 2 (truck part 1)
         // + 3 (truck part 2)
-        // + 8 (co2 handling)
+        // + 2*3,6 (co2 handling)
         // +10 (barge part)
-        // + 4 (Umschlag "Direkttruck Oneway")
-        // = 27
+        // + 3,6 (Umschlag "Direkttruck Oneway")
+        // = 25.8
 
         BigDecimal co2 = sut.getEmission(route);
-        assertThat(co2, comparesEqualTo(new BigDecimal("27")));
+        assertThat(co2, comparesEqualTo(new BigDecimal("25.8")));
     }
 
 
@@ -118,11 +122,13 @@ public class Co2ServiceImplUnitTest {
         bargePart.setRouteType(BARGE);
         bargePart.setOrigin(GEO_SEAPORT);
         bargePart.setDestination(GEO_TERMINAL);
+        bargePart.setContainerState(FULL);
 
         RoutePart truckPart1 = new RoutePart();
         truckPart1.setRouteType(TRUCK);
         truckPart1.setOrigin(GEO_TERMINAL);
         truckPart1.setDestination(GEO_ADDRESS);
+        truckPart1.setContainerState(EMPTY);
 
         RoutePart truckPart2 = new RoutePart();
         truckPart2.setRouteType(TRUCK);
@@ -138,13 +144,13 @@ public class Co2ServiceImplUnitTest {
 
         // + 2 (truck part 1)
         // + 3 (truck part 2)
-        // + 8 (co2 handling)
+        // + 2*3,6 (co2 handling)
         // +10 (barge part)
-        // + 4 (Umschlag "Direkttruck Oneway")
-        // = 27
+        // + 3,6 (Umschlag "Direkttruck Oneway")
+        // = 25.8
 
         BigDecimal co2 = sut.getEmission(route);
-        assertThat(co2, comparesEqualTo(new BigDecimal("27")));
+        assertThat(co2, comparesEqualTo(new BigDecimal("25.8")));
     }
 
 
@@ -161,11 +167,13 @@ public class Co2ServiceImplUnitTest {
         bargePart1.setRouteType(BARGE);
         bargePart1.setOrigin(GEO_SEAPORT);
         bargePart1.setDestination(GEO_TERMINAL);
+        bargePart1.setContainerState(FULL);
 
         RoutePart truckPart1 = new RoutePart();
         truckPart1.setRouteType(TRUCK);
         truckPart1.setOrigin(GEO_TERMINAL);
         truckPart1.setDestination(GEO_ADDRESS);
+        truckPart1.setContainerState(EMPTY);
 
         RoutePart truckPart2 = new RoutePart();
         truckPart2.setRouteType(TRUCK);
@@ -186,15 +194,15 @@ public class Co2ServiceImplUnitTest {
         when(co2PartTruckStrategyMock.getEmissionForRoutePart(truckPart2)).thenReturn(new BigDecimal("3"));
 
         // +10 (barge part 1)
-        // + 8 (co2 handling)
+        // + 2*3,6 (co2 handling)
         // + 2 (truck part 1)
         // + 3 (truck part 2)
-        // + 8 (co2 handling)
+        // + 2*3,6 (co2 handling)
         // +15 (barge part 2)
-        // = 46
+        // = 44.4
 
         BigDecimal co2 = sut.getEmission(route);
-        assertThat(co2, comparesEqualTo(new BigDecimal("46")));
+        assertThat(co2, comparesEqualTo(new BigDecimal("44.4")));
     }
 
 
@@ -208,11 +216,13 @@ public class Co2ServiceImplUnitTest {
         truckPart1.setRouteType(TRUCK);
         truckPart1.setOrigin(GEO_TERMINAL);
         truckPart1.setDestination(GEO_ADDRESS);
+        truckPart1.setContainerState(EMPTY);
 
         RoutePart truckPart2 = new RoutePart();
         truckPart2.setRouteType(TRUCK);
         truckPart2.setOrigin(GEO_ADDRESS);
         truckPart2.setDestination(GEO_SEAPORT);
+        truckPart2.setContainerState(FULL);
 
         Route route = new Route();
         route.getData().setParts(asList(truckPart1, truckPart2));
@@ -222,14 +232,13 @@ public class Co2ServiceImplUnitTest {
 
         // + 2 (truck part 1)
         // + 3 (truck part 2)
-        // + 4 (Umschlag "Direkttruck Oneway")
-        // = 9
+        // + 3,6 (Umschlag "Direkttruck Oneway")
+        // = 8.6
 
-        Route routeDummy = new Route();
-        when(builderMock.getCorrespondingDirectTruckRoute(routeDummy)).thenReturn(route);
+        when(builderMock.getCorrespondingDirectTruckRoute(route)).thenReturn(route);
 
-        BigDecimal co2 = sut.getEmissionDirectTruck(routeDummy);
-        assertThat(co2, comparesEqualTo(new BigDecimal("9")));
+        BigDecimal co2 = sut.getEmissionDirectTruck(route);
+        assertThat(co2, comparesEqualTo(new BigDecimal("8.6")));
     }
 
 
@@ -243,11 +252,13 @@ public class Co2ServiceImplUnitTest {
         truckPart1.setRouteType(TRUCK);
         truckPart1.setOrigin(GEO_SEAPORT);
         truckPart1.setDestination(GEO_ADDRESS);
+        truckPart1.setContainerState(FULL);
 
         RoutePart truckPart2 = new RoutePart();
         truckPart2.setRouteType(TRUCK);
         truckPart2.setOrigin(GEO_ADDRESS);
         truckPart2.setDestination(GEO_TERMINAL);
+        truckPart2.setContainerState(EMPTY);
 
         Route route = new Route();
         route.getData().setParts(asList(truckPart1, truckPart2));
@@ -257,14 +268,13 @@ public class Co2ServiceImplUnitTest {
 
         // + 2 (truck part 1)
         // + 3 (truck part 2)
-        // + 4 (Umschlag "Direkttruck Oneway")
-        // = 9
+        // + 3,6 (Umschlag "Direkttruck Oneway")
+        // = 8.6
 
-        Route routeDummy = new Route();
-        when(builderMock.getCorrespondingDirectTruckRoute(routeDummy)).thenReturn(route);
+        when(builderMock.getCorrespondingDirectTruckRoute(route)).thenReturn(route);
 
-        BigDecimal co2 = sut.getEmissionDirectTruck(routeDummy);
-        assertThat(co2, comparesEqualTo(new BigDecimal("9")));
+        BigDecimal co2 = sut.getEmissionDirectTruck(route);
+        assertThat(co2, comparesEqualTo(new BigDecimal("8.6")));
     }
 
 
@@ -278,11 +288,13 @@ public class Co2ServiceImplUnitTest {
         truckPart1.setRouteType(TRUCK);
         truckPart1.setOrigin(GEO_SEAPORT);
         truckPart1.setDestination(GEO_ADDRESS);
+        truckPart1.setContainerState(FULL);
 
         RoutePart truckPart2 = new RoutePart();
         truckPart2.setRouteType(TRUCK);
         truckPart2.setOrigin(GEO_ADDRESS);
         truckPart2.setDestination(GEO_SEAPORT);
+        truckPart2.setContainerState(EMPTY);
 
         Route route = new Route();
         route.getData().setParts(asList(truckPart1, truckPart2));
@@ -294,10 +306,9 @@ public class Co2ServiceImplUnitTest {
         // + 3 (truck part 2)
         // = 13
 
-        Route routeDummy = new Route();
-        when(builderMock.getCorrespondingDirectTruckRoute(routeDummy)).thenReturn(route);
+        when(builderMock.getCorrespondingDirectTruckRoute(route)).thenReturn(route);
 
-        BigDecimal co2 = sut.getEmissionDirectTruck(routeDummy);
+        BigDecimal co2 = sut.getEmissionDirectTruck(route);
         assertThat(co2, comparesEqualTo(new BigDecimal("5")));
     }
 }

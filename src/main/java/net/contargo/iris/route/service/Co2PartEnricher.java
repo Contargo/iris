@@ -38,7 +38,7 @@ class Co2PartEnricher implements RoutePartEnricher {
             throw new CriticalEnricherException("Co2 part enrichment failed", e);
         }
 
-        BigDecimal emission = strategy.getEmissionForRoutePart(routePart, context.getRouteDirection());
+        BigDecimal emission = strategy.getEmissionForRoutePart(routePart);
 
         routePart.getData().setCo2(emission);
     }

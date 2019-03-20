@@ -4,7 +4,6 @@ import net.contargo.iris.co2.Co2CalculationParams;
 import net.contargo.iris.connection.MainRunConnection;
 import net.contargo.iris.transport.api.TransportResponseDto;
 
-import static net.contargo.iris.container.ContainerState.FULL;
 import static net.contargo.iris.transport.api.StopType.SEAPORT;
 import static net.contargo.iris.transport.api.StopType.TERMINAL;
 
@@ -25,9 +24,9 @@ public class Co2CalculationRailParams implements Co2CalculationParams.Rail {
         electricDistance = connection.getRailElectricDistance().intValue();
 
         if (segment.from.type == SEAPORT && segment.to.type == TERMINAL) {
-            direction = segment.loadingState == FULL ? Direction.IMPORT : Direction.EXPORT;
+            direction = Direction.IMPORT;
         } else if (segment.from.type == TERMINAL && segment.to.type == SEAPORT) {
-            direction = segment.loadingState == FULL ? Direction.EXPORT : Direction.IMPORT;
+            direction = Direction.EXPORT;
         } else {
             throw new IllegalArgumentException("Illegal transport description segment: " + segment);
         }

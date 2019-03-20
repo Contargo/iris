@@ -2,7 +2,6 @@ package net.contargo.iris.co2.advice;
 
 import net.contargo.iris.co2.Co2CalculationParams;
 import net.contargo.iris.co2.Co2Calculator;
-import net.contargo.iris.route.RouteDirection;
 import net.contargo.iris.route.RoutePart;
 
 import java.math.BigDecimal;
@@ -18,9 +17,9 @@ import java.math.BigDecimal;
 class Co2PartRailStrategy implements Co2PartStrategy {
 
     @Override
-    public BigDecimal getEmissionForRoutePart(RoutePart routePart, RouteDirection routeDirection) {
+    public BigDecimal getEmissionForRoutePart(RoutePart routePart) {
 
-        Co2CalculationParams.Rail params = new Co2CalculationRailParams(routeDirection, routePart);
+        Co2CalculationParams.Rail params = new Co2CalculationRailParams(routePart);
 
         return Co2Calculator.rail(params);
     }

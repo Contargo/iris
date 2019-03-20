@@ -1,14 +1,12 @@
 package net.contargo.iris.co2.advice;
 
-import net.contargo.iris.container.ContainerState;
 import net.contargo.iris.route.RoutePart;
+import net.contargo.iris.seaport.Seaport;
+import net.contargo.iris.terminal.Terminal;
 
 import org.junit.Test;
 
 import java.math.BigDecimal;
-
-import static net.contargo.iris.container.ContainerState.FULL;
-import static net.contargo.iris.route.RouteDirection.IMPORT;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -28,28 +26,31 @@ public class Co2PartRailStrategyUnitTest {
     private Co2PartRailStrategy sut = new Co2PartRailStrategy();
 
     @Test
-    public void getEmissionForRoutePartFull() {
+    public void getEmissionForRoutePartExport() {
 
         RoutePart routePart = new RoutePart();
-        routePart.setContainerState(FULL);
+        routePart.setOrigin(new Terminal());
+        routePart.setDestination(new Seaport());
         routePart.getData().setRailDieselDistance(new BigDecimal("105"));
         routePart.getData().setElectricDistance(new BigDecimal("530"));
 
-        BigDecimal co2 = sut.getEmissionForRoutePart(routePart, IMPORT);
+        BigDecimal co2 = sut.getEmissionForRoutePart(routePart);
 
-        assertThat(co2, comparesEqualTo(new BigDecimal("221.06")));
+        assertThat(co2, comparesEqualTo(new BigDecimal("191.66")));
     }
 
 
     @Test
-    public void getEmissionForRoutePartEmpty() {
+    public void getEmissionForRoutePartImport() {
 
         RoutePart routePart = new RoutePart();
-        routePart.setContainerState(ContainerState.EMPTY);
+        routePart.setOrigin(new Seaport());
+        routePart.setDestination(new Terminal());
         routePart.getData().setRailDieselDistance(new BigDecimal("105"));
         routePart.getData().setElectricDistance(new BigDecimal("530"));
 
-        BigDecimal co2 = sut.getEmissionForRoutePart(routePart, IMPORT);
+        BigDecimal co2 = sut.getEmissionForRoutePart(routePart);
+
         assertThat(co2, comparesEqualTo(new BigDecimal("221.06")));
     }
 }

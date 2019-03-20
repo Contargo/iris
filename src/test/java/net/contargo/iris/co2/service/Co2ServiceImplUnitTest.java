@@ -22,8 +22,6 @@ import java.math.BigDecimal;
 
 import static net.contargo.iris.container.ContainerState.EMPTY;
 import static net.contargo.iris.container.ContainerState.FULL;
-import static net.contargo.iris.route.RouteDirection.EXPORT;
-import static net.contargo.iris.route.RouteDirection.IMPORT;
 import static net.contargo.iris.route.RouteType.BARGE;
 import static net.contargo.iris.route.RouteType.TRUCK;
 
@@ -95,9 +93,9 @@ public class Co2ServiceImplUnitTest {
         Route route = new Route();
         route.getData().setParts(asList(truckPart1, truckPart2, bargePart));
 
-        when(co2PartBargeStrategyMock.getEmissionForRoutePart(bargePart, EXPORT)).thenReturn(new BigDecimal("10"));
-        when(co2PartTruckStrategyMock.getEmissionForRoutePart(truckPart1, EXPORT)).thenReturn(new BigDecimal("2"));
-        when(co2PartTruckStrategyMock.getEmissionForRoutePart(truckPart2, EXPORT)).thenReturn(new BigDecimal("3"));
+        when(co2PartBargeStrategyMock.getEmissionForRoutePart(bargePart)).thenReturn(new BigDecimal("10"));
+        when(co2PartTruckStrategyMock.getEmissionForRoutePart(truckPart1)).thenReturn(new BigDecimal("2"));
+        when(co2PartTruckStrategyMock.getEmissionForRoutePart(truckPart2)).thenReturn(new BigDecimal("3"));
 
         // + 2 (truck part 1)
         // + 3 (truck part 2)
@@ -140,9 +138,9 @@ public class Co2ServiceImplUnitTest {
         Route route = new Route();
         route.getData().setParts(asList(bargePart, truckPart1, truckPart2));
 
-        when(co2PartBargeStrategyMock.getEmissionForRoutePart(bargePart, IMPORT)).thenReturn(new BigDecimal("10"));
-        when(co2PartTruckStrategyMock.getEmissionForRoutePart(truckPart1, IMPORT)).thenReturn(new BigDecimal("2"));
-        when(co2PartTruckStrategyMock.getEmissionForRoutePart(truckPart2, IMPORT)).thenReturn(new BigDecimal("3"));
+        when(co2PartBargeStrategyMock.getEmissionForRoutePart(bargePart)).thenReturn(new BigDecimal("10"));
+        when(co2PartTruckStrategyMock.getEmissionForRoutePart(truckPart1)).thenReturn(new BigDecimal("2"));
+        when(co2PartTruckStrategyMock.getEmissionForRoutePart(truckPart2)).thenReturn(new BigDecimal("3"));
 
         // + 2 (truck part 1)
         // + 3 (truck part 2)
@@ -190,10 +188,10 @@ public class Co2ServiceImplUnitTest {
         Route route = new Route();
         route.getData().setParts(asList(bargePart1, truckPart1, truckPart2, bargePart2));
 
-        when(co2PartBargeStrategyMock.getEmissionForRoutePart(bargePart1, IMPORT)).thenReturn(new BigDecimal("10"));
-        when(co2PartBargeStrategyMock.getEmissionForRoutePart(bargePart2, IMPORT)).thenReturn(new BigDecimal("15"));
-        when(co2PartTruckStrategyMock.getEmissionForRoutePart(truckPart1, IMPORT)).thenReturn(new BigDecimal("2"));
-        when(co2PartTruckStrategyMock.getEmissionForRoutePart(truckPart2, IMPORT)).thenReturn(new BigDecimal("3"));
+        when(co2PartBargeStrategyMock.getEmissionForRoutePart(bargePart1)).thenReturn(new BigDecimal("10"));
+        when(co2PartBargeStrategyMock.getEmissionForRoutePart(bargePart2)).thenReturn(new BigDecimal("15"));
+        when(co2PartTruckStrategyMock.getEmissionForRoutePart(truckPart1)).thenReturn(new BigDecimal("2"));
+        when(co2PartTruckStrategyMock.getEmissionForRoutePart(truckPart2)).thenReturn(new BigDecimal("3"));
 
         // +10 (barge part 1)
         // + 2*3,6 (co2 handling)
@@ -229,8 +227,8 @@ public class Co2ServiceImplUnitTest {
         Route route = new Route();
         route.getData().setParts(asList(truckPart1, truckPart2));
 
-        when(co2PartTruckStrategyMock.getEmissionForRoutePart(truckPart1, EXPORT)).thenReturn(new BigDecimal("2"));
-        when(co2PartTruckStrategyMock.getEmissionForRoutePart(truckPart2, EXPORT)).thenReturn(new BigDecimal("3"));
+        when(co2PartTruckStrategyMock.getEmissionForRoutePart(truckPart1)).thenReturn(new BigDecimal("2"));
+        when(co2PartTruckStrategyMock.getEmissionForRoutePart(truckPart2)).thenReturn(new BigDecimal("3"));
 
         // + 2 (truck part 1)
         // + 3 (truck part 2)
@@ -265,8 +263,8 @@ public class Co2ServiceImplUnitTest {
         Route route = new Route();
         route.getData().setParts(asList(truckPart1, truckPart2));
 
-        when(co2PartTruckStrategyMock.getEmissionForRoutePart(truckPart1, IMPORT)).thenReturn(new BigDecimal("2"));
-        when(co2PartTruckStrategyMock.getEmissionForRoutePart(truckPart2, IMPORT)).thenReturn(new BigDecimal("3"));
+        when(co2PartTruckStrategyMock.getEmissionForRoutePart(truckPart1)).thenReturn(new BigDecimal("2"));
+        when(co2PartTruckStrategyMock.getEmissionForRoutePart(truckPart2)).thenReturn(new BigDecimal("3"));
 
         // + 2 (truck part 1)
         // + 3 (truck part 2)
@@ -301,8 +299,8 @@ public class Co2ServiceImplUnitTest {
         Route route = new Route();
         route.getData().setParts(asList(truckPart1, truckPart2));
 
-        when(co2PartTruckStrategyMock.getEmissionForRoutePart(truckPart1, IMPORT)).thenReturn(new BigDecimal("2"));
-        when(co2PartTruckStrategyMock.getEmissionForRoutePart(truckPart2, IMPORT)).thenReturn(new BigDecimal("3"));
+        when(co2PartTruckStrategyMock.getEmissionForRoutePart(truckPart1)).thenReturn(new BigDecimal("2"));
+        when(co2PartTruckStrategyMock.getEmissionForRoutePart(truckPart2)).thenReturn(new BigDecimal("3"));
 
         // + 2 (truck part 1)
         // + 3 (truck part 2)

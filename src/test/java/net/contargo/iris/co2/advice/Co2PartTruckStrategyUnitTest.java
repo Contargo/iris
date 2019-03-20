@@ -33,7 +33,7 @@ public class Co2PartTruckStrategyUnitTest {
         routePart.setContainerState(FULL);
         routePart.getData().setDistance(new BigDecimal("42"));
 
-        BigDecimal co2 = sut.getEmissionForRoutePart(routePart, null);
+        BigDecimal co2 = sut.getEmissionForRoutePart(routePart);
         assertThat(co2, comparesEqualTo(new BigDecimal("35.75")));
     }
 
@@ -45,7 +45,7 @@ public class Co2PartTruckStrategyUnitTest {
         routePart.setContainerState(EMPTY);
         routePart.getData().setDistance(new BigDecimal("42"));
 
-        BigDecimal co2 = sut.getEmissionForRoutePart(routePart, null);
+        BigDecimal co2 = sut.getEmissionForRoutePart(routePart);
         assertThat(co2, comparesEqualTo(new BigDecimal("29.95")));
     }
 }

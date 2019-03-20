@@ -43,7 +43,7 @@ public class Co2PartBargeStrategyUnitTest {
 
         routePart.getData().setBargeDieselDistance(new BigDecimal("714"));
 
-        assertThat(sut.getEmissionForRoutePart(routePart, null), comparesEqualTo(new BigDecimal("285.6")));
+        assertThat(sut.getEmissionForRoutePart(routePart), comparesEqualTo(new BigDecimal("285.6")));
     }
 
 
@@ -61,6 +61,6 @@ public class Co2PartBargeStrategyUnitTest {
 
         routePart.getData().setBargeDieselDistance(new BigDecimal("714"));
 
-        assertThat(sut.getEmissionForRoutePart(routePart, null), comparesEqualTo(new BigDecimal("149.94")));
+        assertThat(sut.getEmissionForRoutePart(routePart), comparesEqualTo(new BigDecimal("149.94")));
     }
 }

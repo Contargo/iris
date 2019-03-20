@@ -57,7 +57,7 @@ public class Co2PartEnricherUnitTest {
     public void enrich() throws CriticalEnricherException {
 
         when(co2PartStrategyAdvisorMock.advice(RouteType.RAIL)).thenReturn(strategyMock);
-        when(strategyMock.getEmissionForRoutePart(routePart, IMPORT)).thenReturn(BigDecimal.TEN);
+        when(strategyMock.getEmissionForRoutePart(routePart)).thenReturn(BigDecimal.TEN);
 
         EnricherContext context = new EnricherContext.Builder().routeDirection(IMPORT).build();
 

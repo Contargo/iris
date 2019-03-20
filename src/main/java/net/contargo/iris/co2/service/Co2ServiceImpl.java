@@ -49,7 +49,7 @@ class Co2ServiceImpl implements Co2Service {
 
         for (RoutePart part : parts) {
             Co2PartStrategy strategy = co2PartStrategyAdvisor.advice(part.getRouteType());
-            co2 = co2.add(strategy.getEmissionForRoutePart(part, route.getDirection()));
+            co2 = co2.add(strategy.getEmissionForRoutePart(part));
 
             Co2CalculationParams.Handling params = new Co2CalculationHandlingParams(part);
             co2 = co2.add(Co2Calculator.handling(params));
@@ -71,7 +71,7 @@ class Co2ServiceImpl implements Co2Service {
 
         for (RoutePart part : parts) {
             Co2PartStrategy strategy = co2PartStrategyAdvisor.advice(RouteType.TRUCK);
-            co2 = co2.add(strategy.getEmissionForRoutePart(part, route.getDirection()));
+            co2 = co2.add(strategy.getEmissionForRoutePart(part));
 
             Co2CalculationParams.Handling params = new Co2CalculationHandlingParams(part);
             co2 = co2.add(Co2Calculator.handling(params));

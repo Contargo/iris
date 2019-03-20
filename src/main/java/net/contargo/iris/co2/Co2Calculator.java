@@ -37,7 +37,7 @@ public class Co2Calculator {
     private static final BigDecimal CO2_RAIL_EXPORT_DIESEL = new BigDecimal("0.417");
     private static final BigDecimal CO2_RAIL_EXPORT_ELEKTRO = new BigDecimal("0.279");
 
-    private static final BigDecimal CO2_PER_HANDLING = new BigDecimal("10.8");
+    private static final BigDecimal CO2_PER_HANDLING = new BigDecimal("3.6");
 
     private static final Map<Region, Co2Region> CO2_REGIONS = unmodifiableMap(new EnumMap<Region, Co2Region>(
                 Region.class) {

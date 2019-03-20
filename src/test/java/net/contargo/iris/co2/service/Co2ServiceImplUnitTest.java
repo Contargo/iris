@@ -101,13 +101,13 @@ public class Co2ServiceImplUnitTest {
 
         // + 2 (truck part 1)
         // + 3 (truck part 2)
-        // + 2*10,8 (co2 handling)
+        // + 2*3,6 (co2 handling)
         // +10 (barge part)
-        // + 10,8 (Umschlag "Direkttruck Oneway")
-        // = 47.4
+        // + 3,6 (Umschlag "Direkttruck Oneway")
+        // = 25.8
 
         BigDecimal co2 = sut.getEmission(route);
-        assertThat(co2, comparesEqualTo(new BigDecimal("47.4")));
+        assertThat(co2, comparesEqualTo(new BigDecimal("25.8")));
     }
 
 
@@ -146,13 +146,13 @@ public class Co2ServiceImplUnitTest {
 
         // + 2 (truck part 1)
         // + 3 (truck part 2)
-        // + 2*10,8 (co2 handling)
+        // + 2*3,6 (co2 handling)
         // +10 (barge part)
-        // + 10,8 (Umschlag "Direkttruck Oneway")
-        // = 47.4
+        // + 3,6 (Umschlag "Direkttruck Oneway")
+        // = 25.8
 
         BigDecimal co2 = sut.getEmission(route);
-        assertThat(co2, comparesEqualTo(new BigDecimal("47.4")));
+        assertThat(co2, comparesEqualTo(new BigDecimal("25.8")));
     }
 
 
@@ -196,15 +196,15 @@ public class Co2ServiceImplUnitTest {
         when(co2PartTruckStrategyMock.getEmissionForRoutePart(truckPart2, IMPORT)).thenReturn(new BigDecimal("3"));
 
         // +10 (barge part 1)
-        // + 2*10,8 (co2 handling)
+        // + 2*3,6 (co2 handling)
         // + 2 (truck part 1)
         // + 3 (truck part 2)
-        // + 2*10,8 (co2 handling)
+        // + 2*3,6 (co2 handling)
         // +15 (barge part 2)
-        // = 73.2
+        // = 44.4
 
         BigDecimal co2 = sut.getEmission(route);
-        assertThat(co2, comparesEqualTo(new BigDecimal("73.2")));
+        assertThat(co2, comparesEqualTo(new BigDecimal("44.4")));
     }
 
 
@@ -234,13 +234,13 @@ public class Co2ServiceImplUnitTest {
 
         // + 2 (truck part 1)
         // + 3 (truck part 2)
-        // + 10,8 (Umschlag "Direkttruck Oneway")
-        // = 15.8
+        // + 3,6 (Umschlag "Direkttruck Oneway")
+        // = 8.6
 
         when(builderMock.getCorrespondingDirectTruckRoute(route)).thenReturn(route);
 
         BigDecimal co2 = sut.getEmissionDirectTruck(route);
-        assertThat(co2, comparesEqualTo(new BigDecimal("15.8")));
+        assertThat(co2, comparesEqualTo(new BigDecimal("8.6")));
     }
 
 
@@ -270,13 +270,13 @@ public class Co2ServiceImplUnitTest {
 
         // + 2 (truck part 1)
         // + 3 (truck part 2)
-        // + 10,8 (Umschlag "Direkttruck Oneway")
-        // = 15.8
+        // + 3,6 (Umschlag "Direkttruck Oneway")
+        // = 8.6
 
         when(builderMock.getCorrespondingDirectTruckRoute(route)).thenReturn(route);
 
         BigDecimal co2 = sut.getEmissionDirectTruck(route);
-        assertThat(co2, comparesEqualTo(new BigDecimal("15.8")));
+        assertThat(co2, comparesEqualTo(new BigDecimal("8.6")));
     }
 
 

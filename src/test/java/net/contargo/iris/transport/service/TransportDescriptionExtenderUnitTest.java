@@ -106,17 +106,17 @@ public class TransportDescriptionExtenderUnitTest {
         assertThat(result.transportChain.get(0).duration, nullValue());
         assertThat(result.transportChain.get(0).distance, nullValue());
         assertThat(result.transportChain.get(0).tollDistance, nullValue());
-        assertThat(result.transportChain.get(0).co2.value, comparesEqualTo(new BigDecimal("11.8")));
+        assertThat(result.transportChain.get(0).co2.value, comparesEqualTo(new BigDecimal("4.6")));
 
         assertThat(result.transportChain.get(1).duration, nullValue());
         assertThat(result.transportChain.get(1).distance, nullValue());
         assertThat(result.transportChain.get(1).tollDistance, nullValue());
-        assertThat(result.transportChain.get(1).co2.value, comparesEqualTo(new BigDecimal("12.8")));
+        assertThat(result.transportChain.get(1).co2.value, comparesEqualTo(new BigDecimal("5.6")));
 
         assertThat(result.transportChain.get(2).duration, nullValue());
         assertThat(result.transportChain.get(2).distance, nullValue());
         assertThat(result.transportChain.get(2).tollDistance, nullValue());
-        assertThat(result.transportChain.get(2).co2.value, comparesEqualTo(new BigDecimal("12.8")));
+        assertThat(result.transportChain.get(2).co2.value, comparesEqualTo(new BigDecimal("5.6")));
     }
 
 

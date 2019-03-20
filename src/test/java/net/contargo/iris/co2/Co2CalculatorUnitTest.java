@@ -82,9 +82,9 @@ public class Co2CalculatorUnitTest {
     @Test
     public void testHandling() {
 
-        assertThat(handling(new HandlingParams(0)), comparesEqualTo(new BigDecimal("0.00")));
-        assertThat(handling(new HandlingParams(1)), comparesEqualTo(new BigDecimal("10.8")));
-        assertThat(handling(new HandlingParams(2)), comparesEqualTo(new BigDecimal("21.6")));
+        assertThat(handling(new HandlingParams(0)), comparesEqualTo(new BigDecimal("0")));
+        assertThat(handling(new HandlingParams(1)), comparesEqualTo(new BigDecimal("3.6")));
+        assertThat(handling(new HandlingParams(2)), comparesEqualTo(new BigDecimal("7.2")));
     }
 
     private static class RoadParams implements Co2CalculationParams.Road {

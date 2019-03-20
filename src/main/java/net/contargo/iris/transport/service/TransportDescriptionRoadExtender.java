@@ -1,16 +1,17 @@
 package net.contargo.iris.transport.service;
 
 import net.contargo.iris.GeoLocation;
+import net.contargo.iris.co2.Co2CalculationParams;
 import net.contargo.iris.routedatarevision.service.RouteDataRevisionService;
 import net.contargo.iris.transport.api.ModeOfTransport;
 import net.contargo.iris.transport.api.TransportResponseDto;
+import net.contargo.iris.transport.service.co2.Co2CalculationRoadParams;
 import net.contargo.iris.units.Distance;
 import net.contargo.iris.units.Duration;
 import net.contargo.iris.units.Weight;
 
 import org.springframework.core.convert.ConversionService;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import static net.contargo.iris.co2.Co2Calculator.road;
@@ -24,6 +25,7 @@ import static net.contargo.iris.units.TimeUnit.MINUTE;
 /**
  * @author  Ben Antony - antony@synyx.de
  * @author  Sandra Thieme - thieme@synyx.de
+ * @author  Oliver Messner - messner@synyx.de
  */
 public class TransportDescriptionRoadExtender {
 
@@ -63,12 +65,14 @@ public class TransportDescriptionRoadExtender {
         segment.duration = new Duration(routeResult.getDuration(), MINUTE);
         segment.geometries = routeResult.getGeometries();
 
+        // with the route distance set on the segment, calculate co2 emissions
+        Co2CalculationParams.Road params = new Co2CalculationRoadParams(segment);
+        segment.co2 = new Weight(road(params), KILOGRAM);
+
         if (includeRouteRevision) {
+            // applying a route revision changes the distances on the segment
             applyRouteRevision(segment);
         }
-
-        BigDecimal co2Value = road(routeResult.getDistance(), segment.loadingState);
-        segment.co2 = new Weight(co2Value, KILOGRAM);
     }
 
 

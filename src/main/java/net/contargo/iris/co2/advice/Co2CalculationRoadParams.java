@@ -22,13 +22,17 @@ class Co2CalculationRoadParams implements Co2CalculationParams.Road {
         this.distance = distance;
         this.loadingState = loadingState;
 
-        Assert.notNull(this.loadingState, "must not be null");
+        Assert.notNull(this.loadingState, "loading state must not be null");
     }
 
     static Co2CalculationParams.Road truckParams(RoutePart routePart) {
 
         int distance = routePart.getData().getDistance().setScale(0, UP).intValue();
         ContainerState loadingState = routePart.getContainerState();
+
+        if (loadingState == null) {
+            loadingState = ContainerState.EMPTY;
+        }
 
         return new Co2CalculationRoadParams(distance, loadingState);
     }
@@ -38,6 +42,10 @@ class Co2CalculationRoadParams implements Co2CalculationParams.Road {
 
         int distance = routePart.getData().getDtruckDistance().setScale(0, UP).intValue();
         ContainerState loadingState = routePart.getContainerState();
+
+        if (loadingState == null) {
+            loadingState = ContainerState.EMPTY;
+        }
 
         return new Co2CalculationRoadParams(distance, loadingState);
     }

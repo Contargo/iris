@@ -28,8 +28,8 @@ public class Co2CalculationWaterParams implements Co2CalculationParams.Water {
         loadingState = routePart.getContainerState();
         flowDirection = FlowDirection.from(routePart.getDirection());
 
-        Assert.notNull(region, "must not be null");
-        Assert.notNull(loadingState, "must not be null");
+        Assert.notNull(region, "region must not be null");
+        Assert.notNull(loadingState, "loading state must not be null");
     }
 
     @Override

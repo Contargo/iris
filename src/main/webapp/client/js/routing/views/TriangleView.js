@@ -25,6 +25,11 @@ var TriangleView = Backbone.View.extend({
             model: this.model.get('points')
         });
 
+        this.elevationsView = new ElevationsView({
+            el: this.$('.elevations'),
+            model: this.model.get('points')
+        });
+
         var geocodingModel = this.model.get('geocoding');
         geocodingModel.set('searchStatus',this.searchStatus);
 

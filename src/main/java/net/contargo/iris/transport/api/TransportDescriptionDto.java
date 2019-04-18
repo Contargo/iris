@@ -14,6 +14,7 @@ import static java.util.stream.Collectors.toList;
  * @author  Ben Antony - antony@synyx.de
  * @author  Oliver Messner - messner@synyx.de
  * @author  Sandra Thieme - thieme@synyx.de
+ * @author  Petra Scherer - scherer@synyx.de
  */
 public class TransportDescriptionDto {
 

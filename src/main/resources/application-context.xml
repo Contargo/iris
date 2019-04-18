@@ -474,14 +474,14 @@
         <constructor-arg name="directory" value="${addresses.csvdir}"/>
     </bean>
 
-    <bean class="net.contargo.iris.transport.service.RouteService" id="routeService">
+    <bean class="net.contargo.iris.transport.route.RouteService" id="routeService">
         <constructor-arg ref="routingQueryStrategyProvider"/>
     </bean>
 
     <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
         <property name="converters">
             <set>
-                <bean class="net.contargo.iris.transport.service.TransportStopToGeoLocationConverter">
+                <bean class="net.contargo.iris.transport.TransportStopToGeoLocationConverter">
                     <constructor-arg ref="seaportService"/>
                     <constructor-arg ref="terminalService"/>
                 </bean>
@@ -489,52 +489,59 @@
         </property>
     </bean>
 
-    <bean class="net.contargo.iris.transport.service.TransportDescriptionExtender">
+    <bean class="net.contargo.iris.transport.TransportDescriptionExtender">
         <constructor-arg ref="transportDescriptionMainRunExtender"/>
         <constructor-arg ref="descriptionNebenlaufExtender"/>
     </bean>
 
-    <bean class="net.contargo.iris.transport.service.TerminalTransportChainGenerator" id="terminalTransportChainGenerator">
+    <bean class="net.contargo.iris.transport.TerminalTransportChainGenerator" id="terminalTransportChainGenerator">
         <constructor-arg ref="terminalService"/>
         <constructor-arg ref="connectionService"/>
     </bean>
 
-    <bean class="net.contargo.iris.transport.service.AddressOnlyTransportChainGenerator" id="addressTransportChainGenerator"/>
+    <bean class="net.contargo.iris.transport.AddressOnlyTransportChainGenerator" id="addressTransportChainGenerator"/>
 
-    <bean class="net.contargo.iris.transport.service.TransportChainGeneratorStrategyAdvisor"
+    <bean class="net.contargo.iris.transport.TransportChainGeneratorStrategyAdvisor"
           id="transportChainGeneratorStrategyAdvisor">
         <constructor-arg ref="terminalTransportChainGenerator"/>
         <constructor-arg ref="addressTransportChainGenerator"/>
     </bean>
 
-    <bean class="net.contargo.iris.transport.service.TransportDescriptionMainRunExtender" id="transportDescriptionMainRunExtender">
+    <bean class="net.contargo.iris.transport.TransportDescriptionMainRunExtender" id="transportDescriptionMainRunExtender">
         <constructor-arg ref="connectionService"/>
     </bean>
 
-    <bean class="net.contargo.iris.transport.service.TransportDescriptionRoadExtender"
+    <bean class="net.contargo.iris.transport.TransportDescriptionRoadExtender"
           id="descriptionNebenlaufExtender">
         <constructor-arg ref="routeService"/>
         <constructor-arg ref="conversionService"/>
         <constructor-arg ref="routeDataRevisionService"/>
     </bean>
 
-    <bean id="elevationSmoother" class="net.contargo.iris.transport.inclinations.smoothing.ElevationSmoother"/>
+    <bean id="elevationSmoother" class="net.contargo.iris.transport.elevation.smoothing.ElevationSmoother"/>
 
-    <bean class="net.contargo.iris.transport.inclinations.service.InclinationsService" id="inclinationsService">
+    <bean class="net.contargo.iris.transport.elevation.InclinationsService" id="inclinationsService">
         <constructor-arg ref="elevationServiceClient"/>
         <constructor-arg ref="routingClient"/>
         <constructor-arg ref="elevationSmoother"/>
         <constructor-arg ref="conversionService"/>
     </bean>
 
-    <bean id="elevationServiceClient" class="net.contargo.iris.transport.inclinations.client.contargo.ElevationServiceClient">
+    <bean class="net.contargo.iris.transport.elevation.ElevationsService" id="elevationsService">
+        <constructor-arg ref="elevationServiceClient"/>
+        <constructor-arg ref="routingClient"/>
+        <constructor-arg ref="elevationSmoother"/>
+        <constructor-arg ref="conversionService"/>
+    </bean>
+
+    <bean id="elevationServiceClient" class="net.contargo.iris.transport.elevation.client.contargo.ElevationServiceClient">
         <constructor-arg name="restTemplate">
             <bean class="org.springframework.web.client.RestTemplate"/>
         </constructor-arg>
         <constructor-arg value="${elevationprovider.url}"/>
     </bean>
 
-    <bean id="routingClient" class="net.contargo.iris.transport.inclinations.client.osrm.OsrmRoutingClient">
+    <bean id="routingClient" class="net.contargo.iris.transport.elevation.client.osrm.OsrmRoutingClient">
         <constructor-arg name="restTemplate">
             <bean class="org.springframework.web.client.RestTemplate"/>
         </constructor-arg>

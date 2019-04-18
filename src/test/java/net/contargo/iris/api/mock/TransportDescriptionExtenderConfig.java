@@ -1,6 +1,6 @@
 package net.contargo.iris.api.mock;
 
-import net.contargo.iris.transport.service.TransportDescriptionExtender;
+import net.contargo.iris.transport.TransportDescriptionExtender;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

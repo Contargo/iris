@@ -1,8 +1,8 @@
 package net.contargo.iris.api.mock;
 
-import net.contargo.iris.transport.service.AddressOnlyTransportChainGenerator;
-import net.contargo.iris.transport.service.TerminalTransportChainGenerator;
-import net.contargo.iris.transport.service.TransportChainGeneratorStrategyAdvisor;
+import net.contargo.iris.transport.AddressOnlyTransportChainGenerator;
+import net.contargo.iris.transport.TerminalTransportChainGenerator;
+import net.contargo.iris.transport.TransportChainGeneratorStrategyAdvisor;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

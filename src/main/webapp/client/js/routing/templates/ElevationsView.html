@@ -1,13 +1,26 @@
 <div class="elevationsView" >
-    <div id="graph" class="svg-container"></div>
 
+    <div id="loadingAnimation" class="hide"></div>
+    <style>
+        #loadingAnimation{
+            background: url('/client/js/routing/templates/animations/ladekringel.gif')no-repeat center center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            z-index: 9999999;
+        }
+    </style>
+    <div id="graph" class="svg-container">
+    </div>
     <style>
 
         .svg-container {
             display: inline-block;
             position: relative;
             width: 100%;
-            padding-bottom: 100%;
+            padding-bottom: 50%;
             overflow: hidden;
         }
         .svg-content {

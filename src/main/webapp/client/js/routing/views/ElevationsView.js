@@ -43,6 +43,19 @@ function transformToD3Objects(elevations) {
     });
 }
 
+function hideLoadingAnimation() {
+    $('#loadingAnimation').addClass('hide');
+}
+
+function showLoadingAnimation() {
+    console.log("GEh an!")
+    $('#loadingAnimation').removeClass('hide');
+}
+
+function removeGraph() {
+    $('#graph').empty();
+}
+
 function drawGraph(elevationData) {
 
     var margins = [40, 40, 40, 80];
@@ -120,15 +133,18 @@ var ElevationsView = Backbone.View.extend({
         this.model.bind('add', this.render);
         this.model.bind('reset', this.render);
         this.model.bind('remove', this.render);
-
-        this.render();
+        this.$el.html(this.template(this.model));
+        // this.render();
     },
 
     getTransportDescription: function () {
 
+        removeGraph();
         if (this.model.length >= 2) {
 
             var transportDescription = {transportChain: getTransportChain(this.model.pairs)};
+
+            showLoadingAnimation();
 
             jQuery.ajax({
                 url: "/api/transport/elevations",
@@ -138,15 +154,16 @@ var ElevationsView = Backbone.View.extend({
                 contentType: "application/json; charset=utf-8",
                 success: function (responseData) {
                     var elevationData = transformToD3Objects(responseData.elevations);
+                    hideLoadingAnimation();
                     drawGraph(elevationData);
                 }
             });
+
         }
     },
 
     render: function () {
-
+        this.model.elevationRequestRunning = true;
         this.getTransportDescription();
-        this.$el.html(this.template(this.model));
     }
 });

@@ -1,79 +1,8 @@
 <div class="elevationsView" >
 
     <div id="loadingAnimation" class="hide"></div>
-    <style>
-        #loadingAnimation{
-            background: url('/client/js/routing/templates/animations/ladekringel.gif')no-repeat center center;
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: 100%;
-            width: 100%;
-            z-index: 9999999;
-        }
-    </style>
-    <div id="graph" class="svg-container">
-    </div>
-    <style>
-
-        .svg-container {
-            display: inline-block;
-            position: relative;
-            width: 100%;
-            padding-bottom: 50%;
-            overflow: hidden;
-        }
-        .svg-content {
-            display: inline-block;
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
-
-        /* tell the SVG path to be a thin blue line without any area fill */
-        path {
-            stroke: #000;
-            stroke-width: 2px;
-            fill: none;
-        }
-
-        .axis {
-            shape-rendering: crispEdges;
-        }
-
-        .x.axis line, x.axis path {
-            fill: none;
-            stroke: #000;
-        }
-
-        .y.axis line, .y.axis path {
-            fill: none;
-            stroke: #000;
-        }
-
-        .dot {
-            fill: #000;
-            stroke: #fff;
-        }
-
-        .focus circle {
-            fill: none;
-            stroke: steelblue;
-        }
-
-        div.tooltip {
-            position: absolute;
-            text-align: center;
-            width: 200px;
-            height: 28px;
-            padding: 2px;
-            font: 12px sans-serif;
-            background: lightsteelblue;
-            border: 0px;
-            boder-radius: 8px;
-            pointer-events: none;
-        }
-    </style>
+    <div id="graph" class="svg-container"></div>
+    <style src="src/main/webapp/client/css/custom.css"></style>
     <script src="https://d3js.org/d3.v5.js"></script>
 
 </div>

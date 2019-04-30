@@ -48,7 +48,6 @@ function hideLoadingAnimation() {
 }
 
 function showLoadingAnimation() {
-    console.log("GEh an!")
     $('#loadingAnimation').removeClass('hide');
 }
 
@@ -134,7 +133,6 @@ var ElevationsView = Backbone.View.extend({
         this.model.bind('reset', this.render);
         this.model.bind('remove', this.render);
         this.$el.html(this.template(this.model));
-        // this.render();
     },
 
     getTransportDescription: function () {

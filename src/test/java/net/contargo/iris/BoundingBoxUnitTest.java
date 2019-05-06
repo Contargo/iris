@@ -8,54 +8,52 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import static org.hamcrest.core.Is.is;
 
+import static org.hamcrest.number.BigDecimalCloseTo.closeTo;
+
 
 /**
  * @author  Marc Kannegiesser - kannegiesser@synyx.de
  * @author  Arnold Franke - franke@synyx.de
+ * @author  Oliver Messner - messner@synyx.de
  */
 public class BoundingBoxUnitTest {
 
-    public static final BigDecimal EXPECTED_LATITUDE_LOWER_LEFT = new BigDecimal(
-            "179.910067980566537926279124803841114044189453125");
-    public static final BigDecimal EXPECTED_LONGITUDE_LOWER_LEFT = new BigDecimal(
-            "6.91006798056656634798855520784854888916015625");
-    public static final BigDecimal EXPECTED_LATITUDE_UPPER_RIGHT = new BigDecimal(
-            "0.08993201943346866567008390802584472112357616424560546875");
-    public static final BigDecimal EXPECTED_LONGITUDE_UPPER_RIGHT = new BigDecimal(
-            "7.08993201943349049543030560016632080078125");
-    public static final BigDecimal ORIGIN_LATITUDE = BigDecimal.ZERO;
-    public static final BigDecimal ORIGIN_LONGITUDE = new BigDecimal("7.0");
-    private static final BigDecimal MAX_LATITUDE = new BigDecimal("90");
-    private static final BigDecimal MAX_LONGITUDE = new BigDecimal("90");
-    private static final BigDecimal MIN_LONGITUDE = BigDecimal.ZERO;
-    private static final BigDecimal MIN_LATIITUDE = new BigDecimal("180");
-    private static final double RADIUS = 10.0;
     private static final double RADIUS_TOO_HIGH = 1000000.0;
+
+    private BoundingBox sut;
 
     @Test
     public void createBoundingBox() {
 
-        GeoLocation location = new GeoLocation(ORIGIN_LATITUDE, ORIGIN_LONGITUDE);
+        BigDecimal closeToError = new BigDecimal("0.002");
 
-        BoundingBox sut = new BoundingBox(location, RADIUS);
+        // The number of kilometers spanned by a longitude range varies based on the current latitude.
+        // For example, one degree of longitude spans a distance of approximately 111 kilometers at
+        // the equator but shrinks to 0 kilometers at the poles.
 
-        GeoLocation expectedLowerLeft = new GeoLocation(EXPECTED_LATITUDE_LOWER_LEFT, EXPECTED_LONGITUDE_LOWER_LEFT);
-        GeoLocation expectedUpperRight = new GeoLocation(EXPECTED_LATITUDE_UPPER_RIGHT, EXPECTED_LONGITUDE_UPPER_RIGHT);
+        sut = new BoundingBox(new GeoLocation(new BigDecimal("0.0"), new BigDecimal("0.0")), 111.0);
 
-        assertThat(sut.getLowerLeft(), is(expectedLowerLeft));
-        assertThat(sut.getUpperRight(), is(expectedUpperRight));
+        assertThat(sut.getLowerLeft().getLongitude(), is(closeTo(new BigDecimal("-1.0"), closeToError)));
+        assertThat(sut.getUpperRight().getLongitude(), is(closeTo(new BigDecimal("1.0"), closeToError)));
+
+        // Unlike longitudinal distances, which vary based on the latitude, one degree of latitude is
+        // always approximately 111 kilometers
+
+        sut = new BoundingBox(new GeoLocation(new BigDecimal("49.0"), new BigDecimal("8.6")), 111.0);
+
+        assertThat(sut.getLowerLeft().getLatitude(), is(closeTo(new BigDecimal("48.0"), closeToError)));
+        assertThat(sut.getUpperRight().getLatitude(), is(closeTo(new BigDecimal("50.0"), closeToError)));
     }
 
 
     @Test
-    public void createBoundingBoxLatitudeTooHigh() {
+    public void createBoundingBoxRadiusTooLarge() {
 
-        GeoLocation location = new GeoLocation(new BigDecimal("90.0"), ORIGIN_LONGITUDE);
+        GeoLocation location = new GeoLocation(new BigDecimal("90.0"), new BigDecimal("7.0"));
+        sut = new BoundingBox(location, RADIUS_TOO_HIGH);
 
-        BoundingBox sut = new BoundingBox(location, RADIUS_TOO_HIGH);
-
-        GeoLocation expectedLowerLeft = new GeoLocation(MAX_LATITUDE, MAX_LONGITUDE);
-        GeoLocation expectedUpperRight = new GeoLocation(MIN_LATIITUDE, MIN_LONGITUDE);
+        GeoLocation expectedLowerLeft = new GeoLocation(new BigDecimal("-90.0"), new BigDecimal("-180.0"));
+        GeoLocation expectedUpperRight = new GeoLocation(new BigDecimal("90.0"), new BigDecimal("180.0"));
 
         assertThat(sut.getLowerLeft(), is(expectedLowerLeft));
         assertThat(sut.getUpperRight(), is(expectedUpperRight));

@@ -3,6 +3,8 @@ package net.contargo.iris.route;
 import net.contargo.iris.GeoLocation;
 import net.contargo.iris.container.ContainerType;
 
+import java.math.BigDecimal;
+
 import java.util.Objects;
 
 
@@ -22,7 +24,7 @@ public class RouteInformation {
     public RouteInformation(ContainerType containerType, RouteCombo combo, double lat, double lon, boolean isRoundTrip,
         boolean isImport) {
 
-        this.destination = new GeoLocation(lat, lon);
+        this.destination = new GeoLocation(BigDecimal.valueOf(lat), BigDecimal.valueOf(lon));
         this.containerType = containerType;
         this.routeCombo = combo;
         this.product = RouteProduct.fromIsRoundtrip(isRoundTrip);

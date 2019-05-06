@@ -5,14 +5,15 @@ import java.math.BigDecimal;
 
 /**
  * @author  Marc Kannegiesser - kannegiesser@synyx.de
+ * @author  Oliver Messner - messner@synyx.de
  */
 public class BoundingBox {
 
     private static final Double EARTH_RADIUS = 6371.01d;
-    private static final Double MIN_LAT = Math.toRadians(-90d);
-    private static final Double MIN_LON = Math.toRadians(90d);
-    private static final Double MAX_LON = Math.toRadians(-180);
-    private static final Double MAX_LAT = Math.toRadians(180d);
+    private static final Double MIN_LAT = Math.toRadians(-90d); // -PI/2
+    private static final Double MAX_LAT = Math.toRadians(90d); // PI/2
+    private static final Double MIN_LON = Math.toRadians(-180d); // -PI
+    private static final Double MAX_LON = Math.toRadians(180d); // PI
 
     private final GeoLocation lowerLeft;
     private final GeoLocation upperRight;
@@ -33,10 +34,9 @@ public class BoundingBox {
      *
      * @return
      */
+    BoundingBox(GeoLocation location, Double distanceInKm) {
 
-    public BoundingBox(GeoLocation location, Double distanceInKm) {
-
-        Double angularDistance = distanceInKm / EARTH_RADIUS;
+        double angularDistance = distanceInKm / EARTH_RADIUS;
 
         double lat = fromDegree(location.getLatitude());
         double lon = fromDegree(location.getLongitude());
@@ -48,7 +48,7 @@ public class BoundingBox {
         Double maxLongitude;
 
         if (minLatitude > MIN_LAT && maxLatitude < MAX_LAT) {
-            Double deltaLongitude = Math.asin(Math.sin(angularDistance) / Math.cos(lat));
+            double deltaLongitude = Math.asin(Math.sin(angularDistance) / Math.cos(lat));
 
             minLongitude = lon - deltaLongitude;
 
@@ -63,16 +63,16 @@ public class BoundingBox {
             }
         } else {
             minLatitude = Math.max(minLatitude, MIN_LAT);
-
             maxLatitude = Math.min(maxLatitude, MAX_LAT);
-
             minLongitude = MIN_LON;
-
             maxLongitude = MAX_LON;
         }
 
-        this.lowerLeft = new GeoLocation(Math.toDegrees(minLatitude), Math.toDegrees(minLongitude));
-        this.upperRight = new GeoLocation(Math.toDegrees(maxLatitude), Math.toDegrees(maxLongitude));
+        this.lowerLeft = new GeoLocation(BigDecimal.valueOf(Math.toDegrees(minLatitude)),
+                BigDecimal.valueOf(Math.toDegrees(minLongitude)));
+
+        this.upperRight = new GeoLocation(BigDecimal.valueOf(Math.toDegrees(maxLatitude)),
+                BigDecimal.valueOf(Math.toDegrees(maxLongitude)));
     }
 
     private double fromDegree(BigDecimal value) {

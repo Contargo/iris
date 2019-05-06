@@ -79,6 +79,8 @@ public class Osrm5QueryStrategy implements RoutingQueryStrategy {
         String uri = String.format(uriPattern, profile.toString().toLowerCase(), start.getLongitude(),
                 start.getLatitude(), destination.getLongitude(), destination.getLatitude());
 
+        LOG.debug("Sending OSRM routing query with URI {}", uri);
+
         return restTemplate.exchange(uri, GET, EMPTY, Osrm5Response.class).getBody();
     }
 

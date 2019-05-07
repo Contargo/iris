@@ -64,8 +64,8 @@ public class OSRMTruckRouteServiceUnitTest {
 
         when(provider.strategy()).thenReturn(queryServiceMock);
 
-        destination = new GeoLocation(49.1d, 8.1d);
-        start = new GeoLocation(49d, 8d);
+        destination = new GeoLocation(new BigDecimal("49.1"), new BigDecimal("8.1"));
+        start = new GeoLocation(new BigDecimal("49.0"), new BigDecimal("8.0"));
     }
 
 

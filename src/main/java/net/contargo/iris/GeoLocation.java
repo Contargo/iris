@@ -36,17 +36,15 @@ import javax.validation.constraints.NotNull;
 public class GeoLocation {
 
     private static final int SCALE = 10;
-    private static final int MAX_VALUE_COORD = 180;
-    private static final int MIN_VALUE_COORD = -180;
 
     @JsonProperty("lat")
     @NotNull
-    @Range(min = MIN_VALUE_COORD, max = MAX_VALUE_COORD)
+    @Range(min = -90, max = 90)
     private BigDecimal latitude;
 
     @JsonProperty("lon")
     @NotNull
-    @Range(min = MIN_VALUE_COORD, max = MAX_VALUE_COORD)
+    @Range(min = -180, max = 180)
     private BigDecimal longitude;
 
     public GeoLocation() {
@@ -59,32 +57,6 @@ public class GeoLocation {
 
         this.latitude = latitude;
         this.longitude = longitude;
-    }
-
-
-    public GeoLocation(double plat, double plon) {
-
-        double lat = plat;
-        double lon = plon;
-
-        while (lon > MAX_VALUE_COORD) {
-            lon = lon - MAX_VALUE_COORD;
-        }
-
-        while (lat > MAX_VALUE_COORD) {
-            lat = lat - MAX_VALUE_COORD;
-        }
-
-        while (lon < 0) {
-            lon = lon + MAX_VALUE_COORD;
-        }
-
-        while (lat < 0) {
-            lat = lat + MAX_VALUE_COORD;
-        }
-
-        this.latitude = new BigDecimal(lat);
-        this.longitude = new BigDecimal(lon);
     }
 
     public BigDecimal getLatitude() {

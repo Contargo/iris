@@ -57,6 +57,7 @@
 <script src="<c:url value="/client/js/routing/views/TriangleDropDownWithAddButtonView.js" />"></script>
 <script src="<c:url value="/client/js/routing/views/TerminalView.js" />"></script>
 <script src="<c:url value="/client/js/routing/views/SeaportView.js" />"></script>
+<script src="<c:url value="/client/js/routing/views/ElevationsView.js" />"></script>
 
 <script src="<c:url value="/client/js/routing/Server.js" />"></script>
 <script src="<c:url value="/client/js/routing/Helper.js" />"></script>

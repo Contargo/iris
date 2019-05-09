@@ -1,6 +1,6 @@
 package net.contargo.iris.api.mock;
 
-import net.contargo.iris.transport.inclinations.service.InclinationsService;
+import net.contargo.iris.transport.elevation.InclinationsService;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

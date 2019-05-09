@@ -1,7 +1,7 @@
 package net.contargo.iris.transport.api;
 
-import net.contargo.iris.transport.service.TransportChainGeneratorStrategyAdvisor;
-import net.contargo.iris.transport.service.TransportDescriptionExtender;
+import net.contargo.iris.transport.TransportChainGeneratorStrategyAdvisor;
+import net.contargo.iris.transport.TransportDescriptionExtender;
 
 import org.apache.commons.io.IOUtils;
 

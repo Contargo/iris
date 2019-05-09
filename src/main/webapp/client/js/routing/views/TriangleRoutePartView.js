@@ -27,7 +27,6 @@ var TriangleRoutePartView = Backbone.View.extend({
 
         Helper.renderCorrectGeolocationView(this.model.get('from'), this.$('.from'));
         Helper.renderCorrectGeolocationView(this.model.get('to'), this.$('.to'));
-
     },
 
     remove: function () {
@@ -36,7 +35,7 @@ var TriangleRoutePartView = Backbone.View.extend({
     },
 
     moveup: function () {
-        this.model.trigger('up', this.model);
+       this.model.trigger('up', this.model);
         return false;
     },
 

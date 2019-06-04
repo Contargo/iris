@@ -33,6 +33,7 @@ public final class TerminalDto extends GeoLocationDto {
     private String uniqueId;
     private String type;
     private Region region;
+    private String organisationId;
 
     public TerminalDto() {
 
@@ -48,6 +49,7 @@ public final class TerminalDto extends GeoLocationDto {
             this.name = terminal.getName();
             this.enabled = terminal.isEnabled();
             this.type = TERMINAL;
+            this.organisationId = terminal.getOrganisation();
             this.uniqueId = terminal.getUniqueId() == null ? null : terminal.getUniqueId().toString();
 
             if (terminal.getRegion() != null) {
@@ -114,6 +116,7 @@ public final class TerminalDto extends GeoLocationDto {
         terminal.setName(this.name);
         terminal.setUniqueId(this.uniqueId == null ? null : new BigInteger(this.uniqueId));
         terminal.setRegion(this.region);
+        terminal.setOrganisation(this.organisationId);
 
         return terminal;
     }
@@ -123,5 +126,17 @@ public final class TerminalDto extends GeoLocationDto {
     public String getType() {
 
         return type;
+    }
+
+
+    public String getOrganisationId() {
+
+        return organisationId;
+    }
+
+
+    public void setOrganisationId(String organisationId) {
+
+        this.organisationId = organisationId;
     }
 }

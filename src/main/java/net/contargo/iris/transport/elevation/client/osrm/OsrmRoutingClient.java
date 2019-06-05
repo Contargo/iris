@@ -19,7 +19,7 @@ import static java.util.stream.Collectors.toList;
  */
 public class OsrmRoutingClient implements RoutingClient {
 
-    private static final String url =
+    private static final String URL =
         "{osrmHost}/v1/driving/{lon1},{lat1};{lon2},{lat2}?overview=full&geometries=geojson&annotations=nodes";
     private static final int INDEX_LAT = 1;
     private static final int INDEX_LON = 0;
@@ -36,7 +36,7 @@ public class OsrmRoutingClient implements RoutingClient {
     @Override
     public List<Point2D> getPoints(GeoLocation start, GeoLocation end) {
 
-        return restTemplate.getForObject(url, AnnotatedOsrmResponse.class, osrmHost, start.getLongitude(),
+        return restTemplate.getForObject(URL, AnnotatedOsrmResponse.class, osrmHost, start.getLongitude(),
                     start.getLatitude(), end.getLongitude(), end.getLatitude())
             .getRoutes()
             .stream()

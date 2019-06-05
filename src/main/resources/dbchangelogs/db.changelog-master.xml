@@ -56,4 +56,6 @@
 
     <include file="dbchangelogs/db.changelog-1.15-remove-sub-connections.xml"/>
 
+    <include file="dbchangelogs/db.changelog-1.15-add-organisation-to-terminal.xml"/>
+
 </databaseChangeLog>

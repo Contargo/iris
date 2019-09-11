@@ -37,6 +37,7 @@ public class Address extends GeoLocation {
     private static final String SUBURB = "suburb";
     private static final String CITY = "city";
     private static final String POSTCODE = "postcode";
+    private static final String OSM_TYPE = "osm_type";
 
     @JsonProperty(DISPLAY_NAME)
     private String displayName;
@@ -49,6 +50,9 @@ public class Address extends GeoLocation {
 
     @JsonProperty(SHORT_NAME)
     private String shortName;
+
+    @JsonProperty(OSM_TYPE)
+    private String osmType;
 
     private Map<String, String> address = new HashMap<>();
 
@@ -130,6 +134,18 @@ public class Address extends GeoLocation {
     }
 
 
+    public String getOsmType() {
+
+        return osmType;
+    }
+
+
+    public void setOsmType(String osmType) {
+
+        this.osmType = osmType;
+    }
+
+
     @Override
     public boolean equals(Object o) {
 
@@ -146,9 +162,7 @@ public class Address extends GeoLocation {
         return new EqualsBuilder().append(displayName, oth.displayName)
             .append(osmId, oth.osmId)
             .append(placeId, oth.placeId)
-            .append(shortName, oth.shortName)
-            .appendSuper(super.equals(o))
-            .isEquals();
+            .append(shortName, oth.shortName).append(osmType, oth.osmType).appendSuper(super.equals(o)).isEquals();
     }
 
 
@@ -157,10 +171,7 @@ public class Address extends GeoLocation {
 
         return new HashCodeBuilder().append(displayName)
             .append(osmId)
-            .append(placeId)
-            .append(shortName)
-            .appendSuper(super.hashCode())
-            .toHashCode();
+            .append(placeId).append(shortName).append(osmType).appendSuper(super.hashCode()).toHashCode();
     }
 
 
@@ -198,8 +209,7 @@ public class Address extends GeoLocation {
         String suburb = this.address.get(SUBURB);
         String city = this.address.get(CITY);
 
-        return Stream.of(city, town, village, suburb)
-            .filter(value -> !StringUtils.isEmpty(value))
+        return Stream.of(city, town, village, suburb).filter(value -> !StringUtils.isEmpty(value))
             .collect(Collectors.joining(", "));
     }
 
@@ -272,6 +282,6 @@ public class Address extends GeoLocation {
 
         return "Address [displayName=" + displayName + ", osmId=" + osmId
             + ", placeId=" + placeId + ", shortName=" + shortName
-            + ", address=" + address + "]";
+            + ", address=" + address + ", osmType=" + osmType + "]";
     }
 }

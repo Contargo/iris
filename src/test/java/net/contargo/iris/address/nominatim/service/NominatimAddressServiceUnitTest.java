@@ -16,6 +16,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -304,5 +305,24 @@ public class NominatimAddressServiceUnitTest {
         List<Address> result = sut.getAddressesByQuery("Streetname 43, cityName");
 
         assertThat(result, is(addresses));
+    }
+
+
+    @Test
+    public void getAddressesByQueryFilterRelations() {
+
+        Address addressWithOsmTypeNode = new Address();
+        addressWithOsmTypeNode.setOsmType("node");
+
+        Address addressWithOsmTypeRelation = new Address();
+        addressWithOsmTypeRelation.setOsmType("relation");
+
+        List<Address> addresses = Arrays.asList(addressWithOsmTypeNode, addressWithOsmTypeRelation);
+
+        when(nominatimUrlBuilderMock.buildSearchUrl("Duisburg")).thenReturn("http://nominatim/search/Duisburg");
+        when(nominatimResponderMock.getAddresses("http://nominatim/search/Duisburg")).thenReturn(addresses);
+
+        List<Address> result = sut.getAddressesByQuery("Duisburg");
+        assertThat(result, contains(addressWithOsmTypeNode));
     }
 }

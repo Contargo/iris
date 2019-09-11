@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import static net.contargo.iris.address.nominatim.service.AddressDetailKey.CITY;
 import static net.contargo.iris.address.nominatim.service.AddressDetailKey.COUNTRY;
@@ -23,6 +24,8 @@ import static net.contargo.iris.address.nominatim.service.AddressDetailKey.POSTA
 import static net.contargo.iris.address.nominatim.service.AddressDetailKey.STREET;
 
 import static org.slf4j.LoggerFactory.getLogger;
+
+import static java.util.stream.Collectors.toList;
 
 
 /**
@@ -125,7 +128,19 @@ public class NominatimAddressService implements AddressService {
 
         String url = nominatimUrlBuilder.buildSearchUrl(query);
 
-        return nominatimResponder.getAddresses(url);
+        List<Address> addresses = nominatimResponder.getAddresses(url);
+
+        if (addresses != null) {
+            return addresses.stream().filter(notRelation()).collect(toList());
+        }
+
+        return null;
+    }
+
+
+    private static Predicate<Address> notRelation() {
+
+        return address -> !"relation".equals(address.getOsmType());
     }
 
 

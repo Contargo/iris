@@ -1,9 +1,11 @@
+dist: trusty
+
 language: java
 
 script: mvn verify
 
 jdk:
-  - oraclejdk8
+  - openjdk8
 
 before_script:
   - mysql -e 'create database iris;'
@@ -14,3 +16,4 @@ cache:
 
 addons:
     mariadb: '10.0'
+

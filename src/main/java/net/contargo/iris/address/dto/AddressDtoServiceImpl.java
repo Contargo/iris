@@ -62,9 +62,7 @@ public class AddressDtoServiceImpl implements AddressDtoService {
     public List<AddressListDto> getAddressesByDetails(Map<String, String> addressDetails) {
 
         return addressServiceWrapper.getAddressesByDetails(addressDetails)
-            .stream()
-            .map(AddressListDto::new)
-            .collect(toList());
+            .stream().map(AddressListDto::new).collect(toList());
     }
 
 

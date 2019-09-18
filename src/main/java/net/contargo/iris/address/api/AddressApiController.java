@@ -11,6 +11,7 @@ import net.contargo.iris.address.dto.AddressListDto;
 import net.contargo.iris.address.nominatim.NominatimUtil;
 import net.contargo.iris.address.staticsearch.service.StaticAddressNotFoundException;
 import net.contargo.iris.address.staticsearch.validator.HashKeyValidator;
+import net.contargo.iris.api.NotFoundException;
 
 import org.slf4j.Logger;
 
@@ -203,5 +204,22 @@ public class AddressApiController {
     public List<AddressDto> getAddresses(@RequestParam("query") String query) {
 
         return addressDtoService.getAddressesByQuery(query);
+    }
+
+
+    @ApiOperation(value = "Returns a static address by its hash key.")
+    @ModelAttribute("address")
+    @RequestMapping(value = "/addresses/static/{hashkey}", method = GET)
+    public AddressDto resolveStaticAddress(@PathVariable("hashkey") String hashKey) {
+
+        if (!hashKeyValidator.validate(hashKey)) {
+            throw new IllegalArgumentException("Invalid hash key");
+        }
+
+        try {
+            return addressDtoService.getAddressesByHashKey(hashKey);
+        } catch (StaticAddressNotFoundException e) {
+            throw new NotFoundException("No address found for hash key " + hashKey);
+        }
     }
 }

@@ -3,12 +3,12 @@ package net.contargo.iris.address.nominatim.service;
 /**
  * @author  Oliver Messner - messner@synyx.de
  */
-enum OsmType {
+public enum OsmType {
 
     WAY {
 
         @Override
-        String getKey() {
+        public String getKey() {
 
             return "W";
         }
@@ -17,11 +17,20 @@ enum OsmType {
     NODE {
 
         @Override
-        String getKey() {
+        public String getKey() {
 
             return "N";
         }
+    },
+
+    RELATION {
+
+        @Override
+        public String getKey() {
+
+            return "R";
+        }
     };
 
-    abstract String getKey();
+    public abstract String getKey();
 }

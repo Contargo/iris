@@ -1,4 +1,3 @@
-
 package net.contargo.iris.address.nominatim.service;
 
 import net.contargo.iris.GeoLocation;
@@ -16,6 +15,7 @@ import java.util.Map;
  * @author  Arnold Franke - franke@synyx.de
  * @author  Sandra Thieme - thieme@synyx.de
  * @author  Ben Antony - antony@synyx.de
+ * @author  Oliver Messner - messner@synyx.de
  */
 public interface AddressService {
 
@@ -43,8 +43,26 @@ public interface AddressService {
      * @param  osmId
      *
      * @return  The address for a certain osmId
+     *
+     * @deprecated  use {@link #getAddressByOsmIdAndOsmType(long, OsmType)} instead
      */
+    @Deprecated
     Address getAddressByOsmId(long osmId);
+
+
+    /**
+     * Returns the OSM address associated with the specified OSM id and OSM type. Nominatim reverse geo-coding using an
+     * OSM Id requires an OSM type to be specified, which represents either a node, a way or a relation (see
+     * https://nominatim.org/release-docs/develop/api/Reverse/)
+     *
+     * @param  osmId  the OSM Id
+     * @param  type  the OSM type
+     *
+     * @return  an address or {@code null}
+     *
+     * @see  OsmType
+     */
+    Address getAddressByOsmIdAndOsmType(long osmId, OsmType type);
 
 
     /**

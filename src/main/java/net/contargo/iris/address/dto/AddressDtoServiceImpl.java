@@ -3,6 +3,7 @@ package net.contargo.iris.address.dto;
 import net.contargo.iris.GeoLocation;
 import net.contargo.iris.address.Address;
 import net.contargo.iris.address.nominatim.service.AddressService;
+import net.contargo.iris.address.nominatim.service.OsmType;
 import net.contargo.iris.address.service.AddressServiceWrapper;
 
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import static java.util.stream.Collectors.toList;
 
 /**
  * @author  Arnold Franke - franke@synyx.de
+ * @author  Oliver Messner - messner@synyx.de
  */
 public class AddressDtoServiceImpl implements AddressDtoService {
 
@@ -33,6 +35,15 @@ public class AddressDtoServiceImpl implements AddressDtoService {
         Address address = addressService.getAddressByOsmId(osmId);
 
         return address == null ? null : new AddressDto(address);
+    }
+
+
+    @Override
+    public AddressDto getAddressByOsmIdAndOsmType(long osmId, OsmType type) {
+
+        Address address = addressService.getAddressByOsmIdAndOsmType(osmId, type);
+
+        return address == null || address.getOsmId() == 0 ? null : new AddressDto(address);
     }
 
 

@@ -1,6 +1,7 @@
 package net.contargo.iris.address.dto;
 
 import net.contargo.iris.GeoLocation;
+import net.contargo.iris.address.nominatim.service.OsmType;
 
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,7 @@ import java.util.Map;
  * Delegates to AddressService and converts Address Beans into Address DTOs.
  *
  * @author  Arnold Franke - franke@synyx.de
+ * @author  Oliver Messner - messner@synyx.de
  */
 public interface AddressDtoService {
 
@@ -19,8 +21,26 @@ public interface AddressDtoService {
      * @param  osmId  search parameter
      *
      * @return  The address for a certain osmId
+     *
+     * @deprecated  use {@link #getAddressByOsmIdAndOsmType(long, OsmType)} instead
      */
+    @Deprecated
     AddressDto getAddressByOsmId(long osmId);
+
+
+    /**
+     * Returns the OSM address associated with the specified OSM id and OSM type. Nominatim reverse geo-coding using an
+     * OSM Id requires an OSM type to be specified, which represents either a node, a way or a relation (see
+     * https://nominatim.org/release-docs/develop/api/Reverse/)
+     *
+     * @param  osmId  the OSM Id
+     * @param  type  the OSM type
+     *
+     * @return  an address or {@code null}
+     *
+     * @see  OsmType
+     */
+    AddressDto getAddressByOsmIdAndOsmType(long osmId, OsmType type);
 
 
     /**

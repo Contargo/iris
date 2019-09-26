@@ -9,6 +9,7 @@ import net.contargo.iris.address.dto.AddressDto;
 import net.contargo.iris.address.dto.AddressDtoService;
 import net.contargo.iris.address.dto.AddressListDto;
 import net.contargo.iris.address.nominatim.NominatimUtil;
+import net.contargo.iris.address.nominatim.service.OsmType;
 import net.contargo.iris.address.staticsearch.service.StaticAddressNotFoundException;
 import net.contargo.iris.address.staticsearch.validator.HashKeyValidator;
 import net.contargo.iris.api.NotFoundException;
@@ -54,6 +55,7 @@ import static java.util.Collections.singletonList;
  * @author  Tobias Schneider - schneider@synyx.de
  * @author  Sandra Thieme - thieme@synyx.de
  * @author  Ben Antony - antony@synyx.de
+ * @author  Oliver Messner - messner@synyx.de
  */
 @Controller
 @Api(description = "API for querying addresses.", value = "")
@@ -73,10 +75,12 @@ public class AddressApiController {
     }
 
     @ApiOperation(
-        value = "Get addresses for a given OpenStreetMap-ID.", notes = "Get addresses for a given OpenStreetMap-ID."
+        value = "Get addresses for a given OpenStreetMap-ID.",
+        notes = "Warning: endpoint is deprecated. Use addresses/osm/{osm-type}/{osm-id} instead."
     )
     @ModelAttribute("geoCodeResponse")
     @RequestMapping(value = "osmaddresses/{id}", method = RequestMethod.GET)
+    @Deprecated
     public ListOfAddressListsResponse addressByOsmId(
         @ApiParam(value = "ID identifying a single osm-address.", required = true)
         @PathVariable("id")
@@ -221,5 +225,38 @@ public class AddressApiController {
         } catch (StaticAddressNotFoundException e) {
             throw new NotFoundException("No address found for hash key " + hashKey);
         }
+    }
+
+
+    @ApiOperation(
+        value = "Returns an OSM address by OSM Id and OSM type",
+        notes = "Supported values for the osm-type path element are: 'nodes', 'ways', 'relations'"
+    )
+    @ModelAttribute("address")
+    @RequestMapping(value = "/addresses/osm/{osm-type}/{osm-id}", method = GET)
+    public AddressDto addressByOsmIdAndOsmType(@PathVariable("osm-type") String type,
+        @PathVariable("osm-id") long id) {
+
+        OsmType osmType;
+
+        switch (type) {
+            case "nodes":
+                osmType = OsmType.NODE;
+                break;
+
+            case "ways":
+                osmType = OsmType.WAY;
+                break;
+
+            case "relations":
+                osmType = OsmType.RELATION;
+                break;
+
+            default:
+                throw new IllegalArgumentException(
+                    "Value of osm-type path part must either be 'nodes', 'ways' or 'relations'");
+        }
+
+        return addressDtoService.getAddressByOsmIdAndOsmType(id, osmType);
     }
 }

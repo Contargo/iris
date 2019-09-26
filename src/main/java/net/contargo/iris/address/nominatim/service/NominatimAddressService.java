@@ -111,6 +111,17 @@ public class NominatimAddressService implements AddressService {
 
 
     @Override
+    public Address getAddressByOsmIdAndOsmType(long osmId, OsmType type) {
+
+        String url = nominatimUrlBuilder.buildOsmUrl(osmId, type);
+
+        List<Address> addresses = nominatimResponder.getAddressesFromOSMId(url);
+
+        return addresses == null || addresses.isEmpty() ? null : addresses.get(0);
+    }
+
+
+    @Override
     public Address getAddressByGeolocation(GeoLocation geoLocation) {
 
         try {

@@ -23,6 +23,7 @@ public final class AddressDto extends GeoLocationDto {
     private final String shortName;
     private final String niceName;
     private final String countryCode;
+    private final String osmType;
     private final long osmId;
     private final long placeId;
     private final Map<String, String> address;
@@ -31,9 +32,11 @@ public final class AddressDto extends GeoLocationDto {
     public AddressDto(Address address) {
 
         super(address);
+
         this.countryCode = address.getCountryCode();
         this.niceName = address.getNiceName();
         this.displayName = address.getDisplayName();
+        this.osmType = address.getOsmType();
         this.osmId = address.getOsmId();
         this.placeId = address.getPlaceId();
         this.shortName = address.getShortName();
@@ -62,6 +65,12 @@ public final class AddressDto extends GeoLocationDto {
     public String getDisplayName() {
 
         return displayName;
+    }
+
+
+    public String getOsmType() {
+
+        return osmType;
     }
 
 

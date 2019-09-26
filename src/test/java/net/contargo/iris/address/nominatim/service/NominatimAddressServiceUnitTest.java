@@ -36,6 +36,7 @@ import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.sameInstance;
 
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 
@@ -225,6 +226,22 @@ public class NominatimAddressServiceUnitTest {
         InOrder inOrder = Mockito.inOrder(nominatimUrlBuilderMock);
         inOrder.verify(nominatimUrlBuilderMock).buildOsmUrl(OSM_ID, OsmType.WAY);
         inOrder.verify(nominatimUrlBuilderMock).buildOsmUrl(OSM_ID, OsmType.NODE);
+    }
+
+
+    @Test
+    public void getAddressByOsmIdAndOsmType() {
+
+        OsmType osmType = OsmType.NODE;
+        long osmId = 42;
+
+        Address address = new Address();
+        address.setOsmId(osmId);
+
+        when(nominatimUrlBuilderMock.buildOsmUrl(osmId, osmType)).thenReturn(DUMMY_URL);
+        when(nominatimResponderMock.getAddressesFromOSMId(DUMMY_URL)).thenReturn(singletonList(address));
+
+        assertThat(sut.getAddressByOsmIdAndOsmType(osmId, osmType), sameInstance(address));
     }
 
 

@@ -4,6 +4,7 @@ import net.contargo.iris.GeoLocation;
 import net.contargo.iris.address.Address;
 import net.contargo.iris.address.AddressList;
 import net.contargo.iris.address.nominatim.service.AddressService;
+import net.contargo.iris.address.nominatim.service.OsmType;
 import net.contargo.iris.address.service.AddressServiceWrapper;
 
 import org.junit.Before;
@@ -73,6 +74,24 @@ public class AddressDtoServiceImplUnitTest {
         AddressDto expectedAddress = new AddressDto(address);
         AddressDto actualAddress = sut.getAddressByOsmId(OSM_ID);
         assertReflectionEquals(actualAddress, expectedAddress);
+    }
+
+
+    @Test
+    public void getAddressByOsmIdAndOsmType() {
+
+        OsmType osmType = OsmType.NODE;
+        long osmId = 42;
+
+        Address address = new Address();
+        address.setOsmType("node");
+        address.setOsmId(osmId);
+
+        when(addressServiceMock.getAddressByOsmIdAndOsmType(osmId, osmType)).thenReturn(address);
+
+        AddressDto addressDto = sut.getAddressByOsmIdAndOsmType(osmId, osmType);
+        assertThat(addressDto.getOsmType(), is("node"));
+        assertThat(addressDto.getOsmId(), is(osmId));
     }
 
 

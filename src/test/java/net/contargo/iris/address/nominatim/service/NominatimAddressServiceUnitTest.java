@@ -326,7 +326,7 @@ public class NominatimAddressServiceUnitTest {
 
 
     @Test
-    public void getAddressesByQueryFilterRelations() {
+    public void getAddressesByQueryDoesNOTFilterRelations() {
 
         Address addressWithOsmTypeNode = new Address();
         addressWithOsmTypeNode.setOsmType("node");
@@ -340,6 +340,6 @@ public class NominatimAddressServiceUnitTest {
         when(nominatimResponderMock.getAddresses("http://nominatim/search/Duisburg")).thenReturn(addresses);
 
         List<Address> result = sut.getAddressesByQuery("Duisburg");
-        assertThat(result, contains(addressWithOsmTypeNode));
+        assertThat(result, contains(addressWithOsmTypeNode, addressWithOsmTypeRelation));
     }
 }

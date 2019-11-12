@@ -116,9 +116,7 @@ public class StaticAddressApiControllerMvcUnitTest {
             singletonList(new StaticAddressDto("unique-id", new GeoLocationDto(new GeoLocation(ONE, TEN)))));
 
         ResultActions resultActions = mockMvc.perform(get("/staticaddresses").param("lat", "10")
-                .param("lon", "1")
-                .param("distance", "20")
-                .accept(APPLICATION_JSON));
+                .param("lon", "1").param("distance", "20").accept(APPLICATION_JSON));
 
         resultActions.andExpect(status().isOk()).andExpect(content().contentType("application/json;charset=UTF-8"));
         resultActions.andExpect(jsonPath("$", hasSize(1)));

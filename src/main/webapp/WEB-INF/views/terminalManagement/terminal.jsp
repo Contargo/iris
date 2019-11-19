@@ -87,6 +87,19 @@
                         </div>
                     </div>
 
+                    <div class="control-group">
+                        <form:label path="country" cssClass="control-label" cssErrorClass="control-label error">
+                            <spring:message code="terminal.country"/>
+                        </form:label>
+                        <div class="controls">
+                            <form:select path="country" cssErrorClass="error">
+                                <c:forEach var="country" items="${countries}">
+                                    <form:option value="${country}" label="${country}"/>
+                                </c:forEach>
+                            </form:select>
+                        </div>
+                    </div>
+
                     <iris:checkboxFieldNormal property="enabled" messageKey="terminal.enabled"/>
 
                     <div class="form-actions">

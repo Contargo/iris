@@ -2,6 +2,7 @@ package net.contargo.iris.terminal.web;
 
 import net.contargo.iris.Message;
 import net.contargo.iris.api.ControllerConstants;
+import net.contargo.iris.countries.service.CountryService;
 import net.contargo.iris.sequence.service.UniqueIdSequenceServiceException;
 import net.contargo.iris.terminal.Region;
 import net.contargo.iris.terminal.Terminal;
@@ -30,6 +31,8 @@ import javax.validation.Valid;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
+import static java.util.stream.Collectors.toList;
+
 
 /**
  * Controller Class for all operations with {@link net.contargo.iris.terminal.Terminal}s.
@@ -54,13 +57,16 @@ public class TerminalController {
     private static final Message SAVE_SUCCESS_MESSAGE = Message.success("terminal.success.save.message");
     private static final Message UPDATE_SUCCESS_MESSAGE = Message.success("terminal.success.update.message");
     private static final String REGIONS_ATTRIBUTE = "regions";
+    private static final String COUNTRIES_ATTRIBUTE = "countries";
 
     private final TerminalService terminalService;
+    private final CountryService countryService;
 
     @Autowired
-    public TerminalController(TerminalService terminalService) {
+    public TerminalController(TerminalService terminalService, CountryService countryService) {
 
         this.terminalService = terminalService;
+        this.countryService = countryService;
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET)
@@ -77,6 +83,8 @@ public class TerminalController {
 
         model.addAttribute(TERMINAL_ATTRIBUTE, new Terminal());
         model.addAttribute(REGIONS_ATTRIBUTE, Region.values());
+        model.addAttribute(COUNTRIES_ATTRIBUTE,
+            countryService.getCountries().values().stream().sorted().collect(toList()));
 
         return CONTROLLER_CONTEXT + TERMINAL_FORM_VIEW;
     }
@@ -95,6 +103,8 @@ public class TerminalController {
 
         model.addAttribute(TERMINAL_ATTRIBUTE, terminalService.getById(id));
         model.addAttribute(REGIONS_ATTRIBUTE, Region.values());
+        model.addAttribute(COUNTRIES_ATTRIBUTE,
+            countryService.getCountries().values().stream().sorted().collect(toList()));
 
         return CONTROLLER_CONTEXT + TERMINAL_FORM_VIEW;
     }

@@ -40,7 +40,7 @@
 
         <org.springframework-version>4.3.20.RELEASE</org.springframework-version>
         <org.springframework.security-version>4.2.9.RELEASE</org.springframework.security-version>
-        <org.springframework.data.jpa-version>1.11.16.RELEASE</org.springframework.data.jpa-version>
+        <org.springframework.data.jpa-version>1.11.23.RELEASE</org.springframework.data.jpa-version>
 
         <logback.version>1.2.3</logback.version>
         <org.aspectj-version>1.9.2</org.aspectj-version>

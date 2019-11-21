@@ -6,8 +6,10 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import net.contargo.iris.GeoLocation;
 import net.contargo.iris.address.api.ListOfAddressListsResponse;
 import net.contargo.iris.address.dto.AddressDto;
+import net.contargo.iris.address.staticsearch.StaticAddress;
 import net.contargo.iris.address.staticsearch.dto.StaticAddressDto;
 import net.contargo.iris.address.staticsearch.dto.StaticAddressDtoService;
+import net.contargo.iris.address.staticsearch.service.ClosestStaticAddressService;
 
 import org.slf4j.Logger;
 
@@ -48,11 +50,14 @@ public class StaticAddressApiController {
     private static final String LON = "lon";
 
     private final StaticAddressDtoService staticAddressDtoService;
+    private final ClosestStaticAddressService closestStaticAddressService;
 
     @Autowired
-    public StaticAddressApiController(StaticAddressDtoService staticAddressDtoService) {
+    public StaticAddressApiController(StaticAddressDtoService staticAddressDtoService,
+        ClosestStaticAddressService closestStaticAddressService) {
 
         this.staticAddressDtoService = staticAddressDtoService;
+        this.closestStaticAddressService = closestStaticAddressService;
     }
 
     @ApiOperation(
@@ -109,5 +114,18 @@ public class StaticAddressApiController {
             addresses.size(), location.toString(), distance);
 
         return addresses;
+    }
+
+
+    @ApiOperation(value = "Returns the best result for the provided parameters.")
+    @RequestMapping(method = GET, params = { "postalCode", "city", "country", LAT, LON })
+    @ResponseBody
+    public StaticAddress closestStaticAddresse(@RequestParam(value = "postalCode") String postalCode,
+        @RequestParam(value = "city") String city,
+        @RequestParam(value = "country") String country,
+        @RequestParam(LAT) BigDecimal latitude,
+        @RequestParam(LON) BigDecimal longitude) {
+
+        return closestStaticAddressService.get(postalCode, city, country, latitude, longitude);
     }
 }

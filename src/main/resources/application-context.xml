@@ -387,11 +387,7 @@
     <bean id="nominatimToStaticAddressMapper"
           class="net.contargo.iris.address.staticsearch.service.NominatimToStaticAddressMapperImpl">
         <constructor-arg name="mappingProcessor" ref="postcodeCitySuburbStaticAddressMappingProcessor"/>
-        <constructor-arg name="selector">
-            <bean class="net.contargo.iris.address.staticsearch.service.StaticAddressSelectorImpl">
-                <constructor-arg name="gisService" ref="gisService"/>
-            </bean>
-        </constructor-arg>
+        <constructor-arg name="selector" ref="staticAddressSelector"/>
     </bean>
 
     <bean id="postcodeCitySuburbStaticAddressMappingProcessor" class="net.contargo.iris.address.staticsearch.service.PostcodeCitySuburbStaticAddressMappingProcessor">
@@ -546,6 +542,16 @@
             <bean class="org.springframework.web.client.RestTemplate"/>
         </constructor-arg>
         <constructor-arg value="${osrm.url}"/>
+    </bean>
+
+    <bean id="staticAddressSelector" class="net.contargo.iris.address.staticsearch.service.StaticAddressSelectorImpl">
+        <constructor-arg name="gisService" ref="gisService"/>
+    </bean>
+
+    <bean id="closestStaticAddressService" class="net.contargo.iris.address.staticsearch.service.ClosestStaticAddressServiceImpl">
+        <constructor-arg name="nominatimToStaticAddressMapper" ref="nominatimToStaticAddressMapper"/>
+        <constructor-arg name="staticAddressService" ref="staticAddressService"/>
+        <constructor-arg name="staticAddressSelector" ref="staticAddressSelector"/>
     </bean>
 
 </beans>

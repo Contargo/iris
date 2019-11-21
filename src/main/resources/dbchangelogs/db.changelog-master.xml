@@ -58,4 +58,6 @@
 
     <include file="dbchangelogs/db.changelog-1.15-add-organisation-to-terminal.xml"/>
 
+    <include file="dbchangelogs/db.changelog-1.15-add-country-to-terminal.xml"/>
+
 </databaseChangeLog>

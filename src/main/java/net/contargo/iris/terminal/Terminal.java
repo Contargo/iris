@@ -45,6 +45,8 @@ public class Terminal extends GeoLocation {
 
     private String organisation;
 
+    private String country;
+
     public Terminal() {
 
         // JPA entity classes must have a no-arg constructor
@@ -147,7 +149,8 @@ public class Terminal extends GeoLocation {
             + ", enabled=" + enabled
             + ", region=" + region
             + ", uniqueId=" + uniqueId
-            + ", organisation='" + organisation + '\'' + '}';
+            + ", organisation='" + organisation + '\''
+            + ", country='" + country + '\'' + '}';
     }
 
 
@@ -160,5 +163,17 @@ public class Terminal extends GeoLocation {
     public void setOrganisation(String organisation) {
 
         this.organisation = organisation;
+    }
+
+
+    public String getCountry() {
+
+        return country;
+    }
+
+
+    public void setCountry(String country) {
+
+        this.country = country;
     }
 }

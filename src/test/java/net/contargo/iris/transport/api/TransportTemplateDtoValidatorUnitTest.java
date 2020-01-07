@@ -4,7 +4,6 @@ import net.contargo.iris.transport.api.TransportTemplateDto.TransportTemplateSeg
 
 import org.junit.Test;
 
-import static net.contargo.iris.transport.api.ModeOfTransport.ROAD;
 import static net.contargo.iris.transport.api.StopType.TERMINAL;
 
 import static org.junit.Assert.fail;
@@ -40,17 +39,6 @@ public class TransportTemplateDtoValidatorUnitTest {
         assertIllegalArgumentExceptionThrown(segment);
 
         segment = new TransportTemplateSegment(stopWithTerminal, stopWithoutTerminal, null, null, null);
-        assertIllegalArgumentExceptionThrown(segment);
-    }
-
-
-    @Test
-    public void validationFailsMoTSpecified() {
-
-        TransportStop from = new TransportStop(TERMINAL, null, null, null);
-        TransportStop to = new TransportStop(TERMINAL, null, null, null);
-
-        TransportTemplateSegment segment = new TransportTemplateSegment(from, to, null, null, ROAD);
         assertIllegalArgumentExceptionThrown(segment);
     }
 

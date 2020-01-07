@@ -236,6 +236,51 @@ public class TerminalTransportChainGeneratorUnitTest {
 
 
     @Test
+    public void roundtripExportDifferentSeaportsWithMotSet() {
+
+        Seaport antwerp = seaport("111");
+        Seaport hamburg = seaport("112");
+
+        Terminal woerth = terminal("1234565789", TEN, TEN);
+        Terminal malu = terminal("987654321", TEN, ZERO);
+
+        when(terminalServiceMock.getAllActive()).thenReturn(asList(woerth, malu));
+
+        MainRunConnection hamburgWoerthWater = connection(hamburg, woerth, BARGE);
+        MainRunConnection hamburgWoerthRail = connection(hamburg, woerth, RAIL);
+        MainRunConnection antwerpWoerthRail = connection(antwerp, woerth, RAIL);
+
+        when(connectionServiceMock.getConnectionsForTerminal(new BigInteger("1234565789"))).thenReturn(asList(
+                hamburgWoerthWater, hamburgWoerthRail, antwerpWoerthRail));
+
+        TransportTemplateSegment hamburgTerminal = new TransportTemplateSegment(new TransportStop(SEAPORT, "112", null,
+                    null), new TransportStop(TERMINAL, null, null, null), EMPTY, true, ModeOfTransport.RAIL);
+        TransportTemplateSegment terminalAddress = new TransportTemplateSegment(new TransportStop(TERMINAL, null, null,
+                    null), new TransportStop(ADDRESS, null, TEN, ONE), EMPTY, true, null);
+        TransportTemplateSegment addressTerminal = new TransportTemplateSegment(new TransportStop(ADDRESS, null, TEN,
+                    ONE), new TransportStop(TERMINAL, null, null, null), FULL, true, null);
+        TransportTemplateSegment terminalAntwerp = new TransportTemplateSegment(new TransportStop(TERMINAL, null, null,
+                    null), new TransportStop(SEAPORT, "111", null, null), FULL, true, null);
+
+        TransportTemplateDto template = new TransportTemplateDto(asList(hamburgTerminal, terminalAddress,
+                    addressTerminal, terminalAntwerp));
+
+        List<TransportDescriptionDto> descriptions = sut.from(template);
+
+        assertThat(descriptions, hasSize(1));
+
+        assertThat(descriptions.get(0).transportChain.get(0).modeOfTransport, is(ModeOfTransport.RAIL));
+        assertThat(descriptions.get(0).transportChain.get(0).to.uuid, is("1234565789"));
+        assertThat(descriptions.get(0).transportChain.get(1).modeOfTransport, is(ModeOfTransport.ROAD));
+        assertThat(descriptions.get(0).transportChain.get(1).from.uuid, is("1234565789"));
+        assertThat(descriptions.get(0).transportChain.get(2).to.uuid, is("1234565789"));
+        assertThat(descriptions.get(0).transportChain.get(2).modeOfTransport, is(ModeOfTransport.ROAD));
+        assertThat(descriptions.get(0).transportChain.get(3).from.uuid, is("1234565789"));
+        assertThat(descriptions.get(0).transportChain.get(3).modeOfTransport, is(ModeOfTransport.RAIL));
+    }
+
+
+    @Test
     public void roundtripExportSameSeaport() {
 
         Seaport antwerp = seaport("111");

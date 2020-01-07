@@ -17,10 +17,7 @@ class TransportTemplateDtoValidator {
      */
     static void validate(TransportTemplateDto template) {
 
-        template.transportChain.forEach(s -> {
-            noTerminalSpecified(s);
-            noMoTSpecified(s);
-        });
+        template.transportChain.forEach(TransportTemplateDtoValidator::noTerminalSpecified);
     }
 
 
@@ -34,16 +31,6 @@ class TransportTemplateDtoValidator {
         if (segment.to.type == StopType.TERMINAL && segment.to.uuid != null) {
             throw new IllegalArgumentException("A transport template's terminal UUID must be null, but was: "
                 + segment.to.uuid);
-        }
-    }
-
-
-    private static void noMoTSpecified(TransportTemplateDto.TransportTemplateSegment segment) {
-
-        if (segment.modeOfTransport != null) {
-            throw new IllegalArgumentException(
-                "A transport template must not have any mode of transport specified, but was: "
-                + segment.modeOfTransport);
         }
     }
 }

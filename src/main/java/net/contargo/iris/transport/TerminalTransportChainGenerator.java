@@ -11,9 +11,11 @@ import net.contargo.iris.transport.api.TransportTemplateDto;
 
 import java.math.BigInteger;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -64,16 +66,13 @@ public class TerminalTransportChainGenerator implements TransportChainGenerator 
 
         Set<String> seaports = template.transportChain.stream()
                 .filter(TerminalTransportChainGenerator::containsSeaport)
-                .map(TerminalTransportChainGenerator::getSeaportUuid)
-                .collect(toSet());
+                .map(TerminalTransportChainGenerator::getSeaportUuid).collect(toSet());
 
         Map<Terminal, List<MainRunConnection>> terminalConnections = terminalService.getAllActive()
-                .stream()
-                .collect(toMap(Function.identity(), getTerminalConnectionsWithSeaports(seaports)));
+                .stream().collect(toMap(Function.identity(), getTerminalConnectionsWithSeaports(seaports)));
 
-        return terminalConnections.entrySet()
-            .stream()
-            .map(entry -> createDescriptionsForTerminal(template, entry.getKey(), entry.getValue()))
+        return terminalConnections.entrySet().stream().map(entry ->
+                        createDescriptionsForTerminal(template, entry.getKey(), entry.getValue()))
             .flatMap(List::stream).collect(toList());
     }
 
@@ -91,7 +90,10 @@ public class TerminalTransportChainGenerator implements TransportChainGenerator 
         template.transportChain.stream().filter(s -> isMainRunSegment(s.from.type, s.to.type)).forEach(s -> {
             String seaportUuid = getSeaportUuid(s);
 
-            List<ModeOfTransport> mots = seaportMots.getOrDefault(new BigInteger(seaportUuid), emptyList());
+            List<ModeOfTransport> possibleMots = seaportMots.getOrDefault(new BigInteger(seaportUuid), emptyList());
+
+            List<ModeOfTransport> mots = Optional.ofNullable(s.modeOfTransport)
+                .filter(possibleMots::contains).map(Collections::singletonList).orElse(possibleMots);
 
             List<TransportDescriptionDto> updatedDescriptions = augmentDescriptionsForEachModeOfTransport(mots,
                     terminal, descriptions.get(), s);
@@ -123,8 +125,7 @@ public class TerminalTransportChainGenerator implements TransportChainGenerator 
         List<MainRunConnection> connections) {
 
         return connections.stream().collect(groupingBy(mainRunConnection ->
-                        mainRunConnection.getSeaport()
-                        .getUniqueId(),
+                        mainRunConnection.getSeaport().getUniqueId(),
                     mapping(mainRunConnection -> ModeOfTransport.fromRouteType(mainRunConnection.getRouteType()),
                         toList())));
     }
@@ -134,10 +135,9 @@ public class TerminalTransportChainGenerator implements TransportChainGenerator 
         List<ModeOfTransport> modeOfTransports, Terminal terminal, List<TransportDescriptionDto> descriptions,
         TransportTemplateDto.TransportTemplateSegment segment) {
 
-        return modeOfTransports.stream()
-            .map(m -> descriptions.stream().map(d -> editMainRunSegments(d, terminal, m, segment)).collect(toList()))
-            .flatMap(List::stream)
-            .collect(toList());
+        return modeOfTransports.stream().map(m ->
+                        descriptions.stream().map(d -> editMainRunSegments(d, terminal, m, segment)).collect(toList()))
+            .flatMap(List::stream).collect(toList());
     }
 
 
@@ -198,8 +198,7 @@ public class TerminalTransportChainGenerator implements TransportChainGenerator 
                 .stream()
                 .filter(MainRunConnection::getEnabled)
                 .filter(TerminalTransportChainGenerator::matchingMot)
-                .filter(matchingSeaports(seaports))
-                .collect(toList());
+                .filter(matchingSeaports(seaports)).collect(toList());
     }
 
 

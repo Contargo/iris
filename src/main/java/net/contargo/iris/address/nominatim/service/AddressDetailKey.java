@@ -11,9 +11,9 @@ public enum AddressDetailKey {
     COUNTRY("country"),
     NAME("name");
 
-    private String key;
+    private final String key;
 
-    private AddressDetailKey(String key) {
+    AddressDetailKey(String key) {
 
         this.key = key;
     }

@@ -47,8 +47,8 @@ class NominatimUrlBuilder {
 
         this.countryService = countryService;
 
-        Assert.hasText(baseUrl);
-        Assert.hasText(language);
+        Assert.hasText(baseUrl, "baseUrl is required");
+        Assert.hasText(language, "language is required");
 
         this.baseUrl = baseUrl;
         this.language = language;

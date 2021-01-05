@@ -41,7 +41,7 @@ public class BestMatchServiceImpl implements BestMatchService {
     }
 
 
-    private Optional<BestMatch> bestMatch(List<AddressList> addressLists) {
+    private static Optional<BestMatch> bestMatch(List<AddressList> addressLists) {
 
         if (addressLists.isEmpty()) {
             return Optional.empty();

@@ -12,9 +12,9 @@ enum SuburbType {
     ADMINISTRATIVE("administrative"),
     VILLAGE("village");
 
-    private String type;
+    private final String type;
 
-    private SuburbType(String type) {
+    SuburbType(String type) {
 
         this.type = type;
     }

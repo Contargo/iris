@@ -15,6 +15,11 @@ import static net.contargo.iris.address.nominatim.service.AddressDetailKey.STREE
  */
 public class NominatimUtil {
 
+    private NominatimUtil() {
+
+        // hide the default constructor
+    }
+
     public static Map<String, String> parameterMap(String postalCode, String city, String countryCode) {
 
         return parameterMap(null, postalCode, city, countryCode, null);

@@ -75,7 +75,7 @@ public class BoundingBox {
                 BigDecimal.valueOf(Math.toDegrees(maxLongitude)));
     }
 
-    private double fromDegree(BigDecimal value) {
+    private static double fromDegree(BigDecimal value) {
 
         return Math.toRadians(value.doubleValue());
     }

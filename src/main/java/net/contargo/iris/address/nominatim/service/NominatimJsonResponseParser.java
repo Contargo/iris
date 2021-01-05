@@ -42,8 +42,8 @@ class NominatimJsonResponseParser {
     }
 
     /**
-     * Returns {@link java.util.List} of {@link Address}es for the given URL. Returns an empty {@link java.util.List} if
-     * there are no search results.
+     * Returns {@link java.util.List} of {@link Address}es for the given URL. Returns an empty {@link java.util.List}
+     * if there are no search results.
      *
      * @param  url  String
      */
@@ -63,8 +63,8 @@ class NominatimJsonResponseParser {
 
 
     /**
-     * Returns {@link java.util.List} of {@link Address}es for the given URL. Returns an empty {@link java.util.List} if
-     * there are no search results.
+     * Returns {@link java.util.List} of {@link Address}es for the given URL. Returns an empty {@link java.util.List}
+     * if there are no search results.
      *
      * @param  url  String
      */
@@ -73,7 +73,8 @@ class NominatimJsonResponseParser {
         List<Address> addresses;
 
         try {
-            addresses = singletonList(nominatimRestClient.exchange(url, GET, getHttpEntity(), Address.class).getBody());
+            addresses = singletonList(nominatimRestClient.exchange(url, GET, getHttpEntity(), Address.class)
+                    .getBody());
             LOG.debug("{} search result(s) found for URL {}", addresses.size(), url);
         } catch (RestClientException e) {
             addresses = null;
@@ -104,7 +105,7 @@ class NominatimJsonResponseParser {
      *
      * @return  HttpEntity with TEXT_HTML Accept in Header
      */
-    private HttpEntity<Address> getHttpEntity() {
+    private static HttpEntity<Address> getHttpEntity() {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(singletonList(TEXT_HTML));

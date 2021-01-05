@@ -49,9 +49,9 @@ public class OSRMTruckRouteService implements TruckRouteService {
         }
 
         BigDecimal toll = osrmResult.getToll();
-        BigDecimal distance = new BigDecimal(osrmResult.getTotalDistance()).divide(METERS_PER_KILOMETER, SCALE,
-                HALF_UP);
-        BigDecimal duration = new BigDecimal(osrmResult.getTotalTime()).divide(SECONDS_PER_MINUTE, SCALE, HALF_UP);
+        BigDecimal distance = BigDecimal.valueOf(osrmResult.getTotalDistance())
+                .divide(METERS_PER_KILOMETER, SCALE, HALF_UP);
+        BigDecimal duration = BigDecimal.valueOf(osrmResult.getTotalTime()).divide(SECONDS_PER_MINUTE, SCALE, HALF_UP);
 
         return new TruckRoute(distance, toll, duration);
     }

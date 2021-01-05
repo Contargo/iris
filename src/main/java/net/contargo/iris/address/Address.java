@@ -273,7 +273,7 @@ public class Address extends GeoLocation {
 
     public boolean inSwitzerland() {
 
-        return this.getCountryCode() != null && "CH".equals(this.getCountryCode().toUpperCase());
+        return this.getCountryCode() != null && "CH".equalsIgnoreCase(this.getCountryCode());
     }
 
 

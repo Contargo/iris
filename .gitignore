@@ -7,3 +7,4 @@ target
 logs/
 error-reports/
 phantomjsdriver.log
+.mvn/wrapper/maven-wrapper.jar

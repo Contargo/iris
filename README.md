@@ -117,11 +117,11 @@ Additionally, there is another logback configuration suited for production use l
 
 In order to build the application you need Maven 3 and Oracle JDK 7. You also need your MariaDb database set up as described above. You can then start the local web server:
 ```sh
-$ mvn jetty:run
+$ ./mvnw jetty:run
 ```
 You can run a full build including all tests with
 ```sh
-$ mvn clean install
+$ ./mvnw clean install
 ```
 Finally, point your browser to the url http://localhost:8082/. IRIS has both a basic user interface and a JSON API. Documentation for the API is located at http://localhost:8082/api/docs.html.
 

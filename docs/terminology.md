@@ -1,6 +1,6 @@
-#Terminology
+# Terminology
 
-##Terminal
+## Terminal
 
 *inland (hinterland) container terminal*
 
@@ -12,12 +12,12 @@ Usually geographical division. (*Oberrhein, Mittelrhein, Niederrhein*) / (*Rhein
 Contargo uses three regions among other things to assign and store the CO₂-parameter of our barge fleet.
 
 
-##Seaport
+## Seaport
 Location on a coast where sea vessels and barges can dock and transfer cargo from or to land. 
 Container seaports handle cargo in containers by different mechanical means. (crane, AGV, reach stacker)
 
 
-##Connections
+## Connections
 This shows the possibilities to connect a seaport and an inland terminal.
 Different and multiple connections are possible. For example barge or rail or both.
 
@@ -27,11 +27,11 @@ Different and multiple connections are possible. For example barge or rail or bo
 * **Subconnections:** Subconnections model parts of connections. Those parts are only relevant if it is a connection of type Barge-Rail.
 
 
-##Static Addresses
+## Static Addresses
 A static address is a city with its corresponding postal code and country. For example *68159 Mannheim, Germany*.
 
 
-##Route types
+## Route types
 
 * **Barge:** Transport of goods / cargo on barge. 
 Barge transport only happens between seaports and inland terminals or between inland terminals that are connected by a major river or canals.
@@ -40,7 +40,7 @@ Barge transport only happens between seaports and inland terminals or between in
 * **Truck:** Transport of goods / cargo from and to seaports and inland terminals and the loading / unloading site.
 
 
-##Route Combination
+## Route Combination
 
 * **Waterway:** Transport per barge between seaport and inland terminal and additional transport per truck to the loading / unloading site.
 * **Railway:** Transport per rail between seaport and inland terminal and additional transport per truck to the loading / unloading site.
@@ -49,12 +49,12 @@ Barge transport only happens between seaports and inland terminals or between in
 * **Roundtrip:** Waterway, Railway, Waterway-Rail or Direct Truck transport from seaport to loading / unloading site and back to seaports.
 * **All:** A list of all the possibilities for transport for a given loading site.
 
-##Route Revision
+## Route Revision
 
 A Route Revision gives the possibility to override the calculated distances between a geolocation and a terminal given by OSRM.
 It is defined by a Geolocation, the responsible terminal, a radius and the three distances that would replace the distances provided by OSRM - Truckdistance Oneway, Tolldistance Oneway, Airline Distance.
 
-###Example
+### Example
 
 1. A Route Revision exists with Terminal **Mannheim**, geolocation 49.451369,8.1030178 and radius 100m.
 2. There is a routing between the Terminal **Mannheim** and the geolocation 49.451367,8.1030177.

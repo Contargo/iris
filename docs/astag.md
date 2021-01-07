@@ -1,3 +1,3 @@
-#ASTAG
+# ASTAG
 
 When routing involves loading places that are located in Switzerland (i.e. the loading place is either origin or destination of a route part), distances are always calculated based on static addresses and associated route revision data. This means, that even when a user selects a Nominatim address (i.e. a non-static addresses), that address gets mapped to the best matching static address. If this mapping is not possible (e.g. if there is no appropriate static address), then the routing will not succeed. Using static addresses only when routing to/from loading places in Switzerland accommodates the [ASTAG](http://www.astag.ch/) requirement: distances to various locations are defined and published by ASTAG. In IRIS these distances are represented as route data revisions.

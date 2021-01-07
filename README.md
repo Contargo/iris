@@ -28,13 +28,13 @@ Further documentation about the IRIS-terminology can be found here: [terminology
 If you are interested to use IRIS in Switzerland read this: [ASTAG](docs/astag.md)
 
 
-#Prerequisites
+# Prerequisites
  - MariaDb 5.5 or higher
  - Maven 3 or higher
  - JDK 8 or higher
 
 
-#Getting started
+# Getting started
 
 Simply clone this repository
 ```sh

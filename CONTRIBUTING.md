@@ -1,4 +1,4 @@
-#CONTRIBUTING
+# CONTRIBUTING
 
 We welcome new contributors. Here you can read our guidelines to contribute to the IRIS project.
 

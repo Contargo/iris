@@ -169,7 +169,7 @@ public class RoutePartDto {
      *
      * @return  the empty list
      */
-    public List<?> getSubRouteParts() {
+    public List<Object> getSubRouteParts() {
 
         return Collections.emptyList();
     }

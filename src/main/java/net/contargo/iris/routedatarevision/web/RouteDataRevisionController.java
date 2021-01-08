@@ -8,9 +8,6 @@ import net.contargo.iris.routedatarevision.dto.RouteDataRevisionDtoService;
 import net.contargo.iris.routedatarevision.service.cleanup.RouteDataRevisionCleanupTask;
 import net.contargo.iris.terminal.service.TerminalService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 
@@ -26,8 +23,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.lang.invoke.MethodHandles;
 
 import java.text.SimpleDateFormat;
 
@@ -55,8 +50,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 @Controller
 @RequestMapping("/routerevisions")
 public class RouteDataRevisionController {
-
-    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private static final Message SAVE_SUCCESS_MESSAGE = success("routerevision.success.save.message");
     private static final Message UPDATE_SUCCESS_MESSAGE = success("routerevision.success.update.message");

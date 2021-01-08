@@ -131,7 +131,6 @@ public class TerminalServiceImpl implements TerminalService {
     }
 
 
-    @Transactional(readOnly = true)
     void checkUniqueConstraints(Terminal terminal) {
 
         boolean uniqueCoordinates;

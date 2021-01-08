@@ -108,7 +108,6 @@ public class SeaportServiceImpl implements SeaportService {
     }
 
 
-    @Transactional(readOnly = true)
     void checkUniqueConstraints(Seaport seaport) {
 
         boolean uniqueCoordinates;
@@ -116,8 +115,8 @@ public class SeaportServiceImpl implements SeaportService {
 
         if (seaport.getId() == null) {
             // create
-            uniqueCoordinates =
-                seaportRepository.findByLatitudeAndLongitude(seaport.getLatitude(), seaport.getLongitude()) == null;
+            uniqueCoordinates = seaportRepository.findByLatitudeAndLongitude(seaport.getLatitude(),
+                    seaport.getLongitude()) == null;
 
             uniqueName = seaportRepository.findByName(seaport.getName()) == null;
         } else {
@@ -152,7 +151,7 @@ public class SeaportServiceImpl implements SeaportService {
             LOG.warn("Terminal uniqueId {} already assigned - trying next uniqueId", nextUniqueId);
             nextUniqueId = nextUniqueId.add(BigInteger.ONE);
 
-            if (!(seaportRepository.findByUniqueId(nextUniqueId) != null)) {
+            if (seaportRepository.findByUniqueId(nextUniqueId) == null) {
                 isUniqueIdAlreadyAssigned = false;
                 uniqueIdSequenceService.setNextId(entityName, nextUniqueId);
             }

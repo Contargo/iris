@@ -243,7 +243,7 @@ public class StaticAddress extends GeoLocation {
         String uniqueIdString = this.uniqueId.toString();
         uniqueIdString = org.apache.commons.lang.StringUtils.leftPad(uniqueIdString, SIZE_TO_THE_PAD, '0');
 
-        long systemId = Long.valueOf(uniqueIdString.substring(BEGIN_INDEX_0, END_INDEX_4));
+        long systemId = Long.parseLong(uniqueIdString.substring(BEGIN_INDEX_0, END_INDEX_4));
         long systemIdInBinary = mapToSixBits(systemId);
         long uniqueIdAutoIncrementedPartInBinary = getAutoIncrementedPart(uniqueIdString);
 
@@ -264,8 +264,7 @@ public class StaticAddress extends GeoLocation {
 
     private long getAutoIncrementedPart(String uniqueIdString) {
 
-        return Long.valueOf(uniqueIdString.substring(uniqueIdString.length() - LENGTH_AUTOINCREMENTED_PART + 1,
-                    uniqueIdString.length()));
+        return Long.parseLong(uniqueIdString.substring(uniqueIdString.length() - LENGTH_AUTOINCREMENTED_PART + 1));
     }
 
 

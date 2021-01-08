@@ -70,8 +70,8 @@ public class PublicAPIExceptionHandler implements HandlerExceptionResolver {
     }
 
 
-    private ModelAndView handleIllegalArgumentException(HttpServletResponse response, IllegalArgumentException ex)
-        throws IOException {
+    private static ModelAndView handleIllegalArgumentException(HttpServletResponse response,
+        IllegalArgumentException ex) throws IOException {
 
         response.sendError(SC_BAD_REQUEST, "Bad Request. " + ex.getMessage());
 
@@ -79,7 +79,7 @@ public class PublicAPIExceptionHandler implements HandlerExceptionResolver {
     }
 
 
-    private ModelAndView handleIllegalStateException(HttpServletResponse response, IllegalStateException ex)
+    private static ModelAndView handleIllegalStateException(HttpServletResponse response, IllegalStateException ex)
         throws IOException {
 
         response.sendError(SC_BAD_REQUEST, "Bad request. " + ex.getMessage());
@@ -88,8 +88,8 @@ public class PublicAPIExceptionHandler implements HandlerExceptionResolver {
     }
 
 
-    private ModelAndView handleHttpClientErrorException(HttpServletResponse response, HttpClientErrorException ex)
-        throws IOException {
+    private static ModelAndView handleHttpClientErrorException(HttpServletResponse response,
+        HttpClientErrorException ex) throws IOException {
 
         response.sendError(SC_SERVICE_UNAVAILABLE,
             "Service is temporary not available, please try again later. " + ex.getMessage());
@@ -98,7 +98,7 @@ public class PublicAPIExceptionHandler implements HandlerExceptionResolver {
     }
 
 
-    private ModelAndView handleGenericException(HttpServletResponse response, Exception ex) throws IOException {
+    private static ModelAndView handleGenericException(HttpServletResponse response, Exception ex) throws IOException {
 
         response.sendError(SC_INTERNAL_SERVER_ERROR, "Internal Server Error. " + ex.getMessage());
 
@@ -106,7 +106,7 @@ public class PublicAPIExceptionHandler implements HandlerExceptionResolver {
     }
 
 
-    private ModelAndView handleNotFoundException(HttpServletResponse response, NotFoundException ex)
+    private static ModelAndView handleNotFoundException(HttpServletResponse response, NotFoundException ex)
         throws IOException {
 
         response.sendError(SC_NOT_FOUND, "Not found. " + ex.getMessage());

@@ -13,7 +13,7 @@ public enum Region {
 
     private final String messageKey;
 
-    private Region(String messageKey) {
+    Region(String messageKey) {
 
         this.messageKey = messageKey;
     }

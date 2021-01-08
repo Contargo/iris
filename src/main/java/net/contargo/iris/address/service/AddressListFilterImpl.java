@@ -25,7 +25,7 @@ public class AddressListFilterImpl implements AddressListFilter {
 
         String addressCountryCode = address.getCountryCode();
 
-        return addressCountryCode != null && countryCode.equalsIgnoreCase(addressCountryCode);
+        return countryCode.equalsIgnoreCase(addressCountryCode);
     }
 
 
@@ -33,7 +33,7 @@ public class AddressListFilterImpl implements AddressListFilter {
 
         return
             addressList -> {
-            if (addressList.getAddresses().size() > 0) {
+            if (!addressList.getAddresses().isEmpty()) {
                 Address address = addressList.getAddresses().get(0);
 
                 return !isAddressOfCountry(address, countryCode);

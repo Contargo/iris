@@ -1,6 +1,5 @@
 package net.contargo.iris.address.service;
 
-import net.contargo.iris.GeoLocation;
 import net.contargo.iris.address.Address;
 import net.contargo.iris.address.dto.GeoLocationDto;
 
@@ -10,7 +9,7 @@ import java.math.BigDecimal;
 /**
  * @author  David Schilling - schilling@synyx.de
  * @author  Oliver Messner - messner@synyx.de
- * @author Ben Antony - antony@synyx.de
+ * @author  Ben Antony - antony@synyx.de
  */
 public class BestMatch {
 
@@ -22,9 +21,10 @@ public class BestMatch {
     private final String suburb;
 
     protected BestMatch(String hashKey, BigDecimal latitude, BigDecimal longitude, String postalCode, String city,
-                        String countryCode, String suburb) {
+        String countryCode, String suburb) {
 
         this.hashKey = hashKey;
+
         GeoLocationDto geoLocationDto = new GeoLocationDto();
         geoLocationDto.setLatitude(latitude);
         geoLocationDto.setLongitude(longitude);
@@ -55,6 +55,7 @@ public class BestMatch {
         return geoLocation;
     }
 
+
     public String getPostalCode() {
 
         return postalCode;
@@ -72,7 +73,9 @@ public class BestMatch {
         return countryCode;
     }
 
+
     public String getSuburb() {
+
         return suburb;
     }
 }

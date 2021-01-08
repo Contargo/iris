@@ -21,7 +21,6 @@ import static java.util.stream.Collectors.toList;
 /**
  * @author  Petra Scherer - scherer@synyx.de
  */
-
 public class ElevationsService {
 
     private final ElevationProviderClient elevationServiceClient;

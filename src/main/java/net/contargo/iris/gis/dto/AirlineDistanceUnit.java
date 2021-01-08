@@ -9,7 +9,7 @@ public enum AirlineDistanceUnit {
 
     private final String name;
 
-    private AirlineDistanceUnit(String name) {
+    AirlineDistanceUnit(String name) {
 
         this.name = name;
     }

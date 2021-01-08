@@ -59,7 +59,7 @@ class AddressCache {
     }
 
 
-    private String getAddressLocationBasedHash(GeoLocation address) {
+    private static String getAddressLocationBasedHash(GeoLocation address) {
 
         BigDecimal latitude = new BigDecimal(-1);
 

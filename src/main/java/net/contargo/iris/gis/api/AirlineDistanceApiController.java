@@ -35,9 +35,10 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @RequestMapping(AirlineDistanceApiController.AIRLINE_DISTANCE)
 public class AirlineDistanceApiController {
 
-    static final String AIRLINE_DISTANCE = "airlineDistance";
+    protected static final String AIRLINE_DISTANCE = "airlineDistance";
 
     private static final Logger LOG = getLogger(MethodHandles.lookup().lookupClass());
+
     private static final BigDecimal LAT_MIN = new BigDecimal(-90);
     private static final BigDecimal LAT_MAX = new BigDecimal(90);
     private static final BigDecimal LON_MIN = new BigDecimal(-180);
@@ -67,8 +68,8 @@ public class AirlineDistanceApiController {
 
         validateGeoCoordinates(aLatitude, aLongitude, bLatitude, bLongitude);
 
-        AirlineDistanceDto airlineDistanceDto = airlineDistanceDtoService.calcAirLineDistInMeters(aLatitude, aLongitude,
-                bLatitude, bLongitude);
+        AirlineDistanceDto airlineDistanceDto = airlineDistanceDtoService.calcAirLineDistInMeters(aLatitude,
+                aLongitude, bLatitude, bLongitude);
         LOG.info("API: Responding to request for airline distance between geographic locations");
 
         return responseAssembler.toResource(airlineDistanceDto);
@@ -89,7 +90,7 @@ public class AirlineDistanceApiController {
         // may throw a NumberFormatException
         BigDecimal latitude = new BigDecimal(lat);
 
-        if (latitude.compareTo(LAT_MIN) == -1 || latitude.compareTo(LAT_MAX) == 1) {
+        if (latitude.compareTo(LAT_MIN) < 0 || latitude.compareTo(LAT_MAX) > 0) {
             throw new IllegalArgumentException();
         }
     }
@@ -100,7 +101,7 @@ public class AirlineDistanceApiController {
         // may throw a NumberFormatException
         BigDecimal longitude = new BigDecimal(lon);
 
-        if (longitude.compareTo(LON_MIN) == -1 || longitude.compareTo(LON_MAX) == 1) {
+        if (longitude.compareTo(LON_MIN) < 0 || longitude.compareTo(LON_MAX) > 0) {
             throw new IllegalArgumentException();
         }
     }

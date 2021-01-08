@@ -241,7 +241,7 @@ public class Address extends GeoLocation {
 
     private String getAddressText() {
 
-        String postalCode = address.get("postcode");
+        String postalCode = address.get(POSTCODE);
 
         if (postalCode == null) {
             postalCode = address.get("boundary");
@@ -273,7 +273,7 @@ public class Address extends GeoLocation {
 
     public boolean inSwitzerland() {
 
-        return this.getCountryCode() != null && "CH".equals(this.getCountryCode().toUpperCase());
+        return this.getCountryCode() != null && "CH".equalsIgnoreCase(this.getCountryCode());
     }
 
 

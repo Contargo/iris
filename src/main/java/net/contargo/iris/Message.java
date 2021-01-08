@@ -68,6 +68,6 @@ public final class Message {
     @Override
     public String toString() {
 
-        return new ToStringBuilder(this).append("type", type).append("message", message).toString();
+        return new ToStringBuilder(this).append("type", type).append(MESSAGE, message).toString();
     }
 }

@@ -19,6 +19,6 @@ public class GisServiceImpl implements GisService {
         calculator.setStartingGeographicPoint(a.getLongitude().doubleValue(), a.getLatitude().doubleValue());
         calculator.setDestinationGeographicPoint(b.getLongitude().doubleValue(), b.getLatitude().doubleValue());
 
-        return new BigDecimal(calculator.getOrthodromicDistance());
+        return BigDecimal.valueOf(calculator.getOrthodromicDistance());
     }
 }

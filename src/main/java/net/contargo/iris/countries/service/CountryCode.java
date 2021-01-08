@@ -21,10 +21,10 @@ enum CountryCode {
     POLAND("Poland", "PL"),
     DENMARK("Denmark", "DK");
 
-    private String name;
-    private String value;
+    private final String name;
+    private final String value;
 
-    private CountryCode(String name, String value) {
+    CountryCode(String name, String value) {
 
         this.name = name;
         this.value = value;

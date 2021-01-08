@@ -40,19 +40,19 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 @ApiIgnore
 public class DiscoverPublicApiController {
 
-    static final String REL_COUNTRIES = "countries";
-    static final String REL_REVERSE_GEOCODE = "reversegeocode";
-    static final String REL_GEOCODE = "geocode";
-    static final String REL_TERMINALS = "terminals";
-    static final String REL_TERMINAL_EXAMPLE = "terminal (by uid)";
-    static final String REL_SEAPORTS_OF_CONNECTIONS = "seaports (as part of connections)";
-    static final String REL_SEAPORTS_OF_CONNECTIONS_FILTERED = "seaports (as part of connections, filtered)";
-    static final String REL_SEAPORT_EXAMPLE = "seaport (by uid)";
-    static final String REL_CONNECTIONS = "connections_url";
-    static final String REL_ROUTES = "routes";
-    static final String REL_SIMPLE_GEOCODES_EXAMPLE = "simplegeocodes_example";
-    static final String REL_ROUTE_DETAILS_EXAMPLE = "route_details_example";
-    static final String REL_OSM_ADDRESSES = "osmaddresses";
+    protected static final String REL_COUNTRIES = "countries";
+    protected static final String REL_REVERSE_GEOCODE = "reversegeocode";
+    protected static final String REL_GEOCODE = "geocode";
+    protected static final String REL_TERMINALS = "terminals";
+    protected static final String REL_TERMINAL_EXAMPLE = "terminal (by uid)";
+    protected static final String REL_SEAPORTS_OF_CONNECTIONS = "seaports (as part of connections)";
+    protected static final String REL_SEAPORTS_OF_CONNECTIONS_FILTERED = "seaports (as part of connections, filtered)";
+    protected static final String REL_SEAPORT_EXAMPLE = "seaport (by uid)";
+    protected static final String REL_CONNECTIONS = "connections_url";
+    protected static final String REL_ROUTES = "routes";
+    protected static final String REL_SIMPLE_GEOCODES_EXAMPLE = "simplegeocodes_example";
+    protected static final String REL_ROUTE_DETAILS_EXAMPLE = "route_details_example";
+    protected static final String REL_OSM_ADDRESSES = "osmaddresses";
 
     private static final Double SEAPORTS_LAT = 49.0;
     private static final Double SEAPORTS_LON = 8.41;
@@ -81,8 +81,8 @@ public class DiscoverPublicApiController {
         discoverResponse.add(linkTo(CountriesApiController.class).withRel(REL_COUNTRIES));
 
         // osmaddresses
-        discoverResponse.add(linkTo(AddressApiController.class).slash("osmaddresses").slash(
-                "134631686?_=1381911583029").withRel(REL_OSM_ADDRESSES));
+        discoverResponse.add(linkTo(AddressApiController.class).slash("osmaddresses")
+            .slash("134631686?_=1381911583029").withRel(REL_OSM_ADDRESSES));
 
         // reverse_geocode
         discoverResponse.add(linkTo(
@@ -101,7 +101,7 @@ public class DiscoverPublicApiController {
                 REL_SEAPORTS_OF_CONNECTIONS));
         discoverResponse.add(linkTo(
                     methodOn(SeaportConnectionApiController.class).getSeaportsInConnections(RouteCombo.RAILWAY))
-            .withRel(REL_SEAPORTS_OF_CONNECTIONS_FILTERED));
+                .withRel(REL_SEAPORTS_OF_CONNECTIONS_FILTERED));
 
         // terminal (by uid)
         discoverResponse.add(linkTo(methodOn(TerminalApiController.class).getTerminalByUid(TERMINAL_UID)).withRel(

@@ -45,7 +45,7 @@ public class ElevationServiceClient implements ElevationProviderClient {
     }
 
 
-    private List<ElevationServicePoint2D> toElevationServicePoints(List<Point2D> points) {
+    private static List<ElevationServicePoint2D> toElevationServicePoints(List<Point2D> points) {
 
         return points.stream()
             .map(p -> new ElevationServicePoint2D(p.getLatitude(), p.getLongitude(), p.getOsmId()))

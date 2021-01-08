@@ -121,8 +121,16 @@
             </bean>
         </constructor-arg>
         <constructor-arg name="normalizerService" ref="normalizerService"/>
+        <constructor-arg name="threeWordClient" ref="threeWordClient"/>
     </bean>
 
+    <bean id="threeWordClient" class="net.contargo.iris.address.w3w.ThreeWordClient">
+        <constructor-arg>
+            <bean class="org.springframework.web.client.RestTemplate"/>
+        </constructor-arg>
+        <constructor-arg name="apiKey" value="${w3w.apikey}"/>
+    </bean>
+    
     <bean id="addressListFilter" class="net.contargo.iris.address.service.AddressListFilterImpl"/>
 
     <bean id="addressDtoService" class="net.contargo.iris.address.dto.AddressDtoServiceImpl">

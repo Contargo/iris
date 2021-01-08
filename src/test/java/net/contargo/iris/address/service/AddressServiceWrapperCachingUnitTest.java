@@ -6,6 +6,7 @@ import net.contargo.iris.address.AddressList;
 import net.contargo.iris.address.nominatim.service.AddressService;
 import net.contargo.iris.address.staticsearch.StaticAddress;
 import net.contargo.iris.address.staticsearch.service.StaticAddressService;
+import net.contargo.iris.address.w3w.ThreeWordClient;
 import net.contargo.iris.normalizer.NormalizerService;
 
 import org.junit.Before;
@@ -61,6 +62,8 @@ public class AddressServiceWrapperCachingUnitTest {
     private StaticAddressService staticAddressServiceMock;
     @Mock
     private AddressCache addressCacheMock;
+    @Mock
+    private ThreeWordClient threeWordClientMock;
 
     @Before
     public void setup() {
@@ -69,7 +72,7 @@ public class AddressServiceWrapperCachingUnitTest {
         when(normalizerServiceMock.normalize(CITY_NAME)).thenReturn(CITY_NAME_NORMALIZED);
 
         sut = new AddressServiceWrapper(addressServiceMock, staticAddressServiceMock, addressCacheMock,
-                normalizerServiceMock);
+                normalizerServiceMock, threeWordClientMock);
     }
 
 

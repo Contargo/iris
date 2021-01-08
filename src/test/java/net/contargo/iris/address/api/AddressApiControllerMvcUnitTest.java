@@ -30,6 +30,7 @@ import java.math.BigDecimal;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -166,6 +167,32 @@ public class AddressApiControllerMvcUnitTest {
         resultActions.andExpect(status().isOk());
         resultActions.andExpect(content().contentType("application/json"));
         resultActions.andExpect(jsonPath("$.geoCodeResponse.addresses[0].addresses[0].displayName", is(displayName)));
+    }
+
+
+    @Test
+    public void addressesByAddressDetailsWithThreeWords() throws Exception {
+
+        AddressDto addressDto = new AddressDto(new Address("Resolved address"));
+        when(addressDtoServiceMock.getAddressesByThreeWords("one.two.three")).thenReturn(Optional.of(addressDto));
+
+        ResultActions resultActions = mockMvc.perform(get("/geocodes/?street=one.two.three").accept(APPLICATION_JSON));
+        resultActions.andExpect(status().isOk());
+        resultActions.andExpect(content().contentType("application/json"));
+        resultActions.andExpect(jsonPath("$.geoCodeResponse.addresses[0].addresses[0].displayName").value(
+                "Resolved address"));
+    }
+
+
+    @Test
+    public void addressesByAddressDetailsWithFailure() throws Exception {
+
+        when(addressDtoServiceMock.getAddressesByThreeWords("one.two.three")).thenReturn(Optional.empty());
+
+        ResultActions resultActions = mockMvc.perform(get("/geocodes/?street=one.two.three").accept(APPLICATION_JSON));
+        resultActions.andExpect(status().isOk());
+        resultActions.andExpect(content().contentType("application/json"));
+        resultActions.andExpect(jsonPath("$.geoCodeResponse.addresses").isEmpty());
     }
 
 

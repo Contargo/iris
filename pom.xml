@@ -659,7 +659,7 @@
                         <include>lib/backbone.js</include>
                         <include>lib/bootstrap.min.js</include>
                         <include>lib/bootstrap-notify.js</include>
-                        <include>lib/handlebars-3.0.3.js</include>
+                        <include>lib/handlebars-v4.7.6.js</include>
 
                         <!-- These first models need to be included first for inheritance reasons -->
                         <include>routing/SelectableAwareCollection.js</include>

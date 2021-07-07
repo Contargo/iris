@@ -26,6 +26,7 @@ import static java.util.Collections.unmodifiableMap;
  * @author  Ben Antony - antony@synyx.de
  * @author  Sandra Thieme - thieme@synyx.de
  * @author  Oliver Messner - messner@synyx.de
+ * @author  Bjoern Martin - martin@synyx.de
  */
 public class Co2Calculator {
 
@@ -39,18 +40,20 @@ public class Co2Calculator {
 
     private static final BigDecimal CO2_PER_HANDLING = new BigDecimal("3.6");
 
-    private static final Map<Region, Co2Region> CO2_REGIONS = unmodifiableMap(new EnumMap<Region, Co2Region>(
-                Region.class) {
-
-                {
-                    put(NIEDERRHEIN, new Co2Region("0.31", "0.27", "0.17", "0.14"));
-                    put(NOT_SET, new Co2Region("0.31", "0.27", "0.17", "0.14"));
-                    put(OBERRHEIN, new Co2Region("0.43", "0.4", "0.23", "0.21"));
-                    put(SCHELDE, new Co2Region("0.427", "0.375", "0.427", "0.375"));
-                }
-            });
+    private static final Map<Region, Co2Region> CO2_REGIONS;
 
     private static final int SCALE = 2;
+
+    static {
+        EnumMap<Region, Co2Region> co2Regions = new EnumMap<>(Region.class);
+
+        co2Regions.put(NIEDERRHEIN, new Co2Region("0.31", "0.27", "0.17", "0.14"));
+        co2Regions.put(NOT_SET, new Co2Region("0.31", "0.27", "0.17", "0.14"));
+        co2Regions.put(OBERRHEIN, new Co2Region("0.43", "0.4", "0.23", "0.21"));
+        co2Regions.put(SCHELDE, new Co2Region("0.427", "0.375", "0.427", "0.375"));
+
+        CO2_REGIONS = unmodifiableMap(co2Regions);
+    }
 
     private Co2Calculator() {
     }

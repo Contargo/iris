@@ -11,6 +11,8 @@ import java.util.Map;
 
 import static net.contargo.iris.container.ContainerState.EMPTY;
 import static net.contargo.iris.container.ContainerState.FULL;
+import static net.contargo.iris.terminal.Region.MAIN;
+import static net.contargo.iris.terminal.Region.MITTELRHEIN;
 import static net.contargo.iris.terminal.Region.NIEDERRHEIN;
 import static net.contargo.iris.terminal.Region.NOT_SET;
 import static net.contargo.iris.terminal.Region.OBERRHEIN;
@@ -30,15 +32,17 @@ import static java.util.Collections.unmodifiableMap;
  */
 public class Co2Calculator {
 
-    private static final BigDecimal CO2_TRUCK_FULL = new BigDecimal("0.851");
-    private static final BigDecimal CO2_TRUCK_EMPTY = new BigDecimal("0.713");
+    private static final BigDecimal CO2_TRUCK_FULL = new BigDecimal("1.136");
+    private static final BigDecimal CO2_TRUCK_EMPTY = new BigDecimal("0.855");
 
-    private static final BigDecimal CO2_RAIL_IMPORT_DIESEL = new BigDecimal("0.48");
-    private static final BigDecimal CO2_RAIL_IMPORT_ELEKTRO = new BigDecimal("0.322");
-    private static final BigDecimal CO2_RAIL_EXPORT_DIESEL = new BigDecimal("0.417");
-    private static final BigDecimal CO2_RAIL_EXPORT_ELEKTRO = new BigDecimal("0.279");
+    private static final BigDecimal CO2_RAIL_IMPORT_DIESEL = new BigDecimal("0.394");
+    private static final BigDecimal CO2_RAIL_IMPORT_ELEKTRO = new BigDecimal("0.12");
+    private static final BigDecimal CO2_RAIL_EXPORT_DIESEL = new BigDecimal("0.394");
+    private static final BigDecimal CO2_RAIL_EXPORT_ELEKTRO = new BigDecimal("0.12");
 
-    private static final BigDecimal CO2_PER_HANDLING = new BigDecimal("3.6");
+    // NOTE: reported to us as "Umschlagpauschale" which assumes the 3 handlings of a standard one-way transport
+    // hence we divide that "Umschlagpauschale" by 3 to get the CO2 value of a single handling again
+    private static final BigDecimal CO2_PER_HANDLING = new BigDecimal("2.927");
 
     private static final Map<Region, Co2Region> CO2_REGIONS;
 
@@ -47,10 +51,12 @@ public class Co2Calculator {
     static {
         EnumMap<Region, Co2Region> co2Regions = new EnumMap<>(Region.class);
 
-        co2Regions.put(NIEDERRHEIN, new Co2Region("0.31", "0.27", "0.17", "0.14"));
+        co2Regions.put(MAIN, new Co2Region("0.862", "0.348", "0.441", "0.195"));
+        co2Regions.put(MITTELRHEIN, new Co2Region("0.67", "0.277", "0.362", "0.144"));
+        co2Regions.put(NIEDERRHEIN, new Co2Region("0.415", "0.27", "0.276", "0.1"));
         co2Regions.put(NOT_SET, new Co2Region("0.31", "0.27", "0.17", "0.14"));
-        co2Regions.put(OBERRHEIN, new Co2Region("0.43", "0.4", "0.23", "0.21"));
-        co2Regions.put(SCHELDE, new Co2Region("0.427", "0.375", "0.427", "0.375"));
+        co2Regions.put(OBERRHEIN, new Co2Region("0.475", "0.162", "0.218", "0.11"));
+        co2Regions.put(SCHELDE, new Co2Region("0.759", "0.108", "0.36", "0.35"));
 
         CO2_REGIONS = unmodifiableMap(co2Regions);
     }

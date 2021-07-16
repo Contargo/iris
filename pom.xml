@@ -80,12 +80,12 @@
         <repository>
             <id>nexus.synyx.org</id>
             <name>Synyx OpenSource Repository</name>
-            <url>http://repo.synyx.org</url>
+            <url>https://repo.synyx.org</url>
         </repository>
         <repository>
             <id>mapfish</id>
             <name>mapfish geotools</name>
-            <url>http://dev.mapfish.org/maven/repository/org/geotools</url>
+            <url>https://dev.mapfish.org/maven/repository/org/geotools</url>
         </repository>
         <repository>
             <id>osgeo</id>
@@ -95,7 +95,7 @@
         <repository>
             <id>oss-jfrog-artifactory</id>
             <name>oss-jfrog-artifactory-releases</name>
-            <url>http://oss.jfrog.org/artifactory/oss-release-local</url>
+            <url>https://oss.jfrog.org/artifactory/oss-release-local</url>
         </repository>
         <repository>
             <id>jitpack.io</id>

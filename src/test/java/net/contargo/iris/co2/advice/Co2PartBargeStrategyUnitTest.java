@@ -24,6 +24,7 @@ import static org.hamcrest.Matchers.comparesEqualTo;
  * @author  Tobias Schneider - schneider@synyx.de
  * @author  Ben Antony - antony@synyx.de
  * @author  Sandra Thieme - thieme@synyx.de
+ * @author  Bjoern Martin - martin@synyx.de
  */
 public class Co2PartBargeStrategyUnitTest {
 
@@ -43,7 +44,7 @@ public class Co2PartBargeStrategyUnitTest {
 
         routePart.getData().setBargeDieselDistance(new BigDecimal("714"));
 
-        assertThat(sut.getEmissionForRoutePart(routePart), comparesEqualTo(new BigDecimal("285.6")));
+        assertThat(sut.getEmissionForRoutePart(routePart), comparesEqualTo(new BigDecimal("115.67")));
     }
 
 
@@ -61,6 +62,6 @@ public class Co2PartBargeStrategyUnitTest {
 
         routePart.getData().setBargeDieselDistance(new BigDecimal("714"));
 
-        assertThat(sut.getEmissionForRoutePart(routePart), comparesEqualTo(new BigDecimal("149.94")));
+        assertThat(sut.getEmissionForRoutePart(routePart), comparesEqualTo(new BigDecimal("78.54")));
     }
 }

@@ -54,6 +54,7 @@ import static java.util.Optional.empty;
 /**
  * @author  Ben Antony - antony@synyx.de
  * @author  Sandra Thieme - thieme@synyx.de
+ * @author  Bjoern Martin - martin@synyx.de
  */
 @RunWith(MockitoJUnitRunner.class)
 public class TransportDescriptionRoadExtenderUnitTest {
@@ -101,7 +102,7 @@ public class TransportDescriptionRoadExtenderUnitTest {
         assertThat(segment.tollDistance.unit, is(KILOMETRE));
         assertThat(segment.duration.value, is(300));
         assertThat(segment.duration.unit, is(MINUTE));
-        assertThat(segment.co2.value, comparesEqualTo(new BigDecimal("28.52")));
+        assertThat(segment.co2.value, comparesEqualTo(new BigDecimal("34.20")));
         assertThat(segment.co2.unit, is(KILOGRAM));
         assertThat(segment.geometries.get(0), is("geometries1"));
         assertThat(segment.geometries.get(1), is("geometries2"));
@@ -144,7 +145,7 @@ public class TransportDescriptionRoadExtenderUnitTest {
         assertThat(segment.tollDistance.unit, is(KILOMETRE));
         assertThat(segment.duration.value, is(300));
         assertThat(segment.duration.unit, is(MINUTE));
-        assertThat(segment.co2.value, comparesEqualTo(new BigDecimal("28.52")));
+        assertThat(segment.co2.value, comparesEqualTo(new BigDecimal("34.20")));
         assertThat(segment.co2.unit, is(KILOGRAM));
         assertThat(segment.geometries.get(0), is("geometries1"));
     }

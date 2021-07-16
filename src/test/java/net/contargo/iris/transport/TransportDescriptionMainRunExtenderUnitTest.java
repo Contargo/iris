@@ -42,6 +42,7 @@ import static org.mockito.Mockito.when;
 /**
  * @author  Ben Antony - antony@synyx.de
  * @author  Sandra Thieme - thieme@synyx.de
+ * @author  Bjoern Martin - martin@synyx.de
  */
 @RunWith(MockitoJUnitRunner.class)
 public class TransportDescriptionMainRunExtenderUnitTest {
@@ -161,7 +162,7 @@ public class TransportDescriptionMainRunExtenderUnitTest {
         assertThat(segment.distance.unit, is(KILOMETRE));
         assertThat(segment.duration.value, is(800));
         assertThat(segment.duration.unit, is(MINUTE));
-        assertThat(segment.co2.value, comparesEqualTo(new BigDecimal("256.4")));
+        assertThat(segment.co2.value, comparesEqualTo(new BigDecimal("181.60")));
         assertThat(segment.co2.unit, is(KILOGRAM));
     }
 

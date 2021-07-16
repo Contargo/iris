@@ -3,9 +3,12 @@ package net.contargo.iris.terminal;
 /**
  * @author  Aljona Murygina - murygina@synyx.de
  * @author  Oliver Messner - messner@synyx.de
+ * @author  Bjoern Martin - martin@synyx.de
  */
 public enum Region {
 
+    MAIN("region.main"),
+    MITTELRHEIN("region.mittelrhein"),
     NIEDERRHEIN("region.niederrhein"),
     OBERRHEIN("region.oberrhein"),
     SCHELDE("region.schelde"),

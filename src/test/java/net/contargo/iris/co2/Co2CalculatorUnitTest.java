@@ -16,6 +16,8 @@ import static net.contargo.iris.co2.Co2Calculator.road;
 import static net.contargo.iris.co2.Co2Calculator.water;
 import static net.contargo.iris.container.ContainerState.EMPTY;
 import static net.contargo.iris.container.ContainerState.FULL;
+import static net.contargo.iris.terminal.Region.MAIN;
+import static net.contargo.iris.terminal.Region.MITTELRHEIN;
 import static net.contargo.iris.terminal.Region.NIEDERRHEIN;
 import static net.contargo.iris.terminal.Region.NOT_SET;
 import static net.contargo.iris.terminal.Region.OBERRHEIN;
@@ -30,6 +32,7 @@ import static org.hamcrest.Matchers.comparesEqualTo;
  * @author  Ben Antony - antony@synyx.de
  * @author  Sandra Thieme - thieme@synyx.de
  * @author  Oliver Messner - messner@synyx.de
+ * @author  Bjoern Martin - martin@synyx.de
  */
 public class Co2CalculatorUnitTest {
 
@@ -38,8 +41,8 @@ public class Co2CalculatorUnitTest {
     @Test
     public void testRoad() {
 
-        assertThat(road(new RoadParams(FULL)), comparesEqualTo(new BigDecimal("85.10")));
-        assertThat(road(new RoadParams(EMPTY)), comparesEqualTo(new BigDecimal("71.3")));
+        assertThat(road(new RoadParams(FULL)), comparesEqualTo(new BigDecimal("113.60")));
+        assertThat(road(new RoadParams(EMPTY)), comparesEqualTo(new BigDecimal("85.50")));
     }
 
 
@@ -47,30 +50,40 @@ public class Co2CalculatorUnitTest {
     public void testRail() {
 
         assertThat(rail(new RailParams(Co2CalculationParams.Rail.Direction.IMPORT)),
-            comparesEqualTo(new BigDecimal("80.2")));
+            comparesEqualTo(new BigDecimal("51.40")));
 
         assertThat(rail(new RailParams(Co2CalculationParams.Rail.Direction.EXPORT)),
-            comparesEqualTo(new BigDecimal("69.6")));
+            comparesEqualTo(new BigDecimal("51.40")));
     }
 
 
     @Test
     public void testWater() {
 
-        assertThat(water(new WaterParams(NIEDERRHEIN, FULL, UPSTREAM)), comparesEqualTo(new BigDecimal("31.00")));
+        assertThat(water(new WaterParams(MAIN, FULL, UPSTREAM)), comparesEqualTo(new BigDecimal("86.20")));
+        assertThat(water(new WaterParams(MAIN, EMPTY, UPSTREAM)), comparesEqualTo(new BigDecimal("34.80")));
+        assertThat(water(new WaterParams(MAIN, FULL, DOWNSTREAM)), comparesEqualTo(new BigDecimal("44.10")));
+        assertThat(water(new WaterParams(MAIN, EMPTY, DOWNSTREAM)), comparesEqualTo(new BigDecimal("19.50")));
+
+        assertThat(water(new WaterParams(MITTELRHEIN, FULL, UPSTREAM)), comparesEqualTo(new BigDecimal("67.00")));
+        assertThat(water(new WaterParams(MITTELRHEIN, EMPTY, UPSTREAM)), comparesEqualTo(new BigDecimal("27.70")));
+        assertThat(water(new WaterParams(MITTELRHEIN, FULL, DOWNSTREAM)), comparesEqualTo(new BigDecimal("36.20")));
+        assertThat(water(new WaterParams(MITTELRHEIN, EMPTY, DOWNSTREAM)), comparesEqualTo(new BigDecimal("14.40")));
+
+        assertThat(water(new WaterParams(NIEDERRHEIN, FULL, UPSTREAM)), comparesEqualTo(new BigDecimal("41.50")));
         assertThat(water(new WaterParams(NIEDERRHEIN, EMPTY, UPSTREAM)), comparesEqualTo(new BigDecimal("27.00")));
-        assertThat(water(new WaterParams(NIEDERRHEIN, FULL, DOWNSTREAM)), comparesEqualTo(new BigDecimal("17.00")));
-        assertThat(water(new WaterParams(NIEDERRHEIN, EMPTY, DOWNSTREAM)), comparesEqualTo(new BigDecimal("14.00")));
+        assertThat(water(new WaterParams(NIEDERRHEIN, FULL, DOWNSTREAM)), comparesEqualTo(new BigDecimal("27.60")));
+        assertThat(water(new WaterParams(NIEDERRHEIN, EMPTY, DOWNSTREAM)), comparesEqualTo(new BigDecimal("10.00")));
 
-        assertThat(water(new WaterParams(OBERRHEIN, FULL, UPSTREAM)), comparesEqualTo(new BigDecimal("43.00")));
-        assertThat(water(new WaterParams(OBERRHEIN, EMPTY, UPSTREAM)), comparesEqualTo(new BigDecimal("40.00")));
-        assertThat(water(new WaterParams(OBERRHEIN, FULL, DOWNSTREAM)), comparesEqualTo(new BigDecimal("23.00")));
-        assertThat(water(new WaterParams(OBERRHEIN, EMPTY, DOWNSTREAM)), comparesEqualTo(new BigDecimal("21.00")));
+        assertThat(water(new WaterParams(OBERRHEIN, FULL, UPSTREAM)), comparesEqualTo(new BigDecimal("47.50")));
+        assertThat(water(new WaterParams(OBERRHEIN, EMPTY, UPSTREAM)), comparesEqualTo(new BigDecimal("16.20")));
+        assertThat(water(new WaterParams(OBERRHEIN, FULL, DOWNSTREAM)), comparesEqualTo(new BigDecimal("21.80")));
+        assertThat(water(new WaterParams(OBERRHEIN, EMPTY, DOWNSTREAM)), comparesEqualTo(new BigDecimal("11.00")));
 
-        assertThat(water(new WaterParams(SCHELDE, FULL, UPSTREAM)), comparesEqualTo(new BigDecimal("42.70")));
-        assertThat(water(new WaterParams(SCHELDE, EMPTY, UPSTREAM)), comparesEqualTo(new BigDecimal("37.50")));
-        assertThat(water(new WaterParams(SCHELDE, FULL, DOWNSTREAM)), comparesEqualTo(new BigDecimal("42.70")));
-        assertThat(water(new WaterParams(SCHELDE, EMPTY, DOWNSTREAM)), comparesEqualTo(new BigDecimal("37.50")));
+        assertThat(water(new WaterParams(SCHELDE, FULL, UPSTREAM)), comparesEqualTo(new BigDecimal("75.90")));
+        assertThat(water(new WaterParams(SCHELDE, EMPTY, UPSTREAM)), comparesEqualTo(new BigDecimal("10.80")));
+        assertThat(water(new WaterParams(SCHELDE, FULL, DOWNSTREAM)), comparesEqualTo(new BigDecimal("36.00")));
+        assertThat(water(new WaterParams(SCHELDE, EMPTY, DOWNSTREAM)), comparesEqualTo(new BigDecimal("35.00")));
 
         assertThat(water(new WaterParams(NOT_SET, FULL, UPSTREAM)), comparesEqualTo(new BigDecimal("31.00")));
         assertThat(water(new WaterParams(NOT_SET, EMPTY, UPSTREAM)), comparesEqualTo(new BigDecimal("27.00")));
@@ -83,8 +96,8 @@ public class Co2CalculatorUnitTest {
     public void testHandling() {
 
         assertThat(handling(new HandlingParams(0)), comparesEqualTo(new BigDecimal("0")));
-        assertThat(handling(new HandlingParams(1)), comparesEqualTo(new BigDecimal("3.6")));
-        assertThat(handling(new HandlingParams(2)), comparesEqualTo(new BigDecimal("7.2")));
+        assertThat(handling(new HandlingParams(1)), comparesEqualTo(new BigDecimal("2.927")));
+        assertThat(handling(new HandlingParams(2)), comparesEqualTo(new BigDecimal("5.854")));
     }
 
     private static class RoadParams implements Co2CalculationParams.Road {

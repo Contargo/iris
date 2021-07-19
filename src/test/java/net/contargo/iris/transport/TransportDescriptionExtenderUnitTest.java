@@ -6,6 +6,8 @@ import net.contargo.iris.transport.api.TransportStop;
 import net.contargo.iris.units.MassUnit;
 import net.contargo.iris.units.Weight;
 
+import org.hamcrest.MatcherAssert;
+
 import org.junit.Test;
 
 import org.junit.runner.RunWith;
@@ -31,11 +33,11 @@ import static net.contargo.iris.transport.api.StopType.ADDRESS;
 import static net.contargo.iris.transport.api.StopType.SEAPORT;
 import static net.contargo.iris.transport.api.StopType.TERMINAL;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+
 import static org.hamcrest.Matchers.comparesEqualTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
-
-import static org.junit.Assert.assertThat;
 
 import static org.mockito.Matchers.any;
 
@@ -53,6 +55,7 @@ import static java.util.Collections.singletonList;
 /**
  * @author  Ben Antony - antony@synyx.de
  * @author  Sandra Thieme - thieme@synyx.de
+ * @author  Bjoern Martin - martin@synyx.de
  */
 @RunWith(MockitoJUnitRunner.class)
 public class TransportDescriptionExtenderUnitTest {
@@ -106,17 +109,17 @@ public class TransportDescriptionExtenderUnitTest {
         assertThat(result.transportChain.get(0).duration, nullValue());
         assertThat(result.transportChain.get(0).distance, nullValue());
         assertThat(result.transportChain.get(0).tollDistance, nullValue());
-        assertThat(result.transportChain.get(0).co2.value, comparesEqualTo(new BigDecimal("4.6")));
+        assertThat(result.transportChain.get(0).co2.value, comparesEqualTo(new BigDecimal("3.927")));
 
         assertThat(result.transportChain.get(1).duration, nullValue());
         assertThat(result.transportChain.get(1).distance, nullValue());
         assertThat(result.transportChain.get(1).tollDistance, nullValue());
-        assertThat(result.transportChain.get(1).co2.value, comparesEqualTo(new BigDecimal("5.6")));
+        assertThat(result.transportChain.get(1).co2.value, comparesEqualTo(new BigDecimal("4.927")));
 
         assertThat(result.transportChain.get(2).duration, nullValue());
         assertThat(result.transportChain.get(2).distance, nullValue());
         assertThat(result.transportChain.get(2).tollDistance, nullValue());
-        assertThat(result.transportChain.get(2).co2.value, comparesEqualTo(new BigDecimal("5.6")));
+        assertThat(result.transportChain.get(2).co2.value, comparesEqualTo(new BigDecimal("4.927")));
     }
 
 

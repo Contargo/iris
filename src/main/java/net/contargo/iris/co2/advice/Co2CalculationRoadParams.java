@@ -16,11 +16,13 @@ class Co2CalculationRoadParams implements Co2CalculationParams.Road {
 
     private final int distance;
     private final ContainerState loadingState;
+    private final boolean directTruck;
 
-    private Co2CalculationRoadParams(Integer distance, ContainerState loadingState) {
+    private Co2CalculationRoadParams(Integer distance, ContainerState loadingState, boolean directTruck) {
 
         this.distance = distance;
         this.loadingState = loadingState;
+        this.directTruck = directTruck;
 
         Assert.notNull(this.loadingState, "loading state must not be null");
     }
@@ -34,7 +36,7 @@ class Co2CalculationRoadParams implements Co2CalculationParams.Road {
             loadingState = ContainerState.EMPTY;
         }
 
-        return new Co2CalculationRoadParams(distance, loadingState);
+        return new Co2CalculationRoadParams(distance, loadingState, false);
     }
 
 
@@ -47,7 +49,7 @@ class Co2CalculationRoadParams implements Co2CalculationParams.Road {
             loadingState = ContainerState.EMPTY;
         }
 
-        return new Co2CalculationRoadParams(distance, loadingState);
+        return new Co2CalculationRoadParams(distance, loadingState, true);
     }
 
 
@@ -62,5 +64,12 @@ class Co2CalculationRoadParams implements Co2CalculationParams.Road {
     public ContainerState getLoadingState() {
 
         return loadingState;
+    }
+
+
+    @Override
+    public boolean isDirectTruck() {
+
+        return directTruck;
     }
 }

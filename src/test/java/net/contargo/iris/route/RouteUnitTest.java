@@ -18,6 +18,8 @@ import static net.contargo.iris.container.ContainerState.FULL;
 import static net.contargo.iris.route.RouteDirection.EXPORT;
 import static net.contargo.iris.route.RouteDirection.IMPORT;
 import static net.contargo.iris.route.RouteType.BARGE;
+import static net.contargo.iris.route.RouteType.DTRUCK;
+import static net.contargo.iris.route.RouteType.RAIL;
 import static net.contargo.iris.route.RouteType.TRUCK;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -182,6 +184,10 @@ public class RouteUnitTest {
         Route route = createRouteWithTypes(asList(TRUCK, TRUCK));
 
         assertThat(route.isDirectTruckRoute(), is(true));
+
+        route = createRouteWithTypes(asList(TRUCK, DTRUCK));
+
+        assertThat(route.isDirectTruckRoute(), is(true));
     }
 
 
@@ -189,6 +195,10 @@ public class RouteUnitTest {
     public void isDirectTruckRoutePartWithWrongType() {
 
         Route route = createRouteWithTypes(asList(TRUCK, BARGE));
+
+        assertThat(route.isDirectTruckRoute(), is(false));
+
+        route = createRouteWithTypes(asList(TRUCK, RAIL));
 
         assertThat(route.isDirectTruckRoute(), is(false));
     }

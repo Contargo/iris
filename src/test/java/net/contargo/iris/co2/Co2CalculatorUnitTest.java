@@ -39,10 +39,18 @@ public class Co2CalculatorUnitTest {
     private static final int DISTANCE = 100;
 
     @Test
-    public void testRoad() {
+    public void testTruck() {
 
-        assertThat(road(new RoadParams(FULL)), comparesEqualTo(new BigDecimal("113.60")));
-        assertThat(road(new RoadParams(EMPTY)), comparesEqualTo(new BigDecimal("85.50")));
+        assertThat(road(new RoadParams(FULL, false)), comparesEqualTo(new BigDecimal("108.50")));
+        assertThat(road(new RoadParams(EMPTY, false)), comparesEqualTo(new BigDecimal("83.60")));
+    }
+
+
+    @Test
+    public void testDTruck() {
+
+        assertThat(road(new RoadParams(FULL, true)), comparesEqualTo(new BigDecimal("113.60")));
+        assertThat(road(new RoadParams(EMPTY, true)), comparesEqualTo(new BigDecimal("85.50")));
     }
 
 
@@ -103,10 +111,12 @@ public class Co2CalculatorUnitTest {
     private static class RoadParams implements Co2CalculationParams.Road {
 
         private final ContainerState loadingState;
+        private final boolean directTruck;
 
-        private RoadParams(ContainerState loadingState) {
+        private RoadParams(ContainerState loadingState, boolean directTruck) {
 
             this.loadingState = loadingState;
+            this.directTruck = directTruck;
         }
 
         @Override
@@ -120,6 +130,13 @@ public class Co2CalculatorUnitTest {
         public ContainerState getLoadingState() {
 
             return loadingState;
+        }
+
+
+        @Override
+        public boolean isDirectTruck() {
+
+            return directTruck;
         }
     }
 

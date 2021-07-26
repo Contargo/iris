@@ -70,7 +70,7 @@ class Co2ServiceImpl implements Co2Service {
         List<RoutePart> parts = truckRoute.getData().getParts();
 
         for (RoutePart part : parts) {
-            Co2PartStrategy strategy = co2PartStrategyAdvisor.advice(RouteType.TRUCK);
+            Co2PartStrategy strategy = co2PartStrategyAdvisor.advice(RouteType.DTRUCK);
             co2 = co2.add(strategy.getEmissionForRoutePart(part));
 
             Co2CalculationParams.Handling params = new Co2CalculationHandlingParams(part);

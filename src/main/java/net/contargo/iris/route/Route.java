@@ -16,6 +16,7 @@ import static net.contargo.iris.route.RouteDirection.EXPORT;
 import static net.contargo.iris.route.RouteDirection.IMPORT;
 import static net.contargo.iris.route.RouteProduct.ONEWAY;
 import static net.contargo.iris.route.RouteProduct.ROUNDTRIP;
+import static net.contargo.iris.route.RouteType.DTRUCK;
 import static net.contargo.iris.route.RouteType.TRUCK;
 
 
@@ -200,12 +201,15 @@ public class Route {
 
 
     /**
-     * A direct truck route is a {@link Route} that only contains {@link RoutePart}s with the {@link RouteType} 'TRUCK'.
+     * A direct truck route is a {@link Route} that only contains {@link RoutePart}s with the {@link RouteType}'TRUCK'.
      *
      * @return  true if the {@link Route} is a direct truck route, otherwise false
      */
     public boolean isDirectTruckRoute() {
 
-        return data.getRoutePartsOfType(TRUCK).size() == data.getParts().size();
+        int truckPartCount = data.getRoutePartsOfType(TRUCK).size();
+        int dtruckPartCount = data.getRoutePartsOfType(DTRUCK).size();
+
+        return truckPartCount + dtruckPartCount == data.getParts().size();
     }
 }

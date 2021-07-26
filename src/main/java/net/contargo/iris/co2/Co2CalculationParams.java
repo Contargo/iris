@@ -7,6 +7,7 @@ import net.contargo.iris.terminal.Region;
 
 /**
  * @author  Oliver Messner - messner@synyx.de
+ * @author  Julian Schäfer - schaefer@synyx.de
  */
 public interface Co2CalculationParams {
 
@@ -16,6 +17,9 @@ public interface Co2CalculationParams {
 
 
         ContainerState getLoadingState();
+
+
+        boolean isDirectTruck();
     }
 
     interface Rail {

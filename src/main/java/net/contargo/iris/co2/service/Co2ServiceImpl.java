@@ -69,6 +69,8 @@ class Co2ServiceImpl implements Co2Service {
         BigDecimal co2 = BigDecimal.ZERO;
         List<RoutePart> parts = truckRoute.getData().getParts();
 
+        setCorrespondingDirectTruckDistance(parts);
+
         for (RoutePart part : parts) {
             Co2PartStrategy strategy = co2PartStrategyAdvisor.advice(RouteType.DTRUCK);
             co2 = co2.add(strategy.getEmissionForRoutePart(part));
@@ -80,5 +82,11 @@ class Co2ServiceImpl implements Co2Service {
         LOG.debug("Setting CO2 Direct Truck for route {}: {} kg", route.getName(), co2);
 
         return co2;
+    }
+
+
+    private void setCorrespondingDirectTruckDistance(List<RoutePart> parts) {
+
+        parts.forEach(p -> p.getData().setDtruckDistance(p.getData().getDistance()));
     }
 }

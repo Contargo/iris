@@ -45,17 +45,17 @@ public class TransportDescriptionRoadExtender {
 
     void forNebenlauf(TransportResponseDto.TransportResponseSegment segment) {
 
-        with(segment, true, false);
+        withTrucking(segment, true, false);
     }
 
 
     void forAddressesOnly(TransportResponseDto.TransportResponseSegment segment) {
 
-        with(segment, false, false);
+        withTrucking(segment, false, false);
     }
 
 
-    private void with(TransportResponseDto.TransportResponseSegment segment, boolean includeRouteRevision,
+    public void withTrucking(TransportResponseDto.TransportResponseSegment segment, boolean includeRouteRevision,
         boolean isDirectTruck) {
 
         GeoLocation start = conversionService.convert(segment.from, GeoLocation.class);

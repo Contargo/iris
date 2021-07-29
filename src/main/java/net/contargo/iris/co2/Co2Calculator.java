@@ -32,8 +32,10 @@ import static java.util.Collections.unmodifiableMap;
  */
 public class Co2Calculator {
 
-    private static final BigDecimal CO2_TRUCK_FULL = new BigDecimal("1.136");
-    private static final BigDecimal CO2_TRUCK_EMPTY = new BigDecimal("0.855");
+    private static final BigDecimal CO2_TRUCK_FULL = new BigDecimal("1.085");
+    private static final BigDecimal CO2_TRUCK_EMPTY = new BigDecimal("0.836");
+    private static final BigDecimal CO2_DTRUCK_FULL = new BigDecimal("1.136");
+    private static final BigDecimal CO2_DTRUCK_EMPTY = new BigDecimal("0.855");
 
     private static final BigDecimal CO2_RAIL_IMPORT_DIESEL = new BigDecimal("0.394");
     private static final BigDecimal CO2_RAIL_IMPORT_ELEKTRO = new BigDecimal("0.12");
@@ -66,7 +68,13 @@ public class Co2Calculator {
 
     public static BigDecimal road(Co2CalculationParams.Road params) {
 
-        BigDecimal factor = params.getLoadingState() == FULL ? CO2_TRUCK_FULL : CO2_TRUCK_EMPTY;
+        BigDecimal factor;
+
+        if (params.isDirectTruck()) {
+            factor = params.getLoadingState() == FULL ? CO2_DTRUCK_FULL : CO2_DTRUCK_EMPTY;
+        } else {
+            factor = params.getLoadingState() == FULL ? CO2_TRUCK_FULL : CO2_TRUCK_EMPTY;
+        }
 
         return calculate(params.getDistance(), factor);
     }

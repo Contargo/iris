@@ -8,7 +8,6 @@ import net.contargo.iris.route.RoutePart;
 import net.contargo.iris.route.RoutePartData;
 
 import static net.contargo.iris.route.RouteType.BARGE;
-import static net.contargo.iris.route.RouteType.DTRUCK;
 import static net.contargo.iris.route.RouteType.RAIL;
 
 
@@ -40,7 +39,8 @@ class MainRunPartEnricher implements RoutePartEnricher {
     @Override
     public void enrich(RoutePart routePart, EnricherContext context) throws CriticalEnricherException {
 
-        if (routePart.isOfType(BARGE) || routePart.isOfType(RAIL) || routePart.isOfType(DTRUCK)) {
+        // No DTruck required, only for FREIGHT; this needs to be discussed cause we are breaking this unused feature
+        if (routePart.isOfType(BARGE) || routePart.isOfType(RAIL)) {
             RoutePartData routePartData = routePart.getData();
 
             MainRunConnection mainRunConnection;

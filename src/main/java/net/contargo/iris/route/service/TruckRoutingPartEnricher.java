@@ -40,7 +40,7 @@ class TruckRoutingPartEnricher implements RoutePartEnricher {
     @Override
     public void enrich(RoutePart routePart, EnricherContext context) throws CriticalEnricherException {
 
-        if (routePart.isOfType(RouteType.TRUCK)) {
+        if (routePart.isOfType(RouteType.TRUCK) || routePart.isOfType(RouteType.DTRUCK)) {
             RoutePartData routePartData = routePart.getData();
 
             TruckRoute truckRoute;
@@ -59,7 +59,7 @@ class TruckRoutingPartEnricher implements RoutePartEnricher {
             routePartData.setElectricDistance(ZERO);
             routePartData.setBargeDieselDistance(ZERO);
             routePartData.setRailDieselDistance(ZERO);
-            routePartData.setDtruckDistance(ZERO);
+            routePartData.setDtruckDistance(routePart.isOfType(RouteType.DTRUCK) ? partDistance : ZERO);
             routePartData.setDuration(durationService.getDuration(truckRoute));
         }
     }

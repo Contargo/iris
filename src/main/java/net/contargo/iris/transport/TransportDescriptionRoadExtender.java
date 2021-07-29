@@ -45,17 +45,18 @@ public class TransportDescriptionRoadExtender {
 
     void forNebenlauf(TransportResponseDto.TransportResponseSegment segment) {
 
-        with(segment, true);
+        withTrucking(segment, true, false);
     }
 
 
     void forAddressesOnly(TransportResponseDto.TransportResponseSegment segment) {
 
-        with(segment, false);
+        withTrucking(segment, false, false);
     }
 
 
-    private void with(TransportResponseDto.TransportResponseSegment segment, boolean includeRouteRevision) {
+    public void withTrucking(TransportResponseDto.TransportResponseSegment segment, boolean includeRouteRevision,
+        boolean isDirectTruck) {
 
         GeoLocation start = conversionService.convert(segment.from, GeoLocation.class);
         GeoLocation end = conversionService.convert(segment.to, GeoLocation.class);
@@ -68,7 +69,7 @@ public class TransportDescriptionRoadExtender {
         segment.geometries = routeResult.getGeometries();
 
         // with the route distance set on the segment, calculate co2 emissions
-        Co2CalculationParams.Road params = new Co2CalculationRoadParams(segment);
+        Co2CalculationParams.Road params = new Co2CalculationRoadParams(segment, isDirectTruck);
         segment.co2 = new Weight(road(params), KILOGRAM);
 
         if (includeRouteRevision) {

@@ -23,6 +23,7 @@ import java.math.BigDecimal;
 import static net.contargo.iris.Movement.move;
 import static net.contargo.iris.Movement.to;
 import static net.contargo.iris.route.RouteType.BARGE;
+import static net.contargo.iris.route.RouteType.DTRUCK;
 import static net.contargo.iris.route.RouteType.TRUCK;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -81,7 +82,7 @@ public class DirectTruckRouteBuilderUnitTest {
                 to(terminal, TRUCK));
 
         // expected route: seaport -> address -> terminal
-        Route expectedRoute = move(seaport, ContainerType.THIRTY, to(addressGeoLocation, TRUCK), to(terminal, TRUCK));
+        Route expectedRoute = move(seaport, ContainerType.THIRTY, to(addressGeoLocation, DTRUCK), to(terminal, TRUCK));
 
         when(truckRouteServiceMock.route(any(GeoLocation.class), any(GeoLocation.class))).thenReturn(truckRouteMock);
 
@@ -103,7 +104,7 @@ public class DirectTruckRouteBuilderUnitTest {
                 to(seaport, BARGE));
 
         // expected route: terminal -> address -> seaport
-        Route expectedRoute = move(terminal, ContainerType.THIRTY, to(addressGeoLocation, TRUCK), to(seaport, TRUCK));
+        Route expectedRoute = move(terminal, ContainerType.THIRTY, to(addressGeoLocation, TRUCK), to(seaport, DTRUCK));
 
         TruckRoute truckRoute = mock(TruckRoute.class);
         when(truckRouteServiceMock.route(any(GeoLocation.class), any(GeoLocation.class))).thenReturn(truckRoute);
@@ -126,7 +127,7 @@ public class DirectTruckRouteBuilderUnitTest {
                 to(terminal, TRUCK), to(seaport, BARGE));
 
         // expected route: seaport -> address -> seaport
-        Route expectedRoute = move(seaport, ContainerType.THIRTY, to(addressGeoLocation, TRUCK), to(seaport, TRUCK));
+        Route expectedRoute = move(seaport, ContainerType.THIRTY, to(addressGeoLocation, DTRUCK), to(seaport, DTRUCK));
 
         TruckRoute truckRoute = mock(TruckRoute.class);
         when(truckRouteServiceMock.route(any(GeoLocation.class), any(GeoLocation.class))).thenReturn(truckRoute);

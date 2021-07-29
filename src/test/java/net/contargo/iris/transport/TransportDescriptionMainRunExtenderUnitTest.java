@@ -24,7 +24,6 @@ import java.math.BigInteger;
 
 import static net.contargo.iris.container.ContainerState.EMPTY;
 import static net.contargo.iris.container.ContainerState.FULL;
-import static net.contargo.iris.transport.api.StopType.ADDRESS;
 import static net.contargo.iris.transport.api.StopType.SEAPORT;
 import static net.contargo.iris.transport.api.StopType.TERMINAL;
 import static net.contargo.iris.units.LengthUnit.KILOMETRE;
@@ -36,6 +35,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.comparesEqualTo;
 import static org.hamcrest.Matchers.is;
 
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 
@@ -52,6 +53,9 @@ public class TransportDescriptionMainRunExtenderUnitTest {
 
     @Mock
     private MainRunConnectionService mainRunConnectionServiceMock;
+
+    @Mock
+    private TransportDescriptionRoadExtender transportDescriptionRoadExtender;
 
     @Test
     public void calculateDuration() {
@@ -167,18 +171,20 @@ public class TransportDescriptionMainRunExtenderUnitTest {
     }
 
 
-    @Test(expected = IllegalArgumentException.class)
-    public void withNonMainRunSegment() {
+    @Test
+    public void withDTruckSegment() {
 
-        TransportStop from = new TransportStop(ADDRESS, null, new BigDecimal("49.12323"), new BigDecimal("8.32432"));
-        TransportStop to = new TransportStop(TERMINAL, "114", null, null);
+        TransportStop from = new TransportStop(SEAPORT, "113", null, null);
+        TransportStop to = new TransportStop(TERMINAL, "121456789", null, null);
 
         TransportDescriptionDto.TransportDescriptionSegment descriptionSegment =
-            new TransportDescriptionDto.TransportDescriptionSegment(from, to, null, null, ModeOfTransport.ROAD);
+            new TransportDescriptionDto.TransportDescriptionSegment(from, to, FULL, null, ModeOfTransport.ROAD);
 
         TransportResponseDto.TransportResponseSegment segment = new TransportResponseDto.TransportResponseSegment(
                 descriptionSegment);
 
         sut.with(segment);
+
+        verify(transportDescriptionRoadExtender, times(1)).withTrucking(segment, false, true);
     }
 }

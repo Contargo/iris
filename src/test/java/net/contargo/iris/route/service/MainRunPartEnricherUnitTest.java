@@ -111,10 +111,29 @@ public class MainRunPartEnricherUnitTest {
 
 
     @Test
-    public void enrichRouteTypeIsWrong() throws CriticalEnricherException {
+    public void enrichRouteTypeIsWrong_Truck() throws CriticalEnricherException {
 
         // wrong RouteType => all attributes has to be BigDecimal(0)
         routePart.setRouteType(RouteType.TRUCK);
+
+        sut.enrich(routePart, enricherContext);
+
+        assertThat(routePart.getData().getDistance(), nullValue());
+        assertThat(routePart.getData().getDieselDistance(), nullValue());
+        assertThat(routePart.getData().getElectricDistance(), nullValue());
+        assertThat(routePart.getData().getDuration(), nullValue());
+
+        verify(connectionDistanceServiceMock, never()).getDistance(mainrunConnection);
+        verify(connectionDistanceServiceMock, never()).getDieselDistance(mainrunConnection);
+        verify(connectionDistanceServiceMock, never()).getElectricDistance(mainrunConnection);
+    }
+
+
+    @Test
+    public void enrichRouteTypeIsWrong_DTruck() throws CriticalEnricherException {
+
+        // wrong RouteType => all attributes has to be BigDecimal(0)
+        routePart.setRouteType(RouteType.DTRUCK);
 
         sut.enrich(routePart, enricherContext);
 

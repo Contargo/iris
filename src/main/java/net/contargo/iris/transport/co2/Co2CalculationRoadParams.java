@@ -14,11 +14,13 @@ public class Co2CalculationRoadParams implements Co2CalculationParams.Road {
 
     private final int distance;
     private final ContainerState loadingState;
+    private final boolean directTruck;
 
-    public Co2CalculationRoadParams(TransportResponseDto.TransportResponseSegment segment) {
+    public Co2CalculationRoadParams(TransportResponseDto.TransportResponseSegment segment, boolean directTruck) {
 
-        distance = segment.distance.value;
-        loadingState = segment.loadingState;
+        this.distance = segment.distance.value;
+        this.loadingState = segment.loadingState;
+        this.directTruck = directTruck;
 
         Assert.notNull(this.loadingState, "must not be null");
     }
@@ -34,5 +36,12 @@ public class Co2CalculationRoadParams implements Co2CalculationParams.Road {
     public ContainerState getLoadingState() {
 
         return loadingState;
+    }
+
+
+    @Override
+    public boolean isDirectTruck() {
+
+        return directTruck;
     }
 }

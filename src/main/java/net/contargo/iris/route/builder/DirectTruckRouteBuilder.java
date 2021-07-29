@@ -28,7 +28,7 @@ public class DirectTruckRouteBuilder {
     /**
      * Builds the corresponding direct truck route to a given {@link Route} that may have mainrun parts.
      *
-     * @param  route {@link Route}
+     * @param  route  {@link Route}
      *
      * @return  corresponding direct truck route to the given {@link Route}
      */
@@ -54,7 +54,7 @@ public class DirectTruckRouteBuilder {
                 if (stopsOnTerminal(currentPart, nextPart)) {
                     partToAdd = currentPart.copyWithoutData();
                     partToAdd.setDestination(nextPart.getDestination());
-                    partToAdd.setRouteType(RouteType.TRUCK);
+                    partToAdd.setRouteType(RouteType.DTRUCK);
 
                     // skip over the next part
                     skipLoop = true;
@@ -87,8 +87,8 @@ public class DirectTruckRouteBuilder {
      * Checks if {@link Route} has a {@link Terminal} as stopover. (e.g. if {@link Route} has schema: Seaport -->
      * Terminal --> Destination --> Terminal)
      *
-     * @param  currentPart {@link RoutePart}
-     * @param  nextPart {@link RoutePart}
+     * @param  currentPart  {@link RoutePart}
+     * @param  nextPart  {@link RoutePart}
      *
      * @return  true if {@link Route} has a {@link Terminal} as stopover, false if not (i.e. Terminal is end or start
      *          point, e.g.: Seaport --> Destination --> Terminal)

@@ -32,6 +32,10 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import static java.math.BigDecimal.ONE;
+import static java.math.BigDecimal.TEN;
+import static java.math.BigDecimal.ZERO;
+
 
 /**
  * Unit test of {@link net.contargo.iris.route.service.TruckRoutingPartEnricher}.
@@ -59,19 +63,18 @@ public class TruckRoutingPartEnricherUnitTest {
     @Before
     public void setup() {
 
-        distance = BigDecimal.TEN;
-        toll = BigDecimal.ONE;
-        duration = BigDecimal.TEN;
+        distance = TEN;
+        toll = ONE;
+        duration = TEN;
 
         Terminal destinationTerminal = new Terminal();
         Terminal originTerminal = new Terminal();
 
-        truckRoute = new TruckRoute(BigDecimal.ONE, BigDecimal.TEN, null);
+        truckRoute = new TruckRoute(ONE, TEN, null);
 
         routePart = new RoutePart();
         routePart.setOrigin(originTerminal);
         routePart.setDestination(destinationTerminal);
-        routePart.setRouteType(RouteType.TRUCK);
 
         when(distanceServiceMock.getDistance(truckRoute)).thenReturn(distance);
         when(distanceServiceMock.getTollDistance(truckRoute)).thenReturn(toll);
@@ -83,7 +86,9 @@ public class TruckRoutingPartEnricherUnitTest {
 
 
     @Test
-    public void enrich() throws CriticalEnricherException {
+    public void enrichTruck() throws CriticalEnricherException {
+
+        routePart.setRouteType(RouteType.TRUCK);
 
         sut.enrich(routePart, null);
 
@@ -91,8 +96,30 @@ public class TruckRoutingPartEnricherUnitTest {
         verify(distanceServiceMock).getDistance(truckRoute);
 
         assertThat(routePart.getData().getDieselDistance(), is(distance));
-        assertThat(routePart.getData().getElectricDistance(), is(BigDecimal.ZERO));
-        assertThat(routePart.getData().getDtruckDistance(), is(BigDecimal.ZERO));
+        assertThat(routePart.getData().getElectricDistance(), is(ZERO));
+        assertThat(routePart.getData().getDtruckDistance(), is(ZERO));
+
+        assertThat(routePart.getData().getDuration(), is(duration));
+        verify(durationServiceMock).getDuration(truckRoute);
+
+        assertThat(routePart.getData().getTollDistance(), is(toll));
+        verify(distanceServiceMock).getTollDistance(truckRoute);
+    }
+
+
+    @Test
+    public void enrichDTruck() throws CriticalEnricherException {
+
+        routePart.setRouteType(RouteType.DTRUCK);
+
+        sut.enrich(routePart, null);
+
+        assertThat(routePart.getData().getDistance(), is(distance));
+        verify(distanceServiceMock).getDistance(truckRoute);
+
+        assertThat(routePart.getData().getDieselDistance(), is(distance));
+        assertThat(routePart.getData().getElectricDistance(), is(ZERO));
+        assertThat(routePart.getData().getDtruckDistance(), is(TEN));
 
         assertThat(routePart.getData().getDuration(), is(duration));
         verify(durationServiceMock).getDuration(truckRoute);
@@ -126,6 +153,8 @@ public class TruckRoutingPartEnricherUnitTest {
 
     @Test(expected = CriticalEnricherException.class)
     public void enrichWithCriticalError() throws CriticalEnricherException {
+
+        routePart.setRouteType(RouteType.TRUCK);
 
         when(truckRouteServiceMock.route(any(GeoLocation.class), any(GeoLocation.class))).thenThrow(
             new RoutingException("", new Exception()));

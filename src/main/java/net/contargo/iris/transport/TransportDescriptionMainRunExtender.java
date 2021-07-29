@@ -46,10 +46,13 @@ public class TransportDescriptionMainRunExtender {
     private static final int SCALE = 2;
 
     private final MainRunConnectionService mainRunConnectionService;
+    private final TransportDescriptionRoadExtender transportDescriptionRoadExtender;
 
-    public TransportDescriptionMainRunExtender(MainRunConnectionService mainRunConnectionService) {
+    public TransportDescriptionMainRunExtender(MainRunConnectionService mainRunConnectionService,
+        TransportDescriptionRoadExtender transportDescriptionRoadExtender) {
 
         this.mainRunConnectionService = mainRunConnectionService;
+        this.transportDescriptionRoadExtender = transportDescriptionRoadExtender;
     }
 
     void with(TransportResponseDto.TransportResponseSegment segment) {
@@ -64,6 +67,10 @@ public class TransportDescriptionMainRunExtender {
 
             case WATER:
                 extendWaterSegment(segment, mainRunConnection);
+                break;
+
+            case ROAD:
+                extendDirectTruckSegment(segment);
                 break;
 
             default:
@@ -146,5 +153,11 @@ public class TransportDescriptionMainRunExtender {
         } else {
             return null;
         }
+    }
+
+
+    private void extendDirectTruckSegment(TransportResponseDto.TransportResponseSegment segment) {
+
+        transportDescriptionRoadExtender.withTrucking(segment, false, true);
     }
 }

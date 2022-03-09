@@ -50,5 +50,10 @@ public class TransportResponseDto {
             this.unitAvailable = segment.unitAvailable;
             this.modeOfTransport = segment.modeOfTransport;
         }
+
+        public boolean isConnectionBetween(StopType one, StopType two) {
+
+            return (this.from.type == one && this.to.type == two) || (this.from.type == two && this.to.type == one);
+        }
     }
 }

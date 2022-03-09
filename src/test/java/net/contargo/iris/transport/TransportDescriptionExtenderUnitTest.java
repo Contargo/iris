@@ -6,8 +6,6 @@ import net.contargo.iris.transport.api.TransportStop;
 import net.contargo.iris.units.MassUnit;
 import net.contargo.iris.units.Weight;
 
-import org.hamcrest.MatcherAssert;
-
 import org.junit.Test;
 
 import org.junit.runner.RunWith;
@@ -67,7 +65,7 @@ public class TransportDescriptionExtenderUnitTest {
     private TransportDescriptionMainRunExtender mainRunExtenderMock;
 
     @Mock
-    private TransportDescriptionRoadExtender nebenlaufExtenderMock;
+    private TransportDescriptionRoadExtender roadExtenderMock;
 
     @Captor
     private ArgumentCaptor<TransportResponseDto.TransportResponseSegment> segmentCaptor;
@@ -94,13 +92,13 @@ public class TransportDescriptionExtenderUnitTest {
         TransportDescriptionDto description = new TransportDescriptionDto(descriptions);
 
         doAnswer(setCo2(1)).when(mainRunExtenderMock).with(any(TransportResponseDto.TransportResponseSegment.class));
-        doAnswer(setCo2(2)).when(nebenlaufExtenderMock)
+        doAnswer(setCo2(2)).when(roadExtenderMock)
             .forNebenlauf(any(TransportResponseDto.TransportResponseSegment.class));
 
         TransportResponseDto result = sut.withRoutingInformation(description);
 
         verify(mainRunExtenderMock).with(segmentCaptor.capture());
-        verify(nebenlaufExtenderMock, times(2)).forNebenlauf(segmentCaptor.capture());
+        verify(roadExtenderMock, times(2)).forNebenlauf(segmentCaptor.capture());
 
         assertThat(segmentCaptor.getAllValues().get(0), is(result.transportChain.get(0)));
         assertThat(segmentCaptor.getAllValues().get(1), is(result.transportChain.get(1)));
@@ -136,13 +134,43 @@ public class TransportDescriptionExtenderUnitTest {
 
         TransportDescriptionDto description = new TransportDescriptionDto(descriptions);
 
-        doAnswer(setCo2(1)).when(nebenlaufExtenderMock)
+        doAnswer(setCo2(1)).when(roadExtenderMock)
             .forAddressesOnly(any(TransportResponseDto.TransportResponseSegment.class));
 
         TransportResponseDto result = sut.withRoutingInformation(description);
 
         verifyZeroInteractions(mainRunExtenderMock);
-        verify(nebenlaufExtenderMock).forAddressesOnly(segmentCaptor.capture());
+        verify(roadExtenderMock).forAddressesOnly(segmentCaptor.capture());
+
+        assertThat(segmentCaptor.getValue(), is(result.transportChain.get(0)));
+
+        assertThat(result.transportChain.get(0).duration, nullValue());
+        assertThat(result.transportChain.get(0).distance, nullValue());
+        assertThat(result.transportChain.get(0).tollDistance, nullValue());
+        assertThat(result.transportChain.get(0).co2.value, comparesEqualTo(ONE));
+    }
+
+
+    @Test
+    public void withDTruck() {
+
+        TransportStop from = new TransportStop(ADDRESS, null, new BigDecimal("42.34234"), new BigDecimal("8.0023"));
+        TransportStop to = new TransportStop(SEAPORT, "13000001", null, null);
+
+        TransportDescriptionDto.TransportDescriptionSegment segment =
+            new TransportDescriptionDto.TransportDescriptionSegment(from, to, FULL, true, ROAD);
+
+        List<TransportDescriptionDto.TransportDescriptionSegment> descriptions = singletonList(segment);
+
+        TransportDescriptionDto description = new TransportDescriptionDto(descriptions);
+
+        doAnswer(setCo2(1)).when(mainRunExtenderMock)
+            .with(any(TransportResponseDto.TransportResponseSegment.class));
+
+        TransportResponseDto result = sut.withRoutingInformation(description);
+
+        verifyZeroInteractions(roadExtenderMock);
+        verify(mainRunExtenderMock).with(segmentCaptor.capture());
 
         assertThat(segmentCaptor.getValue(), is(result.transportChain.get(0)));
 

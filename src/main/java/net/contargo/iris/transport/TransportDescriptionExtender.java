@@ -72,6 +72,6 @@ public class TransportDescriptionExtender {
 
     private static boolean isMainRun(TransportResponseDto.TransportResponseSegment segment) {
 
-        return segment.isConnectionBetween(TERMINAL, SEAPORT);
+        return segment.isConnectionBetween(TERMINAL, SEAPORT) || segment.isConnectionBetween(SEAPORT, ADDRESS);
     }
 }

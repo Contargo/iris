@@ -60,20 +60,18 @@ public class TransportDescriptionExtender {
 
     private static boolean isRoadAndAddressOnly(TransportResponseDto.TransportResponseSegment segment) {
 
-        return segment.from.type == ADDRESS && segment.to.type == ADDRESS && segment.modeOfTransport == ROAD;
+        return segment.isConnectionBetween(ADDRESS, ADDRESS) && segment.modeOfTransport == ROAD;
     }
 
 
     private static boolean isNebenlauf(TransportResponseDto.TransportResponseSegment segment) {
 
-        return ((segment.from.type == TERMINAL && segment.to.type == ADDRESS)
-                || (segment.from.type == ADDRESS && segment.to.type == TERMINAL)) && segment.modeOfTransport == ROAD;
+        return segment.isConnectionBetween(TERMINAL, ADDRESS) && segment.modeOfTransport == ROAD;
     }
 
 
     private static boolean isMainRun(TransportResponseDto.TransportResponseSegment segment) {
 
-        return (segment.from.type == TERMINAL && segment.to.type == SEAPORT)
-            || (segment.from.type == SEAPORT && segment.to.type == TERMINAL);
+        return segment.isConnectionBetween(TERMINAL, SEAPORT) || segment.isConnectionBetween(SEAPORT, ADDRESS);
     }
 }

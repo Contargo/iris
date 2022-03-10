@@ -225,5 +225,12 @@ public class Co2CalculatorUnitTest {
 
             return numberOfTerminals;
         }
+
+
+        @Override
+        public boolean isPartOfRoundtrip() {
+
+            return false;
+        }
     }
 }

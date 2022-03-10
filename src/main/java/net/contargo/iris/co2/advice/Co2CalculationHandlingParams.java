@@ -34,4 +34,11 @@ public class Co2CalculationHandlingParams implements Co2CalculationParams.Handli
 
         return numberOfTerminals;
     }
+
+
+    @Override
+    public boolean isPartOfRoundtrip() {
+
+        return false;
+    }
 }

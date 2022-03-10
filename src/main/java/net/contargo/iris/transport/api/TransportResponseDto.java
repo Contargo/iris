@@ -40,6 +40,7 @@ public class TransportResponseDto {
         public Distance tollDistance;
         public Duration duration;
         public List<String> geometries;
+        public boolean partOfRoundtrip;
         public Weight co2;
 
         public TransportResponseSegment(TransportDescriptionDto.TransportDescriptionSegment segment) {

@@ -42,9 +42,14 @@ public class Co2Calculator {
     private static final BigDecimal CO2_RAIL_EXPORT_DIESEL = new BigDecimal("0.394");
     private static final BigDecimal CO2_RAIL_EXPORT_ELEKTRO = new BigDecimal("0.12");
 
-    // NOTE: reported to us as "Umschlagpauschale" which assumes the 3 handlings of a standard one-way transport
-    // hence we divide that "Umschlagpauschale" by 3 to get the CO2 value of a single handling again
-    private static final BigDecimal CO2_PER_HANDLING = new BigDecimal("2.927");
+    // NOTE: reported to us is the "Umschlagpauschale" with a value of 8.782 kg
+    // For a standard one-way transport, 3 handlings are assumed, each to be rated with a Co2 value of
+    // "Umschlagpauschale" divided by 3 (i.e. 8.782 kg / 3 = 2.927)
+    private static final BigDecimal ONEWAY_CO2_PER_HANDLING = new BigDecimal("2.927");
+
+    // For a standard round-trip transport, 4 handlings are assumed, each to be rated with a Co2 value of
+    // the doubled "Umschlagpauschale" divided by 4 (i.e. 17.564 kg / 4 = 4.391)
+    private static final BigDecimal ROUNDTRIP_CO2_PER_HANDLING = new BigDecimal("4.391");
 
     private static final Map<Region, Co2Region> CO2_REGIONS;
 
@@ -121,7 +126,11 @@ public class Co2Calculator {
 
     public static BigDecimal handling(Co2CalculationParams.Handling params) {
 
-        return CO2_PER_HANDLING.multiply(valueOf(params.numberOfTerminals()));
+        if (params.isPartOfRoundtrip()) {
+            return ROUNDTRIP_CO2_PER_HANDLING.multiply(valueOf(params.numberOfTerminals()));
+        } else {
+            return ONEWAY_CO2_PER_HANDLING.multiply(valueOf(params.numberOfTerminals()));
+        }
     }
 
 

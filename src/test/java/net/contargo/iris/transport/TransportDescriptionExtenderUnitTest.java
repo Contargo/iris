@@ -6,6 +6,7 @@ import net.contargo.iris.transport.api.TransportStop;
 import net.contargo.iris.units.MassUnit;
 import net.contargo.iris.units.Weight;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import org.junit.runner.RunWith;
@@ -54,9 +55,15 @@ import static java.util.Collections.singletonList;
  * @author  Ben Antony - antony@synyx.de
  * @author  Sandra Thieme - thieme@synyx.de
  * @author  Bjoern Martin - martin@synyx.de
+ * @author  Oliver Messner - messner@synyx.de
  */
 @RunWith(MockitoJUnitRunner.class)
 public class TransportDescriptionExtenderUnitTest {
+
+    private static final TransportStop TERMINAL_STOP = new TransportStop(TERMINAL, "42", null, null);
+    private static final TransportStop SEAPORT_STOP = new TransportStop(SEAPORT, "62", null, null);
+    private static final TransportStop ADDRESS_STOP = //
+        new TransportStop(ADDRESS, null, new BigDecimal("42.34234"), new BigDecimal("8.0023"));
 
     @InjectMocks
     private TransportDescriptionExtender sut;
@@ -70,30 +77,76 @@ public class TransportDescriptionExtenderUnitTest {
     @Captor
     private ArgumentCaptor<TransportResponseDto.TransportResponseSegment> segmentCaptor;
 
+    @Before
+    public void setup() {
+
+        doAnswer(setCo2(1)).when(mainRunExtenderMock)
+            .with(any(TransportResponseDto.TransportResponseSegment.class));
+        doAnswer(setCo2(2)).when(roadExtenderMock)
+            .forNebenlauf(any(TransportResponseDto.TransportResponseSegment.class));
+        doAnswer(setCo2(1)).when(roadExtenderMock)
+            .forAddressesOnly(any(TransportResponseDto.TransportResponseSegment.class));
+    }
+
+
     @Test
-    public void withRoutingInformation() {
+    public void withRoutingInformation_flagsResponseSegmentsAsOneway() {
 
-        TransportStop terminal = new TransportStop(TERMINAL, "42", null, null);
+        TransportDescriptionDto.TransportDescriptionSegment seaportToTerminal =
+            new TransportDescriptionDto.TransportDescriptionSegment(SEAPORT_STOP, TERMINAL_STOP, FULL, true, RAIL);
+        TransportDescriptionDto.TransportDescriptionSegment terminalToAddress =
+            new TransportDescriptionDto.TransportDescriptionSegment(TERMINAL_STOP, ADDRESS_STOP, FULL, true, ROAD);
+        TransportDescriptionDto.TransportDescriptionSegment addressToTerminal =
+            new TransportDescriptionDto.TransportDescriptionSegment(ADDRESS_STOP, TERMINAL_STOP, EMPTY, true, ROAD);
 
-        TransportStop seaport = new TransportStop(SEAPORT, "62", null, null);
-
-        TransportStop address = new TransportStop(ADDRESS, null, new BigDecimal("42.34234"), new BigDecimal("8.0023"));
-
-        TransportDescriptionDto.TransportDescriptionSegment seaportTerminal =
-            new TransportDescriptionDto.TransportDescriptionSegment(seaport, terminal, FULL, true, RAIL);
-        TransportDescriptionDto.TransportDescriptionSegment terminalAddress =
-            new TransportDescriptionDto.TransportDescriptionSegment(terminal, address, FULL, true, ROAD);
-        TransportDescriptionDto.TransportDescriptionSegment AddressTerminal =
-            new TransportDescriptionDto.TransportDescriptionSegment(address, terminal, EMPTY, true, ROAD);
-
-        List<TransportDescriptionDto.TransportDescriptionSegment> descriptions = asList(seaportTerminal,
-                terminalAddress, AddressTerminal);
+        List<TransportDescriptionDto.TransportDescriptionSegment> descriptions = //
+            asList(seaportToTerminal, terminalToAddress, addressToTerminal);
 
         TransportDescriptionDto description = new TransportDescriptionDto(descriptions);
 
-        doAnswer(setCo2(1)).when(mainRunExtenderMock).with(any(TransportResponseDto.TransportResponseSegment.class));
-        doAnswer(setCo2(2)).when(roadExtenderMock)
-            .forNebenlauf(any(TransportResponseDto.TransportResponseSegment.class));
+        TransportResponseDto result = sut.withRoutingInformation(description);
+
+        assertThat(result.transportChain.stream().noneMatch(s -> s.partOfRoundtrip), is(true));
+    }
+
+
+    @Test
+    public void withRoutingInformation_flagsResponseSegmentsAsRoundtrip() {
+
+        TransportDescriptionDto.TransportDescriptionSegment seaportToTerminal =
+            new TransportDescriptionDto.TransportDescriptionSegment(SEAPORT_STOP, TERMINAL_STOP, FULL, true, RAIL);
+        TransportDescriptionDto.TransportDescriptionSegment terminalToAddress =
+            new TransportDescriptionDto.TransportDescriptionSegment(TERMINAL_STOP, ADDRESS_STOP, FULL, true, ROAD);
+        TransportDescriptionDto.TransportDescriptionSegment addressToTerminal =
+            new TransportDescriptionDto.TransportDescriptionSegment(ADDRESS_STOP, TERMINAL_STOP, EMPTY, true, ROAD);
+        TransportDescriptionDto.TransportDescriptionSegment terminalToSeaport =
+            new TransportDescriptionDto.TransportDescriptionSegment(TERMINAL_STOP, SEAPORT_STOP, EMPTY, true, RAIL);
+
+        List<TransportDescriptionDto.TransportDescriptionSegment> descriptions = //
+            asList(seaportToTerminal, terminalToAddress, addressToTerminal, terminalToSeaport);
+
+        TransportDescriptionDto description = new TransportDescriptionDto(descriptions);
+
+        TransportResponseDto result = sut.withRoutingInformation(description);
+
+        assertThat(result.transportChain.stream().allMatch(s -> s.partOfRoundtrip), is(true));
+    }
+
+
+    @Test
+    public void withRoutingInformation() {
+
+        TransportDescriptionDto.TransportDescriptionSegment seaportTerminal =
+            new TransportDescriptionDto.TransportDescriptionSegment(SEAPORT_STOP, TERMINAL_STOP, FULL, true, RAIL);
+        TransportDescriptionDto.TransportDescriptionSegment terminalAddress =
+            new TransportDescriptionDto.TransportDescriptionSegment(TERMINAL_STOP, ADDRESS_STOP, FULL, true, ROAD);
+        TransportDescriptionDto.TransportDescriptionSegment AddressTerminal =
+            new TransportDescriptionDto.TransportDescriptionSegment(ADDRESS_STOP, TERMINAL_STOP, EMPTY, true, ROAD);
+
+        List<TransportDescriptionDto.TransportDescriptionSegment> descriptions = //
+            asList(seaportTerminal, terminalAddress, AddressTerminal);
+
+        TransportDescriptionDto description = new TransportDescriptionDto(descriptions);
 
         TransportResponseDto result = sut.withRoutingInformation(description);
 
@@ -124,18 +177,12 @@ public class TransportDescriptionExtenderUnitTest {
     @Test
     public void withOnlyAddresses() {
 
-        TransportStop from = new TransportStop(ADDRESS, null, new BigDecimal("42.34234"), new BigDecimal("8.0023"));
-        TransportStop to = new TransportStop(ADDRESS, null, new BigDecimal("43.34234"), new BigDecimal("9.0023"));
-
         TransportDescriptionDto.TransportDescriptionSegment segment =
-            new TransportDescriptionDto.TransportDescriptionSegment(from, to, FULL, true, ROAD);
+            new TransportDescriptionDto.TransportDescriptionSegment(ADDRESS_STOP, ADDRESS_STOP, FULL, true, ROAD);
 
         List<TransportDescriptionDto.TransportDescriptionSegment> descriptions = singletonList(segment);
 
         TransportDescriptionDto description = new TransportDescriptionDto(descriptions);
-
-        doAnswer(setCo2(1)).when(roadExtenderMock)
-            .forAddressesOnly(any(TransportResponseDto.TransportResponseSegment.class));
 
         TransportResponseDto result = sut.withRoutingInformation(description);
 
@@ -154,11 +201,8 @@ public class TransportDescriptionExtenderUnitTest {
     @Test
     public void withDTruck() {
 
-        TransportStop from = new TransportStop(ADDRESS, null, new BigDecimal("42.34234"), new BigDecimal("8.0023"));
-        TransportStop to = new TransportStop(SEAPORT, "13000001", null, null);
-
         TransportDescriptionDto.TransportDescriptionSegment segment =
-            new TransportDescriptionDto.TransportDescriptionSegment(from, to, FULL, true, ROAD);
+            new TransportDescriptionDto.TransportDescriptionSegment(ADDRESS_STOP, SEAPORT_STOP, FULL, true, ROAD);
 
         List<TransportDescriptionDto.TransportDescriptionSegment> descriptions = singletonList(segment);
 
@@ -181,12 +225,12 @@ public class TransportDescriptionExtenderUnitTest {
     }
 
 
-    private static Answer setCo2(int co2) {
+    private static Answer<?> setCo2(int co2) {
 
         return
             invocation -> {
-            TransportResponseDto.TransportResponseSegment segment = (TransportResponseDto.TransportResponseSegment)
-                invocation.getArguments()[0];
+            TransportResponseDto.TransportResponseSegment segment = //
+                (TransportResponseDto.TransportResponseSegment) invocation.getArguments()[0];
             segment.co2 = new Weight(new BigDecimal(co2), MassUnit.KILOGRAM);
 
             return null;

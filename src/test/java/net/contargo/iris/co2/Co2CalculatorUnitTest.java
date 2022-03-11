@@ -101,11 +101,20 @@ public class Co2CalculatorUnitTest {
 
 
     @Test
-    public void testHandling() {
+    public void testHandling_oneway() {
 
-        assertThat(handling(new HandlingParams(0)), comparesEqualTo(new BigDecimal("0")));
-        assertThat(handling(new HandlingParams(1)), comparesEqualTo(new BigDecimal("2.927")));
-        assertThat(handling(new HandlingParams(2)), comparesEqualTo(new BigDecimal("5.854")));
+        assertThat(handling(new HandlingParams(0, false)), comparesEqualTo(new BigDecimal("0")));
+        assertThat(handling(new HandlingParams(1, false)), comparesEqualTo(new BigDecimal("2.927")));
+        assertThat(handling(new HandlingParams(2, false)), comparesEqualTo(new BigDecimal("5.854")));
+    }
+
+
+    @Test
+    public void testHandling_roundtrip() {
+
+        assertThat(handling(new HandlingParams(0, true)), comparesEqualTo(new BigDecimal("0")));
+        assertThat(handling(new HandlingParams(1, true)), comparesEqualTo(new BigDecimal("4.391")));
+        assertThat(handling(new HandlingParams(2, true)), comparesEqualTo(new BigDecimal("8.782")));
     }
 
     private static class RoadParams implements Co2CalculationParams.Road {
@@ -214,10 +223,12 @@ public class Co2CalculatorUnitTest {
     private static class HandlingParams implements Co2CalculationParams.Handling {
 
         private final int numberOfTerminals;
+        private final boolean partOfRoundtrip;
 
-        private HandlingParams(int numberOfTerminals) {
+        private HandlingParams(int numberOfTerminals, boolean partOfRoundtrip) {
 
             this.numberOfTerminals = numberOfTerminals;
+            this.partOfRoundtrip = partOfRoundtrip;
         }
 
         @Override
@@ -230,7 +241,7 @@ public class Co2CalculatorUnitTest {
         @Override
         public boolean isPartOfRoundtrip() {
 
-            return false;
+            return partOfRoundtrip;
         }
     }
 }

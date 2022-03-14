@@ -10,6 +10,7 @@ import net.contargo.iris.transport.api.TransportStop;
 import net.contargo.iris.transport.route.RouteResult;
 import net.contargo.iris.transport.route.RouteService;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import org.junit.runner.RunWith;
@@ -47,7 +48,6 @@ import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.when;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
 
 
@@ -59,40 +59,48 @@ import static java.util.Optional.empty;
 @RunWith(MockitoJUnitRunner.class)
 public class TransportDescriptionRoadExtenderUnitTest {
 
+    private static final BigInteger TERMINAL_ID = new BigInteger("111");
+
+    private TransportResponseDto.TransportResponseSegment segment;
+    private GeoLocation addressGeoLocation;
+
     @InjectMocks
     private TransportDescriptionRoadExtender sut;
 
     @Mock
     private RouteService routeServiceMock;
+
     @Mock
     private ConversionService conversionServiceMock;
 
     @Mock
     private RouteDataRevisionService routeDataRevisionServiceMock;
 
-    @Test
-    public void withoutRouteRevision() {
+    @Before
+    public void setup() {
 
-        TransportStop terminal = new TransportStop(TERMINAL, "111", null, null);
-        GeoLocation terminalGeoLocation = new GeoLocation(new BigDecimal("42.42"), new BigDecimal("8.42"));
-
+        TransportStop terminal = new TransportStop(TERMINAL, TERMINAL_ID.toString(), null, null);
         TransportStop address = new TransportStop(ADDRESS, null, new BigDecimal("49.23123"), new BigDecimal("8.1233"));
-        GeoLocation addressGeoLocation = new GeoLocation(new BigDecimal("49.23123"), new BigDecimal("8.1233"));
 
         TransportDescriptionDto.TransportDescriptionSegment descriptionSegment =
             new TransportDescriptionDto.TransportDescriptionSegment(terminal, address, EMPTY, null, ROAD);
+        segment = new TransportResponseDto.TransportResponseSegment(descriptionSegment);
 
-        TransportResponseDto.TransportResponseSegment segment = new TransportResponseDto.TransportResponseSegment(
-                descriptionSegment);
+        GeoLocation terminalGeoLocation = new GeoLocation(new BigDecimal("42.42"), new BigDecimal("8.42"));
+        addressGeoLocation = new GeoLocation(new BigDecimal("49.23123"), new BigDecimal("8.1233"));
 
         when(conversionServiceMock.convert(matchesStopType(TERMINAL), any())).thenReturn(terminalGeoLocation);
         when(conversionServiceMock.convert(matchesStopType(ADDRESS), any())).thenReturn(addressGeoLocation);
 
         RouteResult routeResult = new RouteResult(40, 20, 300, asList("geometries1", "geometries2"), OK);
         when(routeServiceMock.route(terminalGeoLocation, addressGeoLocation, ROAD)).thenReturn(routeResult);
+    }
 
-        when(routeDataRevisionServiceMock.getRouteDataRevision(new BigInteger("111"), addressGeoLocation)).thenReturn(
-            empty());
+
+    @Test
+    public void withoutRouteRevision() {
+
+        when(routeDataRevisionServiceMock.getRouteDataRevision(TERMINAL_ID, addressGeoLocation)).thenReturn(empty());
 
         sut.forNebenlauf(segment);
 
@@ -112,30 +120,12 @@ public class TransportDescriptionRoadExtenderUnitTest {
     @Test
     public void withRouteRevision() {
 
-        TransportStop terminal = new TransportStop(TERMINAL, "111", null, null);
-        GeoLocation terminalGeoLocation = new GeoLocation(new BigDecimal("42.42"), new BigDecimal("8.42"));
-
-        TransportStop address = new TransportStop(ADDRESS, null, new BigDecimal("49.23123"), new BigDecimal("8.1233"));
-        GeoLocation addressGeoLocation = new GeoLocation(new BigDecimal("49.23123"), new BigDecimal("8.1233"));
-
-        TransportDescriptionDto.TransportDescriptionSegment descriptionSegment =
-            new TransportDescriptionDto.TransportDescriptionSegment(address, terminal, EMPTY, null, ROAD);
-
-        TransportResponseDto.TransportResponseSegment segment = new TransportResponseDto.TransportResponseSegment(
-                descriptionSegment);
-
-        when(conversionServiceMock.convert(matchesStopType(TERMINAL), any())).thenReturn(terminalGeoLocation);
-        when(conversionServiceMock.convert(matchesStopType(ADDRESS), any())).thenReturn(addressGeoLocation);
-
-        RouteResult routeResult = new RouteResult(40, 20, 300, singletonList("geometries1"), OK);
-        when(routeServiceMock.route(addressGeoLocation, terminalGeoLocation, ROAD)).thenReturn(routeResult);
-
         RouteDataRevision routeRevision = new RouteDataRevision();
         routeRevision.setTruckDistanceOneWayInKilometer(new BigDecimal("50"));
         routeRevision.setTollDistanceOneWayInKilometer(new BigDecimal("32"));
 
-        when(routeDataRevisionServiceMock.getRouteDataRevision(new BigInteger("111"), addressGeoLocation)).thenReturn(
-            Optional.of(routeRevision));
+        when(routeDataRevisionServiceMock.getRouteDataRevision(TERMINAL_ID, addressGeoLocation))
+            .thenReturn(Optional.of(routeRevision));
 
         sut.forNebenlauf(segment);
 
@@ -145,9 +135,10 @@ public class TransportDescriptionRoadExtenderUnitTest {
         assertThat(segment.tollDistance.unit, is(KILOMETRE));
         assertThat(segment.duration.value, is(300));
         assertThat(segment.duration.unit, is(MINUTE));
-        assertThat(segment.co2.value, comparesEqualTo(new BigDecimal("33.44")));
+        assertThat(segment.co2.value, comparesEqualTo(new BigDecimal("41.80")));
         assertThat(segment.co2.unit, is(KILOGRAM));
         assertThat(segment.geometries.get(0), is("geometries1"));
+        assertThat(segment.geometries.get(1), is("geometries2"));
     }
 
 

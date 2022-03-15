@@ -56,5 +56,8 @@ public interface Co2CalculationParams {
     interface Handling {
 
         int numberOfTerminals();
+
+
+        boolean isPartOfRoundtrip();
     }
 }

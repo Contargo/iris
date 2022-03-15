@@ -68,14 +68,14 @@ public class TransportDescriptionRoadExtender {
         segment.duration = new Duration(routeResult.getDuration(), MINUTE);
         segment.geometries = routeResult.getGeometries();
 
-        // with the route distance set on the segment, calculate co2 emissions
-        Co2CalculationParams.Road params = new Co2CalculationRoadParams(segment, isDirectTruck);
-        segment.co2 = new Weight(road(params), KILOGRAM);
-
         if (includeRouteRevision) {
             // applying a route revision changes the distances on the segment
             applyRouteRevision(segment);
         }
+
+        // with the route distance set on the segment, calculate co2 emissions
+        Co2CalculationParams.Road params = new Co2CalculationRoadParams(segment, isDirectTruck);
+        segment.co2 = new Weight(road(params), KILOGRAM);
     }
 
 

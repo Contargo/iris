@@ -6,8 +6,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 
 import java.util.List;
+import java.util.Map;
 
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
 
 /**
@@ -51,6 +53,15 @@ public class Osrm5Route {
     }
 
 
+    public Map<String, Double> getDistancesByCountry() {
+
+        return legs.stream()
+            .map(Osrm5Leg::getDistancesByCountry)
+            .flatMap(m -> m.entrySet().stream())
+            .collect(toMap(Map.Entry::getKey, Map.Entry::getValue, Double::sum));
+    }
+
+
     List<String> getGeometries() {
 
         return this.legs.stream().map(Osrm5Leg::getGeometries).flatMap(List::stream).collect(toList());
@@ -72,13 +83,19 @@ public class Osrm5Route {
         }
 
 
+        public Map<String, Double> getDistancesByCountry() {
+
+            return steps.stream().collect(toMap(Osrm5Step::getCountry, s -> s.distance.doubleValue(), Double::sum));
+        }
+
+
         List<String> getGeometries() {
 
             return this.steps.stream().map(a -> a.geometry).collect(toList());
         }
     }
 
-    private static final class Osrm5Step {
+    static final class Osrm5Step {
 
         private static final int COMPONENT_LENGTH = 4;
         private static final int TOLL_INDEX = 2;
@@ -108,6 +125,14 @@ public class Osrm5Route {
             }
 
             return BigDecimal.ZERO;
+        }
+
+
+        String getCountry() {
+
+            String[] components = name.split("/;");
+
+            return components[COUNTRY_INDEX];
         }
     }
 }

@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import java.math.BigDecimal;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static net.contargo.iris.transport.route.RouteStatus.NO_ROUTE;
 import static net.contargo.iris.transport.route.RouteStatus.OK;
@@ -53,6 +55,14 @@ public class RouteService {
 
         Integer totalDistance = distanceInMeter.divide(METER_PER_KILOMETER, 0, UP).intValue();
 
+        Map<String, Integer> distancesByCountry = queryResult.getDistancesByCountry().entrySet().stream()
+                .collect(Collectors.toMap(Map.Entry::getKey,
+                        e -> {
+                            BigDecimal countryDistanceInMeter = BigDecimal.valueOf(e.getValue());
+
+                            return countryDistanceInMeter.divide(METER_PER_KILOMETER, 0, UP).intValue();
+                        }));
+
         Integer toll = queryResult.getToll().setScale(0, UP).intValue();
 
         Integer duration = BigDecimal.valueOf(queryResult.getTotalTime())
@@ -67,6 +77,6 @@ public class RouteService {
             status = NO_ROUTE;
         }
 
-        return new RouteResult(totalDistance, toll, duration, geometries, status);
+        return new RouteResult(totalDistance, toll, duration, geometries, status, distancesByCountry);
     }
 }

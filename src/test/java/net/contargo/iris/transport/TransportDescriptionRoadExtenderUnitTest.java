@@ -10,7 +10,6 @@ import net.contargo.iris.transport.api.TransportStop;
 import net.contargo.iris.transport.route.RouteResult;
 import net.contargo.iris.transport.route.RouteService;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import org.junit.runner.RunWith;
@@ -26,6 +25,8 @@ import org.springframework.core.convert.ConversionService;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import static net.contargo.iris.container.ContainerState.EMPTY;
@@ -40,6 +41,7 @@ import static net.contargo.iris.units.TimeUnit.MINUTE;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import static org.hamcrest.Matchers.comparesEqualTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 
 import static org.mockito.Matchers.any;
@@ -76,8 +78,8 @@ public class TransportDescriptionRoadExtenderUnitTest {
     @Mock
     private RouteDataRevisionService routeDataRevisionServiceMock;
 
-    @Before
-    public void setup() {
+    @Test
+    public void withoutRouteRevision() {
 
         TransportStop terminal = new TransportStop(TERMINAL, TERMINAL_ID.toString(), null, null);
         TransportStop address = new TransportStop(ADDRESS, null, new BigDecimal("49.23123"), new BigDecimal("8.1233"));
@@ -92,13 +94,12 @@ public class TransportDescriptionRoadExtenderUnitTest {
         when(conversionServiceMock.convert(matchesStopType(TERMINAL), any())).thenReturn(terminalGeoLocation);
         when(conversionServiceMock.convert(matchesStopType(ADDRESS), any())).thenReturn(addressGeoLocation);
 
-        RouteResult routeResult = new RouteResult(40, 20, 300, asList("geometries1", "geometries2"), OK);
+        Map<String, Integer> distancesByCountry = new HashMap<>();
+        distancesByCountry.put("DE", 40);
+
+        RouteResult routeResult = new RouteResult(40, 20, 300, asList("geometries1", "geometries2"), OK,
+                distancesByCountry);
         when(routeServiceMock.route(terminalGeoLocation, addressGeoLocation, ROAD)).thenReturn(routeResult);
-    }
-
-
-    @Test
-    public void withoutRouteRevision() {
 
         when(routeDataRevisionServiceMock.getRouteDataRevision(TERMINAL_ID, addressGeoLocation)).thenReturn(empty());
 
@@ -114,11 +115,83 @@ public class TransportDescriptionRoadExtenderUnitTest {
         assertThat(segment.co2.unit, is(KILOGRAM));
         assertThat(segment.geometries.get(0), is("geometries1"));
         assertThat(segment.geometries.get(1), is("geometries2"));
+        assertThat(segment.distancesByCountry.keySet(), hasSize(1));
+        assertThat(segment.distancesByCountry.get("DE").value, is(40));
+        assertThat(segment.distancesByCountry.get("DE").unit, is(KILOMETRE));
+    }
+
+
+    @Test
+    public void withoutRouteRevision_roundingDifferencesCountries() {
+
+        TransportStop terminal = new TransportStop(TERMINAL, TERMINAL_ID.toString(), null, null);
+        TransportStop address = new TransportStop(ADDRESS, null, new BigDecimal("49.23123"), new BigDecimal("8.1233"));
+
+        TransportDescriptionDto.TransportDescriptionSegment descriptionSegment =
+            new TransportDescriptionDto.TransportDescriptionSegment(terminal, address, EMPTY, null, ROAD);
+        segment = new TransportResponseDto.TransportResponseSegment(descriptionSegment);
+
+        GeoLocation terminalGeoLocation = new GeoLocation(new BigDecimal("42.42"), new BigDecimal("8.42"));
+        addressGeoLocation = new GeoLocation(new BigDecimal("49.23123"), new BigDecimal("8.1233"));
+
+        when(conversionServiceMock.convert(matchesStopType(TERMINAL), any())).thenReturn(terminalGeoLocation);
+        when(conversionServiceMock.convert(matchesStopType(ADDRESS), any())).thenReturn(addressGeoLocation);
+
+        Map<String, Integer> distancesByCountry = new HashMap<>();
+        distancesByCountry.put("DE", 20);
+        distancesByCountry.put("FR", 9);
+        distancesByCountry.put("LU", 9);
+
+        RouteResult routeResult = new RouteResult(40, 20, 300, asList("geometries1", "geometries2"), OK,
+                distancesByCountry);
+        when(routeServiceMock.route(terminalGeoLocation, addressGeoLocation, ROAD)).thenReturn(routeResult);
+
+        when(routeDataRevisionServiceMock.getRouteDataRevision(TERMINAL_ID, addressGeoLocation)).thenReturn(empty());
+
+        sut.forNebenlauf(segment);
+
+        assertThat(segment.distance.value, is(40));
+        assertThat(segment.distance.unit, is(KILOMETRE));
+        assertThat(segment.tollDistance.value, is(20));
+        assertThat(segment.tollDistance.unit, is(KILOMETRE));
+        assertThat(segment.duration.value, is(300));
+        assertThat(segment.duration.unit, is(MINUTE));
+        assertThat(segment.co2.value, comparesEqualTo(new BigDecimal("33.44")));
+        assertThat(segment.co2.unit, is(KILOGRAM));
+        assertThat(segment.geometries.get(0), is("geometries1"));
+        assertThat(segment.geometries.get(1), is("geometries2"));
+        assertThat(segment.distancesByCountry.keySet(), hasSize(3));
+        assertThat(segment.distancesByCountry.get("DE").value, is(22));
+        assertThat(segment.distancesByCountry.get("DE").unit, is(KILOMETRE));
+        assertThat(segment.distancesByCountry.get("FR").value, is(9));
+        assertThat(segment.distancesByCountry.get("FR").unit, is(KILOMETRE));
+        assertThat(segment.distancesByCountry.get("LU").value, is(9));
+        assertThat(segment.distancesByCountry.get("LU").unit, is(KILOMETRE));
     }
 
 
     @Test
     public void withRouteRevision() {
+
+        TransportStop terminal = new TransportStop(TERMINAL, TERMINAL_ID.toString(), null, null);
+        TransportStop address = new TransportStop(ADDRESS, null, new BigDecimal("49.23123"), new BigDecimal("8.1233"));
+
+        TransportDescriptionDto.TransportDescriptionSegment descriptionSegment =
+            new TransportDescriptionDto.TransportDescriptionSegment(terminal, address, EMPTY, null, ROAD);
+        segment = new TransportResponseDto.TransportResponseSegment(descriptionSegment);
+
+        GeoLocation terminalGeoLocation = new GeoLocation(new BigDecimal("42.42"), new BigDecimal("8.42"));
+        addressGeoLocation = new GeoLocation(new BigDecimal("49.23123"), new BigDecimal("8.1233"));
+
+        when(conversionServiceMock.convert(matchesStopType(TERMINAL), any())).thenReturn(terminalGeoLocation);
+        when(conversionServiceMock.convert(matchesStopType(ADDRESS), any())).thenReturn(addressGeoLocation);
+
+        Map<String, Integer> distancesByCountry = new HashMap<>();
+        distancesByCountry.put("DE", 40);
+
+        RouteResult routeResult = new RouteResult(40, 20, 300, asList("geometries1", "geometries2"), OK,
+                distancesByCountry);
+        when(routeServiceMock.route(terminalGeoLocation, addressGeoLocation, ROAD)).thenReturn(routeResult);
 
         RouteDataRevision routeRevision = new RouteDataRevision();
         routeRevision.setTruckDistanceOneWayInKilometer(new BigDecimal("50"));
@@ -139,6 +212,9 @@ public class TransportDescriptionRoadExtenderUnitTest {
         assertThat(segment.co2.unit, is(KILOGRAM));
         assertThat(segment.geometries.get(0), is("geometries1"));
         assertThat(segment.geometries.get(1), is("geometries2"));
+        assertThat(segment.distancesByCountry.keySet(), hasSize(1));
+        assertThat(segment.distancesByCountry.get("DE").value, is(50));
+        assertThat(segment.distancesByCountry.get("DE").unit, is(KILOMETRE));
     }
 
 

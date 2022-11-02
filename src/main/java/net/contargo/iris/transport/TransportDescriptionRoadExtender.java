@@ -16,12 +16,16 @@ import org.springframework.core.convert.ConversionService;
 
 import java.math.BigInteger;
 
+import java.util.Map;
+
 import static net.contargo.iris.co2.Co2Calculator.road;
 import static net.contargo.iris.transport.api.StopType.ADDRESS;
 import static net.contargo.iris.transport.api.StopType.TERMINAL;
 import static net.contargo.iris.units.LengthUnit.KILOMETRE;
 import static net.contargo.iris.units.MassUnit.KILOGRAM;
 import static net.contargo.iris.units.TimeUnit.MINUTE;
+
+import static java.util.stream.Collectors.toMap;
 
 
 /**
@@ -73,9 +77,34 @@ public class TransportDescriptionRoadExtender {
             applyRouteRevision(segment);
         }
 
+        segment.distancesByCountry = extractDistancesByCountry(routeResult, segment.distance.value);
+
         // with the route distance set on the segment, calculate co2 emissions
         Co2CalculationParams.Road params = new Co2CalculationRoadParams(segment, isDirectTruck);
         segment.co2 = new Weight(road(params), KILOGRAM);
+    }
+
+
+    private static Map<String, Distance> extractDistancesByCountry(RouteResult routeResult, Integer finalDistance) {
+
+        String countryMaxDistance = routeResult.getDistancesByCountry().entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .orElse(null);
+
+        Integer totalDistanceByCountry = routeResult.getDistancesByCountry().values().stream().reduce(0, Integer::sum);
+        int distanceDifference = finalDistance - totalDistanceByCountry;
+
+        return routeResult.getDistancesByCountry().entrySet()
+            .stream()
+            .collect(toMap(Map.Entry::getKey,
+                    e -> {
+                        if (e.getKey().equals(countryMaxDistance)) {
+                            return new Distance(e.getValue() + distanceDifference, KILOMETRE);
+                        }
+
+                        return new Distance(e.getValue(), KILOMETRE);
+                    }));
     }
 
 

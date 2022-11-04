@@ -2,6 +2,8 @@ package net.contargo.iris.route;
 
 import java.math.BigDecimal;
 
+import java.util.Map;
+
 
 /**
  * This class represents a collection of attributes associated with a {@link RoutePart}. Any of these attributes might
@@ -17,6 +19,7 @@ public class RoutePartData {
 
     private BigDecimal airLineDistance;
     private BigDecimal distance;
+    private Map<String, BigDecimal> distancesByCountry;
     private BigDecimal dieselDistance;
     private BigDecimal electricDistance;
     private BigDecimal bargeDieselDistance;
@@ -144,5 +147,17 @@ public class RoutePartData {
     public void setDtruckDistance(BigDecimal dtruckDistance) {
 
         this.dtruckDistance = dtruckDistance;
+    }
+
+
+    public Map<String, BigDecimal> getDistancesByCountry() {
+
+        return distancesByCountry;
+    }
+
+
+    public void setDistancesByCountry(Map<String, BigDecimal> distancesByCountry) {
+
+        this.distancesByCountry = distancesByCountry;
     }
 }

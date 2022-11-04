@@ -65,7 +65,7 @@ public class Osrm5QueryStrategyIntegrationTest {
         assertThat(result.getTotalDistance(), is(8249.1));
         assertThat(result.getToll(), is(new BigDecimal("5.2908")));
         assertThat(result.getDistancesByCountry().keySet(), hasSize(1));
-        assertThat(result.getDistancesByCountry().get("DE"), is(8249.1));
+        assertThat(result.getDistancesByCountry().get("DE"), is(8249.3));
     }
 
 
@@ -89,7 +89,7 @@ public class Osrm5QueryStrategyIntegrationTest {
         assertThat(result.getTotalDistance(), is(8249.1));
         assertThat(result.getToll(), is(new BigDecimal("5.2908")));
         assertThat(result.getDistancesByCountry().keySet(), hasSize(1));
-        assertThat(result.getDistancesByCountry().get("DE"), is(8249.1));
+        assertThat(result.getDistancesByCountry().get("DE"), is(8249.3));
     }
 
 

@@ -14,6 +14,7 @@ import org.junit.Test;
 import java.math.BigDecimal;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -74,10 +75,12 @@ public class TruckingTotalEnricherUnitTest {
         RoutePartData routePartData1 = new RoutePartData();
         routePartData1.setTollDistance(partTollDistance1);
         routePartData1.setDistance(partDistance1);
+        routePartData1.setDistancesByCountry(Collections.singletonMap("DE", partDistance1));
 
         RoutePartData routePartData2 = new RoutePartData();
         routePartData2.setTollDistance(partTollDistance2);
         routePartData2.setDistance(partDistance2);
+        routePartData2.setDistancesByCountry(Collections.singletonMap("DE", partDistance2));
 
         routePart1.setData(routePartData1);
         routePart1.setRouteType(RouteType.TRUCK);

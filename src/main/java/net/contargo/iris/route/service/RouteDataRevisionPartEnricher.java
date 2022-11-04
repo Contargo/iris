@@ -12,10 +12,18 @@ import org.slf4j.Logger;
 
 import java.lang.invoke.MethodHandles;
 
+import java.math.BigDecimal;
+
+import java.util.Map;
+
 import static net.contargo.iris.route.RouteType.TRUCK;
 import static net.contargo.iris.route.service.RouteDataRevisionPartEnricher.RouteDataRevisionPolicy.MANDATORY_FOR_SWISS_ADDRESS;
 
 import static org.slf4j.LoggerFactory.getLogger;
+
+import static java.math.BigDecimal.ZERO;
+
+import static java.util.stream.Collectors.toMap;
 
 
 /**
@@ -68,11 +76,37 @@ public class RouteDataRevisionPartEnricher implements RoutePartEnricher {
                     routePart.getData().setDistance(routeDataRevision.getTruckDistanceOneWayInKilometer());
                     routePart.getData().setTollDistance(routeDataRevision.getTollDistanceOneWayInKilometer());
                     routePart.getData().setAirLineDistance(routeDataRevision.getAirlineDistanceInKilometer());
+                    routePart.getData()
+                        .setDistancesByCountry(adjust(routePart.getData().getDistancesByCountry(),
+                                routeDataRevision.getTruckDistanceOneWayInKilometer()));
                 }
             } catch (NotFoundException e) {
                 LOG.debug(e.getMessage());
             }
         }
+    }
+
+
+    private Map<String, BigDecimal> adjust(Map<String, BigDecimal> distancesByCountry, BigDecimal finalDistance) {
+
+        String countryMaxDistance = distancesByCountry.entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .orElse(null);
+
+        BigDecimal totalDistanceByCountry = distancesByCountry.values().stream().reduce(ZERO, BigDecimal::add);
+        BigDecimal distanceDifference = finalDistance.subtract(totalDistanceByCountry);
+
+        return distancesByCountry.entrySet()
+            .stream()
+            .collect(toMap(Map.Entry::getKey,
+                    e -> {
+                        if (e.getKey().equals(countryMaxDistance)) {
+                            return e.getValue().add(distanceDifference);
+                        }
+
+                        return e.getValue();
+                    }));
     }
 
 

@@ -195,6 +195,7 @@ public class TransportDescriptionRoadExtenderUnitTest {
 
         RouteDataRevision routeRevision = new RouteDataRevision();
         routeRevision.setTruckDistanceOneWayInKilometer(new BigDecimal("50"));
+        routeRevision.setTruckDistanceOneWayInKilometerDe(new BigDecimal("50"));
         routeRevision.setTollDistanceOneWayInKilometer(new BigDecimal("32"));
 
         when(routeDataRevisionServiceMock.getRouteDataRevision(TERMINAL_ID, addressGeoLocation))

@@ -46,6 +46,29 @@ public class RouteDataRevision {
     @Column(name = "truckDistanceOneWay")
     private BigDecimal truckDistanceOneWayInKilometer;
 
+    @Column(name = "truckDistanceOneWayDe")
+    private BigDecimal truckDistanceOneWayInKilometerDe;
+    @Column(name = "truckDistanceOneWayNl")
+    private BigDecimal truckDistanceOneWayInKilometerNl;
+    @Column(name = "truckDistanceOneWayBe")
+    private BigDecimal truckDistanceOneWayInKilometerBe;
+    @Column(name = "truckDistanceOneWayLu")
+    private BigDecimal truckDistanceOneWayInKilometerLu;
+    @Column(name = "truckDistanceOneWayFr")
+    private BigDecimal truckDistanceOneWayInKilometerFr;
+    @Column(name = "truckDistanceOneWayCh")
+    private BigDecimal truckDistanceOneWayInKilometerCh;
+    @Column(name = "truckDistanceOneWayLi")
+    private BigDecimal truckDistanceOneWayInKilometerLi;
+    @Column(name = "truckDistanceOneWayAt")
+    private BigDecimal truckDistanceOneWayInKilometerAt;
+    @Column(name = "truckDistanceOneWayCz")
+    private BigDecimal truckDistanceOneWayInKilometerCz;
+    @Column(name = "truckDistanceOneWayPl")
+    private BigDecimal truckDistanceOneWayInKilometerPl;
+    @Column(name = "truckDistanceOneWayDk")
+    private BigDecimal truckDistanceOneWayInKilometerDk;
+
     @Column(name = "tollDistanceOneWay")
     private BigDecimal tollDistanceOneWayInKilometer;
 
@@ -116,6 +139,138 @@ public class RouteDataRevision {
     public void setTruckDistanceOneWayInKilometer(BigDecimal truckDistanceOneWayInKilometer) {
 
         this.truckDistanceOneWayInKilometer = truckDistanceOneWayInKilometer;
+    }
+
+
+    public BigDecimal getTruckDistanceOneWayInKilometerDe() {
+
+        return truckDistanceOneWayInKilometerDe;
+    }
+
+
+    public void setTruckDistanceOneWayInKilometerDe(BigDecimal truckDistanceOneWayInKilometerDe) {
+
+        this.truckDistanceOneWayInKilometerDe = truckDistanceOneWayInKilometerDe;
+    }
+
+
+    public BigDecimal getTruckDistanceOneWayInKilometerNl() {
+
+        return truckDistanceOneWayInKilometerNl;
+    }
+
+
+    public void setTruckDistanceOneWayInKilometerNl(BigDecimal truckDistanceOneWayInKilometerNl) {
+
+        this.truckDistanceOneWayInKilometerNl = truckDistanceOneWayInKilometerNl;
+    }
+
+
+    public BigDecimal getTruckDistanceOneWayInKilometerBe() {
+
+        return truckDistanceOneWayInKilometerBe;
+    }
+
+
+    public void setTruckDistanceOneWayInKilometerBe(BigDecimal truckDistanceOneWayInKilometerBe) {
+
+        this.truckDistanceOneWayInKilometerBe = truckDistanceOneWayInKilometerBe;
+    }
+
+
+    public BigDecimal getTruckDistanceOneWayInKilometerLu() {
+
+        return truckDistanceOneWayInKilometerLu;
+    }
+
+
+    public void setTruckDistanceOneWayInKilometerLu(BigDecimal truckDistanceOneWayInKilometerLu) {
+
+        this.truckDistanceOneWayInKilometerLu = truckDistanceOneWayInKilometerLu;
+    }
+
+
+    public BigDecimal getTruckDistanceOneWayInKilometerFr() {
+
+        return truckDistanceOneWayInKilometerFr;
+    }
+
+
+    public void setTruckDistanceOneWayInKilometerFr(BigDecimal truckDistanceOneWayInKilometerFr) {
+
+        this.truckDistanceOneWayInKilometerFr = truckDistanceOneWayInKilometerFr;
+    }
+
+
+    public BigDecimal getTruckDistanceOneWayInKilometerCh() {
+
+        return truckDistanceOneWayInKilometerCh;
+    }
+
+
+    public void setTruckDistanceOneWayInKilometerCh(BigDecimal truckDistanceOneWayInKilometerCh) {
+
+        this.truckDistanceOneWayInKilometerCh = truckDistanceOneWayInKilometerCh;
+    }
+
+
+    public BigDecimal getTruckDistanceOneWayInKilometerLi() {
+
+        return truckDistanceOneWayInKilometerLi;
+    }
+
+
+    public void setTruckDistanceOneWayInKilometerLi(BigDecimal truckDistanceOneWayInKilometerLi) {
+
+        this.truckDistanceOneWayInKilometerLi = truckDistanceOneWayInKilometerLi;
+    }
+
+
+    public BigDecimal getTruckDistanceOneWayInKilometerAt() {
+
+        return truckDistanceOneWayInKilometerAt;
+    }
+
+
+    public void setTruckDistanceOneWayInKilometerAt(BigDecimal truckDistanceOneWayInKilometerAt) {
+
+        this.truckDistanceOneWayInKilometerAt = truckDistanceOneWayInKilometerAt;
+    }
+
+
+    public BigDecimal getTruckDistanceOneWayInKilometerCz() {
+
+        return truckDistanceOneWayInKilometerCz;
+    }
+
+
+    public void setTruckDistanceOneWayInKilometerCz(BigDecimal truckDistanceOneWayInKilometerCz) {
+
+        this.truckDistanceOneWayInKilometerCz = truckDistanceOneWayInKilometerCz;
+    }
+
+
+    public BigDecimal getTruckDistanceOneWayInKilometerPl() {
+
+        return truckDistanceOneWayInKilometerPl;
+    }
+
+
+    public void setTruckDistanceOneWayInKilometerPl(BigDecimal truckDistanceOneWayInKilometerPl) {
+
+        this.truckDistanceOneWayInKilometerPl = truckDistanceOneWayInKilometerPl;
+    }
+
+
+    public BigDecimal getTruckDistanceOneWayInKilometerDk() {
+
+        return truckDistanceOneWayInKilometerDk;
+    }
+
+
+    public void setTruckDistanceOneWayInKilometerDk(BigDecimal truckDistanceOneWayInKilometerDk) {
+
+        this.truckDistanceOneWayInKilometerDk = truckDistanceOneWayInKilometerDk;
     }
 
 

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet author="antony@synyx.de" id="add-route-revision-country-distances">
+
+        <addColumn tableName="RouteDataRevision">
+            <column name="truckDistanceOneWayDe" type="DECIMAL(15,2)"/>
+            <column name="truckDistanceOneWayNl" type="DECIMAL(15,2)"/>
+            <column name="truckDistanceOneWayBe" type="DECIMAL(15,2)"/>
+            <column name="truckDistanceOneWayLu" type="DECIMAL(15,2)"/>
+            <column name="truckDistanceOneWayFr" type="DECIMAL(15,2)"/>
+            <column name="truckDistanceOneWayCh" type="DECIMAL(15,2)"/>
+            <column name="truckDistanceOneWayLi" type="DECIMAL(15,2)"/>
+            <column name="truckDistanceOneWayAt" type="DECIMAL(15,2)"/>
+            <column name="truckDistanceOneWayCz" type="DECIMAL(15,2)"/>
+            <column name="truckDistanceOneWayPl" type="DECIMAL(15,2)"/>
+            <column name="truckDistanceOneWayDk" type="DECIMAL(15,2)"/>
+        </addColumn>
+
+    </changeSet>
+
+    <changeSet id="migrate-route-revision-country-distances" author="antony@synyx.de">
+        <sql>
+            UPDATE RouteDataRevision
+            SET truckDistanceOneWayDe = truckDistanceOneWay
+            WHERE LOWER(country) = 'de';
+
+            UPDATE RouteDataRevision
+            SET truckDistanceOneWayNl = truckDistanceOneWay
+            WHERE LOWER(country) = 'nl';
+
+            UPDATE RouteDataRevision
+            SET truckDistanceOneWayBe = truckDistanceOneWay
+            WHERE LOWER(country) = 'be';
+
+            UPDATE RouteDataRevision
+            SET truckDistanceOneWayLu = truckDistanceOneWay
+            WHERE LOWER(country) = 'lu';
+
+            UPDATE RouteDataRevision
+            SET truckDistanceOneWayFr = truckDistanceOneWay
+            WHERE LOWER(country) = 'fr';
+
+            UPDATE RouteDataRevision
+            SET truckDistanceOneWayCh = truckDistanceOneWay
+            WHERE LOWER(country) = 'ch';
+
+            UPDATE RouteDataRevision
+            SET truckDistanceOneWayLi = truckDistanceOneWay
+            WHERE LOWER(country) = 'li';
+
+            UPDATE RouteDataRevision
+            SET truckDistanceOneWayAt = truckDistanceOneWay
+            WHERE LOWER(country) = 'at';
+
+            UPDATE RouteDataRevision
+            SET truckDistanceOneWayCz = truckDistanceOneWay
+            WHERE LOWER(country) = 'cz';
+
+            UPDATE RouteDataRevision
+            SET truckDistanceOneWayPl = truckDistanceOneWay
+            WHERE LOWER(country) = 'pl';
+
+            UPDATE RouteDataRevision
+            SET truckDistanceOneWayDk = truckDistanceOneWay
+            WHERE LOWER(country) = 'dk';
+
+            -- Set all not set distances to 0.0
+
+            UPDATE RouteDataRevision
+            SET truckDistanceOneWayDe = 0.0
+            WHERE truckDistanceOneWayDe IS NULL;
+
+            UPDATE RouteDataRevision
+            SET truckDistanceOneWayNl = 0.0
+            WHERE truckDistanceOneWayNl IS NULL;
+
+            UPDATE RouteDataRevision
+            SET truckDistanceOneWayBe = 0.0
+            WHERE truckDistanceOneWayBe IS NULL;
+
+            UPDATE RouteDataRevision
+            SET truckDistanceOneWayLu = 0.0
+            WHERE truckDistanceOneWayLu IS NULL;
+
+            UPDATE RouteDataRevision
+            SET truckDistanceOneWayFr = 0.0
+            WHERE truckDistanceOneWayFr IS NULL;
+
+            UPDATE RouteDataRevision
+            SET truckDistanceOneWayCh = 0.0
+            WHERE truckDistanceOneWayCh IS NULL;
+
+            UPDATE RouteDataRevision
+            SET truckDistanceOneWayLi = 0.0
+            WHERE truckDistanceOneWayLi IS NULL;
+
+            UPDATE RouteDataRevision
+            SET truckDistanceOneWayAt = 0.0
+            WHERE truckDistanceOneWayAt IS NULL;
+
+            UPDATE RouteDataRevision
+            SET truckDistanceOneWayCz = 0.0
+            WHERE truckDistanceOneWayCz IS NULL;
+
+            UPDATE RouteDataRevision
+            SET truckDistanceOneWayPl = 0.0
+            WHERE truckDistanceOneWayPl IS NULL;
+
+            UPDATE RouteDataRevision
+            SET truckDistanceOneWayDk = 0.0
+            WHERE truckDistanceOneWayDk IS NULL;
+
+        </sql>
+    </changeSet>
+
+    <changeSet id="add-null-constraint-route-revision-country-distances" author="antony@synyx.de">
+
+        <addNotNullConstraint tableName="RouteDataRevision"
+                              columnName="truckDistanceOneWayDe"
+                              columnDataType="DECIMAL(15,2)"/>
+
+        <addNotNullConstraint tableName="RouteDataRevision"
+                              columnName="truckDistanceOneWayNl"
+                              columnDataType="DECIMAL(15,2)"/>
+
+        <addNotNullConstraint tableName="RouteDataRevision"
+                              columnName="truckDistanceOneWayBe"
+                              columnDataType="DECIMAL(15,2)"/>
+
+        <addNotNullConstraint tableName="RouteDataRevision"
+                              columnName="truckDistanceOneWayLu"
+                              columnDataType="DECIMAL(15,2)"/>
+
+        <addNotNullConstraint tableName="RouteDataRevision"
+                              columnName="truckDistanceOneWayFr"
+                              columnDataType="DECIMAL(15,2)"/>
+
+        <addNotNullConstraint tableName="RouteDataRevision"
+                              columnName="truckDistanceOneWayCh"
+                              columnDataType="DECIMAL(15,2)"/>
+
+        <addNotNullConstraint tableName="RouteDataRevision"
+                              columnName="truckDistanceOneWayLi"
+                              columnDataType="DECIMAL(15,2)"/>
+
+        <addNotNullConstraint tableName="RouteDataRevision"
+                              columnName="truckDistanceOneWayAt"
+                              columnDataType="DECIMAL(15,2)"/>
+
+        <addNotNullConstraint tableName="RouteDataRevision"
+                              columnName="truckDistanceOneWayCz"
+                              columnDataType="DECIMAL(15,2)"/>
+
+        <addNotNullConstraint tableName="RouteDataRevision"
+                              columnName="truckDistanceOneWayPl"
+                              columnDataType="DECIMAL(15,2)"/>
+
+        <addNotNullConstraint tableName="RouteDataRevision"
+                              columnName="truckDistanceOneWayDk"
+                              columnDataType="DECIMAL(15,2)"/>
+    </changeSet>
+</databaseChangeLog>

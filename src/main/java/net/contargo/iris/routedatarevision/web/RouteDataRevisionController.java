@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.math.BigDecimal;
+
 import java.text.SimpleDateFormat;
 
 import java.util.Date;
@@ -178,6 +180,8 @@ public class RouteDataRevisionController {
     private String save(RouteDataRevisionDto routeDataRevisionDto, RedirectAttributes redirectAttributes,
         BindingResult result, Model model, Message successMessage) {
 
+        routeDataRevisionDto.setTruckDistanceOneWayInKilometer(totalDistance(routeDataRevisionDto));
+
         if (routeDataRevisionDto.getValidFrom() != null) {
             try {
                 // may throw an IllegalArgumentException
@@ -211,6 +215,22 @@ public class RouteDataRevisionController {
         redirectAttributes.addFlashAttribute(Message.MESSAGE, successMessage);
 
         return "redirect:/web/routerevisions/" + savedDto.getId();
+    }
+
+
+    private BigDecimal totalDistance(RouteDataRevisionDto routeDataRevisionDto) {
+
+        return routeDataRevisionDto.getTruckDistanceOneWayInKilometerDe()
+            .add(routeDataRevisionDto.getTruckDistanceOneWayInKilometerNl())
+            .add(routeDataRevisionDto.getTruckDistanceOneWayInKilometerBe())
+            .add(routeDataRevisionDto.getTruckDistanceOneWayInKilometerLu())
+            .add(routeDataRevisionDto.getTruckDistanceOneWayInKilometerFr())
+            .add(routeDataRevisionDto.getTruckDistanceOneWayInKilometerCh())
+            .add(routeDataRevisionDto.getTruckDistanceOneWayInKilometerLi())
+            .add(routeDataRevisionDto.getTruckDistanceOneWayInKilometerAt())
+            .add(routeDataRevisionDto.getTruckDistanceOneWayInKilometerCz())
+            .add(routeDataRevisionDto.getTruckDistanceOneWayInKilometerPl())
+            .add(routeDataRevisionDto.getTruckDistanceOneWayInKilometerDk());
     }
 
 

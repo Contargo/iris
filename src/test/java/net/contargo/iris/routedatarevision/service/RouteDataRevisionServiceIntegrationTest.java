@@ -77,6 +77,17 @@ class RouteDataRevisionServiceIntegrationTest {
         expired.setTruckDistanceOneWayInKilometer(new BigDecimal("220.0"));
         expired.setTollDistanceOneWayInKilometer(new BigDecimal("175.0"));
         expired.setAirlineDistanceInKilometer(new BigDecimal("200.0"));
+        expired.setTruckDistanceOneWayInKilometerDe(new BigDecimal("220.0"));
+        expired.setTruckDistanceOneWayInKilometerNl(BigDecimal.ZERO);
+        expired.setTruckDistanceOneWayInKilometerBe(BigDecimal.ZERO);
+        expired.setTruckDistanceOneWayInKilometerLu(BigDecimal.ZERO);
+        expired.setTruckDistanceOneWayInKilometerFr(BigDecimal.ZERO);
+        expired.setTruckDistanceOneWayInKilometerCh(BigDecimal.ZERO);
+        expired.setTruckDistanceOneWayInKilometerLi(BigDecimal.ZERO);
+        expired.setTruckDistanceOneWayInKilometerAt(BigDecimal.ZERO);
+        expired.setTruckDistanceOneWayInKilometerCz(BigDecimal.ZERO);
+        expired.setTruckDistanceOneWayInKilometerPl(BigDecimal.ZERO);
+        expired.setTruckDistanceOneWayInKilometerDk(BigDecimal.ZERO);
 
         notYetExpired = new RouteDataRevision();
         notYetExpired.setTerminal(terminal);
@@ -88,6 +99,17 @@ class RouteDataRevisionServiceIntegrationTest {
         notYetExpired.setTruckDistanceOneWayInKilometer(new BigDecimal("120.0"));
         notYetExpired.setTollDistanceOneWayInKilometer(new BigDecimal("75.0"));
         notYetExpired.setAirlineDistanceInKilometer(new BigDecimal("100.0"));
+        notYetExpired.setTruckDistanceOneWayInKilometerDe(new BigDecimal("120.0"));
+        notYetExpired.setTruckDistanceOneWayInKilometerNl(BigDecimal.ZERO);
+        notYetExpired.setTruckDistanceOneWayInKilometerBe(BigDecimal.ZERO);
+        notYetExpired.setTruckDistanceOneWayInKilometerLu(BigDecimal.ZERO);
+        notYetExpired.setTruckDistanceOneWayInKilometerFr(BigDecimal.ZERO);
+        notYetExpired.setTruckDistanceOneWayInKilometerCh(BigDecimal.ZERO);
+        notYetExpired.setTruckDistanceOneWayInKilometerLi(BigDecimal.ZERO);
+        notYetExpired.setTruckDistanceOneWayInKilometerAt(BigDecimal.ZERO);
+        notYetExpired.setTruckDistanceOneWayInKilometerCz(BigDecimal.ZERO);
+        notYetExpired.setTruckDistanceOneWayInKilometerPl(BigDecimal.ZERO);
+        notYetExpired.setTruckDistanceOneWayInKilometerDk(BigDecimal.ZERO);
 
         neverExpired = new RouteDataRevision();
         neverExpired.setTerminal(terminal);
@@ -99,6 +121,17 @@ class RouteDataRevisionServiceIntegrationTest {
         neverExpired.setTruckDistanceOneWayInKilometer(new BigDecimal("20.0"));
         neverExpired.setTollDistanceOneWayInKilometer(new BigDecimal("7.5"));
         neverExpired.setAirlineDistanceInKilometer(new BigDecimal("10.0"));
+        neverExpired.setTruckDistanceOneWayInKilometerDe(new BigDecimal("20.0"));
+        neverExpired.setTruckDistanceOneWayInKilometerNl(BigDecimal.ZERO);
+        neverExpired.setTruckDistanceOneWayInKilometerBe(BigDecimal.ZERO);
+        neverExpired.setTruckDistanceOneWayInKilometerLu(BigDecimal.ZERO);
+        neverExpired.setTruckDistanceOneWayInKilometerFr(BigDecimal.ZERO);
+        neverExpired.setTruckDistanceOneWayInKilometerCh(BigDecimal.ZERO);
+        neverExpired.setTruckDistanceOneWayInKilometerLi(BigDecimal.ZERO);
+        neverExpired.setTruckDistanceOneWayInKilometerAt(BigDecimal.ZERO);
+        neverExpired.setTruckDistanceOneWayInKilometerCz(BigDecimal.ZERO);
+        neverExpired.setTruckDistanceOneWayInKilometerPl(BigDecimal.ZERO);
+        neverExpired.setTruckDistanceOneWayInKilometerDk(BigDecimal.ZERO);
 
         em.persist(terminal);
         em.persist(notYetExpired);

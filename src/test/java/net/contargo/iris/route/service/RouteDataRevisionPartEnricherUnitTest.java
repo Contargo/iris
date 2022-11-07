@@ -69,6 +69,8 @@ public class RouteDataRevisionPartEnricherUnitTest {
         routeDataRevision.setAirlineDistanceInKilometer(AIRLINE_DISTANCE);
         routeDataRevision.setTollDistanceOneWayInKilometer(TOLL_DISTANCE_ONE_WAY);
         routeDataRevision.setTruckDistanceOneWayInKilometer(TRUCK_DISTANCE_ONE_WAY);
+        routeDataRevision.setTruckDistanceOneWayInKilometerDe(BigDecimal.valueOf(6));
+        routeDataRevision.setTruckDistanceOneWayInKilometerFr(BigDecimal.valueOf(4));
 
         when(routeDataRevisionServiceMock.getRouteDataRevision(terminal, address)).thenReturn(routeDataRevision);
 
@@ -185,9 +187,8 @@ public class RouteDataRevisionPartEnricherUnitTest {
         assertThat(routePart.getData().getTollDistance(), is(TOLL_DISTANCE_ONE_WAY));
         assertThat(routePart.getData().getDistance(), is(TRUCK_DISTANCE_ONE_WAY));
         assertThat(routePart.getData().getDistancesByCountry().keySet(), hasSize(2));
-        assertThat(routePart.getData().getDistancesByCountry().get("DE"),
-            is(TRUCK_DISTANCE_ONE_WAY.subtract(new BigDecimal("2"))));
-        assertThat(routePart.getData().getDistancesByCountry().get("FR"), is(new BigDecimal("2")));
+        assertThat(routePart.getData().getDistancesByCountry().get("DE"), is(new BigDecimal("6")));
+        assertThat(routePart.getData().getDistancesByCountry().get("FR"), is(new BigDecimal("4")));
     }
 
 

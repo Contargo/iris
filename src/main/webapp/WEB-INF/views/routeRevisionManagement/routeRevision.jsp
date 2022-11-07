@@ -98,18 +98,45 @@
 
                     <iris:inputField property="longitude" messageKey="geolocation.longitude"
                                      title="geolocation.longitude.title"/>
-                    
+
                     <iris:inputField property="radiusInMeter"
                                      messageKey="routerevision.radius" unitMessageKey="unit.meter"/>
-
-                    <iris:inputField property="truckDistanceOneWayInKilometer"
-                                     messageKey="routerevision.truckdistanceoneway" unitMessageKey="unit.kilometer"/>
 
                     <iris:inputField property="tollDistanceOneWayInKilometer"
                                      messageKey="routerevision.tolldistanceoneway" unitMessageKey="unit.kilometer"/>
 
                     <iris:inputField property="airlineDistanceInKilometer"
                                      messageKey="routerevision.airlinedistance" unitMessageKey="unit.kilometer"/>
+
+                    <h4 class="mb-4">
+                        <spring:message code="routerevision.distancesByCountry"/>
+                    </h4>
+                    <iris:inputField property="truckDistanceOneWayInKilometerDe"
+                                     messageKey="country.DE" unitMessageKey="unit.kilometer"/>
+                    <iris:inputField property="truckDistanceOneWayInKilometerNl"
+                                     messageKey="country.NL" unitMessageKey="unit.kilometer"/>
+                    <iris:inputField property="truckDistanceOneWayInKilometerBe"
+                                     messageKey="country.BE" unitMessageKey="unit.kilometer"/>
+                    <iris:inputField property="truckDistanceOneWayInKilometerLu"
+                                     messageKey="country.LU" unitMessageKey="unit.kilometer"/>
+                    <iris:inputField property="truckDistanceOneWayInKilometerFr"
+                                     messageKey="country.FR" unitMessageKey="unit.kilometer"/>
+                    <iris:inputField property="truckDistanceOneWayInKilometerCh"
+                                     messageKey="country.CH" unitMessageKey="unit.kilometer"/>
+                    <iris:inputField property="truckDistanceOneWayInKilometerLi"
+                                     messageKey="country.LI" unitMessageKey="unit.kilometer"/>
+                    <iris:inputField property="truckDistanceOneWayInKilometerAt"
+                                     messageKey="country.AT" unitMessageKey="unit.kilometer"/>
+                    <iris:inputField property="truckDistanceOneWayInKilometerCz"
+                                     messageKey="country.CZ" unitMessageKey="unit.kilometer"/>
+                    <iris:inputField property="truckDistanceOneWayInKilometerPl"
+                                     messageKey="country.PL" unitMessageKey="unit.kilometer"/>
+                    <iris:inputField property="truckDistanceOneWayInKilometerDk"
+                                     messageKey="country.DK" unitMessageKey="unit.kilometer"/>
+
+
+                    <iris:inputField property="truckDistanceOneWayInKilometer"
+                                     messageKey="routerevision.truckdistanceoneway" unitMessageKey="unit.kilometer" readonly="true"/>
 
                     <iris:inputField property="city" messageKey="routerevision.city" readonly="true"/>
                     <iris:inputField property="postalCode" messageKey="routerevision.postalcode" readonly="true"/>

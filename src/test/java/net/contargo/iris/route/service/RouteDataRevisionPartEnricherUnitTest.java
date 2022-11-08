@@ -69,8 +69,8 @@ public class RouteDataRevisionPartEnricherUnitTest {
         routeDataRevision.setAirlineDistanceInKilometer(AIRLINE_DISTANCE);
         routeDataRevision.setTollDistanceOneWayInKilometer(TOLL_DISTANCE_ONE_WAY);
         routeDataRevision.setTruckDistanceOneWayInKilometer(TRUCK_DISTANCE_ONE_WAY);
-        routeDataRevision.setTruckDistanceOneWayInKilometerDe(BigDecimal.valueOf(6));
-        routeDataRevision.setTruckDistanceOneWayInKilometerFr(BigDecimal.valueOf(4));
+        routeDataRevision.getTruckDistanceOnWayInKilometerCountry().put("DE", BigDecimal.valueOf(6));
+        routeDataRevision.getTruckDistanceOnWayInKilometerCountry().put("FR", BigDecimal.valueOf(4));
 
         when(routeDataRevisionServiceMock.getRouteDataRevision(terminal, address)).thenReturn(routeDataRevision);
 

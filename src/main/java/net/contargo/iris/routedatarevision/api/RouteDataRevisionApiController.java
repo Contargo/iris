@@ -177,17 +177,17 @@ public class RouteDataRevisionApiController {
 
     private BigDecimal totalDistance(RouteDataRevisionDto routeDataRevisionDto) {
 
-        return routeDataRevisionDto.getTruckDistanceOneWayInKilometerDe()
-            .add(routeDataRevisionDto.getTruckDistanceOneWayInKilometerNl())
-            .add(routeDataRevisionDto.getTruckDistanceOneWayInKilometerBe())
-            .add(routeDataRevisionDto.getTruckDistanceOneWayInKilometerLu())
-            .add(routeDataRevisionDto.getTruckDistanceOneWayInKilometerFr())
-            .add(routeDataRevisionDto.getTruckDistanceOneWayInKilometerCh())
-            .add(routeDataRevisionDto.getTruckDistanceOneWayInKilometerLi())
-            .add(routeDataRevisionDto.getTruckDistanceOneWayInKilometerAt())
-            .add(routeDataRevisionDto.getTruckDistanceOneWayInKilometerCz())
-            .add(routeDataRevisionDto.getTruckDistanceOneWayInKilometerPl())
-            .add(routeDataRevisionDto.getTruckDistanceOneWayInKilometerDk());
+        return routeDataRevisionDto.getTruckDistanceOneWayInKilometerDE()
+            .add(routeDataRevisionDto.getTruckDistanceOneWayInKilometerNL())
+            .add(routeDataRevisionDto.getTruckDistanceOneWayInKilometerBE())
+            .add(routeDataRevisionDto.getTruckDistanceOneWayInKilometerLU())
+            .add(routeDataRevisionDto.getTruckDistanceOneWayInKilometerFR())
+            .add(routeDataRevisionDto.getTruckDistanceOneWayInKilometerCH())
+            .add(routeDataRevisionDto.getTruckDistanceOneWayInKilometerLI())
+            .add(routeDataRevisionDto.getTruckDistanceOneWayInKilometerAT())
+            .add(routeDataRevisionDto.getTruckDistanceOneWayInKilometerCZ())
+            .add(routeDataRevisionDto.getTruckDistanceOneWayInKilometerPL())
+            .add(routeDataRevisionDto.getTruckDistanceOneWayInKilometerDK());
     }
 
 

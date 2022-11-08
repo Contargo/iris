@@ -6,161 +6,165 @@
 
     <changeSet author="antony@synyx.de" id="add-route-revision-country-distances">
 
-        <addColumn tableName="RouteDataRevision">
-            <column name="truckDistanceOneWayDe" type="DECIMAL(15,2)"/>
-            <column name="truckDistanceOneWayNl" type="DECIMAL(15,2)"/>
-            <column name="truckDistanceOneWayBe" type="DECIMAL(15,2)"/>
-            <column name="truckDistanceOneWayLu" type="DECIMAL(15,2)"/>
-            <column name="truckDistanceOneWayFr" type="DECIMAL(15,2)"/>
-            <column name="truckDistanceOneWayCh" type="DECIMAL(15,2)"/>
-            <column name="truckDistanceOneWayLi" type="DECIMAL(15,2)"/>
-            <column name="truckDistanceOneWayAt" type="DECIMAL(15,2)"/>
-            <column name="truckDistanceOneWayCz" type="DECIMAL(15,2)"/>
-            <column name="truckDistanceOneWayPl" type="DECIMAL(15,2)"/>
-            <column name="truckDistanceOneWayDk" type="DECIMAL(15,2)"/>
-        </addColumn>
+        <createTable tableName="RouteDataRevisionCountryDistances">
+            <column name="routeRevisionId" type="BIGINT">
+                <constraints referencedTableName="RouteDataRevision" referencedColumnNames="id"
+                             foreignKeyName="fk-route-revision-country"/>
+            </column>
+            <column name="country" type="VARCHAR(2)"/>
+            <column name="truckDistanceOneWay" type="DECIMAL(15,2)"/>
+        </createTable>
 
     </changeSet>
 
     <changeSet id="migrate-route-revision-country-distances" author="antony@synyx.de">
         <sql>
-            UPDATE RouteDataRevision
-            SET truckDistanceOneWayDe = truckDistanceOneWay
-            WHERE LOWER(country) = 'de';
 
-            UPDATE RouteDataRevision
-            SET truckDistanceOneWayNl = truckDistanceOneWay
-            WHERE LOWER(country) = 'nl';
+            INSERT INTO RouteDataRevisionCountryDistances (routeRevisionId, country, truckDistanceOneWay)
+            SELECT id as routeRevisionId, UPPER(country) as country, truckDistanceOneWay
+            FROM RouteDataRevision
+            WHERE UPPER(country) = 'DE';
 
-            UPDATE RouteDataRevision
-            SET truckDistanceOneWayBe = truckDistanceOneWay
-            WHERE LOWER(country) = 'be';
+            INSERT INTO RouteDataRevisionCountryDistances (routeRevisionId, country, truckDistanceOneWay)
+            SELECT id as routeRevisionId, UPPER(country) as country, truckDistanceOneWay
+            FROM RouteDataRevision
+            WHERE UPPER(country) = 'NL';
 
-            UPDATE RouteDataRevision
-            SET truckDistanceOneWayLu = truckDistanceOneWay
-            WHERE LOWER(country) = 'lu';
+            INSERT INTO RouteDataRevisionCountryDistances (routeRevisionId, country, truckDistanceOneWay)
+            SELECT id as routeRevisionId, UPPER(country) as country, truckDistanceOneWay
+            FROM RouteDataRevision
+            WHERE UPPER(country) = 'BE';
 
-            UPDATE RouteDataRevision
-            SET truckDistanceOneWayFr = truckDistanceOneWay
-            WHERE LOWER(country) = 'fr';
+            INSERT INTO RouteDataRevisionCountryDistances (routeRevisionId, country, truckDistanceOneWay)
+            SELECT id as routeRevisionId, UPPER(country) as country, truckDistanceOneWay
+            FROM RouteDataRevision
+            WHERE UPPER(country) = 'LU';
 
-            UPDATE RouteDataRevision
-            SET truckDistanceOneWayCh = truckDistanceOneWay
-            WHERE LOWER(country) = 'ch';
+            INSERT INTO RouteDataRevisionCountryDistances (routeRevisionId, country, truckDistanceOneWay)
+            SELECT id as routeRevisionId, UPPER(country) as country, truckDistanceOneWay
+            FROM RouteDataRevision
+            WHERE UPPER(country) = 'FR';
 
-            UPDATE RouteDataRevision
-            SET truckDistanceOneWayLi = truckDistanceOneWay
-            WHERE LOWER(country) = 'li';
+            INSERT INTO RouteDataRevisionCountryDistances (routeRevisionId, country, truckDistanceOneWay)
+            SELECT id as routeRevisionId, UPPER(country) as country, truckDistanceOneWay
+            FROM RouteDataRevision
+            WHERE UPPER(country) = 'CH';
 
-            UPDATE RouteDataRevision
-            SET truckDistanceOneWayAt = truckDistanceOneWay
-            WHERE LOWER(country) = 'at';
+            INSERT INTO RouteDataRevisionCountryDistances (routeRevisionId, country, truckDistanceOneWay)
+            SELECT id as routeRevisionId, UPPER(country) as country, truckDistanceOneWay
+            FROM RouteDataRevision
+            WHERE UPPER(country) = 'LI';
 
-            UPDATE RouteDataRevision
-            SET truckDistanceOneWayCz = truckDistanceOneWay
-            WHERE LOWER(country) = 'cz';
+            INSERT INTO RouteDataRevisionCountryDistances (routeRevisionId, country, truckDistanceOneWay)
+            SELECT id as routeRevisionId, UPPER(country) as country, truckDistanceOneWay
+            FROM RouteDataRevision
+            WHERE UPPER(country) = 'AT';
 
-            UPDATE RouteDataRevision
-            SET truckDistanceOneWayPl = truckDistanceOneWay
-            WHERE LOWER(country) = 'pl';
+            INSERT INTO RouteDataRevisionCountryDistances (routeRevisionId, country, truckDistanceOneWay)
+            SELECT id as routeRevisionId, UPPER(country) as country, truckDistanceOneWay
+            FROM RouteDataRevision
+            WHERE UPPER(country) = 'CZ';
 
-            UPDATE RouteDataRevision
-            SET truckDistanceOneWayDk = truckDistanceOneWay
-            WHERE LOWER(country) = 'dk';
+            INSERT INTO RouteDataRevisionCountryDistances (routeRevisionId, country, truckDistanceOneWay)
+            SELECT id as routeRevisionId, UPPER(country) as country, truckDistanceOneWay
+            FROM RouteDataRevision
+            WHERE UPPER(country) = 'PL';
+
+            INSERT INTO RouteDataRevisionCountryDistances (routeRevisionId, country, truckDistanceOneWay)
+            SELECT id as routeRevisionId, UPPER(country) as country, truckDistanceOneWay
+            FROM RouteDataRevision
+            WHERE UPPER(country) = 'DK';
 
             -- Set all not set distances to 0.0
 
-            UPDATE RouteDataRevision
-            SET truckDistanceOneWayDe = 0.0
-            WHERE truckDistanceOneWayDe IS NULL;
+            INSERT INTO RouteDataRevisionCountryDistances (routeRevisionId, country, truckDistanceOneWay)
+            SELECT RR.id as routeRevisionId, 'DE' as country, 0.0 as truckDistanceOneWay
+            FROM RouteDataRevision RR
+            WHERE (SELECT COUNT(RDRCD.routeRevisionId)
+                   from RouteDataRevisionCountryDistances RDRCD
+                   WHERE RDRCD.routeRevisionId = RR.id
+                     AND RDRCD.country = 'DE') = 0;
 
-            UPDATE RouteDataRevision
-            SET truckDistanceOneWayNl = 0.0
-            WHERE truckDistanceOneWayNl IS NULL;
+            INSERT INTO RouteDataRevisionCountryDistances (routeRevisionId, country, truckDistanceOneWay)
+            SELECT RR.id as routeRevisionId, 'NL' as country, 0.0 as truckDistanceOneWay
+            FROM RouteDataRevision RR
+            WHERE (SELECT COUNT(RDRCD.routeRevisionId)
+                   from RouteDataRevisionCountryDistances RDRCD
+                   WHERE RDRCD.routeRevisionId = RR.id
+                     AND RDRCD.country = 'NL') = 0;
 
-            UPDATE RouteDataRevision
-            SET truckDistanceOneWayBe = 0.0
-            WHERE truckDistanceOneWayBe IS NULL;
+            INSERT INTO RouteDataRevisionCountryDistances (routeRevisionId, country, truckDistanceOneWay)
+            SELECT RR.id as routeRevisionId, 'BE' as country, 0.0 as truckDistanceOneWay
+            FROM RouteDataRevision RR
+            WHERE (SELECT COUNT(RDRCD.routeRevisionId)
+                   from RouteDataRevisionCountryDistances RDRCD
+                   WHERE RDRCD.routeRevisionId = RR.id
+                     AND RDRCD.country = 'BE') = 0;
 
-            UPDATE RouteDataRevision
-            SET truckDistanceOneWayLu = 0.0
-            WHERE truckDistanceOneWayLu IS NULL;
+            INSERT INTO RouteDataRevisionCountryDistances (routeRevisionId, country, truckDistanceOneWay)
+            SELECT RR.id as routeRevisionId, 'LU' as country, 0.0 as truckDistanceOneWay
+            FROM RouteDataRevision RR
+            WHERE (SELECT COUNT(RDRCD.routeRevisionId)
+                   from RouteDataRevisionCountryDistances RDRCD
+                   WHERE RDRCD.routeRevisionId = RR.id
+                     AND RDRCD.country = 'LU') = 0;
 
-            UPDATE RouteDataRevision
-            SET truckDistanceOneWayFr = 0.0
-            WHERE truckDistanceOneWayFr IS NULL;
+            INSERT INTO RouteDataRevisionCountryDistances (routeRevisionId, country, truckDistanceOneWay)
+            SELECT RR.id as routeRevisionId, 'FR' as country, 0.0 as truckDistanceOneWay
+            FROM RouteDataRevision RR
+            WHERE (SELECT COUNT(RDRCD.routeRevisionId)
+                   from RouteDataRevisionCountryDistances RDRCD
+                   WHERE RDRCD.routeRevisionId = RR.id
+                     AND RDRCD.country = 'FR') = 0;
 
-            UPDATE RouteDataRevision
-            SET truckDistanceOneWayCh = 0.0
-            WHERE truckDistanceOneWayCh IS NULL;
+            INSERT INTO RouteDataRevisionCountryDistances (routeRevisionId, country, truckDistanceOneWay)
+            SELECT RR.id as routeRevisionId, 'CH' as country, 0.0 as truckDistanceOneWay
+            FROM RouteDataRevision RR
+            WHERE (SELECT COUNT(RDRCD.routeRevisionId)
+                   from RouteDataRevisionCountryDistances RDRCD
+                   WHERE RDRCD.routeRevisionId = RR.id
+                     AND RDRCD.country = 'CH') = 0;
 
-            UPDATE RouteDataRevision
-            SET truckDistanceOneWayLi = 0.0
-            WHERE truckDistanceOneWayLi IS NULL;
+            INSERT INTO RouteDataRevisionCountryDistances (routeRevisionId, country, truckDistanceOneWay)
+            SELECT RR.id as routeRevisionId, 'LI' as country, 0.0 as truckDistanceOneWay
+            FROM RouteDataRevision RR
+            WHERE (SELECT COUNT(RDRCD.routeRevisionId)
+                   from RouteDataRevisionCountryDistances RDRCD
+                   WHERE RDRCD.routeRevisionId = RR.id
+                     AND RDRCD.country = 'LI') = 0;
 
-            UPDATE RouteDataRevision
-            SET truckDistanceOneWayAt = 0.0
-            WHERE truckDistanceOneWayAt IS NULL;
+            INSERT INTO RouteDataRevisionCountryDistances (routeRevisionId, country, truckDistanceOneWay)
+            SELECT RR.id as routeRevisionId, 'AT' as country, 0.0 as truckDistanceOneWay
+            FROM RouteDataRevision RR
+            WHERE (SELECT COUNT(RDRCD.routeRevisionId)
+                   from RouteDataRevisionCountryDistances RDRCD
+                   WHERE RDRCD.routeRevisionId = RR.id
+                     AND RDRCD.country = 'AT') = 0;
 
-            UPDATE RouteDataRevision
-            SET truckDistanceOneWayCz = 0.0
-            WHERE truckDistanceOneWayCz IS NULL;
+            INSERT INTO RouteDataRevisionCountryDistances (routeRevisionId, country, truckDistanceOneWay)
+            SELECT RR.id as routeRevisionId, 'CZ' as country, 0.0 as truckDistanceOneWay
+            FROM RouteDataRevision RR
+            WHERE (SELECT COUNT(RDRCD.routeRevisionId)
+                   from RouteDataRevisionCountryDistances RDRCD
+                   WHERE RDRCD.routeRevisionId = RR.id
+                     AND RDRCD.country = 'CZ') = 0;
 
-            UPDATE RouteDataRevision
-            SET truckDistanceOneWayPl = 0.0
-            WHERE truckDistanceOneWayPl IS NULL;
+            INSERT INTO RouteDataRevisionCountryDistances (routeRevisionId, country, truckDistanceOneWay)
+            SELECT RR.id as routeRevisionId, 'PL' as country, 0.0 as truckDistanceOneWay
+            FROM RouteDataRevision RR
+            WHERE (SELECT COUNT(RDRCD.routeRevisionId)
+                   from RouteDataRevisionCountryDistances RDRCD
+                   WHERE RDRCD.routeRevisionId = RR.id
+                     AND RDRCD.country = 'PL') = 0;
 
-            UPDATE RouteDataRevision
-            SET truckDistanceOneWayDk = 0.0
-            WHERE truckDistanceOneWayDk IS NULL;
-
+            INSERT INTO RouteDataRevisionCountryDistances (routeRevisionId, country, truckDistanceOneWay)
+            SELECT RR.id as routeRevisionId, 'DK' as country, 0.0 as truckDistanceOneWay
+            FROM RouteDataRevision RR
+            WHERE (SELECT COUNT(RDRCD.routeRevisionId)
+                   from RouteDataRevisionCountryDistances RDRCD
+                   WHERE RDRCD.routeRevisionId = RR.id
+                     AND RDRCD.country = 'DK') = 0;
         </sql>
     </changeSet>
 
-    <changeSet id="add-null-constraint-route-revision-country-distances" author="antony@synyx.de">
-
-        <addNotNullConstraint tableName="RouteDataRevision"
-                              columnName="truckDistanceOneWayDe"
-                              columnDataType="DECIMAL(15,2)"/>
-
-        <addNotNullConstraint tableName="RouteDataRevision"
-                              columnName="truckDistanceOneWayNl"
-                              columnDataType="DECIMAL(15,2)"/>
-
-        <addNotNullConstraint tableName="RouteDataRevision"
-                              columnName="truckDistanceOneWayBe"
-                              columnDataType="DECIMAL(15,2)"/>
-
-        <addNotNullConstraint tableName="RouteDataRevision"
-                              columnName="truckDistanceOneWayLu"
-                              columnDataType="DECIMAL(15,2)"/>
-
-        <addNotNullConstraint tableName="RouteDataRevision"
-                              columnName="truckDistanceOneWayFr"
-                              columnDataType="DECIMAL(15,2)"/>
-
-        <addNotNullConstraint tableName="RouteDataRevision"
-                              columnName="truckDistanceOneWayCh"
-                              columnDataType="DECIMAL(15,2)"/>
-
-        <addNotNullConstraint tableName="RouteDataRevision"
-                              columnName="truckDistanceOneWayLi"
-                              columnDataType="DECIMAL(15,2)"/>
-
-        <addNotNullConstraint tableName="RouteDataRevision"
-                              columnName="truckDistanceOneWayAt"
-                              columnDataType="DECIMAL(15,2)"/>
-
-        <addNotNullConstraint tableName="RouteDataRevision"
-                              columnName="truckDistanceOneWayCz"
-                              columnDataType="DECIMAL(15,2)"/>
-
-        <addNotNullConstraint tableName="RouteDataRevision"
-                              columnName="truckDistanceOneWayPl"
-                              columnDataType="DECIMAL(15,2)"/>
-
-        <addNotNullConstraint tableName="RouteDataRevision"
-                              columnName="truckDistanceOneWayDk"
-                              columnDataType="DECIMAL(15,2)"/>
-    </changeSet>
 </databaseChangeLog>

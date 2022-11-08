@@ -245,17 +245,7 @@ public class RouteDataRevisionRepositoryIntegrationTest {
         routeDataRevision.setComment(comment);
         routeDataRevision.setValidFrom(validFrom);
         routeDataRevision.setValidTo(validTo);
-        routeDataRevision.setTruckDistanceOneWayInKilometerDe(truckdow);
-        routeDataRevision.setTruckDistanceOneWayInKilometerNl(BigDecimal.ZERO);
-        routeDataRevision.setTruckDistanceOneWayInKilometerBe(BigDecimal.ZERO);
-        routeDataRevision.setTruckDistanceOneWayInKilometerLu(BigDecimal.ZERO);
-        routeDataRevision.setTruckDistanceOneWayInKilometerFr(BigDecimal.ZERO);
-        routeDataRevision.setTruckDistanceOneWayInKilometerCh(BigDecimal.ZERO);
-        routeDataRevision.setTruckDistanceOneWayInKilometerLi(BigDecimal.ZERO);
-        routeDataRevision.setTruckDistanceOneWayInKilometerAt(BigDecimal.ZERO);
-        routeDataRevision.setTruckDistanceOneWayInKilometerCz(BigDecimal.ZERO);
-        routeDataRevision.setTruckDistanceOneWayInKilometerPl(BigDecimal.ZERO);
-        routeDataRevision.setTruckDistanceOneWayInKilometerDk(BigDecimal.ZERO);
+        routeDataRevision.getTruckDistanceOnWayInKilometerCountry().put("DE", truckdow);
 
         return routeDataRevision;
     }

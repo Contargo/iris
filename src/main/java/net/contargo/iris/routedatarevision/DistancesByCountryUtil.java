@@ -1,5 +1,7 @@
 package net.contargo.iris.routedatarevision;
 
+import net.contargo.iris.countries.service.CountryCode;
+
 import java.math.BigDecimal;
 
 import java.util.HashMap;
@@ -22,17 +24,10 @@ public class DistancesByCountryUtil {
 
         Map<String, BigDecimal> result = new HashMap<>();
 
-        putCountryIfNotZero(result, "DE", routeDataRevision.getTruckDistanceOneWayInKilometerDe());
-        putCountryIfNotZero(result, "NL", routeDataRevision.getTruckDistanceOneWayInKilometerNl());
-        putCountryIfNotZero(result, "BE", routeDataRevision.getTruckDistanceOneWayInKilometerBe());
-        putCountryIfNotZero(result, "LU", routeDataRevision.getTruckDistanceOneWayInKilometerLu());
-        putCountryIfNotZero(result, "FR", routeDataRevision.getTruckDistanceOneWayInKilometerFr());
-        putCountryIfNotZero(result, "CH", routeDataRevision.getTruckDistanceOneWayInKilometerCh());
-        putCountryIfNotZero(result, "LI", routeDataRevision.getTruckDistanceOneWayInKilometerLi());
-        putCountryIfNotZero(result, "AT", routeDataRevision.getTruckDistanceOneWayInKilometerAt());
-        putCountryIfNotZero(result, "CZ", routeDataRevision.getTruckDistanceOneWayInKilometerCz());
-        putCountryIfNotZero(result, "PL", routeDataRevision.getTruckDistanceOneWayInKilometerPl());
-        putCountryIfNotZero(result, "DK", routeDataRevision.getTruckDistanceOneWayInKilometerDk());
+        CountryCode.countries().stream()
+            .map(CountryCode::getValue)
+            .forEach(c ->
+                    putCountryIfNotZero(result, c, routeDataRevision.getTruckDistanceOnWayInKilometerCountry().get(c)));
 
         return result;
     }

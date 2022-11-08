@@ -1,3 +1,4 @@
+<%@ page import="net.contargo.iris.countries.service.CountryCode" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
@@ -111,29 +112,11 @@
                     <h4 class="mb-4">
                         <spring:message code="routerevision.distancesByCountry"/>
                     </h4>
-                    <iris:inputField property="truckDistanceOneWayInKilometerDe"
-                                     messageKey="country.DE" unitMessageKey="unit.kilometer"/>
-                    <iris:inputField property="truckDistanceOneWayInKilometerNl"
-                                     messageKey="country.NL" unitMessageKey="unit.kilometer"/>
-                    <iris:inputField property="truckDistanceOneWayInKilometerBe"
-                                     messageKey="country.BE" unitMessageKey="unit.kilometer"/>
-                    <iris:inputField property="truckDistanceOneWayInKilometerLu"
-                                     messageKey="country.LU" unitMessageKey="unit.kilometer"/>
-                    <iris:inputField property="truckDistanceOneWayInKilometerFr"
-                                     messageKey="country.FR" unitMessageKey="unit.kilometer"/>
-                    <iris:inputField property="truckDistanceOneWayInKilometerCh"
-                                     messageKey="country.CH" unitMessageKey="unit.kilometer"/>
-                    <iris:inputField property="truckDistanceOneWayInKilometerLi"
-                                     messageKey="country.LI" unitMessageKey="unit.kilometer"/>
-                    <iris:inputField property="truckDistanceOneWayInKilometerAt"
-                                     messageKey="country.AT" unitMessageKey="unit.kilometer"/>
-                    <iris:inputField property="truckDistanceOneWayInKilometerCz"
-                                     messageKey="country.CZ" unitMessageKey="unit.kilometer"/>
-                    <iris:inputField property="truckDistanceOneWayInKilometerPl"
-                                     messageKey="country.PL" unitMessageKey="unit.kilometer"/>
-                    <iris:inputField property="truckDistanceOneWayInKilometerDk"
-                                     messageKey="country.DK" unitMessageKey="unit.kilometer"/>
-
+                    <c:set var="countries" value="<%=CountryCode.countries()%>"/>
+                    <c:forEach items="${countries}" var="country">
+                        <iris:inputField property="truckDistanceOneWayInKilometer${country.getValue()}"
+                                         messageKey="country.${country.getValue()}" unitMessageKey="unit.kilometer"/>
+                    </c:forEach>
 
                     <iris:inputField property="truckDistanceOneWayInKilometer"
                                      messageKey="routerevision.truckdistanceoneway" unitMessageKey="unit.kilometer" readonly="true"/>

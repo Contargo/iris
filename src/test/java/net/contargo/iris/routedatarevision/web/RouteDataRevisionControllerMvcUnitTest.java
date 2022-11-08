@@ -182,17 +182,17 @@ public class RouteDataRevisionControllerMvcUnitTest {
                 .param("latitude", "10")
                 .param("longitude", "1")
                 .param("truckDistanceOneWayInKilometer", "1")
-                .param("truckDistanceOneWayInKilometerDe", "1")
-                .param("truckDistanceOneWayInKilometerNl", "0.0")
-                .param("truckDistanceOneWayInKilometerBe", "0.0")
-                .param("truckDistanceOneWayInKilometerLu", "0.0")
-                .param("truckDistanceOneWayInKilometerFr", "0.0")
-                .param("truckDistanceOneWayInKilometerCh", "0.0")
-                .param("truckDistanceOneWayInKilometerLi", "0.0")
-                .param("truckDistanceOneWayInKilometerAt", "0.0")
-                .param("truckDistanceOneWayInKilometerCz", "0.0")
-                .param("truckDistanceOneWayInKilometerPl", "0.0")
-                .param("truckDistanceOneWayInKilometerDk", "0.0")
+                .param("truckDistanceOneWayInKilometerDE", "1")
+                .param("truckDistanceOneWayInKilometerNL", "0.0")
+                .param("truckDistanceOneWayInKilometerBE", "0.0")
+                .param("truckDistanceOneWayInKilometerLU", "0.0")
+                .param("truckDistanceOneWayInKilometerFR", "0.0")
+                .param("truckDistanceOneWayInKilometerCH", "0.0")
+                .param("truckDistanceOneWayInKilometerLI", "0.0")
+                .param("truckDistanceOneWayInKilometerAT", "0.0")
+                .param("truckDistanceOneWayInKilometerCZ", "0.0")
+                .param("truckDistanceOneWayInKilometerPL", "0.0")
+                .param("truckDistanceOneWayInKilometerDK", "0.0")
                 .param("tollDistanceOneWayInKilometer", "2")
                 .param("airlineDistanceInKilometer", "3")
                 .param("radiusInMeter", "4")
@@ -211,17 +211,17 @@ public class RouteDataRevisionControllerMvcUnitTest {
 
         ResultActions resultActions = perform(post("/routerevisions")
                     .param("terminal.uniqueId", "foo")
-                .param("truckDistanceOneWayInKilometerDe", "0.0")
-                .param("truckDistanceOneWayInKilometerNl", "0.0")
-                .param("truckDistanceOneWayInKilometerBe", "0.0")
-                .param("truckDistanceOneWayInKilometerLu", "0.0")
-                .param("truckDistanceOneWayInKilometerFr", "0.0")
-                .param("truckDistanceOneWayInKilometerCh", "0.0")
-                .param("truckDistanceOneWayInKilometerLi", "0.0")
-                .param("truckDistanceOneWayInKilometerAt", "0.0")
-                .param("truckDistanceOneWayInKilometerCz", "0.0")
-                .param("truckDistanceOneWayInKilometerPl", "0.0")
-                .param("truckDistanceOneWayInKilometerDk", "0.0")
+                .param("truckDistanceOneWayInKilometerDE", "0.0")
+                .param("truckDistanceOneWayInKilometerNL", "0.0")
+                .param("truckDistanceOneWayInKilometerBE", "0.0")
+                .param("truckDistanceOneWayInKilometerLU", "0.0")
+                .param("truckDistanceOneWayInKilometerFR", "0.0")
+                .param("truckDistanceOneWayInKilometerCH", "0.0")
+                .param("truckDistanceOneWayInKilometerLI", "0.0")
+                .param("truckDistanceOneWayInKilometerAT", "0.0")
+                .param("truckDistanceOneWayInKilometerCZ", "0.0")
+                .param("truckDistanceOneWayInKilometerPL", "0.0")
+                .param("truckDistanceOneWayInKilometerDK", "0.0")
                 .contentType(APPLICATION_JSON));
 
         resultActions.andExpect(status().isOk());
@@ -241,17 +241,17 @@ public class RouteDataRevisionControllerMvcUnitTest {
         ResultActions resultActions = perform(post("/routerevisions").param("terminal.uniqueId", "foo")
                 .param("validFrom", "01.05.2015")
                 .param("validTo", "30.04.2015")
-                .param("truckDistanceOneWayInKilometerDe", "0.0")
-                .param("truckDistanceOneWayInKilometerNl", "0.0")
-                .param("truckDistanceOneWayInKilometerBe", "0.0")
-                .param("truckDistanceOneWayInKilometerLu", "0.0")
-                .param("truckDistanceOneWayInKilometerFr", "0.0")
-                .param("truckDistanceOneWayInKilometerCh", "0.0")
-                .param("truckDistanceOneWayInKilometerLi", "0.0")
-                .param("truckDistanceOneWayInKilometerAt", "0.0")
-                .param("truckDistanceOneWayInKilometerCz", "0.0")
-                .param("truckDistanceOneWayInKilometerPl", "0.0")
-                .param("truckDistanceOneWayInKilometerDk", "0.0"));
+                .param("truckDistanceOneWayInKilometerDE", "0.0")
+                .param("truckDistanceOneWayInKilometerNL", "0.0")
+                .param("truckDistanceOneWayInKilometerBE", "0.0")
+                .param("truckDistanceOneWayInKilometerLU", "0.0")
+                .param("truckDistanceOneWayInKilometerFR", "0.0")
+                .param("truckDistanceOneWayInKilometerCH", "0.0")
+                .param("truckDistanceOneWayInKilometerLI", "0.0")
+                .param("truckDistanceOneWayInKilometerAT", "0.0")
+                .param("truckDistanceOneWayInKilometerCZ", "0.0")
+                .param("truckDistanceOneWayInKilometerPL", "0.0")
+                .param("truckDistanceOneWayInKilometerDK", "0.0"));
 
         resultActions.andExpect(status().isOk());
         resultActions.andExpect(model().attributeHasFieldErrorCode("routeRevision", "validFrom",
@@ -275,17 +275,17 @@ public class RouteDataRevisionControllerMvcUnitTest {
                         + "&latitude=10"
                         + "&longitude=1"
                         + "&truckDistanceOneWayInKilometer=1"
-                        + "&truckDistanceOneWayInKilometerDe=1"
-                        + "&truckDistanceOneWayInKilometerNl=0.0"
-                        + "&truckDistanceOneWayInKilometerBe=0.0"
-                        + "&truckDistanceOneWayInKilometerLu=0.0"
-                        + "&truckDistanceOneWayInKilometerFr=0.0"
-                        + "&truckDistanceOneWayInKilometerCh=0.0"
-                        + "&truckDistanceOneWayInKilometerLi=0.0"
-                        + "&truckDistanceOneWayInKilometerAt=0.0"
-                        + "&truckDistanceOneWayInKilometerCz=0.0"
-                        + "&truckDistanceOneWayInKilometerPl=0.0"
-                        + "&truckDistanceOneWayInKilometerDk=0.0"
+                        + "&truckDistanceOneWayInKilometerDE=1"
+                        + "&truckDistanceOneWayInKilometerNL=0.0"
+                        + "&truckDistanceOneWayInKilometerBE=0.0"
+                        + "&truckDistanceOneWayInKilometerLU=0.0"
+                        + "&truckDistanceOneWayInKilometerFR=0.0"
+                        + "&truckDistanceOneWayInKilometerCH=0.0"
+                        + "&truckDistanceOneWayInKilometerLI=0.0"
+                        + "&truckDistanceOneWayInKilometerAT=0.0"
+                        + "&truckDistanceOneWayInKilometerCZ=0.0"
+                        + "&truckDistanceOneWayInKilometerPL=0.0"
+                        + "&truckDistanceOneWayInKilometerDK=0.0"
                         + "&tollDistanceOneWayInKilometer=2"
                         + "&airlineDistanceInKilometer=3"
                         + "&radiusInMeter=4"

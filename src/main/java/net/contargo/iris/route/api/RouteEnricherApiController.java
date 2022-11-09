@@ -7,6 +7,7 @@ import com.wordnik.swagger.annotations.ApiOperation;
 
 import net.contargo.iris.api.ControllerConstants;
 import net.contargo.iris.connection.dto.RouteDto;
+import net.contargo.iris.connection.dto.RoutePartDataDto;
 import net.contargo.iris.route.dto.EnricherDtoService;
 import net.contargo.iris.security.UserAuthenticationService;
 import net.contargo.iris.terminal.dto.TerminalDto;
@@ -30,6 +31,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.lang.invoke.MethodHandles;
 
 import java.math.BigInteger;
+
+import java.util.Optional;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -62,7 +65,8 @@ public class RouteEnricherApiController {
 
     @ApiOperation(
         value = "Takes a route and returns it enriched with additional information.",
-        notes = "Takes a route and returns it enriched with additional information. The route consists of an arbitrary "
+        notes =
+            "Takes a route and returns it enriched with additional information. The route consists of an arbitrary "
             + "number of route parts which are passed as request params.\n\n"
             + "Example usage:\n\n"
             + "/api/routedetails?data.parts[0].origin.latitude=51.39119&data.parts[0].origin.longitude=6.72873&\n"
@@ -71,13 +75,17 @@ public class RouteEnricherApiController {
             + "data.parts[0].routeType=TRUCK&data.parts[1].origin.latitude=51.36833&\n"
             + "data.parts[1].origin.longitude=4.3&data.parts[1].destination.latitude=51.39119&\n"
             + "data.parts[1].destination.longitude=6.72873&data.parts[1].containerType=TWENTY_LIGHT&\n"
-            + "data.parts[1].containerState=FULL&data.parts[1].routeType=TRUCK"
+            + "data.parts[1].containerState=FULL&data.parts[1].routeType=TRUCK&withDistancesByCountry=true \n"
+            + "\n"
+            + "Set parameter withDistancesByCountry=true to get the truck distances one way splittet up by countries"
     )
     @RequestMapping(method = RequestMethod.GET)
     @ModelAttribute(ControllerConstants.RESPONSE)
     public RouteResponse getEnrichedRoute(@ApiIgnore RouteDto route,
         @RequestParam(value = "terminal", required = false)
-        @ApiIgnore String terminalUid, Model model) {
+        @ApiIgnore String terminalUid, Model model,
+        @RequestParam(value = "withDistancesByCountry", required = false, defaultValue = "false")
+        @ApiIgnore boolean withDistancesByCountry) {
 
         model.asMap().remove("routeDto");
 
@@ -87,7 +95,15 @@ public class RouteEnricherApiController {
         }
 
         RouteResponse response = new RouteResponse();
-        response.setRoute(enricherDtoService.enrich(route));
+
+        RouteDto enrichedRoute = enricherDtoService.enrich(route);
+
+        if (!withDistancesByCountry) {
+            resetCountryDistances(enrichedRoute);
+        }
+
+        response.setRoute(enrichedRoute);
+
         response.add(linkTo(getClass()).withSelfRel());
 
         Authentication authentication = userAuthenticationService.getCurrentUser();
@@ -96,5 +112,12 @@ public class RouteEnricherApiController {
             response.getRoute().size(), response.getRoute().getName(), authentication.getName());
 
         return response;
+    }
+
+
+    private void resetCountryDistances(RouteDto route) {
+
+        route.getData().getParts().forEach(p ->
+                Optional.ofNullable(p.getData()).ifPresent(RoutePartDataDto::removeDistancesByCountry));
     }
 }

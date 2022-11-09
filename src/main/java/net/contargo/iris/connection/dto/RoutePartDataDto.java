@@ -127,4 +127,10 @@ public class RoutePartDataDto {
 
         return distancesByCountry;
     }
+
+
+    public void removeDistancesByCountry() {
+
+        this.distancesByCountry = null;
+    }
 }

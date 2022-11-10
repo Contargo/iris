@@ -191,8 +191,8 @@ public class RouteDataRevisionRepositoryIntegrationTest {
         revision1.setPostalCode("70173");
         revision1.setCountry("de");
 
-        RouteDataRevision revision2 = createRouteDataRevision(eisleben, ZERO, ZERO, ZERO, ONE, ONE, TEN, "", new Date(),
-                null);
+        RouteDataRevision revision2 = createRouteDataRevision(eisleben, ZERO, ZERO, ZERO, ONE, ONE, TEN, "",
+                new Date(), null);
         revision2.setCity("Halle");
         revision2.setCityNormalized("HALLEEE");
         revision2.setPostalCode("70173");
@@ -245,6 +245,7 @@ public class RouteDataRevisionRepositoryIntegrationTest {
         routeDataRevision.setComment(comment);
         routeDataRevision.setValidFrom(validFrom);
         routeDataRevision.setValidTo(validTo);
+        routeDataRevision.getTruckDistanceOnWayInKilometerCountry().put("DE", truckdow);
 
         return routeDataRevision;
     }

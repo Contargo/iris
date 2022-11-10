@@ -8,17 +8,25 @@ import org.hibernate.validator.constraints.Range;
 import java.math.BigDecimal;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapKeyColumn;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import static javax.persistence.FetchType.EAGER;
 
 
 /**
@@ -45,6 +53,14 @@ public class RouteDataRevision {
 
     @Column(name = "truckDistanceOneWay")
     private BigDecimal truckDistanceOneWayInKilometer;
+
+    @ElementCollection(fetch = EAGER)
+    @CollectionTable(
+        name = "RouteDataRevisionCountryDistances", joinColumns = { @JoinColumn(name = "routeRevisionId") }
+    )
+    @MapKeyColumn(name = "country")
+    @Column(name = "truckDistanceOneWay")
+    private Map<String, BigDecimal> truckDistanceOnWayInKilometerCountry = new HashMap<>();
 
     @Column(name = "tollDistanceOneWay")
     private BigDecimal tollDistanceOneWayInKilometer;
@@ -116,6 +132,18 @@ public class RouteDataRevision {
     public void setTruckDistanceOneWayInKilometer(BigDecimal truckDistanceOneWayInKilometer) {
 
         this.truckDistanceOneWayInKilometer = truckDistanceOneWayInKilometer;
+    }
+
+
+    public Map<String, BigDecimal> getTruckDistanceOnWayInKilometerCountry() {
+
+        return truckDistanceOnWayInKilometerCountry;
+    }
+
+
+    public void setTruckDistanceOnWayInKilometerCountry(Map<String, BigDecimal> truckDistanceOnWayInKilometerCountry) {
+
+        this.truckDistanceOnWayInKilometerCountry = truckDistanceOnWayInKilometerCountry;
     }
 
 

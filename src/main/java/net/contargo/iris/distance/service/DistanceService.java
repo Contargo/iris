@@ -4,6 +4,8 @@ import net.contargo.iris.truck.TruckRoute;
 
 import java.math.BigDecimal;
 
+import java.util.Map;
+
 
 /**
  * Extracts specific properties and calculates the correct value with or without rounding.
@@ -20,6 +22,9 @@ public interface DistanceService {
      * @return  BigDecimal
      */
     BigDecimal getDistance(TruckRoute truckRoute);
+
+
+    Map<String, BigDecimal> getDistancesByCountry(TruckRoute truckRoute);
 
 
     /**

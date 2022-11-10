@@ -21,6 +21,8 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import static java.util.Collections.singletonMap;
+
 
 /**
  * Unit test for {@link DistanceServiceImpl}.
@@ -52,7 +54,7 @@ public class DistanceServiceImplUnitTest {
     @Test
     public void getDistanceFromTruckRoute() {
 
-        TruckRoute truckRoute = new TruckRoute(value, new BigDecimal(1.11), null);
+        TruckRoute truckRoute = new TruckRoute(value, new BigDecimal(1.11), null, singletonMap("DE", value));
 
         BigDecimal distance = sut.getDistance(truckRoute);
 
@@ -64,7 +66,8 @@ public class DistanceServiceImplUnitTest {
     @Test
     public void getTollDistanceFromTruckRoute() {
 
-        TruckRoute truckRoute = new TruckRoute(new BigDecimal(1.11), value, null);
+        TruckRoute truckRoute = new TruckRoute(new BigDecimal(1.11), value, null,
+                singletonMap("DE", new BigDecimal(1.11)));
 
         BigDecimal tollDistance = sut.getTollDistance(truckRoute);
 

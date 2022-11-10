@@ -1,3 +1,4 @@
+<%@ page import="net.contargo.iris.countries.service.CountryCode" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
@@ -98,18 +99,27 @@
 
                     <iris:inputField property="longitude" messageKey="geolocation.longitude"
                                      title="geolocation.longitude.title"/>
-                    
+
                     <iris:inputField property="radiusInMeter"
                                      messageKey="routerevision.radius" unitMessageKey="unit.meter"/>
-
-                    <iris:inputField property="truckDistanceOneWayInKilometer"
-                                     messageKey="routerevision.truckdistanceoneway" unitMessageKey="unit.kilometer"/>
 
                     <iris:inputField property="tollDistanceOneWayInKilometer"
                                      messageKey="routerevision.tolldistanceoneway" unitMessageKey="unit.kilometer"/>
 
                     <iris:inputField property="airlineDistanceInKilometer"
                                      messageKey="routerevision.airlinedistance" unitMessageKey="unit.kilometer"/>
+
+                    <h4 class="mb-4">
+                        <spring:message code="routerevision.distancesByCountry"/>
+                    </h4>
+                    <c:set var="countries" value="<%=CountryCode.countries()%>"/>
+                    <c:forEach items="${countries}" var="country">
+                        <iris:inputField property="truckDistanceOneWayInKilometer${country.getValue()}"
+                                         messageKey="country.${country.getValue()}" unitMessageKey="unit.kilometer"/>
+                    </c:forEach>
+
+                    <iris:inputField property="truckDistanceOneWayInKilometer"
+                                     messageKey="routerevision.truckdistanceoneway" unitMessageKey="unit.kilometer" readonly="true"/>
 
                     <iris:inputField property="city" messageKey="routerevision.city" readonly="true"/>
                     <iris:inputField property="postalCode" messageKey="routerevision.postalcode" readonly="true"/>

@@ -18,6 +18,7 @@ import java.math.BigDecimal;
 import static net.contargo.iris.routing.osrm.OSRMProfile.RAIL;
 import static net.contargo.iris.routing.osrm.OsrmResponseProvider.osrm5Response;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 
 import static org.junit.Assert.assertThat;
@@ -63,6 +64,8 @@ public class Osrm5QueryStrategyIntegrationTest {
         assertThat(result.getTotalTime(), is(503.6));
         assertThat(result.getTotalDistance(), is(8249.1));
         assertThat(result.getToll(), is(new BigDecimal("5.2908")));
+        assertThat(result.getDistancesByCountry().keySet(), hasSize(1));
+        assertThat(result.getDistancesByCountry().get("DE"), is(8249.3));
     }
 
 
@@ -85,6 +88,8 @@ public class Osrm5QueryStrategyIntegrationTest {
         assertThat(result.getTotalTime(), is(503.6));
         assertThat(result.getTotalDistance(), is(8249.1));
         assertThat(result.getToll(), is(new BigDecimal("5.2908")));
+        assertThat(result.getDistancesByCountry().keySet(), hasSize(1));
+        assertThat(result.getDistancesByCountry().get("DE"), is(8249.3));
     }
 
 

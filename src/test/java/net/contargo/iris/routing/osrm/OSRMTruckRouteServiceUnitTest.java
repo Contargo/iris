@@ -24,6 +24,8 @@ import static net.contargo.iris.routing.osrm.OSRMProfile.DRIVING;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 
+import static org.hamcrest.Matchers.hasSize;
+
 import static org.junit.Assert.assertThat;
 
 import static org.mockito.Mockito.verify;
@@ -31,6 +33,9 @@ import static org.mockito.Mockito.when;
 
 import static java.math.BigDecimal.TEN;
 import static java.math.BigDecimal.ZERO;
+
+import static java.util.Collections.singletonList;
+import static java.util.Collections.singletonMap;
 
 
 /**
@@ -93,8 +98,6 @@ public class OSRMTruckRouteServiceUnitTest {
     @Test
     public void parsesSectionsAndReturnsDistanceInMeters() {
 
-        OSRM4ResponseRouteSummary summary = new OSRM4ResponseRouteSummary();
-        summary.setTotalDistance(12000);
         makeMockReturn(12000, DEFAULT_TOTAL_TIME);
 
         TruckRoute route = sut.route(start, destination);
@@ -104,10 +107,20 @@ public class OSRMTruckRouteServiceUnitTest {
 
 
     @Test
+    public void parsesSectionsAndReturnsDistancesByCountryInMeters() {
+
+        makeMockReturn(12000, DEFAULT_TOTAL_TIME);
+
+        TruckRoute route = sut.route(start, destination);
+        assertThat(route, notNullValue());
+        assertThat(route.getDistancesByCountry().keySet(), hasSize(1));
+        assertThat(route.getDistancesByCountry().get("DE"), equalTo(new BigDecimal("12.00000")));
+    }
+
+
+    @Test
     public void parsesSectionsAndReturnsTimeInMinutes() {
 
-        OSRM4ResponseRouteSummary summary = new OSRM4ResponseRouteSummary();
-        summary.setTotalTime(120);
         makeMockReturn(DEFAULT_TOTAL_DISTANCE, 120);
 
         TruckRoute route = sut.route(start, destination);
@@ -118,7 +131,8 @@ public class OSRMTruckRouteServiceUnitTest {
 
     private void makeMockReturn(double totalDistance, double totalTime) {
 
-        RoutingQueryResult response = new RoutingQueryResult(0, totalDistance, totalTime, ZERO);
+        RoutingQueryResult response = new RoutingQueryResult(0, totalDistance, totalTime, ZERO,
+                singletonList("geometries"), singletonMap("DE", totalDistance));
 
         when(queryServiceMock.route(start, destination, DRIVING)).thenReturn(response);
     }

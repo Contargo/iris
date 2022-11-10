@@ -12,6 +12,8 @@ import net.contargo.iris.truck.service.TruckRouteService;
 
 import java.math.BigDecimal;
 
+import java.util.Map;
+
 import static java.math.BigDecimal.ZERO;
 
 
@@ -52,15 +54,37 @@ class TruckRoutingPartEnricher implements RoutePartEnricher {
             }
 
             BigDecimal partDistance = distanceService.getDistance(truckRoute);
+            Map<String, BigDecimal> distancesByCountry = extractDistancesByCountry(partDistance, truckRoute);
 
             routePartData.setTollDistance(distanceService.getTollDistance(truckRoute));
             routePartData.setDistance(partDistance);
             routePartData.setDieselDistance(partDistance);
+            routePartData.setDistancesByCountry(distancesByCountry);
             routePartData.setElectricDistance(ZERO);
             routePartData.setBargeDieselDistance(ZERO);
             routePartData.setRailDieselDistance(ZERO);
             routePartData.setDtruckDistance(routePart.isOfType(RouteType.DTRUCK) ? partDistance : ZERO);
             routePartData.setDuration(durationService.getDuration(truckRoute));
         }
+    }
+
+
+    private Map<String, BigDecimal> extractDistancesByCountry(BigDecimal totalOnewayDistance, TruckRoute truckRoute) {
+
+        Map<String, BigDecimal> result = distanceService.getDistancesByCountry(truckRoute);
+
+        String countryMaxDistance = result.entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .orElse(null);
+
+        BigDecimal totalDistanceByCountry = result.values().stream()
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal distanceDifference = totalOnewayDistance.subtract(totalDistanceByCountry);
+
+        BigDecimal newDistanceForMaxCountry = result.get(countryMaxDistance).add(distanceDifference);
+        result.put(countryMaxDistance, newDistanceForMaxCountry);
+
+        return result;
     }
 }

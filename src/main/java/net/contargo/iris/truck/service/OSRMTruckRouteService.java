@@ -10,6 +10,9 @@ import org.springframework.cache.annotation.Cacheable;
 
 import java.math.BigDecimal;
 
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import static net.contargo.iris.routing.osrm.OSRMProfile.DRIVING;
 
 import static java.math.RoundingMode.HALF_UP;
@@ -53,8 +56,13 @@ public class OSRMTruckRouteService implements TruckRouteService {
         BigDecimal distance = BigDecimal.valueOf(osrmResult.getTotalDistance())
                 .divide(METERS_PER_KILOMETER, SCALE, HALF_UP);
 
+        Map<String, BigDecimal> distancesByCountry = osrmResult.getDistancesByCountry().entrySet().stream()
+                .collect(Collectors.toMap(Map.Entry::getKey,
+                        e -> BigDecimal.valueOf(e.getValue())
+                                .divide(METERS_PER_KILOMETER, SCALE, HALF_UP)));
+
         BigDecimal duration = BigDecimal.valueOf(osrmResult.getTotalTime()).divide(SECONDS_PER_MINUTE, SCALE, HALF_UP);
 
-        return new TruckRoute(distance, toll, duration);
+        return new TruckRoute(distance, toll, duration, distancesByCountry);
     }
 }

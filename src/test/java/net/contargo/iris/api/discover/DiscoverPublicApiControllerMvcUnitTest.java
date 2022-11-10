@@ -112,7 +112,8 @@ public class DiscoverPublicApiControllerMvcUnitTest {
                 + "&data.parts[3].origin.longitude=8.2852700000"
                 + "&data.parts[3].origin.latitude=49.0690300000&data.parts[3].destination.longitude=4.3"
                 + "&data.parts[3].destination.latitude=51.36833&data.parts[3].routeType=BARGE"
-                + "&data.parts[3].containerType=TWENTY_LIGHT&data.parts[3].containerState=EMPTY"));
+                + "&data.parts[3].containerType=TWENTY_LIGHT&data.parts[3].containerState=EMPTY"
+                + "&withDistancesByCountry=true"));
     }
 
 

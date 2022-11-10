@@ -66,7 +66,8 @@ public class Osrm5QueryStrategy implements RoutingQueryStrategy {
             List<String> geometries = osrm5Response.getGeometries();
 
             return new RoutingQueryResult(STATUS_OK, osrm5Response.getDistance().doubleValue(),
-                    osrm5Response.getDuration().doubleValue(), osrm5Response.getToll(), geometries);
+                    osrm5Response.getDuration().doubleValue(), osrm5Response.getToll(), geometries,
+                    osrm5Response.getDistancesByCountry());
         } catch (HttpClientErrorException e) {
             return handleClientError(e);
         }

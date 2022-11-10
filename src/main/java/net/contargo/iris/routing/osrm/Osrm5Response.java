@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -20,12 +21,14 @@ public class Osrm5Response {
     private final BigDecimal duration;
     private final BigDecimal toll;
     private final List<String> geometries;
+    private final Map<String, Double> distancesByCountry;
 
     @JsonCreator
     public Osrm5Response(@JsonProperty("routes") List<Osrm5Route> routes) {
 
         Osrm5Route route = routes.get(0);
         this.distance = route.getDistance();
+        this.distancesByCountry = route.getDistancesByCountry();
         this.duration = route.getDuration();
         this.toll = route.getToll();
         this.geometries = route.getGeometries();
@@ -34,6 +37,12 @@ public class Osrm5Response {
     public BigDecimal getDistance() {
 
         return distance;
+    }
+
+
+    public Map<String, Double> getDistancesByCountry() {
+
+        return distancesByCountry;
     }
 
 
@@ -61,6 +70,7 @@ public class Osrm5Response {
         return "Osrm5Response{"
             + "distance=" + distance
             + ", duration=" + duration
-            + ", toll=" + toll + ", geometries=" + geometries + '}';
+            + ", toll=" + toll
+            + ", distancesByCountry=" + distancesByCountry + '}';
     }
 }

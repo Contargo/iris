@@ -21,8 +21,11 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 
+import java.util.Map;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
@@ -70,13 +73,19 @@ public class TruckRoutingPartEnricherUnitTest {
         Terminal destinationTerminal = new Terminal();
         Terminal originTerminal = new Terminal();
 
-        truckRoute = new TruckRoute(ONE, TEN, null);
+        Map<String, BigDecimal> distancesByCountry = new java.util.HashMap<>();
+        distancesByCountry.put("DE", ONE);
+        truckRoute = new TruckRoute(ONE, TEN, null, distancesByCountry);
 
         routePart = new RoutePart();
         routePart.setOrigin(originTerminal);
         routePart.setDestination(destinationTerminal);
 
         when(distanceServiceMock.getDistance(truckRoute)).thenReturn(distance);
+
+        Map<String, BigDecimal> roundedDistancesByCountry = new java.util.HashMap<>();
+        roundedDistancesByCountry.put("DE", distance);
+        when(distanceServiceMock.getDistancesByCountry(truckRoute)).thenReturn(roundedDistancesByCountry);
         when(distanceServiceMock.getTollDistance(truckRoute)).thenReturn(toll);
         when(durationServiceMock.getDuration(truckRoute)).thenReturn(duration);
         when(truckRouteServiceMock.route(originTerminal, destinationTerminal)).thenReturn(truckRoute);
@@ -104,6 +113,10 @@ public class TruckRoutingPartEnricherUnitTest {
 
         assertThat(routePart.getData().getTollDistance(), is(toll));
         verify(distanceServiceMock).getTollDistance(truckRoute);
+
+        assertThat(routePart.getData().getDistancesByCountry().keySet(), hasSize(1));
+        assertThat(routePart.getData().getDistancesByCountry().get("DE"), is(distance));
+        verify(distanceServiceMock).getDistancesByCountry(truckRoute);
     }
 
 
@@ -126,6 +139,10 @@ public class TruckRoutingPartEnricherUnitTest {
 
         assertThat(routePart.getData().getTollDistance(), is(toll));
         verify(distanceServiceMock).getTollDistance(truckRoute);
+
+        assertThat(routePart.getData().getDistancesByCountry().keySet(), hasSize(1));
+        assertThat(routePart.getData().getDistancesByCountry().get("DE"), is(distance));
+        verify(distanceServiceMock).getDistancesByCountry(truckRoute);
     }
 
 
@@ -148,6 +165,9 @@ public class TruckRoutingPartEnricherUnitTest {
 
         assertThat(routePart.getData().getTollDistance(), nullValue());
         verify(distanceServiceMock, never()).getTollDistance(truckRoute);
+
+        assertThat(routePart.getData().getDistancesByCountry(), nullValue());
+        verify(distanceServiceMock, never()).getDistancesByCountry(truckRoute);
     }
 
 

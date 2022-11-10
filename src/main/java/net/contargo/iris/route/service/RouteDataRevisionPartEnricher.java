@@ -14,6 +14,7 @@ import java.lang.invoke.MethodHandles;
 
 import static net.contargo.iris.route.RouteType.TRUCK;
 import static net.contargo.iris.route.service.RouteDataRevisionPartEnricher.RouteDataRevisionPolicy.MANDATORY_FOR_SWISS_ADDRESS;
+import static net.contargo.iris.routedatarevision.DistancesByCountryUtil.getDistancesByCountry;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -68,6 +69,7 @@ public class RouteDataRevisionPartEnricher implements RoutePartEnricher {
                     routePart.getData().setDistance(routeDataRevision.getTruckDistanceOneWayInKilometer());
                     routePart.getData().setTollDistance(routeDataRevision.getTollDistanceOneWayInKilometer());
                     routePart.getData().setAirLineDistance(routeDataRevision.getAirlineDistanceInKilometer());
+                    routePart.getData().setDistancesByCountry(getDistancesByCountry(routeDataRevision));
                 }
             } catch (NotFoundException e) {
                 LOG.debug(e.getMessage());

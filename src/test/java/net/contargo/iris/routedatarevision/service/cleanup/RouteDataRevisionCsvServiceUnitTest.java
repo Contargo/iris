@@ -23,6 +23,7 @@ import static java.math.BigDecimal.TEN;
 import static java.math.BigDecimal.ZERO;
 
 import static java.util.Collections.singletonList;
+import static java.util.Collections.singletonMap;
 
 
 /**
@@ -55,7 +56,7 @@ public class RouteDataRevisionCsvServiceUnitTest {
         revision.setTruckDistanceOneWayInKilometer(ONE);
         revision.setTollDistanceOneWayInKilometer(ZERO);
 
-        TruckRoute truckRoute = new TruckRoute(TEN, ZERO, null);
+        TruckRoute truckRoute = new TruckRoute(TEN, ZERO, null, singletonMap("DE", TEN));
 
         InputStream inputStream = sut.generateCsvReport(singletonList(
                     new RouteDataRevisionCleanupRecord(revision, truckRoute)));

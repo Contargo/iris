@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet author="antony@synyx.de" id="add-route-revision-country-distances">
+
+        <createTable tableName="RouteDataRevisionCountryDistances">
+            <column name="routeRevisionId" type="BIGINT">
+                <constraints referencedTableName="RouteDataRevision" referencedColumnNames="id"
+                             foreignKeyName="fk-route-revision-country"/>
+            </column>
+            <column name="country" type="VARCHAR(2)"/>
+            <column name="truckDistanceOneWay" type="DECIMAL(15,2)"/>
+        </createTable>
+
+    </changeSet>
+
+    <changeSet id="migrate-route-revision-country-distances" author="antony@synyx.de">
+        <sql>
+
+            INSERT INTO RouteDataRevisionCountryDistances (routeRevisionId, country, truckDistanceOneWay)
+            SELECT id as routeRevisionId, UPPER(country) as country, truckDistanceOneWay
+            FROM RouteDataRevision
+            WHERE UPPER(country) = 'DE';
+
+            INSERT INTO RouteDataRevisionCountryDistances (routeRevisionId, country, truckDistanceOneWay)
+            SELECT id as routeRevisionId, UPPER(country) as country, truckDistanceOneWay
+            FROM RouteDataRevision
+            WHERE UPPER(country) = 'NL';
+
+            INSERT INTO RouteDataRevisionCountryDistances (routeRevisionId, country, truckDistanceOneWay)
+            SELECT id as routeRevisionId, UPPER(country) as country, truckDistanceOneWay
+            FROM RouteDataRevision
+            WHERE UPPER(country) = 'BE';
+
+            INSERT INTO RouteDataRevisionCountryDistances (routeRevisionId, country, truckDistanceOneWay)
+            SELECT id as routeRevisionId, UPPER(country) as country, truckDistanceOneWay
+            FROM RouteDataRevision
+            WHERE UPPER(country) = 'LU';
+
+            INSERT INTO RouteDataRevisionCountryDistances (routeRevisionId, country, truckDistanceOneWay)
+            SELECT id as routeRevisionId, UPPER(country) as country, truckDistanceOneWay
+            FROM RouteDataRevision
+            WHERE UPPER(country) = 'FR';
+
+            INSERT INTO RouteDataRevisionCountryDistances (routeRevisionId, country, truckDistanceOneWay)
+            SELECT id as routeRevisionId, UPPER(country) as country, truckDistanceOneWay
+            FROM RouteDataRevision
+            WHERE UPPER(country) = 'CH';
+
+            INSERT INTO RouteDataRevisionCountryDistances (routeRevisionId, country, truckDistanceOneWay)
+            SELECT id as routeRevisionId, UPPER(country) as country, truckDistanceOneWay
+            FROM RouteDataRevision
+            WHERE UPPER(country) = 'LI';
+
+            INSERT INTO RouteDataRevisionCountryDistances (routeRevisionId, country, truckDistanceOneWay)
+            SELECT id as routeRevisionId, UPPER(country) as country, truckDistanceOneWay
+            FROM RouteDataRevision
+            WHERE UPPER(country) = 'AT';
+
+            INSERT INTO RouteDataRevisionCountryDistances (routeRevisionId, country, truckDistanceOneWay)
+            SELECT id as routeRevisionId, UPPER(country) as country, truckDistanceOneWay
+            FROM RouteDataRevision
+            WHERE UPPER(country) = 'CZ';
+
+            INSERT INTO RouteDataRevisionCountryDistances (routeRevisionId, country, truckDistanceOneWay)
+            SELECT id as routeRevisionId, UPPER(country) as country, truckDistanceOneWay
+            FROM RouteDataRevision
+            WHERE UPPER(country) = 'PL';
+
+            INSERT INTO RouteDataRevisionCountryDistances (routeRevisionId, country, truckDistanceOneWay)
+            SELECT id as routeRevisionId, UPPER(country) as country, truckDistanceOneWay
+            FROM RouteDataRevision
+            WHERE UPPER(country) = 'DK';
+
+            -- Set all not set distances to 0.0
+
+            INSERT INTO RouteDataRevisionCountryDistances (routeRevisionId, country, truckDistanceOneWay)
+            SELECT RR.id as routeRevisionId, 'DE' as country, 0.0 as truckDistanceOneWay
+            FROM RouteDataRevision RR
+            WHERE (SELECT COUNT(RDRCD.routeRevisionId)
+                   from RouteDataRevisionCountryDistances RDRCD
+                   WHERE RDRCD.routeRevisionId = RR.id
+                     AND RDRCD.country = 'DE') = 0;
+
+            INSERT INTO RouteDataRevisionCountryDistances (routeRevisionId, country, truckDistanceOneWay)
+            SELECT RR.id as routeRevisionId, 'NL' as country, 0.0 as truckDistanceOneWay
+            FROM RouteDataRevision RR
+            WHERE (SELECT COUNT(RDRCD.routeRevisionId)
+                   from RouteDataRevisionCountryDistances RDRCD
+                   WHERE RDRCD.routeRevisionId = RR.id
+                     AND RDRCD.country = 'NL') = 0;
+
+            INSERT INTO RouteDataRevisionCountryDistances (routeRevisionId, country, truckDistanceOneWay)
+            SELECT RR.id as routeRevisionId, 'BE' as country, 0.0 as truckDistanceOneWay
+            FROM RouteDataRevision RR
+            WHERE (SELECT COUNT(RDRCD.routeRevisionId)
+                   from RouteDataRevisionCountryDistances RDRCD
+                   WHERE RDRCD.routeRevisionId = RR.id
+                     AND RDRCD.country = 'BE') = 0;
+
+            INSERT INTO RouteDataRevisionCountryDistances (routeRevisionId, country, truckDistanceOneWay)
+            SELECT RR.id as routeRevisionId, 'LU' as country, 0.0 as truckDistanceOneWay
+            FROM RouteDataRevision RR
+            WHERE (SELECT COUNT(RDRCD.routeRevisionId)
+                   from RouteDataRevisionCountryDistances RDRCD
+                   WHERE RDRCD.routeRevisionId = RR.id
+                     AND RDRCD.country = 'LU') = 0;
+
+            INSERT INTO RouteDataRevisionCountryDistances (routeRevisionId, country, truckDistanceOneWay)
+            SELECT RR.id as routeRevisionId, 'FR' as country, 0.0 as truckDistanceOneWay
+            FROM RouteDataRevision RR
+            WHERE (SELECT COUNT(RDRCD.routeRevisionId)
+                   from RouteDataRevisionCountryDistances RDRCD
+                   WHERE RDRCD.routeRevisionId = RR.id
+                     AND RDRCD.country = 'FR') = 0;
+
+            INSERT INTO RouteDataRevisionCountryDistances (routeRevisionId, country, truckDistanceOneWay)
+            SELECT RR.id as routeRevisionId, 'CH' as country, 0.0 as truckDistanceOneWay
+            FROM RouteDataRevision RR
+            WHERE (SELECT COUNT(RDRCD.routeRevisionId)
+                   from RouteDataRevisionCountryDistances RDRCD
+                   WHERE RDRCD.routeRevisionId = RR.id
+                     AND RDRCD.country = 'CH') = 0;
+
+            INSERT INTO RouteDataRevisionCountryDistances (routeRevisionId, country, truckDistanceOneWay)
+            SELECT RR.id as routeRevisionId, 'LI' as country, 0.0 as truckDistanceOneWay
+            FROM RouteDataRevision RR
+            WHERE (SELECT COUNT(RDRCD.routeRevisionId)
+                   from RouteDataRevisionCountryDistances RDRCD
+                   WHERE RDRCD.routeRevisionId = RR.id
+                     AND RDRCD.country = 'LI') = 0;
+
+            INSERT INTO RouteDataRevisionCountryDistances (routeRevisionId, country, truckDistanceOneWay)
+            SELECT RR.id as routeRevisionId, 'AT' as country, 0.0 as truckDistanceOneWay
+            FROM RouteDataRevision RR
+            WHERE (SELECT COUNT(RDRCD.routeRevisionId)
+                   from RouteDataRevisionCountryDistances RDRCD
+                   WHERE RDRCD.routeRevisionId = RR.id
+                     AND RDRCD.country = 'AT') = 0;
+
+            INSERT INTO RouteDataRevisionCountryDistances (routeRevisionId, country, truckDistanceOneWay)
+            SELECT RR.id as routeRevisionId, 'CZ' as country, 0.0 as truckDistanceOneWay
+            FROM RouteDataRevision RR
+            WHERE (SELECT COUNT(RDRCD.routeRevisionId)
+                   from RouteDataRevisionCountryDistances RDRCD
+                   WHERE RDRCD.routeRevisionId = RR.id
+                     AND RDRCD.country = 'CZ') = 0;
+
+            INSERT INTO RouteDataRevisionCountryDistances (routeRevisionId, country, truckDistanceOneWay)
+            SELECT RR.id as routeRevisionId, 'PL' as country, 0.0 as truckDistanceOneWay
+            FROM RouteDataRevision RR
+            WHERE (SELECT COUNT(RDRCD.routeRevisionId)
+                   from RouteDataRevisionCountryDistances RDRCD
+                   WHERE RDRCD.routeRevisionId = RR.id
+                     AND RDRCD.country = 'PL') = 0;
+
+            INSERT INTO RouteDataRevisionCountryDistances (routeRevisionId, country, truckDistanceOneWay)
+            SELECT RR.id as routeRevisionId, 'DK' as country, 0.0 as truckDistanceOneWay
+            FROM RouteDataRevision RR
+            WHERE (SELECT COUNT(RDRCD.routeRevisionId)
+                   from RouteDataRevisionCountryDistances RDRCD
+                   WHERE RDRCD.routeRevisionId = RR.id
+                     AND RDRCD.country = 'DK') = 0;
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

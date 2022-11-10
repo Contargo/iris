@@ -1,8 +1,13 @@
 package net.contargo.iris.connection.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import net.contargo.iris.route.RoutePartData;
 
 import java.math.BigDecimal;
+
+import java.util.Map;
 
 
 /**
@@ -14,6 +19,8 @@ public class RoutePartDataDto {
 
     private BigDecimal airlineDistance;
     private BigDecimal distance;
+    @JsonInclude(Include.NON_NULL)
+    private Map<String, BigDecimal> distancesByCountry;
     private BigDecimal dieselDistance;
     private BigDecimal bargeDieselDistance;
     private BigDecimal railDieselDistance;
@@ -33,6 +40,7 @@ public class RoutePartDataDto {
         if (data != null) {
             this.airlineDistance = data.getAirLineDistance();
             this.distance = data.getDistance();
+            this.distancesByCountry = data.getDistancesByCountry();
             this.dieselDistance = data.getDieselDistance();
             this.bargeDieselDistance = data.getBargeDieselDistance();
             this.railDieselDistance = data.getRailDieselDistance();
@@ -48,6 +56,7 @@ public class RoutePartDataDto {
         RoutePartData routePartData = new RoutePartData();
         routePartData.setAirLineDistance(airlineDistance);
         routePartData.setDistance(distance);
+        routePartData.setDistancesByCountry(distancesByCountry);
         routePartData.setDieselDistance(dieselDistance);
         routePartData.setBargeDieselDistance(bargeDieselDistance);
         routePartData.setRailDieselDistance(railDieselDistance);
@@ -111,5 +120,17 @@ public class RoutePartDataDto {
     public BigDecimal getCo2() {
 
         return co2;
+    }
+
+
+    public Map<String, BigDecimal> getDistancesByCountry() {
+
+        return distancesByCountry;
+    }
+
+
+    public void removeDistancesByCountry() {
+
+        this.distancesByCountry = null;
     }
 }

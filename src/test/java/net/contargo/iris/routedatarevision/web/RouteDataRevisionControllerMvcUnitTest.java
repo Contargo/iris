@@ -177,9 +177,27 @@ public class RouteDataRevisionControllerMvcUnitTest {
         when(routeDataRevisionDtoServiceMock.existsEntry(eq("10"), eq(BigDecimal.TEN), eq(BigDecimal.ONE),
                     any(ValidityRange.class), eq(null))).thenReturn(false);
 
-        ResultActions resultActions = perform(post(
-                        "/routerevisions?terminal.uniqueId=10&latitude=10&longitude=1&truckDistanceOneWayInKilometer=1&"
-                        + "tollDistanceOneWayInKilometer=2&airlineDistanceInKilometer=3&radiusInMeter=4&validFrom=08.09.2015&validTo=23.09.2015")
+        ResultActions resultActions = perform(post("/routerevisions")
+                    .param("terminal.uniqueId", "10")
+                .param("latitude", "10")
+                .param("longitude", "1")
+                .param("truckDistanceOneWayInKilometer", "1")
+                .param("truckDistanceOneWayInKilometerDE", "1")
+                .param("truckDistanceOneWayInKilometerNL", "0.0")
+                .param("truckDistanceOneWayInKilometerBE", "0.0")
+                .param("truckDistanceOneWayInKilometerLU", "0.0")
+                .param("truckDistanceOneWayInKilometerFR", "0.0")
+                .param("truckDistanceOneWayInKilometerCH", "0.0")
+                .param("truckDistanceOneWayInKilometerLI", "0.0")
+                .param("truckDistanceOneWayInKilometerAT", "0.0")
+                .param("truckDistanceOneWayInKilometerCZ", "0.0")
+                .param("truckDistanceOneWayInKilometerPL", "0.0")
+                .param("truckDistanceOneWayInKilometerDK", "0.0")
+                .param("tollDistanceOneWayInKilometer", "2")
+                .param("airlineDistanceInKilometer", "3")
+                .param("radiusInMeter", "4")
+                .param("validFrom", "08.09.2015")
+                .param("validTo", "23.09.2015")
                 .contentType(APPLICATION_JSON));
 
         resultActions.andExpect(status().is3xxRedirection());
@@ -191,17 +209,25 @@ public class RouteDataRevisionControllerMvcUnitTest {
 
         when(routeDataRevisionDtoServiceMock.save(any(RouteDataRevisionDto.class))).thenReturn(routeDataRevision);
 
-        ResultActions resultActions = perform(post("/routerevisions").param("terminal.uniqueId", "foo")
+        ResultActions resultActions = perform(post("/routerevisions")
+                    .param("terminal.uniqueId", "foo")
+                .param("truckDistanceOneWayInKilometerDE", "0.0")
+                .param("truckDistanceOneWayInKilometerNL", "0.0")
+                .param("truckDistanceOneWayInKilometerBE", "0.0")
+                .param("truckDistanceOneWayInKilometerLU", "0.0")
+                .param("truckDistanceOneWayInKilometerFR", "0.0")
+                .param("truckDistanceOneWayInKilometerCH", "0.0")
+                .param("truckDistanceOneWayInKilometerLI", "0.0")
+                .param("truckDistanceOneWayInKilometerAT", "0.0")
+                .param("truckDistanceOneWayInKilometerCZ", "0.0")
+                .param("truckDistanceOneWayInKilometerPL", "0.0")
+                .param("truckDistanceOneWayInKilometerDK", "0.0")
                 .contentType(APPLICATION_JSON));
 
         resultActions.andExpect(status().isOk());
-        resultActions.andExpect(model().errorCount(7));
+        resultActions.andExpect(model().errorCount(6));
         resultActions.andExpect(model().attributeHasFieldErrorCode("routeRevision", "latitude", "NotNull"));
         resultActions.andExpect(model().attributeHasFieldErrorCode("routeRevision", "longitude", "NotNull"));
-        resultActions.andExpect(model().attributeHasFieldErrorCode("routeRevision", "truckDistanceOneWayInKilometer",
-                "NotNull"));
-        resultActions.andExpect(model().attributeHasFieldErrorCode("routeRevision", "tollDistanceOneWayInKilometer",
-                "NotNull"));
         resultActions.andExpect(model().attributeHasFieldErrorCode("routeRevision", "airlineDistanceInKilometer",
                 "NotNull"));
         resultActions.andExpect(model().attributeHasFieldErrorCode("routeRevision", "radiusInMeter", "NotNull"));
@@ -214,7 +240,18 @@ public class RouteDataRevisionControllerMvcUnitTest {
 
         ResultActions resultActions = perform(post("/routerevisions").param("terminal.uniqueId", "foo")
                 .param("validFrom", "01.05.2015")
-                .param("validTo", "30.04.2015"));
+                .param("validTo", "30.04.2015")
+                .param("truckDistanceOneWayInKilometerDE", "0.0")
+                .param("truckDistanceOneWayInKilometerNL", "0.0")
+                .param("truckDistanceOneWayInKilometerBE", "0.0")
+                .param("truckDistanceOneWayInKilometerLU", "0.0")
+                .param("truckDistanceOneWayInKilometerFR", "0.0")
+                .param("truckDistanceOneWayInKilometerCH", "0.0")
+                .param("truckDistanceOneWayInKilometerLI", "0.0")
+                .param("truckDistanceOneWayInKilometerAT", "0.0")
+                .param("truckDistanceOneWayInKilometerCZ", "0.0")
+                .param("truckDistanceOneWayInKilometerPL", "0.0")
+                .param("truckDistanceOneWayInKilometerDK", "0.0"));
 
         resultActions.andExpect(status().isOk());
         resultActions.andExpect(model().attributeHasFieldErrorCode("routeRevision", "validFrom",
@@ -232,9 +269,29 @@ public class RouteDataRevisionControllerMvcUnitTest {
         when(routeDataRevisionDtoServiceMock.save(any(RouteDataRevisionDto.class))).thenReturn(routeDataRevision);
 
         ResultActions resultActions = perform(put(
-                        "/routerevisions/7?id=7&terminal.uniqueId=10&latitude=10&longitude=1&truckDistanceOneWayInKilometer=1&"
-                        + "tollDistanceOneWayInKilometer=2&airlineDistanceInKilometer=3&radiusInMeter=4&validFrom=08.09.2015&validTo=23.09.2015")
-                .contentType(APPLICATION_JSON));
+                        "/routerevisions/7?"
+                        + "id=7"
+                        + "&terminal.uniqueId=10"
+                        + "&latitude=10"
+                        + "&longitude=1"
+                        + "&truckDistanceOneWayInKilometer=1"
+                        + "&truckDistanceOneWayInKilometerDE=1"
+                        + "&truckDistanceOneWayInKilometerNL=0.0"
+                        + "&truckDistanceOneWayInKilometerBE=0.0"
+                        + "&truckDistanceOneWayInKilometerLU=0.0"
+                        + "&truckDistanceOneWayInKilometerFR=0.0"
+                        + "&truckDistanceOneWayInKilometerCH=0.0"
+                        + "&truckDistanceOneWayInKilometerLI=0.0"
+                        + "&truckDistanceOneWayInKilometerAT=0.0"
+                        + "&truckDistanceOneWayInKilometerCZ=0.0"
+                        + "&truckDistanceOneWayInKilometerPL=0.0"
+                        + "&truckDistanceOneWayInKilometerDK=0.0"
+                        + "&tollDistanceOneWayInKilometer=2"
+                        + "&airlineDistanceInKilometer=3"
+                        + "&radiusInMeter=4"
+                        + "&validFrom=08.09.2015"
+                        + "&validTo=23.09.2015")
+                    .contentType(APPLICATION_JSON));
 
         resultActions.andExpect(status().is3xxRedirection());
     }

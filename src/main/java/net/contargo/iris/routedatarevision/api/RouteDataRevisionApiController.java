@@ -37,6 +37,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.lang.invoke.MethodHandles;
 
+import java.math.BigDecimal;
+
 import java.util.Date;
 
 import javax.validation.Valid;
@@ -88,9 +90,7 @@ public class RouteDataRevisionApiController {
     @ApiImplicitParams(
         {
             @ApiImplicitParam(name = "latitude", dataType = "String", required = true, paramType = "query"),
-            @ApiImplicitParam(
-                name = "longitude", dataType = "String", required = true, paramType = "query"
-            )
+            @ApiImplicitParam(name = "longitude", dataType = "String", required = true, paramType = "query")
         }
     )
     @RequestMapping(value = "", method = GET, params = { "terminalUid", "latitude", "longitude" })
@@ -145,7 +145,8 @@ public class RouteDataRevisionApiController {
 
         try {
             // may throw an IllegalArgumentException
-            validityRange = new ValidityRange(asLocalDate(revision.getValidFrom()), asLocalDate(revision.getValidTo()));
+            validityRange = new ValidityRange(asLocalDate(revision.getValidFrom()),
+                    asLocalDate(revision.getValidTo()));
         } catch (IllegalArgumentException e) {
             throw new RestApiException(messageSource.getMessage("routerevision.validityrange", null, getLocale()), e,
                 "routerevision.validityrange", BAD_REQUEST);
@@ -157,9 +158,36 @@ public class RouteDataRevisionApiController {
                 "routerevision.exists", BAD_REQUEST);
         }
 
+        if (distancesMissmatch(revision)) {
+            throw new RestApiException(messageSource.getMessage("routerevision.countryDistances.mismatch", null,
+                    getLocale()), "routerevision.countryDistances.mismatch", BAD_REQUEST);
+        }
+
         RouteDataRevisionDto savedRevision = routeDataRevisionDtoService.save(revision);
 
         return new ResponseEntity<>(savedRevision, statusCode);
+    }
+
+
+    private boolean distancesMissmatch(RouteDataRevisionDto revision) {
+
+        return revision.getTruckDistanceOneWayInKilometer().compareTo(totalDistance(revision)) != 0;
+    }
+
+
+    private BigDecimal totalDistance(RouteDataRevisionDto routeDataRevisionDto) {
+
+        return routeDataRevisionDto.getTruckDistanceOneWayInKilometerDE()
+            .add(routeDataRevisionDto.getTruckDistanceOneWayInKilometerNL())
+            .add(routeDataRevisionDto.getTruckDistanceOneWayInKilometerBE())
+            .add(routeDataRevisionDto.getTruckDistanceOneWayInKilometerLU())
+            .add(routeDataRevisionDto.getTruckDistanceOneWayInKilometerFR())
+            .add(routeDataRevisionDto.getTruckDistanceOneWayInKilometerCH())
+            .add(routeDataRevisionDto.getTruckDistanceOneWayInKilometerLI())
+            .add(routeDataRevisionDto.getTruckDistanceOneWayInKilometerAT())
+            .add(routeDataRevisionDto.getTruckDistanceOneWayInKilometerCZ())
+            .add(routeDataRevisionDto.getTruckDistanceOneWayInKilometerPL())
+            .add(routeDataRevisionDto.getTruckDistanceOneWayInKilometerDK());
     }
 
 

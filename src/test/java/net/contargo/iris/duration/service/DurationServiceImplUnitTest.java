@@ -21,6 +21,10 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import static java.math.BigDecimal.ONE;
+
+import static java.util.Collections.singletonMap;
+
 
 /**
  * Unit test of {@link DurationServiceImpl}.
@@ -52,7 +56,7 @@ public class DurationServiceImplUnitTest {
     @Test
     public void getDurationFromTruckRoute() {
 
-        TruckRoute truckRoute = new TruckRoute(BigDecimal.ONE, BigDecimal.TEN, value);
+        TruckRoute truckRoute = new TruckRoute(ONE, BigDecimal.TEN, value, singletonMap("DE", ONE));
 
         BigDecimal duration = sut.getDuration(truckRoute);
 

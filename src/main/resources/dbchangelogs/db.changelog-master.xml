@@ -60,4 +60,6 @@
 
     <include file="dbchangelogs/db.changelog-1.15-add-country-to-terminal.xml"/>
 
+    <include file="dbchangelogs/db.changelog-1.15-add-route-revision-country-distances.xml"/>
+
 </databaseChangeLog>

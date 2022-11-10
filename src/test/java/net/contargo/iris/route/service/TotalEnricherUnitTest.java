@@ -11,6 +11,7 @@ import org.junit.Test;
 import java.math.BigDecimal;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -59,6 +60,7 @@ public class TotalEnricherUnitTest {
         routePartData.setDistance(distance);
         routePartData.setTollDistance(tollDistance);
         routePartData.setDuration(duration);
+        routePartData.setDistancesByCountry(Collections.singletonMap("DE", distance));
         routePart.setData(routePartData);
         routeData.setParts(Arrays.asList(routePart, routePart, routePart, routePart));
 

@@ -19,6 +19,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static net.contargo.iris.route.RouteType.BARGE;
 import static net.contargo.iris.route.RouteType.TRUCK;
 
@@ -28,6 +31,7 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import static org.hamcrest.Matchers.hasEntry;
+import static org.hamcrest.Matchers.hasSize;
 
 import static org.mockito.Mockito.when;
 
@@ -65,6 +69,8 @@ public class RouteDataRevisionPartEnricherUnitTest {
         routeDataRevision.setAirlineDistanceInKilometer(AIRLINE_DISTANCE);
         routeDataRevision.setTollDistanceOneWayInKilometer(TOLL_DISTANCE_ONE_WAY);
         routeDataRevision.setTruckDistanceOneWayInKilometer(TRUCK_DISTANCE_ONE_WAY);
+        routeDataRevision.getTruckDistanceOnWayInKilometerCountry().put("DE", BigDecimal.valueOf(6));
+        routeDataRevision.getTruckDistanceOnWayInKilometerCountry().put("FR", BigDecimal.valueOf(4));
 
         when(routeDataRevisionServiceMock.getRouteDataRevision(terminal, address)).thenReturn(routeDataRevision);
 
@@ -79,6 +85,10 @@ public class RouteDataRevisionPartEnricherUnitTest {
     public void enrichTerminal2Address() throws CriticalEnricherException {
 
         RoutePart routePart = new RoutePart(terminal, address, TRUCK);
+        Map<String, BigDecimal> distancesByCountry = new HashMap<>();
+        distancesByCountry.put("DE", new BigDecimal("42"));
+        distancesByCountry.put("FR", new BigDecimal("2"));
+        routePart.getData().setDistancesByCountry(distancesByCountry);
 
         sut.enrich(routePart, enricherContext);
 
@@ -90,6 +100,10 @@ public class RouteDataRevisionPartEnricherUnitTest {
     public void enrichAddress2Terminal() throws CriticalEnricherException {
 
         RoutePart routePart = new RoutePart(address, terminal, TRUCK);
+        Map<String, BigDecimal> distancesByCountry = new HashMap<>();
+        distancesByCountry.put("DE", new BigDecimal("42"));
+        distancesByCountry.put("FR", new BigDecimal("2"));
+        routePart.getData().setDistancesByCountry(distancesByCountry);
 
         sut.enrich(routePart, enricherContext);
 
@@ -172,6 +186,9 @@ public class RouteDataRevisionPartEnricherUnitTest {
         assertThat(routePart.getData().getAirLineDistance(), is(AIRLINE_DISTANCE));
         assertThat(routePart.getData().getTollDistance(), is(TOLL_DISTANCE_ONE_WAY));
         assertThat(routePart.getData().getDistance(), is(TRUCK_DISTANCE_ONE_WAY));
+        assertThat(routePart.getData().getDistancesByCountry().keySet(), hasSize(2));
+        assertThat(routePart.getData().getDistancesByCountry().get("DE"), is(new BigDecimal("6")));
+        assertThat(routePart.getData().getDistancesByCountry().get("FR"), is(new BigDecimal("4")));
     }
 
 
@@ -180,5 +197,6 @@ public class RouteDataRevisionPartEnricherUnitTest {
         assertThat(routePart.getData().getAirLineDistance(), is(nullValue()));
         assertThat(routePart.getData().getTollDistance(), is(nullValue()));
         assertThat(routePart.getData().getDistance(), is(nullValue()));
+        assertThat(routePart.getData().getDistancesByCountry(), is(nullValue()));
     }
 }

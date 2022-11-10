@@ -8,6 +8,7 @@ import net.contargo.iris.units.Duration;
 import net.contargo.iris.units.Weight;
 
 import java.util.List;
+import java.util.Map;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
@@ -37,6 +38,7 @@ public class TransportResponseDto {
         public final boolean unitAvailable;
         public final ModeOfTransport modeOfTransport;
         public Distance distance;
+        public Map<String, Distance> distancesByCountry;
         public Distance tollDistance;
         public Duration duration;
         public List<String> geometries;

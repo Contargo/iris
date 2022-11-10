@@ -581,3 +581,7 @@ div.tooltip {
     width: 100%;
     z-index: 9999999;
 }
+
+.mb-4{
+    margin-bottom: 1rem;
+}

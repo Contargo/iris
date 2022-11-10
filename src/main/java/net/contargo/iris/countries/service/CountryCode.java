@@ -1,12 +1,18 @@
 package net.contargo.iris.countries.service;
 
+import java.util.Arrays;
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
+
+
 /**
  * Enum representing country codes (ISO 3166-1 alpha2 code), e.g. de for Germany.
  *
  * @author  Aljona Murygina - murygina@synyx.de
  * @author  Arnold Franke - franke@synyx.de
  */
-enum CountryCode {
+public enum CountryCode {
 
     OPTIONAL("Country (optional)", ""),
     GERMANY("Germany", "DE"),
@@ -39,5 +45,11 @@ enum CountryCode {
     public String getName() {
 
         return name;
+    }
+
+
+    public static List<CountryCode> countries() {
+
+        return Arrays.stream(values()).filter(c -> OPTIONAL != c).collect(toList());
     }
 }

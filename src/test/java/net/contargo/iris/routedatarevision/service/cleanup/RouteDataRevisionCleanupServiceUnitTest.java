@@ -51,6 +51,9 @@ import static java.math.BigDecimal.ONE;
 import static java.math.BigDecimal.TEN;
 import static java.math.BigDecimal.ZERO;
 
+import static java.util.Collections.emptyMap;
+import static java.util.Collections.singletonMap;
+
 
 /**
  * @author  Sandra Thieme - thieme@synyx.de
@@ -93,8 +96,8 @@ public class RouteDataRevisionCleanupServiceUnitTest {
         revision.setTruckDistanceOneWayInKilometer(TEN);
 
         when(repoMock.findValid(any(Date.class))).thenReturn(Stream.of(revision));
-        when(routeServiceMock.route(any(GeoLocation.class), any(GeoLocation.class))).thenReturn(new TruckRoute(TEN,
-                TEN, ZERO));
+        when(routeServiceMock.route(any(GeoLocation.class), any(GeoLocation.class)))
+            .thenReturn(new TruckRoute(TEN, TEN, ZERO, singletonMap("DE", TEN)));
         when(roundingServiceMock.roundDistance(TEN)).thenReturn(TEN);
 
         InputStream csv = new ByteArrayInputStream("lala".getBytes());
@@ -124,8 +127,8 @@ public class RouteDataRevisionCleanupServiceUnitTest {
         revision.setTruckDistanceOneWayInKilometer(TEN);
 
         when(repoMock.findValid(any(Date.class))).thenReturn(Stream.of(revision));
-        when(routeServiceMock.route(any(GeoLocation.class), any(GeoLocation.class))).thenReturn(new TruckRoute(TEN,
-                TEN, ZERO));
+        when(routeServiceMock.route(any(GeoLocation.class), any(GeoLocation.class)))
+            .thenReturn(new TruckRoute(TEN, TEN, ZERO, singletonMap("DE", TEN)));
         when(roundingServiceMock.roundDistance(TEN)).thenReturn(TEN);
         doThrow(RouteDataRevisionCsvException.class).when(csvServiceMock).generateCsvReport(any());
 
@@ -159,8 +162,8 @@ public class RouteDataRevisionCleanupServiceUnitTest {
         revision.setTerminal(new Terminal(new GeoLocation(ONE, TEN)));
         revision.setTruckDistanceOneWayInKilometer(new BigDecimal("100"));
 
-        when(routeServiceMock.route(any(GeoLocation.class), any(GeoLocation.class))).thenReturn(new TruckRoute(TEN,
-                TEN, ZERO));
+        when(routeServiceMock.route(any(GeoLocation.class), any(GeoLocation.class)))
+            .thenReturn(new TruckRoute(TEN, TEN, ZERO, singletonMap("DE", TEN)));
         when(roundingServiceMock.roundDistance(TEN)).thenReturn(TEN);
 
         assertThat(sut.identifyObsoleteRevision(revision), isEmpty());
@@ -176,8 +179,8 @@ public class RouteDataRevisionCleanupServiceUnitTest {
         revision.setTerminal(new Terminal(new GeoLocation(ONE, TEN)));
         revision.setTruckDistanceOneWayInKilometer(TEN);
 
-        when(routeServiceMock.route(any(GeoLocation.class), any(GeoLocation.class))).thenReturn(new TruckRoute(TEN,
-                TEN, ZERO));
+        when(routeServiceMock.route(any(GeoLocation.class), any(GeoLocation.class)))
+            .thenReturn(new TruckRoute(TEN, TEN, ZERO, singletonMap("DE", TEN)));
         when(roundingServiceMock.roundDistance(TEN)).thenReturn(TEN);
 
         assertThat(sut.identifyObsoleteRevision(revision), isPresent());
@@ -191,7 +194,7 @@ public class RouteDataRevisionCleanupServiceUnitTest {
         revision.setTruckDistanceOneWayInKilometer(new BigDecimal("11"));
 
         BigDecimal truckDistance = new BigDecimal("20");
-        TruckRoute truckRoute = new TruckRoute(truckDistance, null, null);
+        TruckRoute truckRoute = new TruckRoute(truckDistance, null, null, singletonMap("DE", truckDistance));
         when(roundingServiceMock.roundDistance(truckDistance)).thenReturn(truckDistance);
 
         assertThat(sut.isStaffelsprung(revision, truckRoute), is(false));
@@ -205,7 +208,7 @@ public class RouteDataRevisionCleanupServiceUnitTest {
         revision.setTruckDistanceOneWayInKilometer(new BigDecimal("20"));
 
         BigDecimal truckDistance = new BigDecimal("20.7");
-        TruckRoute truckRoute = new TruckRoute(truckDistance, null, null);
+        TruckRoute truckRoute = new TruckRoute(truckDistance, null, null, singletonMap("DE", truckDistance));
         when(roundingServiceMock.roundDistance(truckDistance)).thenReturn(new BigDecimal("21"));
 
         assertThat(sut.isStaffelsprung(revision, truckRoute), is(true));
@@ -218,7 +221,7 @@ public class RouteDataRevisionCleanupServiceUnitTest {
         RouteDataRevision revision = new RouteDataRevision();
         revision.setTruckDistanceOneWayInKilometer(ZERO);
 
-        TruckRoute truckRoute = new TruckRoute(ZERO, null, null);
+        TruckRoute truckRoute = new TruckRoute(ZERO, null, null, emptyMap());
         when(roundingServiceMock.roundDistance(ZERO)).thenReturn(ZERO);
 
         assertThat(sut.isStaffelsprung(revision, truckRoute), is(false));

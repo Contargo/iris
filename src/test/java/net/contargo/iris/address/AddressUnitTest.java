@@ -6,9 +6,8 @@ import org.junit.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-import static junit.framework.Assert.assertTrue;
-
 import static junit.framework.TestCase.assertFalse;
+import static junit.framework.TestCase.assertTrue;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 

@@ -5,7 +5,6 @@ import net.contargo.iris.seaport.Seaport;
 import net.contargo.iris.seaport.persistence.SeaportRepository;
 import net.contargo.iris.sequence.service.UniqueIdSequenceServiceImpl;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -244,15 +243,15 @@ public class SeaportServiceImplUnitTest {
         seaport.setId(null);
         seaport.setName(SEAPORT_NAME);
 
-        when(seaportRepositoryMock.findByLatitudeAndLongitude(any(BigDecimal.class), any(BigDecimal.class))).thenReturn(
-            ports.get(0));
+        when(seaportRepositoryMock.findByLatitudeAndLongitude(any(BigDecimal.class), any(BigDecimal.class)))
+            .thenReturn(ports.get(0));
         when(seaportRepositoryMock.findByName(SEAPORT_NAME)).thenReturn(null);
 
         try {
             sut.checkUniqueConstraints(seaport);
             fail("Expected exception did not occur.");
         } catch (NonUniqueSeaportException e) {
-            Assert.assertThat(e.getBadFields(), contains("latitude", "longitude"));
+            assertThat(e.getBadFields(), contains("latitude", "longitude"));
         }
     }
 
@@ -264,15 +263,15 @@ public class SeaportServiceImplUnitTest {
         seaport.setId(null);
         seaport.setName(SEAPORT_NAME);
 
-        when(seaportRepositoryMock.findByLatitudeAndLongitude(any(BigDecimal.class), any(BigDecimal.class))).thenReturn(
-            null);
+        when(seaportRepositoryMock.findByLatitudeAndLongitude(any(BigDecimal.class), any(BigDecimal.class)))
+            .thenReturn(null);
         when(seaportRepositoryMock.findByName(SEAPORT_NAME)).thenReturn(ports.get(0));
 
         try {
             sut.checkUniqueConstraints(seaport);
             fail("Expected exception did not occur.");
         } catch (NonUniqueSeaportException e) {
-            Assert.assertThat(e.getBadFields(), contains("name"));
+            assertThat(e.getBadFields(), contains("name"));
         }
     }
 
@@ -285,14 +284,14 @@ public class SeaportServiceImplUnitTest {
         seaport.setName(SEAPORT_NAME);
 
         when(seaportRepositoryMock.findByLatitudeAndLongitudeAndIdNot(any(BigDecimal.class), any(BigDecimal.class),
-                anyLong())).thenReturn(ports.get(0));
+                    anyLong())).thenReturn(ports.get(0));
         when(seaportRepositoryMock.findByNameAndIdNot(SEAPORT_NAME, 42L)).thenReturn(null);
 
         try {
             sut.checkUniqueConstraints(seaport);
             fail("Expected exception did not occur.");
         } catch (NonUniqueSeaportException e) {
-            Assert.assertThat(e.getBadFields(), contains("latitude", "longitude"));
+            assertThat(e.getBadFields(), contains("latitude", "longitude"));
         }
     }
 
@@ -305,14 +304,14 @@ public class SeaportServiceImplUnitTest {
         seaport.setName(SEAPORT_NAME);
 
         when(seaportRepositoryMock.findByLatitudeAndLongitudeAndIdNot(any(BigDecimal.class), any(BigDecimal.class),
-                anyLong())).thenReturn(null);
+                    anyLong())).thenReturn(null);
         when(seaportRepositoryMock.findByNameAndIdNot(SEAPORT_NAME, 42L)).thenReturn(ports.get(0));
 
         try {
             sut.checkUniqueConstraints(seaport);
             fail("Expected exception did not occur.");
         } catch (NonUniqueSeaportException e) {
-            Assert.assertThat(e.getBadFields(), contains("name"));
+            assertThat(e.getBadFields(), contains("name"));
         }
     }
 }

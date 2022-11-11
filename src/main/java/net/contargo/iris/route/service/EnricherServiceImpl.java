@@ -31,8 +31,8 @@ public class EnricherServiceImpl implements EnricherService {
     public EnricherServiceImpl(List<RoutePartEnricher> routePartEnricherList,
         List<RouteTotalEnricher> routeTotalEnricherList) {
 
-        Assert.notNull(routePartEnricherList);
-        Assert.notNull(routeTotalEnricherList);
+        Assert.notNull(routePartEnricherList, "Route part enricher list may not be null");
+        Assert.notNull(routeTotalEnricherList, "Route total enricher list may not be null");
 
         this.routePartEnricherList = routePartEnricherList;
         this.routeTotalEnricherList = routeTotalEnricherList;

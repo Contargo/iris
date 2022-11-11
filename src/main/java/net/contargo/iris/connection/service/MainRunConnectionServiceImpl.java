@@ -83,9 +83,9 @@ public class MainRunConnectionServiceImpl implements MainRunConnectionService {
     public MainRunConnection findRoutingConnectionBetweenTerminalAndSeaportByType(Terminal terminal, Seaport seaport,
         RouteType routeType) {
 
-        Assert.notNull(terminal);
-        Assert.notNull(seaport);
-        Assert.notNull(routeType);
+        Assert.notNull(terminal, "Terminal may not be null");
+        Assert.notNull(seaport, "Seaport may not be null");
+        Assert.notNull(routeType, "Route type may not be null");
 
         List<MainRunConnection> connections =
             mainRunConnectionRepository.findByTerminalAndSeaportAndRouteTypeAndEnabled(terminal, seaport, routeType,

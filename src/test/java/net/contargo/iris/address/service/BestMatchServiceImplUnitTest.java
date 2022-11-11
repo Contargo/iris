@@ -4,28 +4,40 @@ import net.contargo.iris.address.Address;
 import net.contargo.iris.address.AddressList;
 import net.contargo.iris.address.nominatim.service.AddressDetailKey;
 import net.contargo.iris.address.staticsearch.StaticAddress;
+
 import org.junit.Test;
 
 import java.math.BigInteger;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static java.math.BigDecimal.ONE;
-import static java.math.BigDecimal.TEN;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+
+import static org.junit.Assert.assertFalse;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import static java.math.BigDecimal.ONE;
+import static java.math.BigDecimal.TEN;
+
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 
 
 /**
  * @author  David Schilling - schilling@synyx.de
  * @author  Oliver Messner - messner@synyx.de
- * @author Ben Antony - antony@synyx.de
+ * @author  Ben Antony - antony@synyx.de
  */
 public class BestMatchServiceImplUnitTest {
 
@@ -128,6 +140,7 @@ public class BestMatchServiceImplUnitTest {
 
             return "GOMARINGEN";
         }
+
 
         @Override
         public String getSuburb() {

@@ -71,9 +71,6 @@ public class DiscoverPublicApiController {
 
         // routes
         discoverResponse.add(linkTo(
-                    methodOn(RoutesApiController.class).getSeaportRoutes(SEAPORT_UID, SEAPORTS_LAT, SEAPORTS_LON, true,
-                        TWENTY_LIGHT, false, RouteCombo.WATERWAY)).withRel(REL_CONNECTIONS));
-        discoverResponse.add(linkTo(
                     methodOn(RoutesApiController.class).getRoutes(SEAPORT_UID, SEAPORTS_LAT, SEAPORTS_LON, true,
                         TWENTY_LIGHT, false, RouteCombo.WATERWAY)).withRel(REL_ROUTES));
 

@@ -61,8 +61,6 @@
         <constructor-arg name="ehcache" ref="ehCacheFactory"/>
     </bean>
 
-    <bean id="roundingService" class="net.contargo.iris.rounding.RoundingServiceImpl"/>
-
     <bean id="urlSerializationService" class="net.contargo.iris.route.service.RouteUrlSerializationServiceImpl"/>
 
     <bean id="irisStartupWatcher" class="net.contargo.iris.startup.IrisStartupWatcher">
@@ -228,21 +226,13 @@
         <constructor-arg name="dtruckActive" value="${feature.dtruck}"/>
     </bean>
 
-    <bean id="mainRunDurationService" class="net.contargo.iris.mainrun.service.MainRunDurationServiceImpl">
-        <constructor-arg name="roundingService" ref="roundingService"/>
-    </bean>
+    <bean id="mainRunDurationService" class="net.contargo.iris.mainrun.service.MainRunDurationServiceImpl"/>
 
-    <bean id="connectionDistanceService" class="net.contargo.iris.distance.service.ConnectionDistanceServiceImpl">
-        <constructor-arg name="roundingService" ref="roundingService"/>
-    </bean>
+    <bean id="connectionDistanceService" class="net.contargo.iris.distance.service.ConnectionDistanceServiceImpl"/>
 
-    <bean id="distanceService" class="net.contargo.iris.distance.service.DistanceServiceImpl">
-        <constructor-arg name="roundingService" ref="roundingService"/>
-    </bean>
+    <bean id="distanceService" class="net.contargo.iris.distance.service.DistanceServiceImpl"/>
 
-    <bean id="durationService" class="net.contargo.iris.duration.service.DurationServiceImpl">
-        <constructor-arg name="roundingService" ref="roundingService"/>
-    </bean>
+    <bean id="durationService" class="net.contargo.iris.duration.service.DurationServiceImpl"/>
 
     <bean id="mainRunAdvisor" class="net.contargo.iris.connection.advice.MainRunAdvisor">
         <constructor-arg name="mainRunRoundTripImportAdvice">
@@ -282,7 +272,6 @@
                 </bean>
                 <bean class="net.contargo.iris.route.service.AirLineDistancePartEnricher">
                     <constructor-arg name="gisService" ref="gisService"/>
-                    <constructor-arg name="roundingService" ref="roundingService"/>
                 </bean>
                 <bean class="net.contargo.iris.route.service.MainRunPartEnricher">
                     <constructor-arg name="mainRunConnectionService" ref="connectionService"/>
@@ -331,7 +320,6 @@
           class="net.contargo.iris.routedatarevision.service.cleanup.RouteDataRevisionCleanupService">
         <constructor-arg name="routeDataRevisionRepository" ref="routeDataRevisionRepository"/>
         <constructor-arg name="truckRouteService" ref="truckRouteService"/>
-        <constructor-arg name="roundingService" ref="roundingService"/>
         <constructor-arg name="emailService" ref="mailService"/>
         <constructor-arg name="csvService" ref="routeDataRevisionCsvService"/>
     </bean>

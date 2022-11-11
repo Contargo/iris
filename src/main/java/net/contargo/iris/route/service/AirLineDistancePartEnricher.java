@@ -18,12 +18,9 @@ class AirLineDistancePartEnricher implements RoutePartEnricher {
 
     private final GisService gisService;
 
-    private final RoundingService roundingService;
-
-    AirLineDistancePartEnricher(GisService gisService, RoundingService roundingService) {
+    AirLineDistancePartEnricher(GisService gisService) {
 
         this.gisService = gisService;
-        this.roundingService = roundingService;
     }
 
     @Override
@@ -32,7 +29,7 @@ class AirLineDistancePartEnricher implements RoutePartEnricher {
         BigDecimal airLineDistance = gisService.calcAirLineDistInMeters(routePart.getOrigin(),
                 routePart.getDestination());
         airLineDistance = airLineDistance.divide(METERS_IN_A_KILOMETER);
-        airLineDistance = roundingService.roundDistance(airLineDistance);
+        airLineDistance = RoundingService.roundDistance(airLineDistance);
 
         routePart.getData().setAirLineDistance(airLineDistance);
     }

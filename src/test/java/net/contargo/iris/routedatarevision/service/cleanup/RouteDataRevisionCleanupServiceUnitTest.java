@@ -2,7 +2,6 @@ package net.contargo.iris.routedatarevision.service.cleanup;
 
 import net.contargo.iris.GeoLocation;
 import net.contargo.iris.mail.service.EmailService;
-import net.contargo.iris.rounding.RoundingService;
 import net.contargo.iris.routedatarevision.RouteDataRevision;
 import net.contargo.iris.routedatarevision.persistence.RouteDataRevisionRepository;
 import net.contargo.iris.routedatarevision.web.RouteDataRevisionCleanupRequest;
@@ -67,8 +66,7 @@ public class RouteDataRevisionCleanupServiceUnitTest {
     private RouteDataRevisionRepository repoMock;
     @Mock
     private TruckRouteService routeServiceMock;
-    @Mock
-    private RoundingService roundingServiceMock;
+
     @Mock
     private EmailService emailServiceMock;
     @Mock
@@ -81,8 +79,7 @@ public class RouteDataRevisionCleanupServiceUnitTest {
     @Before
     public void setUp() {
 
-        sut = new RouteDataRevisionCleanupService(repoMock, routeServiceMock, roundingServiceMock, emailServiceMock,
-                csvServiceMock);
+        sut = new RouteDataRevisionCleanupService(repoMock, routeServiceMock, emailServiceMock, csvServiceMock);
     }
 
 
@@ -98,7 +95,6 @@ public class RouteDataRevisionCleanupServiceUnitTest {
         when(repoMock.findValid(any(Date.class))).thenReturn(Stream.of(revision));
         when(routeServiceMock.route(any(GeoLocation.class), any(GeoLocation.class)))
             .thenReturn(new TruckRoute(TEN, TEN, ZERO, singletonMap("DE", TEN)));
-        when(roundingServiceMock.roundDistance(TEN)).thenReturn(TEN);
 
         InputStream csv = new ByteArrayInputStream("lala".getBytes());
         when(csvServiceMock.generateCsvReport(any())).thenReturn(csv);
@@ -129,7 +125,6 @@ public class RouteDataRevisionCleanupServiceUnitTest {
         when(repoMock.findValid(any(Date.class))).thenReturn(Stream.of(revision));
         when(routeServiceMock.route(any(GeoLocation.class), any(GeoLocation.class)))
             .thenReturn(new TruckRoute(TEN, TEN, ZERO, singletonMap("DE", TEN)));
-        when(roundingServiceMock.roundDistance(TEN)).thenReturn(TEN);
         doThrow(RouteDataRevisionCsvException.class).when(csvServiceMock).generateCsvReport(any());
 
         sut.cleanup(new RouteDataRevisionCleanupRequest("user@example.com"));
@@ -164,7 +159,6 @@ public class RouteDataRevisionCleanupServiceUnitTest {
 
         when(routeServiceMock.route(any(GeoLocation.class), any(GeoLocation.class)))
             .thenReturn(new TruckRoute(TEN, TEN, ZERO, singletonMap("DE", TEN)));
-        when(roundingServiceMock.roundDistance(TEN)).thenReturn(TEN);
 
         assertThat(sut.identifyObsoleteRevision(revision), isEmpty());
     }
@@ -181,7 +175,6 @@ public class RouteDataRevisionCleanupServiceUnitTest {
 
         when(routeServiceMock.route(any(GeoLocation.class), any(GeoLocation.class)))
             .thenReturn(new TruckRoute(TEN, TEN, ZERO, singletonMap("DE", TEN)));
-        when(roundingServiceMock.roundDistance(TEN)).thenReturn(TEN);
 
         assertThat(sut.identifyObsoleteRevision(revision), isPresent());
     }
@@ -195,7 +188,6 @@ public class RouteDataRevisionCleanupServiceUnitTest {
 
         BigDecimal truckDistance = new BigDecimal("20");
         TruckRoute truckRoute = new TruckRoute(truckDistance, null, null, singletonMap("DE", truckDistance));
-        when(roundingServiceMock.roundDistance(truckDistance)).thenReturn(truckDistance);
 
         assertThat(sut.isStaffelsprung(revision, truckRoute), is(false));
     }
@@ -209,7 +201,6 @@ public class RouteDataRevisionCleanupServiceUnitTest {
 
         BigDecimal truckDistance = new BigDecimal("20.7");
         TruckRoute truckRoute = new TruckRoute(truckDistance, null, null, singletonMap("DE", truckDistance));
-        when(roundingServiceMock.roundDistance(truckDistance)).thenReturn(new BigDecimal("21"));
 
         assertThat(sut.isStaffelsprung(revision, truckRoute), is(true));
     }
@@ -222,7 +213,6 @@ public class RouteDataRevisionCleanupServiceUnitTest {
         revision.setTruckDistanceOneWayInKilometer(ZERO);
 
         TruckRoute truckRoute = new TruckRoute(ZERO, null, null, emptyMap());
-        when(roundingServiceMock.roundDistance(ZERO)).thenReturn(ZERO);
 
         assertThat(sut.isStaffelsprung(revision, truckRoute), is(false));
     }

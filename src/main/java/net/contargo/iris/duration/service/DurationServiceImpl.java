@@ -13,16 +13,9 @@ import java.math.BigDecimal;
  */
 public class DurationServiceImpl implements DurationService {
 
-    private final RoundingService roundingService;
-
-    public DurationServiceImpl(RoundingService roundingService) {
-
-        this.roundingService = roundingService;
-    }
-
     @Override
     public BigDecimal getDuration(TruckRoute truckRoute) {
 
-        return roundingService.roundDuration(truckRoute.getDuration());
+        return RoundingService.roundDuration(truckRoute.getDuration());
     }
 }

@@ -19,9 +19,9 @@ import java.math.BigDecimal;
 
 import static net.contargo.iris.routing.osrm.OSRMProfile.DRIVING;
 
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

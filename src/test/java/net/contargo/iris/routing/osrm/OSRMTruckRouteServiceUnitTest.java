@@ -23,9 +23,9 @@ import static net.contargo.iris.routing.osrm.OSRMProfile.DRIVING;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.MatcherAssert.assertThat;
 
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;

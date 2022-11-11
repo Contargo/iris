@@ -14,11 +14,11 @@ import java.util.Map;
 
 import static net.contargo.iris.address.Address.COUNTRY_CODE;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+
 import static org.hamcrest.Matchers.is;
 
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
-
-import static org.junit.Assert.assertThat;
 
 import static java.util.Collections.singletonList;
 

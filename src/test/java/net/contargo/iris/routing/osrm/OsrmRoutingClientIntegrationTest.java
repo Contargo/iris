@@ -20,10 +20,10 @@ import static net.contargo.iris.routing.osrm.OSRMProfile.DRIVING;
 import static net.contargo.iris.routing.osrm.OSRMProfile.RAIL;
 import static net.contargo.iris.routing.osrm.OsrmResponseProvider.osrm5Response;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-
-import static org.junit.Assert.assertThat;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 

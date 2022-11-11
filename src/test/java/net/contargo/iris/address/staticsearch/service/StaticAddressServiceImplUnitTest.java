@@ -36,13 +36,13 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+
 import static org.hamcrest.Matchers.closeTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
-
-import static org.junit.Assert.assertThat;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -193,7 +193,8 @@ public class StaticAddressServiceImplUnitTest {
         assertThat(addresses.getAddresses().size(), is(3));
         verify(staticAddressRepositoryMock).findByCountryAndPostalCodeAndCity(postalCode, normalizedCity + "%",
             country);
-        verify(staticAddressRepositoryMock).findByCountryAndPostalCodeOrCity(postalCode, normalizedCity + "%", country);
+        verify(staticAddressRepositoryMock).findByCountryAndPostalCodeOrCity(postalCode, normalizedCity + "%",
+            country);
     }
 
 
@@ -328,8 +329,8 @@ public class StaticAddressServiceImplUnitTest {
 
         when(staticAddressRepositoryMock.findByPostalCodeAndCity(postalCode, CITY_NEUSTADT_NORMALIZED + "%"))
             .thenReturn(new ArrayList<>());
-        when(staticAddressRepositoryMock.findByPostalCodeOrCity(postalCode, CITY_NEUSTADT_NORMALIZED + "%")).thenReturn(
-            new ArrayList<>());
+        when(staticAddressRepositoryMock.findByPostalCodeOrCity(postalCode, CITY_NEUSTADT_NORMALIZED + "%"))
+            .thenReturn(new ArrayList<>());
 
         sut.findAddresses(postalCode, CITY_NEUSTADT_AN_DER_WEINSTRASSE, country);
         verify(staticAddressRepositoryMock).findByPostalCodeAndCity("", CITY_NEUSTADT_NORMALIZED + "%");

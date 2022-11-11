@@ -18,10 +18,10 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+
 import static org.hamcrest.Matchers.comparesEqualTo;
 import static org.hamcrest.Matchers.is;
-
-import static org.junit.Assert.assertThat;
 
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;

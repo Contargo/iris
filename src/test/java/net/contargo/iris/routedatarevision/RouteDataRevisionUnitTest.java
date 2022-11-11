@@ -5,10 +5,10 @@ import org.junit.Test;
 
 import java.util.stream.IntStream;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
-
-import static org.junit.Assert.assertThat;
 
 import static java.util.stream.Collectors.joining;
 

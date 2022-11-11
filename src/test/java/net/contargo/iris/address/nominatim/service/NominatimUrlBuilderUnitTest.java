@@ -22,12 +22,12 @@ import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.anyOf;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.isEmptyString;
 import static org.hamcrest.Matchers.startsWith;
-
-import static org.junit.Assert.assertThat;
 
 import static org.mockito.Mockito.when;
 

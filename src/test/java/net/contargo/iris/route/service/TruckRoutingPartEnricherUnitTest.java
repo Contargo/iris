@@ -2,7 +2,6 @@ package net.contargo.iris.route.service;
 
 import net.contargo.iris.GeoLocation;
 import net.contargo.iris.distance.service.DistanceService;
-import net.contargo.iris.duration.service.DurationService;
 import net.contargo.iris.route.RoutePart;
 import net.contargo.iris.route.RouteType;
 import net.contargo.iris.routing.RoutingException;
@@ -56,8 +55,6 @@ public class TruckRoutingPartEnricherUnitTest {
     private TruckRouteService truckRouteServiceMock;
     @Mock
     private DistanceService distanceServiceMock;
-    @Mock
-    private DurationService durationServiceMock;
 
     private RoutePart routePart;
     private TruckRoute truckRoute;
@@ -75,7 +72,7 @@ public class TruckRoutingPartEnricherUnitTest {
 
         Map<String, BigDecimal> distancesByCountry = new java.util.HashMap<>();
         distancesByCountry.put("DE", ONE);
-        truckRoute = new TruckRoute(ONE, TEN, null, distancesByCountry);
+        truckRoute = new TruckRoute(ONE, TEN, TEN, distancesByCountry);
 
         routePart = new RoutePart();
         routePart.setOrigin(originTerminal);
@@ -87,10 +84,9 @@ public class TruckRoutingPartEnricherUnitTest {
         roundedDistancesByCountry.put("DE", distance);
         when(distanceServiceMock.getDistancesByCountry(truckRoute)).thenReturn(roundedDistancesByCountry);
         when(distanceServiceMock.getTollDistance(truckRoute)).thenReturn(toll);
-        when(durationServiceMock.getDuration(truckRoute)).thenReturn(duration);
         when(truckRouteServiceMock.route(originTerminal, destinationTerminal)).thenReturn(truckRoute);
 
-        sut = new TruckRoutingPartEnricher(truckRouteServiceMock, distanceServiceMock, durationServiceMock);
+        sut = new TruckRoutingPartEnricher(truckRouteServiceMock, distanceServiceMock);
     }
 
 
@@ -109,7 +105,6 @@ public class TruckRoutingPartEnricherUnitTest {
         assertThat(routePart.getData().getDtruckDistance(), is(ZERO));
 
         assertThat(routePart.getData().getDuration(), is(duration));
-        verify(durationServiceMock).getDuration(truckRoute);
 
         assertThat(routePart.getData().getTollDistance(), is(toll));
         verify(distanceServiceMock).getTollDistance(truckRoute);
@@ -135,7 +130,6 @@ public class TruckRoutingPartEnricherUnitTest {
         assertThat(routePart.getData().getDtruckDistance(), is(TEN));
 
         assertThat(routePart.getData().getDuration(), is(duration));
-        verify(durationServiceMock).getDuration(truckRoute);
 
         assertThat(routePart.getData().getTollDistance(), is(toll));
         verify(distanceServiceMock).getTollDistance(truckRoute);
@@ -161,7 +155,6 @@ public class TruckRoutingPartEnricherUnitTest {
         assertThat(routePart.getData().getDtruckDistance(), nullValue());
 
         assertThat(routePart.getData().getDuration(), nullValue());
-        verify(durationServiceMock, never()).getDuration(truckRoute);
 
         assertThat(routePart.getData().getTollDistance(), nullValue());
         verify(distanceServiceMock, never()).getTollDistance(truckRoute);

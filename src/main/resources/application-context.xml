@@ -232,8 +232,6 @@
 
     <bean id="distanceService" class="net.contargo.iris.distance.service.DistanceServiceImpl"/>
 
-    <bean id="durationService" class="net.contargo.iris.duration.service.DurationServiceImpl"/>
-
     <bean id="mainRunAdvisor" class="net.contargo.iris.connection.advice.MainRunAdvisor">
         <constructor-arg name="mainRunRoundTripImportAdvice">
             <bean class="net.contargo.iris.connection.advice.MainRunRoundTripImportStrategy"/>
@@ -280,7 +278,6 @@
                 </bean>
                 <bean class="net.contargo.iris.route.service.TruckRoutingPartEnricher">
                     <constructor-arg name="truckRouteService" ref="truckRouteService"/>
-                    <constructor-arg name="durationService" ref="durationService"/>
                     <constructor-arg name="distanceService" ref="distanceService"/>
                 </bean>
                 <bean class="net.contargo.iris.route.service.Co2PartEnricher"/>

@@ -33,6 +33,8 @@ import static org.mockito.Mockito.when;
 import static java.math.BigDecimal.TEN;
 import static java.math.BigDecimal.ZERO;
 
+import static java.util.Collections.emptyList;
+import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static java.util.Collections.singletonMap;
 
@@ -73,7 +75,7 @@ public class OSRMTruckRouteServiceUnitTest {
     public void routeIsNotRoutable() {
 
         when(osrmRoutingClient.route(start, destination, DRIVING)).thenReturn(new RoutingQueryResult(207, 1.1, 2.2,
-                TEN));
+                TEN, emptyList(), emptyMap()));
 
         sut.route(start, destination);
     }

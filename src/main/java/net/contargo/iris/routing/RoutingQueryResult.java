@@ -2,7 +2,6 @@ package net.contargo.iris.routing;
 
 import java.math.BigDecimal;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,17 +24,6 @@ public final class RoutingQueryResult {
     private final BigDecimal toll;
     private final List<String> geometries;
     private final Map<String, Double> distancesByCountry;
-
-    public RoutingQueryResult(int status, double totalDistance, double totalTime, BigDecimal toll) {
-
-        this.status = status;
-        this.totalDistance = totalDistance;
-        this.totalTime = totalTime;
-        this.toll = toll;
-        geometries = null;
-        distancesByCountry = new HashMap<>();
-    }
-
 
     public RoutingQueryResult(int status, double totalDistance, double totalTime, BigDecimal toll,
         List<String> geometries, Map<String, Double> distancesByCountry) {

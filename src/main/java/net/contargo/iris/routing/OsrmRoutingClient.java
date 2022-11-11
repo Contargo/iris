@@ -28,6 +28,9 @@ import static org.slf4j.LoggerFactory.getLogger;
 import static org.springframework.http.HttpEntity.EMPTY;
 import static org.springframework.http.HttpMethod.GET;
 
+import static java.util.Collections.emptyList;
+import static java.util.Collections.emptyMap;
+
 
 /**
  * Interface of the osrm services.
@@ -85,7 +88,7 @@ public class OsrmRoutingClient {
             ErrorResponse error = new ObjectMapper().readValue(response, ErrorResponse.class);
 
             if (error.noRoute()) {
-                return new RoutingQueryResult(STATUS_NO_ROUTE, 0.0, 0.0, null);
+                return new RoutingQueryResult(STATUS_NO_ROUTE, 0.0, 0.0, null, emptyList(), emptyMap());
             }
 
             throw clientException;

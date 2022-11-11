@@ -36,7 +36,7 @@ import static java.util.Collections.singletonList;
  * @author  Ben Antony - antony@synyx.de
  */
 @RunWith(MockitoJUnitRunner.class)
-public class OsrmRoutingClientUnitTest {
+public class OsrmOsrmRoutingClientUnitTest {
 
     private static final BigDecimal START_LON = new BigDecimal("8.45646354");
     private static final BigDecimal START_LAT = new BigDecimal("49.45646354");

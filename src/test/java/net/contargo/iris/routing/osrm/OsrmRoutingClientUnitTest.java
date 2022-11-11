@@ -1,6 +1,7 @@
 package net.contargo.iris.routing.osrm;
 
 import net.contargo.iris.GeoLocation;
+import net.contargo.iris.routing.OsrmRoutingClient;
 import net.contargo.iris.routing.RoutingQueryResult;
 
 import org.junit.Before;
@@ -16,6 +17,8 @@ import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 
+import static net.contargo.iris.routing.osrm.OSRMProfile.DRIVING;
+
 import static org.hamcrest.Matchers.is;
 
 import static org.junit.Assert.assertThat;
@@ -24,17 +27,17 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 
-public class Osrm5QueryStrategyUnitTest {
+public class OsrmRoutingClientUnitTest {
 
     private RestTemplate restTemplateMock = mock(RestTemplate.class);
 
-    private Osrm5QueryStrategy sut;
+    private OsrmRoutingClient sut;
     private Osrm5Response osrmResponseMock = mock(Osrm5Response.class);
 
     @Before
     public void setUp() {
 
-        sut = new Osrm5QueryStrategy(restTemplateMock, "http://maps1.contargo.net/osrm/route");
+        sut = new OsrmRoutingClient(restTemplateMock, "http://maps1.contargo.net/osrm/route");
 
         when(osrmResponseMock.getDistance()).thenReturn(new BigDecimal("45.45"));
         when(osrmResponseMock.getToll()).thenReturn(new BigDecimal("34"));
@@ -53,7 +56,7 @@ public class Osrm5QueryStrategyUnitTest {
                     Osrm5Response.class)).thenReturn(response);
 
         RoutingQueryResult result = sut.route(new GeoLocation(BigDecimal.ONE, BigDecimal.TEN),
-                new GeoLocation(BigDecimal.ZERO, BigDecimal.ONE));
+                new GeoLocation(BigDecimal.ZERO, BigDecimal.ONE), DRIVING);
 
         assertThat(result.getTotalDistance(), is(45.45));
         assertThat(result.getToll(), is(new BigDecimal("34")));
@@ -73,7 +76,7 @@ public class Osrm5QueryStrategyUnitTest {
                     Osrm5Response.class)).thenThrow(clientException);
 
         RoutingQueryResult result = sut.route(new GeoLocation(BigDecimal.ONE, BigDecimal.TEN),
-                new GeoLocation(BigDecimal.ZERO, BigDecimal.ONE));
+                new GeoLocation(BigDecimal.ZERO, BigDecimal.ONE), DRIVING);
 
         assertThat(result.noRoute(), is(true));
     }

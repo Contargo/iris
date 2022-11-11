@@ -1,9 +1,8 @@
 package net.contargo.iris.routing.osrm;
 
 import net.contargo.iris.GeoLocation;
+import net.contargo.iris.routing.OsrmRoutingClient;
 import net.contargo.iris.routing.RoutingQueryResult;
-import net.contargo.iris.routing.RoutingQueryStrategy;
-import net.contargo.iris.routing.RoutingQueryStrategyProvider;
 import net.contargo.iris.truck.TruckRoute;
 import net.contargo.iris.truck.service.OSRMNonRoutableRouteException;
 import net.contargo.iris.truck.service.OSRMTruckRouteService;
@@ -55,9 +54,7 @@ public class OSRMTruckRouteServiceUnitTest {
     private OSRMTruckRouteService sut;
 
     @Mock
-    private RoutingQueryStrategy queryServiceMock;
-    @Mock
-    private RoutingQueryStrategyProvider provider;
+    private OsrmRoutingClient osrmRoutingClient;
 
     private GeoLocation start;
     private GeoLocation destination;
@@ -65,9 +62,7 @@ public class OSRMTruckRouteServiceUnitTest {
     @Before
     public void setup() {
 
-        sut = new OSRMTruckRouteService(provider);
-
-        when(provider.strategy()).thenReturn(queryServiceMock);
+        sut = new OSRMTruckRouteService(osrmRoutingClient);
 
         destination = new GeoLocation(new BigDecimal("49.1"), new BigDecimal("8.1"));
         start = new GeoLocation(new BigDecimal("49.0"), new BigDecimal("8.0"));
@@ -77,7 +72,7 @@ public class OSRMTruckRouteServiceUnitTest {
     @Test(expected = OSRMNonRoutableRouteException.class)
     public void routeIsNotRoutable() {
 
-        when(queryServiceMock.route(start, destination, DRIVING)).thenReturn(new RoutingQueryResult(207, 1.1, 2.2,
+        when(osrmRoutingClient.route(start, destination, DRIVING)).thenReturn(new RoutingQueryResult(207, 1.1, 2.2,
                 TEN));
 
         sut.route(start, destination);
@@ -91,7 +86,7 @@ public class OSRMTruckRouteServiceUnitTest {
 
         TruckRoute route = sut.route(start, destination);
         assertThat(route, notNullValue());
-        verify(queryServiceMock).route(start, destination, DRIVING);
+        verify(osrmRoutingClient).route(start, destination, DRIVING);
     }
 
 
@@ -134,6 +129,6 @@ public class OSRMTruckRouteServiceUnitTest {
         RoutingQueryResult response = new RoutingQueryResult(0, totalDistance, totalTime, ZERO,
                 singletonList("geometries"), singletonMap("DE", totalDistance));
 
-        when(queryServiceMock.route(start, destination, DRIVING)).thenReturn(response);
+        when(osrmRoutingClient.route(start, destination, DRIVING)).thenReturn(response);
     }
 }

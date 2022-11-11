@@ -1,9 +1,8 @@
 package net.contargo.iris.truck.service;
 
 import net.contargo.iris.GeoLocation;
+import net.contargo.iris.routing.OsrmRoutingClient;
 import net.contargo.iris.routing.RoutingQueryResult;
-import net.contargo.iris.routing.RoutingQueryStrategy;
-import net.contargo.iris.routing.RoutingQueryStrategyProvider;
 import net.contargo.iris.truck.TruckRoute;
 
 import org.springframework.cache.annotation.Cacheable;
@@ -32,20 +31,18 @@ public class OSRMTruckRouteService implements TruckRouteService {
     private static final BigDecimal SECONDS_PER_MINUTE = new BigDecimal("60.0");
     private static final int SCALE = 5;
 
-    private final RoutingQueryStrategyProvider routingQueryStrategyProvider;
+    private final OsrmRoutingClient osrmRoutingClient;
 
-    public OSRMTruckRouteService(RoutingQueryStrategyProvider routingQueryStrategyProvider) {
+    public OSRMTruckRouteService(OsrmRoutingClient osrmRoutingClient) {
 
-        this.routingQueryStrategyProvider = routingQueryStrategyProvider;
+        this.osrmRoutingClient = osrmRoutingClient;
     }
 
     @Override
     @Cacheable("osrmCache")
     public TruckRoute route(GeoLocation start, GeoLocation destination) {
 
-        RoutingQueryStrategy strategy = routingQueryStrategyProvider.strategy();
-
-        RoutingQueryResult osrmResult = strategy.route(start, destination, DRIVING);
+        RoutingQueryResult osrmResult = osrmRoutingClient.route(start, destination, DRIVING);
 
         if (osrmResult.noRoute()) {
             throw new OSRMNonRoutableRouteException("Start: "

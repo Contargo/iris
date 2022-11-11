@@ -1,4 +1,4 @@
-package net.contargo.iris.routing.osrm;
+package net.contargo.iris.routing;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -6,8 +6,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import net.contargo.iris.GeoLocation;
-import net.contargo.iris.routing.RoutingQueryResult;
-import net.contargo.iris.routing.RoutingQueryStrategy;
+import net.contargo.iris.routing.osrm.OSRMProfile;
+import net.contargo.iris.routing.osrm.Osrm5Response;
 
 import org.slf4j.Logger;
 
@@ -22,7 +22,6 @@ import java.util.List;
 
 import static net.contargo.iris.routing.RoutingQueryResult.STATUS_NO_ROUTE;
 import static net.contargo.iris.routing.RoutingQueryResult.STATUS_OK;
-import static net.contargo.iris.routing.osrm.OSRMProfile.DRIVING;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -31,33 +30,26 @@ import static org.springframework.http.HttpMethod.GET;
 
 
 /**
- * An OSRM specific implementation of {@code RoutingServiceQueryStrategy} suitable for querying an OSRM version 5
- * routing service.
+ * Interface of the osrm services.
  *
+ * @author  Sven Mueller - mueller@synyx.de
+ * @author  Tobias Schneider - schneider@synyx.de
  * @author  David Schilling - schilling@synyx.de
  * @author  Ben Antony - antony@synyx.de
  */
-public class Osrm5QueryStrategy implements RoutingQueryStrategy {
+public class OsrmRoutingClient {
 
     private static final Logger LOG = getLogger(MethodHandles.lookup().lookupClass());
 
     private final String baseUrl;
     private final RestTemplate restTemplate;
 
-    public Osrm5QueryStrategy(RestTemplate restTemplate, String baseUrl) {
+    public OsrmRoutingClient(RestTemplate restTemplate, String baseUrl) {
 
         this.restTemplate = restTemplate;
         this.baseUrl = baseUrl;
     }
 
-    @Override
-    public RoutingQueryResult route(GeoLocation start, GeoLocation destination) {
-
-        return route(start, destination, DRIVING);
-    }
-
-
-    @Override
     public RoutingQueryResult route(GeoLocation start, GeoLocation destination, OSRMProfile profile) {
 
         try {

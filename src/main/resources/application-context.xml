@@ -190,15 +190,15 @@
         </property>
     </bean>
 
-    <bean id="routingQueryStrategyProvider" class="net.contargo.iris.routing.RoutingQueryStrategyProvider">
+    <bean id="osrmRoutingClient" class="net.contargo.iris.routing.OsrmRoutingClient">
         <constructor-arg name="restTemplate">
             <bean class="org.springframework.web.client.RestTemplate"/>
         </constructor-arg>
-        <constructor-arg name="baseUri" value="${osrm.url}"/>
+        <constructor-arg name="baseUrl" value="${osrm.url}"/>
     </bean>
 
     <bean id="truckRouteService" class="net.contargo.iris.truck.service.OSRMTruckRouteService">
-        <constructor-arg name="routingQueryStrategyProvider" ref="routingQueryStrategyProvider"/>
+        <constructor-arg name="osrmRoutingClient" ref="osrmRoutingClient"/>
     </bean>
 
 
@@ -471,7 +471,7 @@
     </bean>
 
     <bean class="net.contargo.iris.transport.route.RouteService" id="routeService">
-        <constructor-arg ref="routingQueryStrategyProvider"/>
+        <constructor-arg ref="osrmRoutingClient"/>
     </bean>
 
     <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">

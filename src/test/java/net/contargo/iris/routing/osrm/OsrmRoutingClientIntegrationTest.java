@@ -1,6 +1,7 @@
 package net.contargo.iris.routing.osrm;
 
 import net.contargo.iris.GeoLocation;
+import net.contargo.iris.routing.OsrmRoutingClient;
 import net.contargo.iris.routing.RoutingQueryResult;
 
 import org.junit.Before;
@@ -15,13 +16,14 @@ import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 
+import static net.contargo.iris.routing.osrm.OSRMProfile.DRIVING;
 import static net.contargo.iris.routing.osrm.OSRMProfile.RAIL;
 import static net.contargo.iris.routing.osrm.OsrmResponseProvider.osrm5Response;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-
-import static org.junit.Assert.assertThat;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
@@ -31,17 +33,17 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
 
-public class Osrm5QueryStrategyIntegrationTest {
+public class OsrmRoutingClientIntegrationTest {
 
     private static final String ENDPOINT = "http://maps/osrm/route";
     private RestTemplate restTemplate = new RestTemplate();
 
-    private Osrm5QueryStrategy sut;
+    private OsrmRoutingClient sut;
 
     @Before
     public void setUp() {
 
-        sut = new Osrm5QueryStrategy(restTemplate, ENDPOINT);
+        sut = new OsrmRoutingClient(restTemplate, ENDPOINT);
     }
 
 
@@ -58,7 +60,7 @@ public class Osrm5QueryStrategyIntegrationTest {
         GeoLocation start = new GeoLocation(new BigDecimal("53.092984"), new BigDecimal("8.691601"));
         GeoLocation end = new GeoLocation(new BigDecimal("53.082857"), new BigDecimal("8.733542"));
 
-        RoutingQueryResult result = sut.route(start, end);
+        RoutingQueryResult result = sut.route(start, end, DRIVING);
 
         assertThat(result.noRoute(), is(false));
         assertThat(result.getTotalTime(), is(503.6));
@@ -106,7 +108,7 @@ public class Osrm5QueryStrategyIntegrationTest {
         GeoLocation start = new GeoLocation(new BigDecimal("53.092984"), new BigDecimal("8.691601"));
         GeoLocation end = new GeoLocation(new BigDecimal("53.082857"), new BigDecimal("8.733542"));
 
-        RoutingQueryResult result = sut.route(start, end);
+        RoutingQueryResult result = sut.route(start, end, DRIVING);
 
         assertThat(result.noRoute(), is(true));
     }

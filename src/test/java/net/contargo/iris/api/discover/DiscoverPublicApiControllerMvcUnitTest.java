@@ -17,7 +17,6 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 
 import org.springframework.web.context.WebApplicationContext;
 
-import static net.contargo.iris.api.discover.DiscoverPublicApiController.REL_CONNECTIONS;
 import static net.contargo.iris.api.discover.DiscoverPublicApiController.REL_COUNTRIES;
 import static net.contargo.iris.api.discover.DiscoverPublicApiController.REL_GEOCODE;
 import static net.contargo.iris.api.discover.DiscoverPublicApiController.REL_OSM_ADDRESSES;
@@ -62,7 +61,7 @@ public class DiscoverPublicApiControllerMvcUnitTest {
 
         ResultActions resultActions = perform(get("/").accept(APPLICATION_JSON));
 
-        resultActions.andExpect(jsonPath("$.response.links", hasSize(13)));
+        resultActions.andExpect(jsonPath("$.response.links", hasSize(12)));
 
         String responseContent = new ObjectMapper().readTree(resultActions.andReturn()
                     .getResponse()
@@ -89,8 +88,6 @@ public class DiscoverPublicApiControllerMvcUnitTest {
         assertThat(response.getLink(REL_TERMINALS).getHref(), is("http://localhost/terminals?activeOnly=true"));
         assertThat(response.getLink(REL_TERMINAL_EXAMPLE).getHref(),
             is("http://localhost/terminals/1301000000000001"));
-        assertThat(response.getLink(REL_CONNECTIONS).getHref(),
-            is("http://localhost/connections/1301000000000001/49.0:8.41/true?containerType=TWENTY_LIGHT&isImport=false&combo=WATERWAY"));
         assertThat(response.getLink(REL_ROUTES).getHref(),
             is("http://localhost/routes/1301000000000001/49.0:8.41/true?containerType=TWENTY_LIGHT&isImport=false&combo=WATERWAY"));
         assertThat(response.getLink(REL_SIMPLE_GEOCODES_EXAMPLE).getHref(),

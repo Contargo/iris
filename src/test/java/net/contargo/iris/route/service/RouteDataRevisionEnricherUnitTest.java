@@ -11,11 +11,11 @@ import org.junit.Test;
 import static net.contargo.iris.route.RouteType.RAIL;
 import static net.contargo.iris.route.RouteType.TRUCK;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+
 import static org.hamcrest.Matchers.hasKey;
 
 import static org.hamcrest.core.IsNot.not;
-
-import static org.junit.Assert.assertThat;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;

@@ -2,7 +2,7 @@
 package net.contargo.iris.route.service;
 
 import net.contargo.iris.distance.service.DistanceService;
-import net.contargo.iris.duration.service.DurationService;
+import net.contargo.iris.rounding.RoundingService;
 import net.contargo.iris.route.RoutePart;
 import net.contargo.iris.route.RoutePartData;
 import net.contargo.iris.route.RouteType;
@@ -29,14 +29,11 @@ class TruckRoutingPartEnricher implements RoutePartEnricher {
 
     private final TruckRouteService truckRouteService;
     private final DistanceService distanceService;
-    private final DurationService durationService;
 
-    TruckRoutingPartEnricher(TruckRouteService truckRouteService, DistanceService distanceService,
-        DurationService durationService) {
+    TruckRoutingPartEnricher(TruckRouteService truckRouteService, DistanceService distanceService) {
 
         this.truckRouteService = truckRouteService;
         this.distanceService = distanceService;
-        this.durationService = durationService;
     }
 
     @Override
@@ -64,7 +61,7 @@ class TruckRoutingPartEnricher implements RoutePartEnricher {
             routePartData.setBargeDieselDistance(ZERO);
             routePartData.setRailDieselDistance(ZERO);
             routePartData.setDtruckDistance(routePart.isOfType(RouteType.DTRUCK) ? partDistance : ZERO);
-            routePartData.setDuration(durationService.getDuration(truckRoute));
+            routePartData.setDuration(RoundingService.roundDuration(truckRoute.getDuration()));
         }
     }
 

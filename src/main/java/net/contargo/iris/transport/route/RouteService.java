@@ -1,9 +1,8 @@
 package net.contargo.iris.transport.route;
 
 import net.contargo.iris.GeoLocation;
+import net.contargo.iris.routing.OsrmRoutingClient;
 import net.contargo.iris.routing.RoutingQueryResult;
-import net.contargo.iris.routing.RoutingQueryStrategy;
-import net.contargo.iris.routing.RoutingQueryStrategyProvider;
 import net.contargo.iris.transport.api.ModeOfTransport;
 
 import org.springframework.cache.annotation.Cacheable;
@@ -31,18 +30,17 @@ public class RouteService {
     private static final BigDecimal METER_PER_KILOMETER = new BigDecimal("1000");
     private static final BigDecimal SECONDS_PER_MINUTES = new BigDecimal("60");
 
-    private final RoutingQueryStrategyProvider routingQueryStrategyProvider;
+    private final OsrmRoutingClient osrmRoutingClient;
 
-    public RouteService(RoutingQueryStrategyProvider routingQueryStrategyProvider) {
+    public RouteService(OsrmRoutingClient osrmRoutingClient) {
 
-        this.routingQueryStrategyProvider = routingQueryStrategyProvider;
+        this.osrmRoutingClient = osrmRoutingClient;
     }
 
     @Cacheable("RouteServiceRoute")
     public RouteResult route(GeoLocation start, GeoLocation end, ModeOfTransport mot) {
 
-        RoutingQueryStrategy strategy = routingQueryStrategyProvider.strategy();
-        RoutingQueryResult queryResult = strategy.route(start, end, mot.getOsrmProfile());
+        RoutingQueryResult queryResult = osrmRoutingClient.route(start, end, mot.getOsrmProfile());
 
         return toRouteResult(queryResult);
     }

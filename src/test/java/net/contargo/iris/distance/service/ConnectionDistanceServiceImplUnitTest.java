@@ -1,7 +1,6 @@
 package net.contargo.iris.distance.service;
 
 import net.contargo.iris.connection.MainRunConnection;
-import net.contargo.iris.rounding.RoundingService;
 
 import org.junit.Test;
 
@@ -21,7 +20,6 @@ import static org.hamcrest.Matchers.is;
 
 import static org.mockito.Mockito.when;
 
-import static java.math.BigDecimal.ONE;
 import static java.math.BigDecimal.TEN;
 
 
@@ -37,16 +35,13 @@ public class ConnectionDistanceServiceImplUnitTest {
 
     @Mock
     private MainRunConnection mainrunConnectionMock;
-    @Mock
-    private RoundingService roundingServiceMock;
 
     @Test
     public void getDistance() {
 
         when(mainrunConnectionMock.getTotalDistance()).thenReturn(TEN);
-        when(roundingServiceMock.roundDistance(TEN)).thenReturn(ONE);
 
-        assertThat(sut.getDistance(mainrunConnectionMock), is(ONE));
+        assertThat(sut.getDistance(mainrunConnectionMock), is(TEN));
     }
 
 
@@ -55,9 +50,8 @@ public class ConnectionDistanceServiceImplUnitTest {
 
         when(mainrunConnectionMock.getRailDieselDistance()).thenReturn(TEN);
         when(mainrunConnectionMock.getBargeDieselDistance()).thenReturn(TEN);
-        when(roundingServiceMock.roundDistance(TEN.add(TEN))).thenReturn(ONE);
 
-        assertThat(sut.getDieselDistance(mainrunConnectionMock), is(ONE));
+        assertThat(sut.getDieselDistance(mainrunConnectionMock), is(BigDecimal.valueOf(20)));
     }
 
 
@@ -65,9 +59,8 @@ public class ConnectionDistanceServiceImplUnitTest {
     public void getRailDieselDistance() {
 
         when(mainrunConnectionMock.getRailDieselDistance()).thenReturn(TEN);
-        when(roundingServiceMock.roundDistance(TEN)).thenReturn(ONE);
 
-        assertThat(sut.getRailDieselDistance(mainrunConnectionMock), is(ONE));
+        assertThat(sut.getRailDieselDistance(mainrunConnectionMock), is(TEN));
     }
 
 
@@ -75,9 +68,8 @@ public class ConnectionDistanceServiceImplUnitTest {
     public void getBargeDieselDistance() {
 
         when(mainrunConnectionMock.getBargeDieselDistance()).thenReturn(TEN);
-        when(roundingServiceMock.roundDistance(TEN)).thenReturn(ONE);
 
-        assertThat(sut.getBargeDieselDistance(mainrunConnectionMock), is(ONE));
+        assertThat(sut.getBargeDieselDistance(mainrunConnectionMock), is(TEN));
     }
 
 
@@ -85,9 +77,8 @@ public class ConnectionDistanceServiceImplUnitTest {
     public void getElectricDistance() {
 
         when(mainrunConnectionMock.getRailElectricDistance()).thenReturn(TEN);
-        when(roundingServiceMock.roundDistance(TEN)).thenReturn(ONE);
 
-        assertThat(sut.getElectricDistance(mainrunConnectionMock), is(ONE));
+        assertThat(sut.getElectricDistance(mainrunConnectionMock), is(TEN));
     }
 
 
@@ -96,7 +87,6 @@ public class ConnectionDistanceServiceImplUnitTest {
 
         BigDecimal roadDistance = new BigDecimal("466.2");
         when(mainrunConnectionMock.getRoadDistance()).thenReturn(roadDistance);
-        when(roundingServiceMock.roundDistance(roadDistance)).thenReturn(new BigDecimal("467"));
 
         assertThat(sut.getDtruckDistance(mainrunConnectionMock), comparesEqualTo(new BigDecimal("467")));
     }

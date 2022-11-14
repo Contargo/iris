@@ -37,17 +37,14 @@ public class RouteDataRevisionCleanupService {
 
     private final RouteDataRevisionRepository routeDataRevisionRepository;
     private final TruckRouteService truckRouteService;
-    private final RoundingService roundingService;
     private final EmailService emailService;
     private final RouteDataRevisionCsvService csvService;
 
     public RouteDataRevisionCleanupService(RouteDataRevisionRepository routeDataRevisionRepository,
-        TruckRouteService truckRouteService, RoundingService roundingService, EmailService emailService,
-        RouteDataRevisionCsvService csvService) {
+        TruckRouteService truckRouteService, EmailService emailService, RouteDataRevisionCsvService csvService) {
 
         this.routeDataRevisionRepository = routeDataRevisionRepository;
         this.truckRouteService = truckRouteService;
-        this.roundingService = roundingService;
         this.emailService = emailService;
         this.csvService = csvService;
     }
@@ -102,7 +99,7 @@ public class RouteDataRevisionCleanupService {
             ? revision.getTruckDistanceOneWayInKilometer().subtract(ONE)
             : revision.getTruckDistanceOneWayInKilometer();
 
-        BigDecimal routeDistance = roundingService.roundDistance(route.getDistance());
+        BigDecimal routeDistance = RoundingService.roundDistance(route.getDistance());
 
         BigDecimal currentDistance = routeDistance.compareTo(ZERO) != 0 ? routeDistance.subtract(ONE) : routeDistance;
 

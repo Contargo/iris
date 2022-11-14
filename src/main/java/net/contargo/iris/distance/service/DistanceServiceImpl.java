@@ -17,17 +17,10 @@ import java.util.stream.Collectors;
  */
 public class DistanceServiceImpl implements DistanceService {
 
-    private final RoundingService roundingService;
-
-    public DistanceServiceImpl(RoundingService roundingService) {
-
-        this.roundingService = roundingService;
-    }
-
     @Override
     public BigDecimal getDistance(TruckRoute truckRoute) {
 
-        return roundingService.roundDistance(truckRoute.getDistance());
+        return RoundingService.roundDistance(truckRoute.getDistance());
     }
 
 
@@ -36,13 +29,13 @@ public class DistanceServiceImpl implements DistanceService {
 
         return truckRoute.getDistancesByCountry().entrySet()
             .stream()
-            .collect(Collectors.toMap(Entry::getKey, e -> roundingService.roundDistance(e.getValue())));
+            .collect(Collectors.toMap(Entry::getKey, e -> RoundingService.roundDistance(e.getValue())));
     }
 
 
     @Override
     public BigDecimal getTollDistance(TruckRoute truckRoute) {
 
-        return roundingService.roundDistance(truckRoute.getTollDistance());
+        return RoundingService.roundDistance(truckRoute.getTollDistance());
     }
 }

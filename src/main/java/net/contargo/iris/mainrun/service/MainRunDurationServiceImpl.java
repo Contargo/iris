@@ -30,13 +30,6 @@ public class MainRunDurationServiceImpl implements MainRunDurationService {
     private static final BigDecimal MINUTES_PER_HOUR = new BigDecimal("60.0");
     private static final int SCALE = 5;
 
-    private final RoundingService roundingService;
-
-    public MainRunDurationServiceImpl(RoundingService roundingService) {
-
-        this.roundingService = roundingService;
-    }
-
     /**
      * @see  MainRunDurationService#getMainRunRoutePartDuration(net.contargo.iris.connection.MainRunConnection,
      *       net.contargo.iris.route.RoutePart)
@@ -71,6 +64,6 @@ public class MainRunDurationServiceImpl implements MainRunDurationService {
 
         BigDecimal duration = distance.divide(divisor, SCALE, RoundingMode.HALF_UP).multiply(MINUTES_PER_HOUR);
 
-        return roundingService.roundDuration(duration);
+        return RoundingService.roundDuration(duration);
     }
 }

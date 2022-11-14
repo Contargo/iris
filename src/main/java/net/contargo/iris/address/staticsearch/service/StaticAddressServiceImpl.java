@@ -66,7 +66,7 @@ public class StaticAddressServiceImpl implements StaticAddressService {
     public AddressList findAddresses(String postalCode, String city, String country) {
 
         List<Address> addresses = getAddressesByDetailsWithFallbacks(postalCode, city, country).stream()
-            .map(StaticAddress::toAddress)
+                .map(StaticAddress::toAddress)
                 .collect(toList());
 
         return new AddressList("City and Suburb Results", addresses);
@@ -236,15 +236,15 @@ public class StaticAddressServiceImpl implements StaticAddressService {
     @Override
     public List<StaticAddress> getAddressesInBoundingBox(GeoLocation geoLocation, Double km) {
 
-        Assert.notNull(geoLocation);
-        Assert.notNull(km);
+        Assert.notNull(geoLocation, "Geo location may not be null");
+        Assert.notNull(km, "Distance in km may not be null");
 
         BoundingBox box = geoLocation.getBoundingBox(km);
         GeoLocation lowerLeft = box.getLowerLeft();
         GeoLocation upperRight = box.getUpperRight();
 
-        return repository.findByBoundingBox(lowerLeft.getLatitude(), upperRight.getLatitude(), lowerLeft.getLongitude(),
-                upperRight.getLongitude());
+        return repository.findByBoundingBox(lowerLeft.getLatitude(), upperRight.getLatitude(),
+                lowerLeft.getLongitude(), upperRight.getLongitude());
     }
 
 
@@ -430,8 +430,8 @@ public class StaticAddressServiceImpl implements StaticAddressService {
 
 
     /**
-     * This is a fallback method if neither executeANDSearch nor executeORSearch have a result. The city string is split
-     * on whitespaces. The current implementation executes the search only for first element of the split string.
+     * This is a fallback method if neither executeANDSearch nor executeORSearch have a result. The city string is
+     * split on whitespaces. The current implementation executes the search only for first element of the split string.
      *
      * @param  postalCode
      * @param  city
@@ -441,7 +441,7 @@ public class StaticAddressServiceImpl implements StaticAddressService {
      */
     private List<StaticAddress> executeSplitSearch(String postalCode, String city, String country) {
 
-        Assert.notNull(city);
+        Assert.notNull(city, "City may not be null");
 
         String[] singleSearchParameters = city.split(" ");
 

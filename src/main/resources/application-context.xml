@@ -61,8 +61,6 @@
         <constructor-arg name="ehcache" ref="ehCacheFactory"/>
     </bean>
 
-    <bean id="roundingService" class="net.contargo.iris.rounding.RoundingServiceImpl"/>
-
     <bean id="urlSerializationService" class="net.contargo.iris.route.service.RouteUrlSerializationServiceImpl"/>
 
     <bean id="irisStartupWatcher" class="net.contargo.iris.startup.IrisStartupWatcher">
@@ -190,15 +188,15 @@
         </property>
     </bean>
 
-    <bean id="routingQueryStrategyProvider" class="net.contargo.iris.routing.RoutingQueryStrategyProvider">
+    <bean id="osrmRoutingClient" class="net.contargo.iris.routing.OsrmRoutingClient">
         <constructor-arg name="restTemplate">
             <bean class="org.springframework.web.client.RestTemplate"/>
         </constructor-arg>
-        <constructor-arg name="baseUri" value="${osrm.url}"/>
+        <constructor-arg name="baseUrl" value="${osrm.url}"/>
     </bean>
 
     <bean id="truckRouteService" class="net.contargo.iris.truck.service.OSRMTruckRouteService">
-        <constructor-arg name="routingQueryStrategyProvider" ref="routingQueryStrategyProvider"/>
+        <constructor-arg name="osrmRoutingClient" ref="osrmRoutingClient"/>
     </bean>
 
 
@@ -228,21 +226,11 @@
         <constructor-arg name="dtruckActive" value="${feature.dtruck}"/>
     </bean>
 
-    <bean id="mainRunDurationService" class="net.contargo.iris.mainrun.service.MainRunDurationServiceImpl">
-        <constructor-arg name="roundingService" ref="roundingService"/>
-    </bean>
+    <bean id="mainRunDurationService" class="net.contargo.iris.mainrun.service.MainRunDurationServiceImpl"/>
 
-    <bean id="connectionDistanceService" class="net.contargo.iris.distance.service.ConnectionDistanceServiceImpl">
-        <constructor-arg name="roundingService" ref="roundingService"/>
-    </bean>
+    <bean id="connectionDistanceService" class="net.contargo.iris.distance.service.ConnectionDistanceServiceImpl"/>
 
-    <bean id="distanceService" class="net.contargo.iris.distance.service.DistanceServiceImpl">
-        <constructor-arg name="roundingService" ref="roundingService"/>
-    </bean>
-
-    <bean id="durationService" class="net.contargo.iris.duration.service.DurationServiceImpl">
-        <constructor-arg name="roundingService" ref="roundingService"/>
-    </bean>
+    <bean id="distanceService" class="net.contargo.iris.distance.service.DistanceServiceImpl"/>
 
     <bean id="mainRunAdvisor" class="net.contargo.iris.connection.advice.MainRunAdvisor">
         <constructor-arg name="mainRunRoundTripImportAdvice">
@@ -282,7 +270,6 @@
                 </bean>
                 <bean class="net.contargo.iris.route.service.AirLineDistancePartEnricher">
                     <constructor-arg name="gisService" ref="gisService"/>
-                    <constructor-arg name="roundingService" ref="roundingService"/>
                 </bean>
                 <bean class="net.contargo.iris.route.service.MainRunPartEnricher">
                     <constructor-arg name="mainRunConnectionService" ref="connectionService"/>
@@ -291,7 +278,6 @@
                 </bean>
                 <bean class="net.contargo.iris.route.service.TruckRoutingPartEnricher">
                     <constructor-arg name="truckRouteService" ref="truckRouteService"/>
-                    <constructor-arg name="durationService" ref="durationService"/>
                     <constructor-arg name="distanceService" ref="distanceService"/>
                 </bean>
                 <bean class="net.contargo.iris.route.service.Co2PartEnricher"/>
@@ -331,7 +317,6 @@
           class="net.contargo.iris.routedatarevision.service.cleanup.RouteDataRevisionCleanupService">
         <constructor-arg name="routeDataRevisionRepository" ref="routeDataRevisionRepository"/>
         <constructor-arg name="truckRouteService" ref="truckRouteService"/>
-        <constructor-arg name="roundingService" ref="roundingService"/>
         <constructor-arg name="emailService" ref="mailService"/>
         <constructor-arg name="csvService" ref="routeDataRevisionCsvService"/>
     </bean>
@@ -471,7 +456,7 @@
     </bean>
 
     <bean class="net.contargo.iris.transport.route.RouteService" id="routeService">
-        <constructor-arg ref="routingQueryStrategyProvider"/>
+        <constructor-arg ref="osrmRoutingClient"/>
     </bean>
 
     <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">

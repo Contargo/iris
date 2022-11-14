@@ -14,20 +14,13 @@ import java.math.BigDecimal;
  */
 public class ConnectionDistanceServiceImpl implements ConnectionDistanceService {
 
-    private final RoundingService roundingService;
-
-    public ConnectionDistanceServiceImpl(RoundingService roundingService) {
-
-        this.roundingService = roundingService;
-    }
-
     /**
      * @see  ConnectionDistanceService#getDistance(net.contargo.iris.connection.MainRunConnection)
      */
     @Override
     public BigDecimal getDistance(MainRunConnection mainrunConnection) {
 
-        return roundingService.roundDistance(mainrunConnection.getTotalDistance());
+        return RoundingService.roundDistance(mainrunConnection.getTotalDistance());
     }
 
 
@@ -37,7 +30,7 @@ public class ConnectionDistanceServiceImpl implements ConnectionDistanceService 
     @Override
     public BigDecimal getDieselDistance(MainRunConnection mainrunConnection) {
 
-        return roundingService.roundDistance(mainrunConnection.getRailDieselDistance()
+        return RoundingService.roundDistance(mainrunConnection.getRailDieselDistance()
                 .add(mainrunConnection.getBargeDieselDistance()));
     }
 
@@ -48,27 +41,27 @@ public class ConnectionDistanceServiceImpl implements ConnectionDistanceService 
     @Override
     public BigDecimal getElectricDistance(MainRunConnection mainrunConnection) {
 
-        return roundingService.roundDistance(mainrunConnection.getRailElectricDistance());
+        return RoundingService.roundDistance(mainrunConnection.getRailElectricDistance());
     }
 
 
     @Override
     public BigDecimal getRailDieselDistance(MainRunConnection mainrunConnection) {
 
-        return roundingService.roundDistance(mainrunConnection.getRailDieselDistance());
+        return RoundingService.roundDistance(mainrunConnection.getRailDieselDistance());
     }
 
 
     @Override
     public BigDecimal getBargeDieselDistance(MainRunConnection mainrunConnection) {
 
-        return roundingService.roundDistance(mainrunConnection.getBargeDieselDistance());
+        return RoundingService.roundDistance(mainrunConnection.getBargeDieselDistance());
     }
 
 
     @Override
     public BigDecimal getDtruckDistance(MainRunConnection mainrunConnection) {
 
-        return roundingService.roundDistance(mainrunConnection.getRoadDistance());
+        return RoundingService.roundDistance(mainrunConnection.getRoadDistance());
     }
 }

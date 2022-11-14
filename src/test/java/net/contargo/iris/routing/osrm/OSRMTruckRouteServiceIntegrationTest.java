@@ -1,7 +1,7 @@
 package net.contargo.iris.routing.osrm;
 
 import net.contargo.iris.GeoLocation;
-import net.contargo.iris.routing.RoutingQueryStrategyProvider;
+import net.contargo.iris.routing.OsrmRoutingClient;
 import net.contargo.iris.truck.TruckRoute;
 import net.contargo.iris.truck.service.OSRMNonRoutableRouteException;
 import net.contargo.iris.truck.service.OSRMTruckRouteService;
@@ -34,14 +34,14 @@ import static org.hamcrest.Matchers.closeTo;
 public class OSRMTruckRouteServiceIntegrationTest {
 
     @Autowired
-    private RoutingQueryStrategyProvider provider;
+    private OsrmRoutingClient osrmRoutingClient;
 
     private OSRMTruckRouteService OSRMTruckRouteService;
 
     @Before
     public void setUp() {
 
-        OSRMTruckRouteService = new OSRMTruckRouteService(provider);
+        OSRMTruckRouteService = new OSRMTruckRouteService(osrmRoutingClient);
     }
 
 

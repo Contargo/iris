@@ -48,37 +48,37 @@ public class RouteDataRevisionDto {
 
     @BigDecimalValidate(maxFractionalPlaces = MAX_FRAC_2, maxDecimalPlaces = MAX_DEC)
     @NotNull
-    private BigDecimal truckDistanceOneWayInKilometerDE;
+    private BigDecimal truckDistanceOneWayInKilometerDE = ZERO;
     @BigDecimalValidate(maxFractionalPlaces = MAX_FRAC_2, maxDecimalPlaces = MAX_DEC)
     @NotNull
-    private BigDecimal truckDistanceOneWayInKilometerNL;
+    private BigDecimal truckDistanceOneWayInKilometerNL = ZERO;
     @BigDecimalValidate(maxFractionalPlaces = MAX_FRAC_2, maxDecimalPlaces = MAX_DEC)
     @NotNull
-    private BigDecimal truckDistanceOneWayInKilometerBE;
+    private BigDecimal truckDistanceOneWayInKilometerBE = ZERO;
     @BigDecimalValidate(maxFractionalPlaces = MAX_FRAC_2, maxDecimalPlaces = MAX_DEC)
     @NotNull
-    private BigDecimal truckDistanceOneWayInKilometerLU;
+    private BigDecimal truckDistanceOneWayInKilometerLU = ZERO;
     @BigDecimalValidate(maxFractionalPlaces = MAX_FRAC_2, maxDecimalPlaces = MAX_DEC)
     @NotNull
-    private BigDecimal truckDistanceOneWayInKilometerFR;
+    private BigDecimal truckDistanceOneWayInKilometerFR = ZERO;
     @BigDecimalValidate(maxFractionalPlaces = MAX_FRAC_2, maxDecimalPlaces = MAX_DEC)
     @NotNull
-    private BigDecimal truckDistanceOneWayInKilometerCH;
+    private BigDecimal truckDistanceOneWayInKilometerCH = ZERO;
     @BigDecimalValidate(maxFractionalPlaces = MAX_FRAC_2, maxDecimalPlaces = MAX_DEC)
     @NotNull
-    private BigDecimal truckDistanceOneWayInKilometerLI;
+    private BigDecimal truckDistanceOneWayInKilometerLI = ZERO;
     @BigDecimalValidate(maxFractionalPlaces = MAX_FRAC_2, maxDecimalPlaces = MAX_DEC)
     @NotNull
-    private BigDecimal truckDistanceOneWayInKilometerAT;
+    private BigDecimal truckDistanceOneWayInKilometerAT = ZERO;
     @BigDecimalValidate(maxFractionalPlaces = MAX_FRAC_2, maxDecimalPlaces = MAX_DEC)
     @NotNull
-    private BigDecimal truckDistanceOneWayInKilometerCZ;
+    private BigDecimal truckDistanceOneWayInKilometerCZ = ZERO;
     @BigDecimalValidate(maxFractionalPlaces = MAX_FRAC_2, maxDecimalPlaces = MAX_DEC)
     @NotNull
-    private BigDecimal truckDistanceOneWayInKilometerPL;
+    private BigDecimal truckDistanceOneWayInKilometerPL = ZERO;
     @BigDecimalValidate(maxFractionalPlaces = MAX_FRAC_2, maxDecimalPlaces = MAX_DEC)
     @NotNull
-    private BigDecimal truckDistanceOneWayInKilometerDK;
+    private BigDecimal truckDistanceOneWayInKilometerDK = ZERO;
 
     @NotNull
     @BigDecimalValidate(maxFractionalPlaces = MAX_FRAC_2, maxDecimalPlaces = MAX_DEC)

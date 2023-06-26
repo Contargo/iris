@@ -9,6 +9,7 @@ import net.contargo.iris.address.service.AddressServiceWrapper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
@@ -109,5 +110,14 @@ public class AddressDtoServiceImpl implements AddressDtoService {
     public List<AddressDto> getAddressesByQuery(String query) {
 
         return addressServiceWrapper.getAddressesByQuery(query).stream().map(AddressDto::new).collect(toList());
+    }
+
+
+    @Override
+    public Optional<AddressDto> getAddressesByThreeWords(String threeWords) {
+
+        Optional<Address> optionalAddress = addressServiceWrapper.getAddressByThreeWords(threeWords);
+
+        return optionalAddress.map(AddressDto::new);
     }
 }

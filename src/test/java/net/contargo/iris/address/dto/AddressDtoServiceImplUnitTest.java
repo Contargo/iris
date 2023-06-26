@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static net.contargo.iris.address.nominatim.service.AddressDetailKey.CITY;
 import static net.contargo.iris.address.nominatim.service.AddressDetailKey.COUNTRY;
@@ -210,5 +211,17 @@ public class AddressDtoServiceImplUnitTest {
 
         assertThat(addresses, hasSize(1));
         assertThat(addresses.get(0).getDisplayName(), is("Gartenstr. 67, Karlsruhe (Südweststadt)"));
+    }
+
+
+    @Test
+    public void getAddressesByThreeWords() {
+
+        when(addressServiceWrapperMock.getAddressByThreeWords("riches.lofts.guessing")).thenReturn(Optional.of(
+                new Address("German Chancellery")));
+
+        Optional<AddressDto> dto = sut.getAddressesByThreeWords("riches.lofts.guessing");
+
+        assertThat(dto.get().getDisplayName(), is("German Chancellery"));
     }
 }

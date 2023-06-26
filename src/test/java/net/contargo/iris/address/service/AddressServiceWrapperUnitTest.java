@@ -7,6 +7,8 @@ import net.contargo.iris.address.nominatim.service.AddressService;
 import net.contargo.iris.address.staticsearch.StaticAddress;
 import net.contargo.iris.address.staticsearch.service.StaticAddressNotFoundException;
 import net.contargo.iris.address.staticsearch.service.StaticAddressService;
+import net.contargo.iris.address.w3w.ThreeWordClient;
+import net.contargo.iris.address.w3w.ThreeWordClientException;
 import net.contargo.iris.normalizer.NormalizerService;
 
 import org.junit.Before;
@@ -24,6 +26,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static net.contargo.iris.address.nominatim.service.AddressDetailKey.CITY;
 import static net.contargo.iris.address.nominatim.service.AddressDetailKey.COUNTRY;
@@ -81,6 +84,8 @@ public class AddressServiceWrapperUnitTest {
     private NormalizerService normalizerServiceMock;
     @Mock
     private AddressListFilter addressListFilterMock;
+    @Mock
+    private ThreeWordClient threeWordClientMock;
 
     private Map<String, String> addressDetails;
 
@@ -96,8 +101,8 @@ public class AddressServiceWrapperUnitTest {
 
         when(normalizerServiceMock.normalize(CITYNAME_KARLSRUHE)).thenReturn(CITYNAME_KARLSRUHE_NORMALIZED);
 
-        sut = new AddressServiceWrapper(addressServiceMock, staticAddressServiceMock, cacheMock,
-                normalizerServiceMock);
+        sut = new AddressServiceWrapper(addressServiceMock, staticAddressServiceMock, cacheMock, normalizerServiceMock,
+                threeWordClientMock);
     }
 
 
@@ -492,5 +497,33 @@ public class AddressServiceWrapperUnitTest {
         assertThat(addresses, hasSize(1));
         assertThat(addresses.get(0).getCity(), is("Karlsruhe"));
         assertThat(addresses.get(0).getPostcode(), is("76135"));
+    }
+
+
+    @Test
+    public void getAddressByThreeWords() {
+
+        GeoLocation geoLocation = new GeoLocation(new BigDecimal("52.520146"), new BigDecimal("13.36926"));
+        when(threeWordClientMock.resolve("riches.lofts.guessing")).thenReturn(geoLocation);
+
+        Address address = new Address("German chancellery");
+        when(cacheMock.getForLocation(geoLocation)).thenReturn(address);
+
+        Optional<Address> resolvedAddress = sut.getAddressByThreeWords("riches.lofts.guessing");
+
+        assertThat(resolvedAddress.get(), is(address));
+    }
+
+
+    @Test
+    public void unresolvableThreeWordAddress() {
+
+        doThrow(ThreeWordClientException.class).when(threeWordClientMock).resolve("riches.lofts.guessing");
+
+        Optional<Address> resolvedAddress = sut.getAddressByThreeWords("riches.lofts.guessing");
+
+        assertThat(resolvedAddress.isPresent(), is(false));
+
+        verifyZeroInteractions(cacheMock);
     }
 }

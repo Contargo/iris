@@ -39,7 +39,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <org.springframework-version>4.3.30.RELEASE</org.springframework-version>
-        <org.springframework.security-version>4.2.20.RELEASE</org.springframework.security-version>
+        <org.springframework.security-version>5.2.10.RELEASE</org.springframework.security-version>
         <org.springframework.data.jpa-version>1.11.23.RELEASE</org.springframework.data.jpa-version>
 
         <logback.version>1.2.3</logback.version>
